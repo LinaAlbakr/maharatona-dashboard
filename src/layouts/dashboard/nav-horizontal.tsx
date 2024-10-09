@@ -20,8 +20,6 @@ import HeaderShadow from '../common/header-shadow';
 function NavHorizontal() {
   const theme = useTheme();
 
-  const { user } = useMockedUser();
-
   const navData = useNavData();
 
   return (
@@ -47,9 +45,6 @@ function NavHorizontal() {
         >
           <NavSectionHorizontal
             data={navData}
-            slotProps={{
-              currentRole: user?.role,
-            }}
             sx={{
               ...theme.mixins.toolbar,
             }}

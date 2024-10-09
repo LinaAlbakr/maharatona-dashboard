@@ -17,7 +17,7 @@ const icon = (name: string) => (
 );
 
 const ICONS = {
-  main: icon('mdi-light:chart-line'),
+  home: icon('solar:home-bold'),
   sections: icon('lucide:network'),
   categories: icon('bi:grid-fill'),
   subCategories: icon('fluent:list-bar-16-filled'),
@@ -56,6 +56,7 @@ const ICONS = {
   dataManagements: icon('fa:cogs'),
   promocodes: icon('mdi:coupon'),
   support: icon('streamline:customer-support-1-solid'),
+  building: icon('fa-solid:building'),
 };
 
 export function useNavData() {
@@ -64,7 +65,8 @@ export function useNavData() {
     () => [
       {
         items: [
-          { title: t('main'), path: paths.dashboard.root, icon: ICONS.main, },
+          { title: t('SIDEBAR.MAIN'), path: paths.dashboard.root, icon: ICONS.home },
+          { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
         ],
       },
     ],
