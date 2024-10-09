@@ -1,0 +1,16 @@
+{
+  "TITLE": {
+    "SIGN_IN": "Sign In"
+  },
+  "LABEL": {
+    "USER_NAME": "User Name",
+    "PASSWORD": "Password",
+    "EMAIL": "Email",
+    "DASHBOARD": "Dashboard",
+    "MAHARATONA": "Maharatona"
+  },
+  "BUTTON": {
+    "LOGIN": "Login",
+    "FORGOT_PASSWORD": "Forgot Password?"
+  }
+}
