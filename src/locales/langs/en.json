@@ -12,5 +12,6 @@
   "BUTTON": {
     "LOGIN": "Login",
     "FORGOT_PASSWORD": "Forgot Password?"
-  }
+  },
+  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers" }
 }
