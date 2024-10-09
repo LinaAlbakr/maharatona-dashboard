@@ -34,11 +34,11 @@ export const grey = {
 };
 
 export const primary = {
-  lighter: '#3CB8BB',
-  light: '#5BE49B',
+  lighter: '#EE9FC4',
+  light: '#D85BA7',
   main: '#CC3899',
-  dark: '#007867',
-  darker: '#004B50',
+  dark: '#992A74',
+  darker: '#7F225F',
   contrastText: '#FFFFFF',
 };
 
