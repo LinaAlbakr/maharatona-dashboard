@@ -1,17 +1,57 @@
 {
   "TITLE": {
-    "SIGN_IN": "Sign In"
+    "SIGN_IN": "Sign In",
+    "BLOCK_CENTER": "حظر مركز"
   },
   "LABEL": {
     "USER_NAME": "User Name",
     "PASSWORD": "Password",
     "EMAIL": "Email",
     "DASHBOARD": "Dashboard",
-    "MAHARATONA": "Maharatona"
+    "MAHARATONA": "Maharatona",
+    "CENTER_NAME": "Center Name",
+    "CITY": "City",
+    "NEIGHBORHOOD": "Neighborhood",
+    "PHONE": "Phone",
+    "NUMBER_OF_COURSES": "Number of courses",
+    "NUMBER_OF_REGISTRANTS": "Number of registrants",
+    "SETTINGS": "Settings",
+    "SEARCH_CENTER": "Center Search",
+    "EDUCATIONAL_CENTERS": "Educational Centers",
+    "SEND_NOTIFICATION": "Send Notification",
+    "BLOCK": "Block",
+    "VIEW": "View"
   },
   "BUTTON": {
     "LOGIN": "Login",
-    "FORGOT_PASSWORD": "Forgot Password?"
+    "FORGOT_PASSWORD": "Forgot Password?",
+    "BLOCK": "Block",
+    "CANCEL": "Cancel"
   },
-  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers" }
+  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers" },
+  "TABLE": {
+    "DENSE": "Dense",
+    "ROWS_PER_PAGE": "Rows per page",
+    "OF": "of",
+    "MORE_THAN": "More Than",
+    "STATUS": "Status",
+    "IMAGE": "Image",
+    "VIEW": "View",
+    "STOP": "Stop",
+    "RESTORE": "Restore",
+    "DELETE": "Delete",
+    "ACTIVE": "Active",
+    "IN_ACTIVE": "Inactive",
+    "NAME": "Name",
+    "EMAIL": "Email",
+    "LAST_LOGIN": "Last login",
+    "WORKING": "Working",
+    "RATING": "Rating",
+    "SPORT_ACTIVITY": "Sport activity",
+    "SPORT_ACTIVITY_NAME_IN_ARABIC": "Sport activity name in arabic",
+    "SPORT_ACTIVITY_NAME_IN_ENGLISH": "Sport activity name in arabic"
+  },
+  "MESSAGE": {
+    "CONFIRM_BLOCK": "Are you sure you want to block this center?"
+  }
 }

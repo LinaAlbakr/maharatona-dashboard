@@ -46,7 +46,7 @@ export default function TableHeadCustom({
 }: Props) {
   const { t } = useTranslate();
   return (
-    <TableHead sx={sx}>
+    <TableHead sx={{ color: 'secondary.main', ...sx }}>
       <TableRow>
         {onSelectAllRows && (
           <TableCell padding="checkbox">
