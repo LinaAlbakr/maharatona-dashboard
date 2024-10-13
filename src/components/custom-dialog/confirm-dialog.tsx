@@ -23,13 +23,15 @@ export default function ConfirmDialog({
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose} {...other}>
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
 
-      {content && <DialogContent sx={{ typography: 'body2' }}> {content} </DialogContent>}
+      {content && (
+        <DialogContent sx={{ typography: 'body2', minHeight: '50px' }}> {content} </DialogContent>
+      )}
 
       <DialogActions>
         {action}
 
         <Button variant="outlined" color="inherit" onClick={onClose}>
-          {t('cancel')}
+          {t('BUTTON.CANCEL')}
         </Button>
       </DialogActions>
     </Dialog>
