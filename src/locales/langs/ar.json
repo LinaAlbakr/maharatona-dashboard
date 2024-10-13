@@ -1,20 +1,60 @@
 {
   "TITLE": {
-    "SIGN_IN": "تسجيل الدخول"
+    "SIGN_IN": "تسجيل الدخول",
+    "BLOCK_CENTER": "حظر مركز"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
     "PASSWORD": "كلمة المرور",
     "EMAIL": "البريد الالكتروني",
     "DASHBOARD": "لوحة تحكم",
-    "MAHARATONA": "مهاراتنا"
+    "MAHARATONA": "مهاراتنا",
+    "CENTER_NAME": "اسم المركز",
+    "CITY": "المدينة",
+    "NEIGHBORHOOD": "الحى",
+    "PHONE": "رقم الهاتف",
+    "NUMBER_OF_COURSES": "عدد الدورات",
+    "NUMBER_OF_REGISTRANTS": "عدد المسجلين",
+    "SETTINGS": "الإعدادات",
+    "SEARCH_CENTER": "ابحث عن مركز",
+    "EDUCATIONAL_CENTERS": "المراكز التعليمية",
+    "SEND_NOTIFICATION": "ارسال الاشعار",
+    "BLOCK": "حظر",
+    "VIEW": "عرض"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
-    "FORGOT_PASSWORD": "هل نسيت كلمة المرور ؟"
+    "FORGOT_PASSWORD": "هل نسيت كلمة المرور ؟",
+    "BLOCK": "حظر",
+    "CANCEL": "الغاء"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
     "CENTERS": "المراكز التعليمية"
+  },
+  "TABLE": {
+    "DENSE": "تكديس",
+    "ROWS_PER_PAGE": "عدد الصفوف لكل صفحة",
+    "OF": "من",
+    "MORE_THAN": "اكثر من",
+    "STATUS": "الحالة",
+    "IMAGE": "الصورة",
+    "VIEW": "عرض",
+    "STOP": "إيقاف",
+    "RESTORE": "تفعيل",
+    "DELETE": "حذف",
+    "ACTIVE": "نشط",
+    "IN_ACTIVE": "غير نشط",
+    "NAME": "الاسم",
+    "EMAIL": "البريد الإلكتروني",
+    "LAST_LOGIN": "أخر تسجيل دخول",
+    "WORKING": "يعمل",
+    "RATING": "التقييم",
+    "SPORT_ACTIVITY": "النشاط الرياضي",
+    "SPORT_ACTIVITY_NAME_IN_ARABIC": "اسم النشاط الرياضة باللغة العربية",
+    "SPORT_ACTIVITY_NAME_IN_ENGLISH": "اسم النشاط الرياضة باللغة الإنجليزية"
+  },
+  "MESSAGE": {
+    "CONFIRM_BLOCK": "هل تريد حظر هذا المركز؟"
   }
 }
