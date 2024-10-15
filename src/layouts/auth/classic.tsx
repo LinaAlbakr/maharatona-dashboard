@@ -88,7 +88,7 @@ export default function AuthClassicLayout({ children }: Props) {
             backgroundImage: "url('/assets/images/login/image-1.jpeg')",
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            height: { md: '260px', lg: '385px' },
+            height: { md: '260px', lg: '350px' },
             width: { md: '127px', lg: '189px' },
             borderRadius: '13px',
             position: 'relative',
@@ -111,11 +111,11 @@ export default function AuthClassicLayout({ children }: Props) {
             backgroundImage: "url('/assets/images/login/image-2.jpeg')",
             backgroundRepeat: 'no-repeat',
             backgroundSize: '100% 100%',
-            height: { md: '260px', lg: '385px' },
+            height: { md: '260px', lg: '350px' },
             width: { md: '127px', lg: '189px' },
             borderRadius: '13px',
             position: 'relative',
-            top: '-100px',
+            top: '-80px',
           }}
         ></Box>
         <Box
@@ -123,11 +123,11 @@ export default function AuthClassicLayout({ children }: Props) {
             backgroundImage: "url('/assets/images/login/image-3.jpeg')",
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            height: { md: '260px', lg: '385px' },
+            height: { md: '260px', lg: '350px' },
             width: { md: '127px', lg: '189px' },
             borderRadius: '13px',
             position: 'relative',
-            top: '-60px',
+            top: '-50px',
           }}
         ></Box>
       </Box>
@@ -175,9 +175,9 @@ export default function AuthClassicLayout({ children }: Props) {
     >
       {renderLogo}
 
-      {mdUp && renderSection}
 
       {renderContent}
+      {mdUp && renderSection}
     </Stack>
   );
 }

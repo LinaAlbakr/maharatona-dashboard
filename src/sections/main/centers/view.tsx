@@ -5,7 +5,7 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import { Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 import { ICenter } from 'src/types/centers';
 import { useForm } from 'react-hook-form';
@@ -16,6 +16,8 @@ import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
+import SendNotification from './center-details/components/send-notification';
+import { changeCenterStatus } from 'src/actions/centers';
 
 type props = {
   centers: ICenter[];
@@ -32,7 +34,14 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const searchParams = useSearchParams();
   const router = useRouter();
   const confirmBlock = useBoolean();
+  const confirmUnblock = useBoolean();
+  const [selectedId, setSelectedId] = useState<string | null>();
+  const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
+  const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
 
+  useEffect(() => {
+    router.push(`${pathname}`);
+  }, []);
   const city = searchParams?.get('city');
   const neighborhood = searchParams?.get('neighborhood');
 
@@ -64,11 +73,13 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
 
       if (value) {
         params.set(name, value);
+        localStorage.setItem(name, value);
       } else {
         params.delete(name);
       }
       if (name === 'city') {
         setValue('neighborhood', { id: '' });
+        localStorage.setItem('neighborhood', '');
         params?.delete('neighborhood');
       }
       router.push(`${pathname}?${params.toString()}`);
@@ -77,7 +88,27 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   );
 
   const handleConfirmBlock = async () => {
+    if (selectedId) {
+      const res = await changeCenterStatus(selectedId, { userStatus: 'BlockedClient' });
+      if (res === 200) {
+        enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
+      } else {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      }
+    }
+
     confirmBlock.onFalse();
+  };
+  const handleConfirmUnblock = async () => {
+    if (selectedId) {
+      const res = await changeCenterStatus(selectedId, { userStatus: 'ActiveClient' });
+      if (res === 200) {
+        enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
+      } else {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      }
+    }
+    confirmUnblock.onFalse();
   };
 
   return (
@@ -160,22 +191,38 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           actions={[
             {
               label: t('LABEL.VIEW'),
-              icon: 'solar:pen-bold',
+              icon: 'lets-icons:view',
               onClick: (item) => {
                 router.push(`${paths.dashboard.centers}/${item.id}`);
               },
             },
             {
               label: t('LABEL.BLOCK'),
-              icon: 'lets-icons:view',
+              icon: 'ic:outline-block',
               onClick: (item: any) => {
+                setSelectedId(item.id);
                 confirmBlock.onTrue();
               },
+              hide: (center) => center.userStatus === 'BlockedClient',
+            },
+            {
+              label: t('LABEL.UNBLOCK'),
+              icon: 'gg:unblock',
+              onClick: (item: any) => {
+                console.log(item);
+
+                setSelectedId(item.id);
+                confirmUnblock.onTrue();
+              },
+              hide: (center) => center.userStatus === 'ActiveClient',
             },
             {
               label: t('LABEL.SEND_NOTIFICATION'),
               icon: 'mingcute:notification-fill',
-              onClick: (item) => {},
+              onClick: (item) => {
+                setShowSendNotification(true);
+                setSelectedCenter(item);
+              },
             },
           ]}
           customRender={{
@@ -202,6 +249,33 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           </Button>
         }
       />
+      <ConfirmDialog
+        open={confirmUnblock.value}
+        onClose={confirmUnblock.onFalse}
+        title={t('TITLE.UNBLOCK_CENTER')}
+        content={t('MESSAGE.CONFIRM_UNBLOCK')}
+        action={
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              handleConfirmUnblock();
+            }}
+          >
+            {t('BUTTON.UNBLOCK')}
+          </Button>
+        }
+      />
+      {showSendNotification && (
+        <SendNotification
+          open={showSendNotification}
+          onClose={() => {
+            setShowSendNotification(false);
+            // setSelectedEmail(undefined);
+          }}
+          selectedCenter={selectedCenter}
+        />
+      )}
     </>
   );
 };

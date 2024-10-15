@@ -1,7 +1,9 @@
 {
   "TITLE": {
     "SIGN_IN": "Sign In",
-    "BLOCK_CENTER": "حظر مركز"
+    "BLOCK_CENTER": "Block Center",
+    "UNBLOCK_CENTER": "Unblock Center",
+    "SEND_NOTIFICATON": "Send Notification"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -20,13 +22,21 @@
     "EDUCATIONAL_CENTERS": "Educational Centers",
     "SEND_NOTIFICATION": "Send Notification",
     "BLOCK": "Block",
-    "VIEW": "View"
+    "VIEW": "View",
+    "UNBLOCK": "Unblock",
+    "CONTENT_AR": "Content in Arabic",
+    "CONTENT_EN": "Content in English",
+    "TITLE_AR": "Title in Arabic",
+    "TITLE_EN": "Title in English",
+    "SEND_TO": "Send To"
   },
   "BUTTON": {
     "LOGIN": "Login",
     "FORGOT_PASSWORD": "Forgot Password?",
     "BLOCK": "Block",
-    "CANCEL": "Cancel"
+    "UNBLOCK": "Unblock",
+    "CANCEL": "Cancel",
+    "SEND": "Send"
   },
   "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers" },
   "TABLE": {
@@ -52,6 +62,10 @@
     "SPORT_ACTIVITY_NAME_IN_ENGLISH": "Sport activity name in arabic"
   },
   "MESSAGE": {
-    "CONFIRM_BLOCK": "Are you sure you want to block this center?"
+    "CONFIRM_BLOCK": "Are you sure you want to block this center?",
+    "CONFIRM_UNBLOCK": "Are you sure you want to unblock this center?",
+    "SEND_SUCCESSFULLY": "Notification sent successfully",
+    "BLOCK_SUCCESSFULLY": "Center blocked successfully",
+    "UNBLOCK_SUCCESSFULLY": "Center unblocked successfully"
   }
 }

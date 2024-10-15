@@ -1,7 +1,9 @@
 {
   "TITLE": {
     "SIGN_IN": "تسجيل الدخول",
-    "BLOCK_CENTER": "حظر مركز"
+    "BLOCK_CENTER": "حظر مركز",
+    "UNBLOCK_CENTER": "الغاء حظر مركز",
+    "SEND_NOTIFICATON": "ارسال الاشعار"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -20,13 +22,21 @@
     "EDUCATIONAL_CENTERS": "المراكز التعليمية",
     "SEND_NOTIFICATION": "ارسال الاشعار",
     "BLOCK": "حظر",
-    "VIEW": "عرض"
+    "VIEW": "عرض",
+    "UNBLOCK": "الغاء الحظر",
+    "CONTENT_AR": "المحتوى باللغة العربية",
+    "CONTENT_EN": "المحتوى باللغة الانجليزية",
+    "TITLE_AR": "العنوان باللغة العربية",
+    "TITLE_EN": "العنوان باللغة الانجليزية",
+    "SEND_TO": "ارسال الى"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
     "FORGOT_PASSWORD": "هل نسيت كلمة المرور ؟",
     "BLOCK": "حظر",
-    "CANCEL": "الغاء"
+    "UNBLOCK": "الغاء الحظر",
+    "CANCEL": "الغاء",
+    "SEND": "ارسال"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -55,6 +65,10 @@
     "SPORT_ACTIVITY_NAME_IN_ENGLISH": "اسم النشاط الرياضة باللغة الإنجليزية"
   },
   "MESSAGE": {
-    "CONFIRM_BLOCK": "هل تريد حظر هذا المركز؟"
+    "CONFIRM_BLOCK": "هل تريد حظر هذا المركز؟",
+    "CONFIRM_UNBLOCK": "هل تريد الغاء الحظر هذا المركز؟",
+    "SEND_SUCCESSFULLY": "تم الارسال بنجاح",
+    "BLOCK_SUCCESSFULLY": "تم الحظر بنجاح",
+    "UNBLOCK_SUCCESSFULLY": "تم الغاء الحظر بنجاح"
   }
 }
