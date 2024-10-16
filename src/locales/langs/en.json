@@ -28,7 +28,17 @@
     "CONTENT_EN": "Content in English",
     "TITLE_AR": "Title in Arabic",
     "TITLE_EN": "Title in English",
-    "SEND_TO": "Send To"
+    "SEND_TO": "Send To",
+    "IMAGES": "Images",
+    "ABOUT_CENTER": "About Center",
+    "DESCRIPTION": "Description",
+    "WEBSITE": "Website",
+    "LOCATION": "Location",
+    "COURSES_NUMBER": "Courses Number",
+    "LOCATION_DESCRIPTION": "Location Description",
+    "FIELDS": "Fields",
+    "BANK_ACCOUNT": "Bank Account",
+    "TOTAL_RATE": "Total Rate"
   },
   "BUTTON": {
     "LOGIN": "Login",

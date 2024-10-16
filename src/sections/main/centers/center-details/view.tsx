@@ -46,6 +46,7 @@ const CenterDetailsView = ({
 }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
+  console.log(CenterInfo);
 
   const currentTab = useMemo(
     () =>
@@ -60,7 +61,7 @@ const CenterDetailsView = ({
   };
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Card sx={{ pt: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <Card sx={{  display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Box
           sx={{
             backgroundImage: `url(/assets/images/centers/image.png)`,
@@ -73,25 +74,31 @@ const CenterDetailsView = ({
         >
           <Box>
             <Image
-              src="/assets/images/centers/profile.jpeg"
+              src={CenterInfo.logo}
               width={130}
               height={120}
               alt="image"
               style={{
                 borderRadius: '50%',
                 position: 'absolute',
-                bottom: '-50px',
-                right: '20px',
+                bottom: '-60px',
+                right: '25px',
                 outline: '3px solid rgba(192,192,192,0.5)',
               }}
             />
-            <Typography variant="body1" color="initial">
-              {'center name'}
+            <Typography
+              variant="h4"
+              color="primary.main"
+              sx={{ position: 'absolute', bottom: '-40px', left: '170px' }}
+            >
+              {CenterInfo.name}
             </Typography>
           </Box>
         </Box>
 
-        <Box sx={{ mx: 4, display: 'flex', gap: 4, flexDirection: { sm: 'row', xs: 'column' } }}>
+        <Box
+          sx={{ mx: 4, mt: 4, display: 'flex', gap: 4, flexDirection: { sm: 'row', xs: 'column' } }}
+        >
           <Tabs value={currentTab} onChange={handleChangeTab} sx={{ color: 'secondary.main' }}>
             {tabs.map((item) => (
               <Tab

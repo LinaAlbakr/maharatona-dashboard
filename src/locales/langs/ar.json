@@ -28,7 +28,17 @@
     "CONTENT_EN": "المحتوى باللغة الانجليزية",
     "TITLE_AR": "العنوان باللغة العربية",
     "TITLE_EN": "العنوان باللغة الانجليزية",
-    "SEND_TO": "ارسال الى"
+    "SEND_TO": "ارسال الى",
+    "IMAGES": "الصور",
+    "ABOUT_CENTER": "عن المركز",
+    "DESCRIPTION": "الوصف",
+    "WEBSITE": "الموقع الإلكترونى",
+    "LOCATION": "موقع المركز",
+    "COURSES_NUMBER": "عدد الدورات",
+    "LOCATION_DESCRIPTION": "وصف المكان",
+    "FIELDS": "المجالات",
+    "BANK_ACCOUNT": "رقم الحساب البنكى",
+    "TOTAL_RATE": "التقييم الكلي"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
