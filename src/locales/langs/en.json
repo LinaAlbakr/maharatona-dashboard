@@ -38,7 +38,11 @@
     "LOCATION_DESCRIPTION": "Location Description",
     "FIELDS": "Fields",
     "BANK_ACCOUNT": "Bank Account",
-    "TOTAL_RATE": "Total Rate"
+    "TOTAL_RATE": "Total Rate",
+    "ALL_INFORMATION": "All Information",
+    "CENTER_COURSES": "Center Courses",
+    "REPORTS": "Reports",
+    "FIELD_NAME": "Field Name"
   },
   "BUTTON": {
     "LOGIN": "Login",

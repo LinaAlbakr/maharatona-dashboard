@@ -19,7 +19,7 @@ type IProps = {
 const Page = async ({ params, searchParams }: IProps) => {
   const tab = typeof searchParams.tab === 'string' ? searchParams.tab : undefined;
   const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 5;
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 6;
   const CenterInfo = await fetchCenterInfo(params.centerId);
   const CenterCourses = await fetchCenterCourses(page, limit, params.centerId);
   const CenterReviews = await fetchCenterReviews(page, limit, params.centerId);

@@ -81,13 +81,12 @@ export const fetchCenterInfo = async (centerId: string): Promise<any> => {
       params: {},
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res.data); //TODO remove log from here
     return res?.data;
   } catch (error) {
     throw new Error(error);
   }
 };
-export const fetchCenterCourses = async (page = 1, limit = 50, centerId = ''): Promise<any> => {
+export const fetchCenterCourses = async (page = 1, limit = 6, centerId = ''): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
@@ -96,7 +95,6 @@ export const fetchCenterCourses = async (page = 1, limit = 50, centerId = ''): P
       params: { page, limit },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res.data); //TODO remove log from here
     return res?.data;
   } catch (error) {
     throw new Error(error);
@@ -111,7 +109,6 @@ export const fetchCenterReports = async (centerId: string): Promise<any> => {
       params: {},
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res.data); //TODO remove log from here
     return res?.data;
   } catch (error) {
     throw new Error(error);
@@ -126,7 +123,6 @@ export const fetchCenterReviews = async (page = 1, limit = 50, centerId = ''): P
       params: { page, limit },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res.data); //TODO remove log from here
     return res?.data;
   } catch (error) {
     throw new Error(error);
@@ -135,17 +131,12 @@ export const fetchCenterReviews = async (page = 1, limit = 50, centerId = ''): P
 
 export async function changeCenterStatus(centerId: string, reqBody: any): Promise<any> {
   const accessToken = cookies().get('access_token')?.value;
-
-  console.log(centerId);
-  console.log(reqBody);
-
   try {
     const res = await axiosInstance.patch(endpoints.centers.changeStatus(centerId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log(res);
     revalidatePath('/dashboard/centers/');
     return res?.status;
   } catch (error) {

@@ -14,18 +14,15 @@ import Image from 'next/image';
 export const tabs = [
   {
     value: 'all-information',
-    label: 'All information',
-    // icon: 'material-symbols-light:id-card',
+    label: 'ALL_INFORMATION',
   },
   {
-    value: 'courses',
-    label: 'Courses',
-    // icon: 'f7:sportscourt-fill',
+    value: 'center-courses',
+    label: 'CENTER_COURSES',
   },
   {
     value: 'reports',
-    label: 'Reports',
-    // icon: 'clarity:employee-group-solid',
+    label: 'REPORTS',
   },
 ];
 
@@ -46,8 +43,6 @@ const CenterDetailsView = ({
 }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
-  console.log(CenterInfo);
-
   const currentTab = useMemo(
     () =>
       typeof tab === 'string' && tabs.find((item) => item.value === tab) ? tab : 'all-information',
@@ -61,7 +56,7 @@ const CenterDetailsView = ({
   };
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Card sx={{  display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <Card sx={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Box
           sx={{
             backgroundImage: `url(/assets/images/centers/image.png)`,
@@ -101,12 +96,7 @@ const CenterDetailsView = ({
         >
           <Tabs value={currentTab} onChange={handleChangeTab} sx={{ color: 'secondary.main' }}>
             {tabs.map((item) => (
-              <Tab
-                key={item.value}
-                value={item.value}
-                // icon={typeof item.icon === 'string' ? <Iconify icon={item.icon} /> : item.icon}
-                label={t(item.label)}
-              />
+              <Tab key={item.value} value={item.value} label={t(`LABEL.${item.label}`)} />
             ))}
           </Tabs>
         </Box>
@@ -114,7 +104,7 @@ const CenterDetailsView = ({
 
       <Box mt={3}>
         {currentTab === 'all-information' && <AllInformation CenterInfo={CenterInfo} />}
-        {currentTab === 'courses' && <Courses />}
+        {currentTab === 'center-courses' && <Courses CenterCourses={CenterCourses} />}
         {currentTab === 'reports' && <Reports />}
       </Box>
     </Container>

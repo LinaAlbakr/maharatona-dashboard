@@ -38,7 +38,11 @@
     "LOCATION_DESCRIPTION": "وصف المكان",
     "FIELDS": "المجالات",
     "BANK_ACCOUNT": "رقم الحساب البنكى",
-    "TOTAL_RATE": "التقييم الكلي"
+    "TOTAL_RATE": "التقييم الكلي",
+    "ALL_INFORMATION": "كل المعلومات",
+    "CENTER_COURSES": "دورات المركز",
+    "REPORTS": "التقارير",
+    "FIELD_NAME": "اسم المجال"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
