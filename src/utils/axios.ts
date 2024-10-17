@@ -4,6 +4,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
+import { stat } from 'fs';
 
 export interface Params {
   page: number;
@@ -78,5 +79,14 @@ export const endpoints = {
     fetch: '/admin-panel/all-centers',
     cities: '/city-neighborhood/all-cities',
     neighborhoods: (cityId: string) => `/city-neighborhood/all-neighborhoods/${cityId}`,
+    info: (centerId: string) => `/admin-panel/center/${centerId}`,
+    courses: (centerId: string) => `/admin-panel/center/${centerId}/courses`,
+    reports: (centerId: string) => `/admin-panel/center/${centerId}/reports`,
+    reviews: (centerId: string) => `/admin-panel/center/${centerId}/reviews`,
+    changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
+    deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
+  },
+  notifications: {
+    send: '/notification/send-to-users',
   },
 };
