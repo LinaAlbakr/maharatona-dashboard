@@ -45,7 +45,7 @@ const Reports = ({ CenterCourses, CenterReports, CenterReviews }: Props) => {
     [pathname, router, searchParams]
   );
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: 0, padding: '!0px' }}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: '0px !important', padding: '0px !important' }}>
       <Grid container spacing={1}>
         <Grid
           item

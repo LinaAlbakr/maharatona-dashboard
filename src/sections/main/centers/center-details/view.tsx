@@ -60,7 +60,7 @@ const CenterDetailsView = ({
     router.push(`${pathname}?tab=${newValue}`);
   };
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: '0px !important', padding: '0px !important' }}>
       <Card sx={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Box
           sx={{

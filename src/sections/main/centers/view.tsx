@@ -113,7 +113,10 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      <Container
+        maxWidth={settings.themeStretch ? false : 'xl'}
+        sx={{ margin: '0px !important', padding: '0px !important' }}
+      >
         <Box
           sx={{
             backgroundImage: `url(/assets/images/centers/header.jpeg)`,
