@@ -49,11 +49,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
               // <Link href={`${CenterInfo?.website}`} passHref>
               //   {CenterInfo?.website}
               // </Link>
-              <a
-                href={`https://${CenterInfo?.website}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={`https://${CenterInfo?.website}`} target="_blank" rel="noopener noreferrer">
                 {CenterInfo?.website}
               </a>
             }
@@ -152,68 +148,84 @@ const AllInformation = ({ CenterInfo }: Props) => {
         </Typography>
         <Divider sx={{ my: 3 }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
-          <Image
-            src={CenterInfo?.bank_account_image || '/assets/images/centers/gray.jpeg'}
-            width={250}
-            height={250}
-            alt="image"
-            style={{
-              borderRadius: '10px',
-            }}
-          />
-          <Image
-            src={CenterInfo?.commercial_register || '/assets/images/centers/gray.jpeg'}
-            width={250}
-            height={250}
-            alt="image"
-            style={{
-              borderRadius: '10px',
-            }}
-          />
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: 1,
-              height: 'fit-content',
-            }}
-          >
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
             <Image
-              src={CenterInfo?.center_images[0].url || '/assets/images/centers/gray.jpeg'}
-              width={120}
-              height={120}
-              alt="image"
-              style={{
-                borderRadius: '10px',
-              }}
-            />{' '}
-            <Image
-              src={CenterInfo?.center_images[1]?.url || '/assets/images/centers/gray.jpeg'}
-              width={120}
-              height={120}
-              alt="image"
-              style={{
-                borderRadius: '10px',
-              }}
-            />{' '}
-            <Image
-              src={CenterInfo?.center_images[2]?.url || '/assets/images/centers/gray.jpeg'}
-              width={120}
-              height={120}
-              alt="image"
-              style={{
-                borderRadius: '10px',
-              }}
-            />{' '}
-            <Image
-              src={CenterInfo?.center_images[3]?.url || '/assets/images/centers/gray.jpeg'}
-              width={120}
-              height={120}
+              src={CenterInfo?.commercial_register || '/assets/images/centers/gray.jpeg'}
+              width={250}
+              height={250}
               alt="image"
               style={{
                 borderRadius: '10px',
               }}
             />
+            <Typography variant="body1" color="info.dark">
+              {t('LABEL.COMMERIAL_REGISTER')}
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Image
+              src={CenterInfo?.bank_account_image || '/assets/images/centers/gray.jpeg'}
+              width={250}
+              height={250}
+              alt="image"
+              style={{
+                borderRadius: '10px',
+              }}
+            />
+            <Typography variant="body1" color="info.dark">
+              {t('LABEL.BANK_ACCOUNT_IMAGE')}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: 1,
+                height: 'fit-content',
+              }}
+            >
+              <Image
+                src={CenterInfo?.center_images[0].url || '/assets/images/centers/gray.jpeg'}
+                width={120}
+                height={120}
+                alt="image"
+                style={{
+                  borderRadius: '10px',
+                }}
+              />{' '}
+              <Image
+                src={CenterInfo?.center_images[1]?.url || '/assets/images/centers/gray.jpeg'}
+                width={120}
+                height={120}
+                alt="image"
+                style={{
+                  borderRadius: '10px',
+                }}
+              />{' '}
+              <Image
+                src={CenterInfo?.center_images[2]?.url || '/assets/images/centers/gray.jpeg'}
+                width={120}
+                height={120}
+                alt="image"
+                style={{
+                  borderRadius: '10px',
+                }}
+              />{' '}
+              <Image
+                src={CenterInfo?.center_images[3]?.url || '/assets/images/centers/gray.jpeg'}
+                width={120}
+                height={120}
+                alt="image"
+                style={{
+                  borderRadius: '10px',
+                }}
+              />
+            </Box>
+            <Typography variant="body1" color="info.dark">
+              {t('LABEL.CENTER_IMAGES')}
+            </Typography>
           </Box>
         </Box>
       </Card>
