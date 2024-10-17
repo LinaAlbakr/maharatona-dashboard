@@ -51,7 +51,15 @@
     "SAR": "ر.س",
     "CUSTOMER_RATINGS": "تقييم العملاء",
     "NO_DATA": "لا يوجد بيانات",
-    "TOP_THREE_COURSES": "أعلى ثلاث دورات"
+    "TOP_THREE_COURSES": "أعلى ثلاث دورات",
+    "CLIENTS": "العملاء",
+    "FEILDS": "المجالات",
+    "NUMBER_OF_CHILDREN": "عدد الاطفال",
+    "CLIENT_NAME": "إسم العميل",
+    "THIS_FIELD_IS_REQUIRED": "هذا الحقل مطلوب",
+    "CHILDREN": "الأطفال",
+    "COURSES": "الدورات",
+    "INTERESTS": "الاهتمامات"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -63,7 +71,8 @@
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
-    "CENTERS": "المراكز التعليمية"
+    "CENTERS": "المراكز التعليمية",
+    "CLIENTS": "العملاء"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -85,7 +94,8 @@
     "RATING": "التقييم",
     "SPORT_ACTIVITY": "النشاط الرياضي",
     "SPORT_ACTIVITY_NAME_IN_ARABIC": "اسم النشاط الرياضة باللغة العربية",
-    "SPORT_ACTIVITY_NAME_IN_ENGLISH": "اسم النشاط الرياضة باللغة الإنجليزية"
+    "SPORT_ACTIVITY_NAME_IN_ENGLISH": "اسم النشاط الرياضة باللغة الإنجليزية",
+    "CHILDREN": "أطفال"
   },
   "MESSAGE": {
     "CONFIRM_BLOCK": "هل تريد حظر هذا المركز؟",

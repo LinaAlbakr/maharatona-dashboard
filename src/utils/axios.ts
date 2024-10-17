@@ -86,6 +86,13 @@ export const endpoints = {
     changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
     deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
   },
+  clients: {
+    fetch: '/admin-panel/all-clients',
+    cities: '/city-neighborhood/all-cities',
+    fetchfields: '/admin-panel/all-fields',
+    info: (clientId: string) => `/admin-panel/client/${clientId}`,
+    changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
+  },
   notifications: {
     send: '/notification/send-to-users',
   },

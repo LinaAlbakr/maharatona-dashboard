@@ -51,7 +51,15 @@
     "SAR": "SAR",
     "CUSTOMER_RATINGS": "Customer Ratings",
     "NO_DATA": "No Data",
-    "TOP_THREE_COURSES": "Top Three Courses"
+    "TOP_THREE_COURSES": "Top Three Courses",
+    "CLIENTS": "Clients",
+    "FEILDS": "Fields",
+    "NUMBER_OF_CHILDREN": "Number of Children",
+    "CLIENT_NAME": "Client Name",
+    "THIS_FIELD_IS_REQUIRED": "This field is required",
+    "CHILDREN": "Children",
+    "COURSES": "Courses",
+    "INTERESTS": "Interests"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -61,7 +69,7 @@
     "CANCEL": "Cancel",
     "SEND": "Send"
   },
-  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers" },
+  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers", "CLIENTS": "Clients" },
   "TABLE": {
     "DENSE": "Dense",
     "ROWS_PER_PAGE": "Rows per page",
@@ -82,7 +90,8 @@
     "RATING": "Rating",
     "SPORT_ACTIVITY": "Sport activity",
     "SPORT_ACTIVITY_NAME_IN_ARABIC": "Sport activity name in arabic",
-    "SPORT_ACTIVITY_NAME_IN_ENGLISH": "Sport activity name in arabic"
+    "SPORT_ACTIVITY_NAME_IN_ENGLISH": "Sport activity name in arabic",
+    "CHILDREN": "Children"
   },
   "MESSAGE": {
     "CONFIRM_BLOCK": "Are you sure you want to block this center?",

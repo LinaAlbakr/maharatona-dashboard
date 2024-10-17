@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
@@ -16,17 +16,17 @@ import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
-import SendNotification from './center-details/components/send-notification';
-import { changeCenterStatus } from 'src/actions/centers';
+import { changeClientStatus } from 'src/actions/clients';
+import SendNotification from './client-details/components/send-notification';
 
 type props = {
-  centers: ICenter[];
+  clients: any[];
   count: number;
   cities: ITems[];
-  neighborhoods?: ITems[];
+  fields?: ITems[];
 };
 
-const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>) => {
+const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -43,22 +43,22 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     router.push(`${pathname}`);
   }, []);
   const city = searchParams?.get('city');
-  const neighborhood = searchParams?.get('neighborhood');
+  const field = searchParams?.get('field');
 
   const TABLE_HEAD = [
-    { id: 'name', label: 'LABEL.CENTER_NAME' },
+    { id: 'name', label: 'LABEL.CLIENT_NAME' },
     { id: 'id', label: 'LABEL.CITY' },
     { id: 'neighborhood', label: 'LABEL.NEIGHBORHOOD' },
+    { id: 'children', label: 'LABEL.NUMBER_OF_CHILDREN' },
     { id: 'phone', label: 'LABEL.PHONE' },
-    { id: 'number_of_courses', label: 'LABEL.NUMBER_OF_COURSES' },
-    { id: 'number_of_registrants', label: 'LABEL.NUMBER_OF_REGISTRANTS' },
+    { id: 'email', label: 'LABEL.EMAIL' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
   const formDefaultValues = {
     name: '',
     city: { id: city },
-    neighborhood: { id: neighborhood },
+    field: { id: field },
   };
 
   const pathname = usePathname();
@@ -78,7 +78,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         params.delete(name);
       }
       if (name === 'city') {
-        setValue('neighborhood', { id: '' });
+        setValue('field', { id: '' });
         localStorage.setItem('neighborhood', '');
         params?.delete('neighborhood');
       }
@@ -89,7 +89,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
 
   const handleConfirmBlock = async () => {
     if (selectedId) {
-      const res = await changeCenterStatus(selectedId, { userStatus: 'BlockedClient' });
+      const res = await changeClientStatus(selectedId, { userStatus: 'BlockedClient' });
       if (res === 200) {
         enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
       } else {
@@ -101,7 +101,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   };
   const handleConfirmUnblock = async () => {
     if (selectedId) {
-      const res = await changeCenterStatus(selectedId, { userStatus: 'ActiveClient' });
+      const res = await changeClientStatus(selectedId, { userStatus: 'ActiveClient' });
       if (res === 200) {
         enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
       } else {
@@ -119,7 +119,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       >
         <Box
           sx={{
-            backgroundImage: `url(/assets/images/centers/header.jpeg)`,
+            backgroundImage: `url(/assets/images/clients/children.jpeg)`,
             height: { sm: '300px', xs: '400px' },
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -133,7 +133,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           }}
         >
           <Typography variant="h3" color="white">
-            {t('LABEL.EDUCATIONAL_CENTERS')}
+            {t('LABEL.CLIENTS')}
           </Typography>
           <Grid
             sx={{
@@ -152,17 +152,20 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(3 1fr)',
-                    sm: 'repeat(3, 1fr)',
+                    xs: 'repeat(2 1fr)',
+                    sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <TextField
-                    id="outlined-search"
-                    label={t('LABEL.SEARCH_CENTER')}
-                    type="search"
-                    onChange={(e) => createQueryString('search', e.target.value)}
+                  <CutomAutocompleteView
+                    items={fields as unknown as ITems[]}
+                    label={t('LABEL.FEILDS')}
+                    placeholder={t('LABEL.FEILDS')}
+                    name="fieldId"
+                    isDisabled={!fields || fields.length === 0}
+                    onCustomChange={(selectedCityId: any) =>
+                      createQueryString('field', selectedCityId?.id ?? '')
+                    }
                   />
-
                   <CutomAutocompleteView
                     items={cities as ITems[]}
                     label={t('LABEL.CITY')}
@@ -172,16 +175,6 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                       createQueryString('city', selectedCountryId?.id ?? '')
                     }
                   />
-                  <CutomAutocompleteView
-                    items={neighborhoods as unknown as ITems[]}
-                    label={t('LABEL.NEIGHBORHOOD')}
-                    placeholder={t('LABEL.NEIGHBORHOOD')}
-                    name="neighborhoodId"
-                    isDisabled={!neighborhoods || neighborhoods.length === 0}
-                    onCustomChange={(selectedCityId: any) =>
-                      createQueryString('neighborhood', selectedCityId?.id ?? '')
-                    }
-                  />
                 </Box>
               </FormProvider>
             </Card>
@@ -189,14 +182,14 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         </Box>
         <SharedTable
           count={count}
-          data={centers}
+          data={clients}
           tableHead={TABLE_HEAD}
           actions={[
             {
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
-                router.push(`${paths.dashboard.centers}/${item.id}`);
+                router.push(`${paths.dashboard.clients}/${item.id}`);
               },
             },
             {
@@ -230,6 +223,11 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             neighborhood: (item: any) => item?.neighborhood.name,
             id: (item: any) => item?.neighborhood.city.name,
             phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
+            children: (item: any) => (
+              <Box>
+                {item?.children} {t('TABLE.CHILDREN')}
+              </Box>
+            ),
           }}
         />
       </Container>
@@ -281,4 +279,4 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   );
 };
 
-export default CentersView;
+export default ClientsView;
