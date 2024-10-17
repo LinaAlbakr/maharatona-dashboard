@@ -3,6 +3,7 @@
 import { Box, Card, Container, Divider, ListItemText, Rating, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
@@ -12,6 +13,8 @@ type Props = {
 const AllInformation = ({ CenterInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
+  console.log(CenterInfo);
+
   return (
     <Container
       maxWidth={settings.themeStretch ? false : 'xl'}
@@ -43,16 +46,32 @@ const AllInformation = ({ CenterInfo }: Props) => {
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.WEBSITE')}
             secondary={
-              <Link href={`${CenterInfo?.website}`} passHref>
+              // <Link href={`${CenterInfo?.website}`} passHref>
+              //   {CenterInfo?.website}
+              // </Link>
+              <a
+                href={`https://${CenterInfo?.website}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {CenterInfo?.website}
-              </Link>
+              </a>
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.LOCATION')}
-            secondary={<Link href={CenterInfo?.website}>{CenterInfo?.website}</Link>}
+            secondary={
+              <a
+                href={`https://www.google.com/maps?q=${CenterInfo.latitude},${CenterInfo.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('LABEL.CENTER_LOCATION')}{' '}
+                <Iconify width={12} icon="pajamas:earth" color={'info.dark'} />
+              </a>
+            }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText

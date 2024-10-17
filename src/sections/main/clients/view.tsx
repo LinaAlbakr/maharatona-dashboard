@@ -186,6 +186,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
           tableHead={TABLE_HEAD}
           actions={[
             {
+              sx: { color: 'info.dark' },
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
@@ -193,6 +194,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               },
             },
             {
+              sx: { color: 'error.dark' },
               label: t('LABEL.BLOCK'),
               icon: 'ic:outline-block',
               onClick: (item: any) => {
@@ -202,6 +204,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               hide: (center) => center.userStatus === 'BlockedClient',
             },
             {
+              sx: { color: 'info.dark' },
               label: t('LABEL.UNBLOCK'),
               icon: 'gg:unblock',
               onClick: (item: any) => {
@@ -211,6 +214,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               hide: (center) => center.userStatus === 'ActiveClient',
             },
             {
+              sx: { color: 'info.dark' },
               label: t('LABEL.SEND_NOTIFICATION'),
               icon: 'mingcute:notification-fill',
               onClick: (item) => {
@@ -234,8 +238,8 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
       <ConfirmDialog
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
-        title={t('TITLE.BLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_BLOCK')}
+        title={t('TITLE.BLOCK_CLIENT')}
+        content={t('MESSAGE.CONFIRM_BLOCK_CLIENT')}
         action={
           <Button
             variant="contained"
@@ -251,8 +255,8 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
       <ConfirmDialog
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
-        title={t('TITLE.UNBLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK')}
+        title={t('TITLE.UNBLOCK_CLIENT')}
+        content={t('MESSAGE.CONFIRM_UNBLOCK_CLIENT')}
         action={
           <Button
             variant="contained"

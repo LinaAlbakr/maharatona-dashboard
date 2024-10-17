@@ -59,7 +59,8 @@
     "THIS_FIELD_IS_REQUIRED": "This field is required",
     "CHILDREN": "Children",
     "COURSES": "Courses",
-    "INTERESTS": "Interests"
+    "INTERESTS": "Interests",
+    "CENTER_LOCATION": "Center Location"
   },
   "BUTTON": {
     "LOGIN": "Login",
