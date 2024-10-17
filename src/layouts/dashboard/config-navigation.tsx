@@ -25,7 +25,7 @@ const ICONS = {
   products: icon('dashicons:products'),
   mostSelling: icon('mdi:stars'),
   financialReports: icon('icon-park-outline:table-report'),
-  clients: icon('mingcute:group-fill'),
+  clients: icon('fluent:people-32-light'),
   otp: icon('teenyicons:otp-solid'),
   clientsWallet: icon('ic_clients-wallet'),
   orders: icon('ion:cart-outline'),
@@ -67,6 +67,7 @@ export function useNavData() {
         items: [
           { title: t('SIDEBAR.MAIN'), path: paths.dashboard.root, icon: ICONS.home },
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
+          { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
         ],
       },
     ],

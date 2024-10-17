@@ -13,7 +13,10 @@ const AllInformation = ({ CenterInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: 0, padding: '!0px' }}>
+    <Container
+      maxWidth={settings.themeStretch ? false : 'xl'}
+      sx={{ margin: '0px !important', padding: '0px !important' }}
+    >
       <Card
         sx={{
           minHeight: '100px',
