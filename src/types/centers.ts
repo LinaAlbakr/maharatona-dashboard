@@ -13,6 +13,7 @@ export type ICenter = {
       name: string;
     };
   };
+  userStatus: string;
 };
 
 export type ICity = {
