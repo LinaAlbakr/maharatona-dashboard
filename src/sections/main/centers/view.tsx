@@ -193,6 +193,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           tableHead={TABLE_HEAD}
           actions={[
             {
+              sx: { color: 'info.dark' },
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
@@ -200,6 +201,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               },
             },
             {
+              sx: { color: 'error.dark' },
               label: t('LABEL.BLOCK'),
               icon: 'ic:outline-block',
               onClick: (item: any) => {
@@ -209,6 +211,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               hide: (center) => center.userStatus === 'BlockedClient',
             },
             {
+              sx: { color: 'info.dark' },
               label: t('LABEL.UNBLOCK'),
               icon: 'gg:unblock',
               onClick: (item: any) => {
@@ -218,6 +221,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               hide: (center) => center.userStatus === 'ActiveClient',
             },
             {
+              sx: { color: 'info.dark' },
               label: t('LABEL.SEND_NOTIFICATION'),
               icon: 'mingcute:notification-fill',
               onClick: (item) => {

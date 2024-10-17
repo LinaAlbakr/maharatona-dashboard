@@ -163,7 +163,7 @@ const StyledNavItem = styled(ListItemButton, {
     item: {
       marginBottom: 4,
       borderRadius: 8,
-      color: theme.palette.text.secondary,
+      color: theme.palette.info.dark,
       padding: theme.spacing(0.5, 1, 0.5, 1.5),
     },
     icon: {

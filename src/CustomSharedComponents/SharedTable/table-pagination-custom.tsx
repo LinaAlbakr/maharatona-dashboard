@@ -30,6 +30,7 @@ export default function TablePaginationCustom({
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
         sx={{
+          color: 'secondary.main',
           borderTopColor: 'transparent',
         }}
       />
@@ -37,11 +38,12 @@ export default function TablePaginationCustom({
       {onChangeDense && (
         <FormControlLabel
           label={t('TABLE.DENSE')}
-          control={<Switch checked={dense} onChange={onChangeDense} />}
+          control={<Switch checked={dense} onChange={onChangeDense} color="secondary" />}
           sx={{
             pl: 2,
             py: 1.5,
             top: 0,
+            color: 'secondary.main',
             position: {
               sm: 'absolute',
             },

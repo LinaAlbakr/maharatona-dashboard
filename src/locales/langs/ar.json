@@ -3,7 +3,9 @@
     "SIGN_IN": "تسجيل الدخول",
     "BLOCK_CENTER": "حظر مركز",
     "UNBLOCK_CENTER": "الغاء حظر مركز",
-    "SEND_NOTIFICATON": "ارسال الاشعار"
+    "SEND_NOTIFICATON": "ارسال الاشعار",
+    "BLOCK_CLIENT": "حظر العميل",
+    "UNBLOCK_CLIENT": "الغاء حظر العميل"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -59,7 +61,8 @@
     "THIS_FIELD_IS_REQUIRED": "هذا الحقل مطلوب",
     "CHILDREN": "الأطفال",
     "COURSES": "الدورات",
-    "INTERESTS": "الاهتمامات"
+    "INTERESTS": "الإهتمامات",
+    "CENTER_LOCATION": "موقع المركز"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -103,6 +106,8 @@
     "SEND_SUCCESSFULLY": "تم الارسال بنجاح",
     "BLOCK_SUCCESSFULLY": "تم الحظر بنجاح",
     "UNBLOCK_SUCCESSFULLY": "تم الغاء الحظر بنجاح",
-    "DELETED_SUCCESS": "تم الحذف بنجاح"
+    "DELETED_SUCCESS": "تم الحذف بنجاح",
+    "CONFIRM_BLOCK_CLIENT": "هل تريد حظر هذا العميل؟",
+    "CONFIRM_UNBLOCK_CLIENT": "هل تريد الغاء الحظر هذا العميل؟"
   }
 }
