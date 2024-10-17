@@ -42,7 +42,16 @@
     "ALL_INFORMATION": "كل المعلومات",
     "CENTER_COURSES": "دورات المركز",
     "REPORTS": "التقارير",
-    "FIELD_NAME": "اسم المجال"
+    "FIELD_NAME": "اسم المجال",
+    "NUMBER_OF_SUBSCRIPTIONS": "عدد الاشتراكات",
+    "DURING_THE_PREVIOUS_28_DAYS": "خلال ال28 يوم السابقين",
+    "CUSTOMER_SATISFACTION": "رضا العملاء",
+    "TOTAL_PROFIT": "اجمالي الربح",
+    "TOTAL_VIEWS": "اجمالي المشاهدات",
+    "SAR": "ر.س",
+    "CUSTOMER_RATINGS": "تقييم العملاء",
+    "NO_DATA": "لا يوجد بيانات",
+    "TOP_THREE_COURSES": "أعلى ثلاث دورات"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -83,6 +92,7 @@
     "CONFIRM_UNBLOCK": "هل تريد الغاء الحظر هذا المركز؟",
     "SEND_SUCCESSFULLY": "تم الارسال بنجاح",
     "BLOCK_SUCCESSFULLY": "تم الحظر بنجاح",
-    "UNBLOCK_SUCCESSFULLY": "تم الغاء الحظر بنجاح"
+    "UNBLOCK_SUCCESSFULLY": "تم الغاء الحظر بنجاح",
+    "DELETED_SUCCESS": "تم الحذف بنجاح"
   }
 }

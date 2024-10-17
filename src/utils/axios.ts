@@ -84,6 +84,7 @@ export const endpoints = {
     reports: (centerId: string) => `/admin-panel/center/${centerId}/reports`,
     reviews: (centerId: string) => `/admin-panel/center/${centerId}/reviews`,
     changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
+    deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
   },
   notifications: {
     send: '/notification/send-to-users',

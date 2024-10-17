@@ -42,7 +42,16 @@
     "ALL_INFORMATION": "All Information",
     "CENTER_COURSES": "Center Courses",
     "REPORTS": "Reports",
-    "FIELD_NAME": "Field Name"
+    "FIELD_NAME": "Field Name",
+    "NUMBER_OF_SUBSCRIPTIONS": "Number of Subscriptions",
+    "DURING_THE_PREVIOUS_28_DAYS": "During The Previous 28 Days",
+    "CUSTOMER_SATISFACTION": "Customer Satisfaction",
+    "TOTAL_PROFIT": "Total Profit",
+    "TOTAL_VIEWS": "Total Views",
+    "SAR": "SAR",
+    "CUSTOMER_RATINGS": "Customer Ratings",
+    "NO_DATA": "No Data",
+    "TOP_THREE_COURSES": "Top Three Courses"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -80,6 +89,7 @@
     "CONFIRM_UNBLOCK": "Are you sure you want to unblock this center?",
     "SEND_SUCCESSFULLY": "Notification sent successfully",
     "BLOCK_SUCCESSFULLY": "Center blocked successfully",
-    "UNBLOCK_SUCCESSFULLY": "Center unblocked successfully"
+    "UNBLOCK_SUCCESSFULLY": "Center unblocked successfully",
+    "DELETED_SUCCESS": "Review deleted successfully"
   }
 }

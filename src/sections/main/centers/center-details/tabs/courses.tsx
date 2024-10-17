@@ -17,7 +17,7 @@ const Courses = ({ CenterCourses }: Props) => {
   const pathname = usePathname();
   const count = (count: number) => {
     if (count / 6 > 1) {
-      return count / 6;
+      return Math.ceil(count / 6);
     } else return 1;
   };
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -39,7 +39,7 @@ const Courses = ({ CenterCourses }: Props) => {
   );
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}sx={{ margin: 0, padding: '!0px' }}>
       <Stack
         sx={{
           display: 'grid',

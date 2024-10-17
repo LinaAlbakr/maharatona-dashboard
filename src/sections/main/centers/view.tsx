@@ -209,8 +209,6 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               label: t('LABEL.UNBLOCK'),
               icon: 'gg:unblock',
               onClick: (item: any) => {
-                console.log(item);
-
                 setSelectedId(item.id);
                 confirmUnblock.onTrue();
               },

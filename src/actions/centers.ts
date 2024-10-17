@@ -143,3 +143,22 @@ export async function changeCenterStatus(centerId: string, reqBody: any): Promis
     throw new Error(error);
   }
 }
+
+export const deleteRate = async (rateId: string, centerid: any): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    const res = await axiosInstance.delete(endpoints.centers.deleteReview(rateId), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/centers/${centerid}/?tab=reports`);
+};

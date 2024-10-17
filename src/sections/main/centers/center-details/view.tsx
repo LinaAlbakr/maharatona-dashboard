@@ -10,6 +10,7 @@ import AllInformation from './tabs/all-Information';
 import Reports from './tabs/reports';
 import Courses from './tabs/courses';
 import Image from 'next/image';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export const tabs = [
   {
@@ -43,6 +44,9 @@ const CenterDetailsView = ({
 }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const currentTab = useMemo(
     () =>
       typeof tab === 'string' && tabs.find((item) => item.value === tab) ? tab : 'all-information',
@@ -53,6 +57,7 @@ const CenterDetailsView = ({
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
     createQueryString([{ name: 'tab', value: newValue }], true);
+    router.push(`${pathname}?tab=${newValue}`);
   };
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -105,7 +110,13 @@ const CenterDetailsView = ({
       <Box mt={3}>
         {currentTab === 'all-information' && <AllInformation CenterInfo={CenterInfo} />}
         {currentTab === 'center-courses' && <Courses CenterCourses={CenterCourses} />}
-        {currentTab === 'reports' && <Reports />}
+        {currentTab === 'reports' && (
+          <Reports
+            CenterReviews={CenterReviews}
+            CenterReports={CenterReports}
+            CenterCourses={CenterCourses}
+          />
+        )}
       </Box>
     </Container>
   );
