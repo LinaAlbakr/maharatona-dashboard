@@ -65,7 +65,8 @@
     "CENTER_LOCATION": "موقع المركز",
     "CENTER_IMAGES": "صور المركز",
     "BANK_ACCOUNT_IMAGE": "رقم الحساب ",
-    "COMMERIAL_REGISTER": "السجل التجارى"
+    "COMMERIAL_REGISTER": "السجل التجارى",
+    "ABOUT_CLIENT": "عن العميل"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",

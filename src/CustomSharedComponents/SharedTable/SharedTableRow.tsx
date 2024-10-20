@@ -43,7 +43,7 @@ export default function SharedTableRow<T extends { id: string }>({
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
-        sx={{ width: 140 }}
+        sx={{ width: "fit-content" }}
       >
         {actions
           ?.filter((action) => (action.hide ? !action.hide(row) : true))

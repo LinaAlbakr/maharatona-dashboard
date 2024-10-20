@@ -1,8 +1,6 @@
 'use client';
 
 import { Box, Card, Container, Divider, ListItemText, Rating, Typography } from '@mui/material';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
@@ -27,7 +25,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
         }}
       >
         <Typography variant="h5" color="secondary" sx={{ px: 4 }}>
-          {t('LABEL.ABOUT_CENTER')}
+          {t('LABEL.ABOUT_CLIENT')}
         </Typography>
 
         <Divider sx={{ my: 3 }} />
@@ -67,7 +65,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
             primary={t('LABEL.INTERESTS')}
             secondary={CenterInfo?.client_fields
               .map((field: any) => {
-                return field.field.name_ar;
+                return i18n.language === 'ar' ? field.field.name_ar : field.field.name_en;
               })
               .join(', ')}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
@@ -75,13 +73,21 @@ const AllInformation = ({ CenterInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.CITY')}
-            secondary={CenterInfo?.neighborhood.city.name_ar}
+            secondary={
+              i18n.language === 'ar'
+                ? CenterInfo?.neighborhood.city.name_ar
+                : CenterInfo?.neighborhood.city.name_en
+            }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.NEIGHBORHOOD')}
-            secondary={CenterInfo?.neighborhood.name_ar}
+            secondary={
+              i18n.language === 'ar'
+                ? CenterInfo?.neighborhood.name_ar
+                : CenterInfo?.neighborhood.name_en
+            }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
         </Box>

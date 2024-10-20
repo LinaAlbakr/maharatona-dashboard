@@ -11,6 +11,7 @@ import Reports from './tabs/reports';
 import Courses from './tabs/courses';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import i18n from 'src/locales/i18n';
 
 export const tabs = [
   {
@@ -60,7 +61,10 @@ const CenterDetailsView = ({
     router.push(`${pathname}?tab=${newValue}`);
   };
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: '0px !important', padding: '0px !important' }}>
+    <Container
+      maxWidth={settings.themeStretch ? false : 'xl'}
+      sx={{ margin: '0px !important', padding: '0px !important' }}
+    >
       <Card sx={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Box
           sx={{
@@ -82,7 +86,8 @@ const CenterDetailsView = ({
                 borderRadius: '50%',
                 position: 'absolute',
                 bottom: '-60px',
-                right: '25px',
+                right: i18n.language === 'ar' ? '25px' : '',
+                left: i18n.language === 'en' ? '25px' : '',
                 outline: '3px solid rgba(192,192,192,0.5)',
               }}
             />
