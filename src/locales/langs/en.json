@@ -60,7 +60,10 @@
     "CHILDREN": "Children",
     "COURSES": "Courses",
     "INTERESTS": "Interests",
-    "CENTER_LOCATION": "Center Location"
+    "CENTER_LOCATION": "Center Location",
+    "CENTER_IMAGES": "Center Images",
+    "BANK_ACCOUNT_IMAGE": "Bank Account Image",
+    "COMMERIAL_REGISTER": "Commerial Register"
   },
   "BUTTON": {
     "LOGIN": "Login",
