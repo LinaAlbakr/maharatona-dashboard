@@ -69,8 +69,6 @@ export const fetchfields = async (): Promise<any> => {
     });
     return res?.data.data;
   } catch (error) {
-    console.log(error);
-
     throw new Error(error);
   }
 };
@@ -104,3 +102,18 @@ export async function changeClientStatus(clientId: string, reqBody: any): Promis
     throw new Error(error);
   }
 }
+
+export const fetchClientCourses = async (page = 1, limit = 50, centerId: string): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.clients.courses(centerId), {
+      params: { page, limit },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

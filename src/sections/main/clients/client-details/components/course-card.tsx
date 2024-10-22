@@ -41,7 +41,7 @@ const CourseCard = ({ course }: props) => {
             flexDirection: 'column',
           }}
           primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
-          secondary={course.registeredStudents}
+          secondary={course.registeredStudents | 0}
           secondaryTypographyProps={{ color: 'info.dark', fontSize: '20px', fontWeight: 'bold' }}
         />{' '}
         <ListItemText

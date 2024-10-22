@@ -5,12 +5,11 @@ import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
 type Props = {
-  CenterInfo: any;
+  ClientInfo: any;
 };
-const AllInformation = ({ CenterInfo }: Props) => {
+const AllInformation = ({ ClientInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
-  console.log(CenterInfo);
 
   return (
     <Container
@@ -34,7 +33,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.EMAIL')}
-            secondary={CenterInfo?.email}
+            secondary={ClientInfo?.email}
             secondaryTypographyProps={{
               color: 'info.dark',
               fontSize: '12px',
@@ -45,7 +44,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.PHONE')}
-            secondary={CenterInfo?.phone}
+            secondary={ClientInfo?.phone}
             secondaryTypographyProps={{
               color: 'info.dark',
               fontSize: '12px',
@@ -56,14 +55,14 @@ const AllInformation = ({ CenterInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.NUMBER_OF_CHILDREN')}
-            secondary={CenterInfo?.children.length}
+            secondary={ClientInfo?.children.length}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
 
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.INTERESTS')}
-            secondary={CenterInfo?.client_fields
+            secondary={ClientInfo?.client_fields
               .map((field: any) => {
                 return i18n.language === 'ar' ? field.field.name_ar : field.field.name_en;
               })
@@ -75,8 +74,8 @@ const AllInformation = ({ CenterInfo }: Props) => {
             primary={t('LABEL.CITY')}
             secondary={
               i18n.language === 'ar'
-                ? CenterInfo?.neighborhood.city.name_ar
-                : CenterInfo?.neighborhood.city.name_en
+                ? ClientInfo?.neighborhood.city.name_ar
+                : ClientInfo?.neighborhood.city.name_en
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
@@ -85,8 +84,8 @@ const AllInformation = ({ CenterInfo }: Props) => {
             primary={t('LABEL.NEIGHBORHOOD')}
             secondary={
               i18n.language === 'ar'
-                ? CenterInfo?.neighborhood.name_ar
-                : CenterInfo?.neighborhood.name_en
+                ? ClientInfo?.neighborhood.name_ar
+                : ClientInfo?.neighborhood.name_en
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />

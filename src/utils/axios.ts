@@ -92,6 +92,7 @@ export const endpoints = {
     fetchfields: '/admin-panel/all-fields',
     info: (clientId: string) => `/admin-panel/client/${clientId}`,
     changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
+    courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
   },
   notifications: {
     send: '/notification/send-to-users',
