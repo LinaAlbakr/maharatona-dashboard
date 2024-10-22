@@ -32,10 +32,10 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
   const NewMessageSchema = Yup.object().shape({
-    message_ar: Yup.string().required(t('This field is required')),
-    message_en: Yup.string().required(t('This field is required')),
-    title_ar: Yup.string().required(t('This field is required')),
-    title_en: Yup.string().required(t('This field is required')),
+    message_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+    message_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+    title_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+    title_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
   });
 
   const defaultValues = useMemo(
