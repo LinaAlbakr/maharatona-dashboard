@@ -1,5 +1,7 @@
 // ----------------------------------------------------------------------
 
+import { ro } from 'date-fns/locale';
+
 const ROOTS = {
   AUTH: '/auth',
   DASHBOARD: '/dashboard',
@@ -22,5 +24,9 @@ export const paths = {
     centers: `${ROOTS.DASHBOARD}/centers`,
     clients: `${ROOTS.DASHBOARD}/clients`,
     courses: `${ROOTS.DASHBOARD}/courses`,
+    supportGroup: {
+      root: `${ROOTS.DASHBOARD}/support`,
+      calls_reasons: `${ROOTS.DASHBOARD}/support/calls-reasons`,
+    },
   },
 };

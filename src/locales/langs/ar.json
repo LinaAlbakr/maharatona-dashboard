@@ -5,7 +5,8 @@
     "UNBLOCK_CENTER": "الغاء حظر مركز",
     "SEND_NOTIFICATON": "ارسال الاشعار",
     "BLOCK_CLIENT": "حظر العميل",
-    "UNBLOCK_CLIENT": "الغاء حظر العميل"
+    "UNBLOCK_CLIENT": "الغاء حظر العميل",
+    "DELETE_REASON": "حذف السبب"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -76,7 +77,11 @@
     "END_DATE": "تاريخ النهاية",
     "NUMBER_OF_REMAINING_SEATS": "عدد المقاعد المتبقية",
     "STUDENT": "طالب",
-    "SEAT": "مقعد"
+    "SEAT": "مقعد",
+    "CALLS_REASONS": "اسباب الاتصال",
+    "SEARCH_BY_NAME": "بحث بالاسم",
+    "DELETE": "حذف",
+    "EDIT": "تعديل"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -84,13 +89,17 @@
     "BLOCK": "حظر",
     "UNBLOCK": "الغاء الحظر",
     "CANCEL": "الغاء",
-    "SEND": "ارسال"
+    "SEND": "ارسال",
+    "DELETE": "حذف",
+    "EDIT": "تعديل"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
     "CENTERS": "المراكز التعليمية",
     "CLIENTS": "العملاء",
-    "COURSES": "الدورات التدريبية"
+    "COURSES": "الدورات التدريبية",
+    "SUPPORT": "الدعم الفني",
+    "CALLS_REASONS": "اسباب الاتصال"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -123,6 +132,7 @@
     "UNBLOCK_SUCCESSFULLY": "تم الغاء الحظر بنجاح",
     "DELETED_SUCCESS": "تم الحذف بنجاح",
     "CONFIRM_BLOCK_CLIENT": "هل تريد حظر هذا العميل؟",
-    "CONFIRM_UNBLOCK_CLIENT": "هل تريد الغاء الحظر هذا العميل؟"
+    "CONFIRM_UNBLOCK_CLIENT": "هل تريد الغاء الحظر هذا العميل؟",
+    "CONFIRM_DELETE_REASON": "هل تريد حذف هذا السبب؟"
   }
 }

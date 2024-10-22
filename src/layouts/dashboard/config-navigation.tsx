@@ -55,7 +55,7 @@ const ICONS = {
   posters: icon('mingcute:announcement-line'),
   dataManagements: icon('fa:cogs'),
   promocodes: icon('mdi:coupon'),
-  support: icon('streamline:customer-support-1-solid'),
+  support: icon('token:chat'),
   building: icon('fa-solid:building'),
   bag: icon('lets-icons:bag-fill'),
 };
@@ -70,6 +70,18 @@ export function useNavData() {
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
           { title: t('SIDEBAR.COURSES'), path: paths.dashboard.courses, icon: ICONS.bag },
+          {
+            title: t('SIDEBAR.SUPPORT'),
+            path: paths.dashboard.supportGroup.root,
+            icon: ICONS.support,
+            module: 'SUPPORT',
+            children: [
+              {
+                title: t('SIDEBAR.CALLS_REASONS'),
+                path: paths.dashboard.supportGroup.calls_reasons,
+              },
+            ],
+          },
         ],
       },
     ],

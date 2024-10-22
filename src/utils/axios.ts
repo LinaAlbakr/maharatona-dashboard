@@ -100,4 +100,8 @@ export const endpoints = {
   notifications: {
     send: '/notification/send-to-users',
   },
+  support: {
+    calls_reasons: '/admin-panel/all-call-us-reasons',
+    delete_reason: (reasonId: string) => `/admin-panel/delete-call-us-reason/${reasonId}`,
+  }
 };
