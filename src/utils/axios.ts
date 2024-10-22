@@ -86,6 +86,9 @@ export const endpoints = {
     changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
     deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
   },
+  courses: {
+    fetch: '/admin-panel/all-courses',
+  },
   clients: {
     fetch: '/admin-panel/all-clients',
     cities: '/city-neighborhood/all-cities',

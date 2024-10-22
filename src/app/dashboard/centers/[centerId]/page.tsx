@@ -28,7 +28,7 @@ const Page = async ({ params, searchParams }: IProps) => {
   return (
     <CenterDetailsView
       tab={tab}
-      CenterInfo={CenterInfo}
+      CenterInfo={CenterInfo}   
       CenterCourses={CenterCourses}
       CenterReviews={CenterReviews}
       CenterReports={CenterReports}

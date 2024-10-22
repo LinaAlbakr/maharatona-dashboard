@@ -66,7 +66,17 @@
     "CENTER_IMAGES": "صور المركز",
     "BANK_ACCOUNT_IMAGE": "رقم الحساب ",
     "COMMERIAL_REGISTER": "السجل التجارى",
-    "ABOUT_CLIENT": "عن العميل"
+    "ABOUT_CLIENT": "عن العميل",
+    "EDUCATIONAL_COURSES": "الدورات التدريبية",
+    "COURSE_NAME": "اسم الدورة",
+    "NUMBER_OF_SUBSCRIBERS": "عدد المسجلين",
+    "FIELD": "المجال",
+    "PRICE": "السعر",
+    "START_DATE": "تاريخ البداية",
+    "END_DATE": "تاريخ النهاية",
+    "NUMBER_OF_REMAINING_SEATS": "عدد المقاعد المتبقية",
+    "STUDENT": "طالب",
+    "SEAT": "مقعد"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -79,7 +89,8 @@
   "SIDEBAR": {
     "MAIN": "الرئيسية",
     "CENTERS": "المراكز التعليمية",
-    "CLIENTS": "العملاء"
+    "CLIENTS": "العملاء",
+    "COURSES": "الدورات التدريبية"
   },
   "TABLE": {
     "DENSE": "تكديس",

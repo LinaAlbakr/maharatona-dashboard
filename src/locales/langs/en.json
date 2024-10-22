@@ -64,7 +64,16 @@
     "CENTER_IMAGES": "Center Images",
     "BANK_ACCOUNT_IMAGE": "Bank Account Image",
     "COMMERIAL_REGISTER": "Commerial Register",
-    "ABOUT_CLIENT": "About Client"
+    "ABOUT_CLIENT": "About Client",
+    "COURSE_NAME": "Course Name",
+    "NUMBER_OF_SUBSCRIBERS": "Number of Subscribers",
+    "FIELD": "Field",
+    "PRICE": "Price",
+    "START_DATE": "Start Date",
+    "END_DATE": "End Date",
+    "NUMBER_OF_REMAINING_SEATS": "Number of Remaining Seats",
+    "STUDENT": "Student",
+    "SEAT": "Seat"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -74,7 +83,7 @@
     "CANCEL": "Cancel",
     "SEND": "Send"
   },
-  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers", "CLIENTS": "Clients" },
+  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers", "CLIENTS": "Clients", "COURSES": "Courses" },
   "TABLE": {
     "DENSE": "Dense",
     "ROWS_PER_PAGE": "Rows per page",

@@ -57,6 +57,7 @@ const ICONS = {
   promocodes: icon('mdi:coupon'),
   support: icon('streamline:customer-support-1-solid'),
   building: icon('fa-solid:building'),
+  bag: icon('lets-icons:bag-fill'),
 };
 
 export function useNavData() {
@@ -68,6 +69,7 @@ export function useNavData() {
           { title: t('SIDEBAR.MAIN'), path: paths.dashboard.root, icon: ICONS.home },
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
+          { title: t('SIDEBAR.COURSES'), path: paths.dashboard.courses, icon: ICONS.bag },
         ],
       },
     ],
