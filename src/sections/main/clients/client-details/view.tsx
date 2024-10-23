@@ -2,7 +2,7 @@
 
 import { Box, Card, Container, ListItemText, Tab, Tabs, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
-import Iconify from 'src/components/iconify';
+
 import { useSettingsContext } from 'src/components/settings';
 import { useQueryString } from 'src/hooks/use-queryString';
 import { useTranslate } from 'src/locales';
@@ -10,6 +10,8 @@ import AllInformation from './tabs/all-Information';
 
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Courses from './tabs/courses';
+import Children from './tabs/children';
 
 export const tabs = [
   {
@@ -28,11 +30,12 @@ export const tabs = [
 
 interface Props {
   tab?: string;
-
-  CenterInfo?: any;
+  ClientInfo?: any;
+  ClientCourses?: any;
+  ClientChildren?: any;
 }
 
-const ClientDetailsView = ({ tab, CenterInfo }: Props) => {
+const ClientDetailsView = ({ tab, ClientInfo, ClientCourses, ClientChildren }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
   const pathname = usePathname();
@@ -72,7 +75,7 @@ const ClientDetailsView = ({ tab, CenterInfo }: Props) => {
               color="primary.main"
               sx={{ position: 'absolute', bottom: '-40px', left: '50px' }}
             >
-              {CenterInfo.name}
+              {ClientInfo.name}
             </Typography>
           </Box>
         </Box>
@@ -89,7 +92,9 @@ const ClientDetailsView = ({ tab, CenterInfo }: Props) => {
       </Card>
 
       <Box mt={3}>
-        {currentTab === 'all-information' && <AllInformation CenterInfo={CenterInfo} />}
+        {currentTab === 'all-information' && <AllInformation ClientInfo={ClientInfo} />}
+        {currentTab === 'children' && <Children ClientChildren={ClientChildren} />}
+        {currentTab === 'courses' && <Courses ClientCourses={ClientCourses} />}
       </Box>
     </Container>
   );

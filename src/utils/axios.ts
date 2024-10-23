@@ -86,14 +86,23 @@ export const endpoints = {
     changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
     deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
   },
+  courses: {
+    fetch: '/admin-panel/all-courses',
+  },
   clients: {
     fetch: '/admin-panel/all-clients',
     cities: '/city-neighborhood/all-cities',
     fetchfields: '/admin-panel/all-fields',
     info: (clientId: string) => `/admin-panel/client/${clientId}`,
     changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
+    courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
+    children: (clientId: string) => `/admin-panel/client/${clientId}/children`,
   },
   notifications: {
     send: '/notification/send-to-users',
   },
+  support: {
+    calls_reasons: '/admin-panel/all-call-us-reasons',
+    delete_reason: (reasonId: string) => `/admin-panel/delete-call-us-reason/${reasonId}`,
+  }
 };

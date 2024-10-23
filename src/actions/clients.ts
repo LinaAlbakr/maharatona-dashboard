@@ -69,18 +69,16 @@ export const fetchfields = async (): Promise<any> => {
     });
     return res?.data.data;
   } catch (error) {
-    console.log(error);
-
     throw new Error(error);
   }
 };
 
-export const fetchClientInfo = async (centerId: string): Promise<any> => {
+export const fetchClientInfo = async (clientId: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.clients.info(centerId), {
+    const res = await axiosInstance.get(endpoints.clients.info(clientId), {
       params: {},
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
@@ -104,3 +102,37 @@ export async function changeClientStatus(clientId: string, reqBody: any): Promis
     throw new Error(error);
   }
 }
+
+export const fetchClientCourses = async (page = 1, limit = 50, clientId: string): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.clients.courses(clientId), {
+      params: { page, limit },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+export const fetchClientChildren = async (
+  page = 1,
+  limit = 50,
+  by_name: string,
+  clientId: string
+): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.clients.children(clientId), {
+      params: { page, limit, by_name },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

@@ -3,7 +3,8 @@
     "SIGN_IN": "Sign In",
     "BLOCK_CENTER": "Block Center",
     "UNBLOCK_CENTER": "Unblock Center",
-    "SEND_NOTIFICATON": "Send Notification"
+    "SEND_NOTIFICATON": "Send Notification",
+    "DELETE_REASON": "Delete Reason"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -64,7 +65,22 @@
     "CENTER_IMAGES": "Center Images",
     "BANK_ACCOUNT_IMAGE": "Bank Account Image",
     "COMMERIAL_REGISTER": "Commerial Register",
-    "ABOUT_CLIENT": "About Client"
+    "ABOUT_CLIENT": "About Client",
+    "COURSE_NAME": "Course Name",
+    "NUMBER_OF_SUBSCRIBERS": "Number of Subscribers",
+    "FIELD": "Field",
+    "PRICE": "Price",
+    "START_DATE": "Start Date",
+    "END_DATE": "End Date",
+    "NUMBER_OF_REMAINING_SEATS": "Number of Remaining Seats",
+    "STUDENT": "Student",
+    "SEAT": "Seat",
+    "CALLS_REASONS": "Calls Reasons",
+    "SEARCH_BY_NAME": "Search By Name",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "NAME": "Name",
+    "AGE": "Age"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -72,9 +88,18 @@
     "BLOCK": "Block",
     "UNBLOCK": "Unblock",
     "CANCEL": "Cancel",
-    "SEND": "Send"
+    "SEND": "Send",
+    "DELETE": "Delete",
+    "EDIT": "Edit"
   },
-  "SIDEBAR": { "MAIN": "Main", "CENTERS": "Centers", "CLIENTS": "Clients" },
+  "SIDEBAR": {
+    "MAIN": "Main",
+    "CENTERS": "Centers",
+    "CLIENTS": "Clients",
+    "COURSES": "Courses",
+    "SUPPORT": "Support",
+    "CALLS_REASONS": "Calls Reasons"
+  },
   "TABLE": {
     "DENSE": "Dense",
     "ROWS_PER_PAGE": "Rows per page",
@@ -104,6 +129,7 @@
     "SEND_SUCCESSFULLY": "Notification sent successfully",
     "BLOCK_SUCCESSFULLY": "Center blocked successfully",
     "UNBLOCK_SUCCESSFULLY": "Center unblocked successfully",
-    "DELETED_SUCCESS": "Review deleted successfully"
+    "DELETED_SUCCESS": "Review deleted successfully",
+    "CONFIRM_DELETE_REASON": "Are you sure you want to delete this reason?"
   }
 }

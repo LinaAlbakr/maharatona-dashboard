@@ -19,20 +19,18 @@ import { Grid } from '@mui/material';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { ICenter } from 'src/types/centers';
 import { sendMessage } from 'src/actions/notifications';
 import { toFormData } from 'axios';
 
 type Props = {
   open: boolean;
   onClose: VoidFunction;
-  selectedCenter: ICenter | undefined;
+  selectedSubscribers: string[] | undefined;
 };
 
-export default function SendNotification({ open, onClose, selectedCenter }: Props) {
+export default function SendNotification({ open, onClose, selectedSubscribers }: Props) {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
-
   const NewMessageSchema = Yup.object().shape({
     message_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
     message_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
@@ -47,7 +45,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
       title_ar: '',
       title_en: '',
     }),
-    [selectedCenter]
+    [selectedSubscribers]
   );
 
   const methods = useForm({
@@ -66,7 +64,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
   const onSubmit = handleSubmit(async (data) => {
     const newMessage = {
       ...data,
-      users_id: [selectedCenter?.user_id],
+      users_id: [selectedSubscribers],
     };
 
     const res = await sendMessage(newMessage);
@@ -91,15 +89,6 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle>{t('TITLE.SEND_NOTIFICATON')}</DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <RHFTextField
-              name=""
-              label={t('LABEL.SEND_TO')}
-              type="text"
-              defaultValue={selectedCenter?.name}
-              disabled
-            />
-          </Box>
           <Grid rowGap={2} mt={1} container columnSpacing={{ xs: 1, sm: 2 }}>
             <Grid item sm={6}>
               <RHFTextField name="title_ar" label={t('LABEL.TITLE_AR')} type="text" />
