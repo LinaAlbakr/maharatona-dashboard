@@ -81,7 +81,9 @@
     "CALLS_REASONS": "اسباب الاتصال",
     "SEARCH_BY_NAME": "بحث بالاسم",
     "DELETE": "حذف",
-    "EDIT": "تعديل"
+    "EDIT": "تعديل",
+    "NAME": "الاسم",
+    "AGE": "السن"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",

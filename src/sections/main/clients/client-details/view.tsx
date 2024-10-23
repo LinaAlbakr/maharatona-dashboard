@@ -11,6 +11,7 @@ import AllInformation from './tabs/all-Information';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Courses from './tabs/courses';
+import Children from './tabs/children';
 
 export const tabs = [
   {
@@ -31,9 +32,10 @@ interface Props {
   tab?: string;
   ClientInfo?: any;
   ClientCourses?: any;
+  ClientChildren?: any;
 }
 
-const ClientDetailsView = ({ tab, ClientInfo, ClientCourses }: Props) => {
+const ClientDetailsView = ({ tab, ClientInfo, ClientCourses, ClientChildren }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
   const pathname = usePathname();
@@ -91,6 +93,7 @@ const ClientDetailsView = ({ tab, ClientInfo, ClientCourses }: Props) => {
 
       <Box mt={3}>
         {currentTab === 'all-information' && <AllInformation ClientInfo={ClientInfo} />}
+        {currentTab === 'children' && <Children ClientChildren={ClientChildren} />}
         {currentTab === 'courses' && <Courses ClientCourses={ClientCourses} />}
       </Box>
     </Container>

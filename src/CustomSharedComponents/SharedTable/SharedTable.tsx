@@ -39,7 +39,7 @@ export default function SharedTable<T extends { id: string }>({
     <Box>
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <Scrollbar>
-          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+          <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 400 }}>
             <TableHeadCustom headLabel={tableHead} />
 
             <TableBody>

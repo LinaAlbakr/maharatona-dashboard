@@ -78,7 +78,9 @@
     "CALLS_REASONS": "Calls Reasons",
     "SEARCH_BY_NAME": "Search By Name",
     "DELETE": "Delete",
-    "EDIT": "Edit"
+    "EDIT": "Edit",
+    "NAME": "Name",
+    "AGE": "Age"
   },
   "BUTTON": {
     "LOGIN": "Login",

@@ -96,6 +96,7 @@ export const endpoints = {
     info: (clientId: string) => `/admin-panel/client/${clientId}`,
     changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
     courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
+    children: (clientId: string) => `/admin-panel/client/${clientId}/children`,
   },
   notifications: {
     send: '/notification/send-to-users',
