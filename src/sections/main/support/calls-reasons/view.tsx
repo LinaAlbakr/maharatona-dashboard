@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
@@ -17,6 +17,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import { deleteReason } from 'src/actions/support';
+import Iconify from 'src/components/iconify';
 
 type props = {
   reasons: any[];
@@ -120,8 +121,14 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
               <FormProvider methods={methods}>
                 <TextField
                   sx={{ width: '100%' }}
-                  id="outlined-search"
-                  label={t('LABEL.SEARCH_BY_NAME')}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="mingcute:search-line" />
+                      </InputAdornment>
+                    ),
+                  }} 
+                  placeholder={t('LABEL.SEARCH_BY_NAME')}
                   type="search"
                   onChange={(e) => createQueryString('search', e.target.value)}
                 />

@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Card, Grid, TextField, Typography } from '@mui/material';
+import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,6 +16,7 @@ import { paths } from 'src/routes/paths';
 import SendNotification from './components/send-notification';
 import i18n from 'src/locales/i18n';
 import { set } from 'lodash';
+import Iconify from 'src/components/iconify';
 
 type props = {
   count: number;
@@ -124,8 +125,14 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               <FormProvider methods={methods}>
                 <TextField
                   sx={{ width: '100%' }}
-                  id="outlined-search"
-                  label={t('LABEL.COURSE_NAME')}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="mingcute:search-line" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder={t('LABEL.COURSE_NAME')}
                   type="search"
                   onChange={(e) => createQueryString('search', e.target.value)}
                 />
@@ -172,8 +179,10 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             field: (item: any) =>
               i18n.language === 'ar' ? item?.field?.name : item?.field?.name_en,
             average_rate: (item: any) => item?.average_rate.slice(0, 3),
-            start_date: (item: any) => i18n.language === 'ar' ? arabicDate(item?.start_date) : englishDate(item?.start_date),
-            end_date: (item: any) =>  i18n.language === 'ar' ? arabicDate(item?.end_date) :englishDate(item?.end_date),
+            start_date: (item: any) =>
+              i18n.language === 'ar' ? arabicDate(item?.start_date) : englishDate(item?.start_date),
+            end_date: (item: any) =>
+              i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date),
             // phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
             price: (item: any) => (
               <Box>

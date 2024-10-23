@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
@@ -18,6 +18,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import SendNotification from './center-details/components/send-notification';
 import { changeCenterStatus } from 'src/actions/centers';
+import Iconify from 'src/components/iconify';
 
 type props = {
   centers: ICenter[];
@@ -157,8 +158,14 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                   }}
                 >
                   <TextField
-                    id="outlined-search"
-                    label={t('LABEL.SEARCH_CENTER')}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify icon="mingcute:search-line" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder={t('LABEL.SEARCH_CENTER')}
                     type="search"
                     onChange={(e) => createQueryString('search', e.target.value)}
                   />

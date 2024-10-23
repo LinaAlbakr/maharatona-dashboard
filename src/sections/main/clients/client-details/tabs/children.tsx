@@ -3,13 +3,14 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Card, Grid, TextField, Typography } from '@mui/material';
+import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import Iconify from 'src/components/iconify';
 
 type props = {
   ClientChildren: any;
@@ -62,8 +63,14 @@ const Children = ({ ClientChildren }: Readonly<props>) => {
           <FormProvider methods={methods}>
             <TextField
               sx={{ width: '100%', mb: 2 }}
-              id="outlined-search"
-              label={t('LABEL.SEARCH_BY_NAME')}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="mingcute:search-line" />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder={t('LABEL.SEARCH_BY_NAME')}
               type="search"
               onChange={(e) => createQueryString('search', e.target.value)}
             />
