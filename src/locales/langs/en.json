@@ -97,7 +97,11 @@
     "AGE_FROM": "Age From",
     "AGE_TO": "Age To",
     "AM": "AM",
-    "PM": "PM"
+    "PM": "PM",
+    "REASON_NAME_IN_ENGLISH": "Reason name in english",
+    "REASON_NAME_IN_ARABIC": "Reason name in arabic",
+    "EDIT_REASON": "Edit Reason",
+    "NEW_REASON": "New Reason"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -108,7 +112,9 @@
     "SEND": "Send",
     "DELETE": "Delete",
     "EDIT": "Edit",
-    "ADD_FIELD": "Add Field"
+    "ADD_FIELD": "Add Field",
+    "ADD_REASON": "Add Reason",
+    "SAVE": "Save"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -150,6 +156,13 @@
     "UNBLOCK_SUCCESSFULLY": "Center unblocked successfully",
     "DELETED_SUCCESS": "Review deleted successfully",
     "CONFIRM_DELETE_REASON": "Are you sure you want to delete this reason?",
-    "CONFIRM_DELETE_FIELD": "Are you sure you want to delete this field?"
+    "CONFIRM_DELETE_FIELD": "Are you sure you want to delete this field?",
+    "DELETE_SUCCESSFULLY": "Deleted successfully",
+    "REASON_CREATED_SUCCESSFULLY": "Reason created successfully",
+    "REASON_UPDATED_SUCCESSFULLY": "Reason updated successfully"
+  },
+  "PLACEHOLDER": {
+    "REASON_NAME_IN_ENGLISH": "Reason name in english",
+    "REASON_NAME_IN_ARABIC": "Reason name in arabic"
   }
 }
