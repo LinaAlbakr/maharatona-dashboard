@@ -36,3 +36,18 @@ export const fetchCourses = async ({
   }
 };
 
+
+export const fetchCourseInfo = async (courseId: string): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.courses.info(courseId), {
+      params: {},
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

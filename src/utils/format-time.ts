@@ -1,4 +1,5 @@
 import { format, getTime, formatDistanceToNow, differenceInMinutes } from 'date-fns';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -61,4 +62,22 @@ type Options = {
 };
 export function fToNowWithLocales(date: InputValue, options: Options) {
   return date ? formatDistanceToNow(new Date(date), options) : '';
+}
+
+export function convertTime24to12(time: string) {
+  const { t } = useTranslate();
+  // Split the input string to extract hours, minutes, and seconds
+  const [hour, minute] = time.split(':');
+
+  // Convert the hour from string to number
+  let hourNum = parseInt(hour, 10);
+
+  // Determine if it's AM or PM in Arabic
+  const period = hourNum < 12 ? `${t('LABEL.AM')}` : `${t('LABEL.PM')}`;
+
+  // Adjust hour for 12-hour format
+  hourNum = hourNum % 12 || 12; // converts 0 -> 12 and keeps 1-11 as-is
+
+  // Return formatted time
+  return `${hourNum}:${minute} ${period}`;
 }

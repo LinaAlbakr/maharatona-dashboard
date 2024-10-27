@@ -88,6 +88,7 @@ export const endpoints = {
   },
   courses: {
     fetch: '/admin-panel/all-courses',
+    info: (courseId: string) => `/admin-panel/course/${courseId}`,
   },
   clients: {
     fetch: '/admin-panel/all-clients',
@@ -107,6 +108,6 @@ export const endpoints = {
   },
   categories: {
     fetch: '/admin-panel/all-fields',
-    deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,  //TODO edit endpoint when its done
+    deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`, //TODO edit endpoint when its done
   },
 };

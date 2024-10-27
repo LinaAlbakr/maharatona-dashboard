@@ -86,7 +86,18 @@
     "NAME_AR": "Arabic Name",
     "NAME_EN": " English Name",
     "COLOR": "Color",
-    "FIELDS_AND_SPECIALTIES": "Fields and Specialties"
+    "FIELDS_AND_SPECIALTIES": "Fields and Specialties",
+    "ABOUT_COURSE": "About Course",
+    "NUMBER_OF_SEATS": "Number of Seats",
+    "COURSE_DESCRIPTION": "Course Description",
+    "START_IN": "Start In",
+    "END_IN": "End In",
+    "FROM_HOURE": "From Hour",
+    "TO_HOURE": "To Hour",
+    "AGE_FROM": "Age From",
+    "AGE_TO": "Age To",
+    "AM": "AM",
+    "PM": "PM"
   },
   "BUTTON": {
     "LOGIN": "Login",

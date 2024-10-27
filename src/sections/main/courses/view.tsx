@@ -5,13 +5,10 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import SendNotification from './components/send-notification';
 import i18n from 'src/locales/i18n';
@@ -25,13 +22,12 @@ type props = {
 
 const CoursesView = ({ count, courses }: Readonly<props>) => {
   const settings = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+
 
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [selectedId, setSelectedId] = useState<string | null>();
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedSubscribers, setSelectedSubscribers] = useState<any[] | undefined>();
 
@@ -150,7 +146,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
-                router.push(`${paths.dashboard.clients}/${item.id}`);
+                router.push(`${paths.dashboard.courses}/${item.id}`);
               },
             },
             {
