@@ -100,7 +100,11 @@
     "AGE_FROM": "الفئة العمريه من",
     "AGE_TO": "الفئة العمريه الي",
     "AM": "صباحاً",
-    "PM": "مساءاً"
+    "PM": "مساءاً",
+    "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
+    "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
+    "EDIT_REASON": "تعديل سبب",
+    "NEW_REASON": "اضافة سبب"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -111,7 +115,9 @@
     "SEND": "ارسال",
     "DELETE": "حذف",
     "EDIT": "تعديل",
-    "ADD_FIELD": "اضافة مجال"
+    "ADD_FIELD": "اضافة مجال",
+    "ADD_REASON": "اضافه سبب",
+    "SAVE": "حفظ"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -155,6 +161,13 @@
     "CONFIRM_BLOCK_CLIENT": "هل تريد حظر هذا العميل؟",
     "CONFIRM_UNBLOCK_CLIENT": "هل تريد الغاء الحظر هذا العميل؟",
     "CONFIRM_DELETE_REASON": "هل تريد حذف هذا السبب؟",
-    "CONFIRM_DELETE_FIELD": "هل تريد حذف هذا المجال؟"
+    "CONFIRM_DELETE_FIELD": "هل تريد حذف هذا المجال؟",
+    "DELETE_SUCCESSFULLY": "تم الحذف بنجاح",
+    "REASON_CREATED_SUCCESSFULLY": "تم انشاء السبب بنجاح",
+    "REASON_UPDATED_SUCCESSFULLY": "تم تعديل السبب بنجاح"
+  },
+  "PLACEHOLDER": {
+    "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
+    "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية"
   }
 }

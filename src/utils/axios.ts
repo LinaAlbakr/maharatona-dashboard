@@ -103,8 +103,12 @@ export const endpoints = {
     send: '/notification/send-to-users',
   },
   support: {
-    calls_reasons: '/admin-panel/all-call-us-reasons',
-    delete_reason: (reasonId: string) => `/admin-panel/delete-call-us-reason/${reasonId}`,
+    calls_reasons: {
+      fetch: '/admin-panel/all-call-us-reasons',
+      delete_reason: (reasonId: string) => `/admin-panel/delete-call-us-reason/${reasonId}`,
+      new: '/admin-panel/create-reason-call-us',
+      edit: (reasonId: string) => `/admin-panel/update-call-us-reason/${reasonId}`,
+    },
   },
   categories: {
     fetch: '/admin-panel/all-fields',

@@ -18,6 +18,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import { deleteReason } from 'src/actions/support';
 import Iconify from 'src/components/iconify';
+import { NewEditReasonDialog } from './new-edit-reason-dialog';
 
 type props = {
   reasons: any[];
@@ -34,7 +35,7 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
   const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
   const [selectedReason, setSelectedReason] = useState<any | undefined>();
-
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   useEffect(() => {
     router.push(`${pathname}`);
   }, []);
@@ -92,7 +93,8 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
         <Box
           sx={{
             backgroundImage: `url(/assets/images/support/calls-reason-header.jpeg)`,
-            height: { sm: '300px', xs: '400px' },
+            height: '400px',
+            width: '100%',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             p: 0,
@@ -109,15 +111,17 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           </Typography>
           <Grid
             sx={{
-              width: '50%',
+              width: '100%',
               height: '100%',
               display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               px: 6,
+              gap: 4,
             }}
           >
-            <Card sx={{ p: 1, ml: 3, mb: 1, flexGrow: 1 }}>
+            <Card sx={{ p: 1, ml: 3, mb: 1, width: '50%' }}>
               <FormProvider methods={methods}>
                 <TextField
                   sx={{ width: '100%' }}
@@ -127,13 +131,29 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
                         <Iconify icon="mingcute:search-line" />
                       </InputAdornment>
                     ),
-                  }} 
+                  }}
                   placeholder={t('LABEL.SEARCH_BY_NAME')}
                   type="search"
                   onChange={(e) => createQueryString('search', e.target.value)}
                 />
               </FormProvider>
             </Card>
+            <Button
+              variant="contained"
+              sx={{
+                px: 8,
+                py: 2,
+                bgcolor: 'white',
+                borderRadius: 4,
+                color: 'primary.main',
+                '&:hover': { bgcolor: 'primary.main', color: 'white' },
+              }}
+              onClick={() => {
+                setIsFormDialogOpen(true);
+              }}
+            >
+              {t('BUTTON.ADD_REASON')}{' '}
+            </Button>
           </Grid>
         </Box>
         <SharedTable
@@ -156,6 +176,7 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
               icon: 'material-symbols:edit',
               onClick: (item) => {
                 setSelectedReason(item);
+                setIsFormDialogOpen(true);
               },
             },
           ]}
@@ -178,6 +199,16 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           </Button>
         }
       />
+      {isFormDialogOpen ? (
+        <NewEditReasonDialog
+          open={isFormDialogOpen}
+          onClose={() => {
+            setSelectedReason(null);
+            setIsFormDialogOpen(false);
+          }}
+          reason={selectedReason}
+        />
+      ) : null}
     </>
   );
 };
