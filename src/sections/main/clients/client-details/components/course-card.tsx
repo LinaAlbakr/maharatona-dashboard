@@ -21,7 +21,7 @@ const CourseCard = ({ course }: props) => {
       }}
     >
       <Avatar sx={{ width: 150, height: 150 }} src={course.logo_url}></Avatar>
-      <Typography variant="body1" color="initial">
+      <Typography variant="h6" color="info.dark">
         {course.name}
       </Typography>
       <Box
