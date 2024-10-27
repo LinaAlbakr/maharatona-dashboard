@@ -52,7 +52,7 @@
     "CUSTOMER_SATISFACTION": "رضا العملاء",
     "TOTAL_PROFIT": "اجمالي الربح",
     "TOTAL_VIEWS": "اجمالي المشاهدات",
-    "SAR": "ر.س",
+    "SAR": "ر س",
     "CUSTOMER_RATINGS": "تقييم العملاء",
     "NO_DATA": "لا يوجد بيانات",
     "TOP_THREE_COURSES": "أعلى ثلاث دورات",
@@ -89,7 +89,18 @@
     "NAME_AR": "الاسم باللغة العربية",
     "NAME_EN": "الاسم باللغة الانجليزية",
     "COLOR": "اللون",
-    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات"
+    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات",
+    "ABOUT_COURSE": "عن الدورة",
+    "NUMBER_OF_SEATS": "عدد المقاعد",
+    "COURSE_DESCRIPTION": "وصف الدورة",
+    "START_IN": "تبدأ  في",
+    "END_IN": "تنتهي  في",
+    "FROM_HOURE": "من الساعة",
+    "TO_HOURE": "الي الساعة",
+    "AGE_FROM": "الفئة العمريه من",
+    "AGE_TO": "الفئة العمريه الي",
+    "AM": "صباحاً",
+    "PM": "مساءاً"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
