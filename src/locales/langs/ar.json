@@ -6,7 +6,8 @@
     "SEND_NOTIFICATON": "ارسال الاشعار",
     "BLOCK_CLIENT": "حظر العميل",
     "UNBLOCK_CLIENT": "الغاء حظر العميل",
-    "DELETE_REASON": "حذف السبب"
+    "DELETE_REASON": "حذف السبب",
+    "DELETE_FIELD": "حذف مجال"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -83,7 +84,12 @@
     "DELETE": "حذف",
     "EDIT": "تعديل",
     "NAME": "الاسم",
-    "AGE": "السن"
+    "AGE": "السن",
+    "IMAGE": "الصورة",
+    "NAME_AR": "الاسم باللغة العربية",
+    "NAME_EN": "الاسم باللغة الانجليزية",
+    "COLOR": "اللون",
+    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -93,7 +99,8 @@
     "CANCEL": "الغاء",
     "SEND": "ارسال",
     "DELETE": "حذف",
-    "EDIT": "تعديل"
+    "EDIT": "تعديل",
+    "ADD_FIELD": "اضافة مجال"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -101,7 +108,8 @@
     "CLIENTS": "العملاء",
     "COURSES": "الدورات التدريبية",
     "SUPPORT": "الدعم الفني",
-    "CALLS_REASONS": "اسباب الاتصال"
+    "CALLS_REASONS": "اسباب الاتصال",
+    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -135,6 +143,7 @@
     "DELETED_SUCCESS": "تم الحذف بنجاح",
     "CONFIRM_BLOCK_CLIENT": "هل تريد حظر هذا العميل؟",
     "CONFIRM_UNBLOCK_CLIENT": "هل تريد الغاء الحظر هذا العميل؟",
-    "CONFIRM_DELETE_REASON": "هل تريد حذف هذا السبب؟"
+    "CONFIRM_DELETE_REASON": "هل تريد حذف هذا السبب؟",
+    "CONFIRM_DELETE_FIELD": "هل تريد حذف هذا المجال؟"
   }
 }

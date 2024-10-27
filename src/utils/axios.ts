@@ -104,5 +104,9 @@ export const endpoints = {
   support: {
     calls_reasons: '/admin-panel/all-call-us-reasons',
     delete_reason: (reasonId: string) => `/admin-panel/delete-call-us-reason/${reasonId}`,
-  }
+  },
+  categories: {
+    fetch: '/admin-panel/all-fields',
+    deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,  //TODO edit endpoint when its done
+  },
 };

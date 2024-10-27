@@ -28,5 +28,6 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/support`,
       calls_reasons: `${ROOTS.DASHBOARD}/support/calls-reasons`,
     },
+    categories: `${ROOTS.DASHBOARD}/categories`,
   },
 };

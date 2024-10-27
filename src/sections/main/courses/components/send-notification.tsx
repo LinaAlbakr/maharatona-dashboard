@@ -37,6 +37,7 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
     title_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
     title_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
   });
+console.log(selectedSubscribers);
 
   const defaultValues = useMemo(
     () => ({

@@ -21,7 +21,7 @@ const CourseCard = ({ course }: props) => {
       }}
     >
       <Avatar sx={{ width: 150, height: 150 }} src={course.logo_url}></Avatar>
-      <Typography variant="body1" color="initial">
+      <Typography variant="h6" color="info.dark">
         {course.name}
       </Typography>
       <Box
@@ -41,7 +41,7 @@ const CourseCard = ({ course }: props) => {
             flexDirection: 'column',
           }}
           primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
-          secondary={course.registeredStudents | 0}
+          secondary={course.number_of_users | 0}
           secondaryTypographyProps={{ color: 'info.dark', fontSize: '20px', fontWeight: 'bold' }}
         />{' '}
         <ListItemText
