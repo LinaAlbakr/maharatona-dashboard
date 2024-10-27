@@ -39,7 +39,7 @@ const Courses = ({ CenterCourses }: Props) => {
   );
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: '0px !important', padding: '0px !important' }}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: '0px !important', padding: { xs: '5px !important', sm: '0px !important' }}}>
       <Stack
         sx={{
           display: 'grid',

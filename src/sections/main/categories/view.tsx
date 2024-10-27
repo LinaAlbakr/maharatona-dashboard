@@ -28,6 +28,7 @@ import { paths } from 'src/routes/paths';
 import { changeCenterStatus } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
 import { deleteField } from 'src/actions/categories';
+import { NewEditBrandDialog } from './new-edit-category-dialog';
 
 type props = {
   categories: any[];
@@ -43,7 +44,8 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const router = useRouter();
   const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
-  const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
+  const [selectedCategory, setSelectedCategory] = useState<ICenter | undefined>();
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -84,16 +86,14 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   );
 
   const handleConfirmBlock = async () => {
-    if (selectedId) {
-      const res = await deleteField(selectedId);
-      if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.DELETED_SUCCESSFULLY'));
-      } else {
-        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
-      }
+    const res = await deleteField(selectedCategory);
+    console.log(res);
+    if (res.statusCode === 200) {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESSFULLY'));
+      confirmDelete.onFalse();
+    } else {
+      enqueueSnackbar(`${res.error}`, { variant: 'error' });
     }
-
-    confirmDelete.onFalse();
   };
 
   return (
@@ -115,6 +115,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
             alignItems: 'center',
             flexDirection: 'column',
             gap: 4,
+            width: '100%',
           }}
         >
           <Typography variant="h3" color="white">
@@ -122,7 +123,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           </Typography>
           <Grid
             sx={{
-              width: '50%',
+              width: '100%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -132,10 +133,10 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
               gap: 3,
             }}
           >
-            <Card sx={{ p: 1, ml: 3, mb: 1 }}>
+            <Card sx={{ p: 1, ml: 3, mb: 1, width: '50%' }}>
               <FormProvider methods={methods}>
                 <TextField
-                  sx={{ maxWidth: '100%', width: '400px' }}
+                  sx={{ width: '100%' }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -152,7 +153,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
 
             <Button
               variant="contained"
-              onClick={() => createQueryString('search', '')}
+              onClick={() => setIsFormDialogOpen(true)}
               sx={{
                 bgcolor: 'white',
                 color: 'primary.main',
@@ -178,14 +179,16 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
               sx: { color: 'info.dark' },
               label: t('LABEL.EDIT'),
               onClick: (item) => {
-                // router.push(`${paths.dashboard.centers}/${item.id}`);
+                setSelectedCategory(item);
+                setIsFormDialogOpen(true);
               },
             },
             {
               sx: { color: 'error.dark' },
               label: t('LABEL.DELETE'),
+              icon: 'eva:trash-2-outline',
               onClick: (item: any) => {
-                setSelectedId(item.id);
+                setSelectedCategory(item);
                 confirmDelete.onTrue();
               },
             },
@@ -217,6 +220,17 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           </Button>
         }
       />
+
+      {isFormDialogOpen ? (
+        <NewEditBrandDialog
+          open={isFormDialogOpen}
+          onClose={() => {
+            setIsFormDialogOpen(false);
+            setSelectedCategory(undefined);
+          }}
+          category={selectedCategory}
+        />
+      ) : null}
     </>
   );
 };

@@ -164,7 +164,8 @@
     "CONFIRM_DELETE_FIELD": "هل تريد حذف هذا المجال؟",
     "DELETE_SUCCESSFULLY": "تم الحذف بنجاح",
     "REASON_CREATED_SUCCESSFULLY": "تم انشاء السبب بنجاح",
-    "REASON_UPDATED_SUCCESSFULLY": "تم تعديل السبب بنجاح"
+    "REASON_UPDATED_SUCCESSFULLY": "تم تعديل السبب بنجاح",
+    "DELETED_SUCCESSFULLY":"تم الحذف بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
