@@ -58,6 +58,7 @@ const ICONS = {
   support: icon('token:chat'),
   building: icon('fa-solid:building'),
   bag: icon('lets-icons:bag-fill'),
+  cartegries: icon('fluent:playing-cards-20-filled'),
 };
 
 export function useNavData() {
@@ -70,6 +71,11 @@ export function useNavData() {
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
           { title: t('SIDEBAR.COURSES'), path: paths.dashboard.courses, icon: ICONS.bag },
+          {
+            title: t('SIDEBAR.FIELDS_AND_SPECIALTIES'),
+            path: paths.dashboard.categories,
+            icon: ICONS.cartegries,
+          },
           {
             title: t('SIDEBAR.SUPPORT'),
             path: paths.dashboard.supportGroup.root,

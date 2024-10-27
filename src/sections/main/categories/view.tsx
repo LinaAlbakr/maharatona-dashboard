@@ -3,51 +3,57 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
+import { ICenter } from 'src/types/centers';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
-import SendNotification from './components/send-notification';
-import i18n from 'src/locales/i18n';
-import { set } from 'lodash';
+import { changeCenterStatus } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
+import { deleteField } from 'src/actions/categories';
 
 type props = {
+  categories: any[];
   count: number;
-  courses: any[];
 };
 
-const CoursesView = ({ count, courses }: Readonly<props>) => {
+const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
-  const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
-  const [selectedSubscribers, setSelectedSubscribers] = useState<any[] | undefined>();
+  const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
 
   useEffect(() => {
     router.push(`${pathname}`);
   }, []);
 
   const TABLE_HEAD = [
-    { id: 'name', label: 'LABEL.COURSE_NAME' },
-    { id: 'field', label: 'LABEL.FIELD' },
-    { id: 'price', label: 'LABEL.PRICE' },
-    { id: 'students', label: 'LABEL.NUMBER_OF_SUBSCRIBERS' },
-    { id: 'seats', label: 'LABEL.NUMBER_OF_REMAINING_SEATS' },
-    { id: 'start_date', label: 'LABEL.START_DATE' },
-    { id: 'end_date', label: 'LABEL.END_DATE' },
-    { id: 'average_rate', label: 'LABEL.TOTAL_RATE' },
+    { id: 'avatar', label: 'LABEL.IMAGE' },
+    { id: 'name_ar', label: 'LABEL.NAME_AR' },
+    { id: 'name_en', label: 'LABEL.NAME_EN' },
+    { id: 'color', label: 'LABEL.COLOR' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -77,16 +83,19 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     [pathname, router, searchParams, setValue]
   );
 
-  const englishDate = (date: string) => {
-    return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long' }).format(
-      new Date(date)
-    );
+  const handleConfirmBlock = async () => {
+    if (selectedId) {
+      const res = await deleteField(selectedId);
+      if (res === 200) {
+        enqueueSnackbar(t('MESSAGE.DELETED_SUCCESSFULLY'));
+      } else {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      }
+    }
+
+    confirmDelete.onFalse();
   };
-  const arabicDate = (date: string) => {
-    return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long' }).format(
-      new Date(date)
-    );
-  };
+
   return (
     <>
       <Container
@@ -95,8 +104,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
       >
         <Box
           sx={{
-            backgroundImage: `url(/assets/images/courses/header.jpeg)`,
-            height: '400px',
+            backgroundImage: `url(/assets/images/centers/header.jpeg)`,
+            height: { sm: '300px', xs: '400px' },
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             p: 0,
@@ -109,22 +118,24 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           }}
         >
           <Typography variant="h3" color="white">
-            {t('LABEL.EDUCATIONAL_COURSES')}
+            {t('LABEL.FIELDS_AND_SPECIALTIES')}
           </Typography>
           <Grid
             sx={{
               width: '50%',
               height: '100%',
               display: 'flex',
+              flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
               px: 6,
+              gap: 3,
             }}
           >
-            <Card sx={{ p: 1, ml: 3, mb: 1, flexGrow: 1 }} className="text-[125px]">
+            <Card sx={{ p: 1, ml: 3, mb: 1 }}>
               <FormProvider methods={methods}>
                 <TextField
-                  sx={{ width: '100%' }}
+                  sx={{ maxWidth: '100%', width: '400px' }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -132,80 +143,82 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                       </InputAdornment>
                     ),
                   }}
-                  placeholder={t('LABEL.COURSE_NAME')}
+                  placeholder={t('LABEL.FIELD_NAME')}
                   type="search"
                   onChange={(e) => createQueryString('search', e.target.value)}
                 />
               </FormProvider>
             </Card>
+
+            <Button
+              variant="contained"
+              onClick={() => createQueryString('search', '')}
+              sx={{
+                bgcolor: 'white',
+                color: 'primary.main',
+                px: 8,
+                py: 1,
+                borderRadius: '40px',
+                '&:hover': {
+                  bgcolor: '#fff',
+                  color: 'primary.dark',
+                },
+              }}
+            >
+              {t('BUTTON.ADD_FIELD')}
+            </Button>
           </Grid>
         </Box>
         <SharedTable
           count={count}
-          data={courses}
+          data={categories}
           tableHead={TABLE_HEAD}
           actions={[
             {
               sx: { color: 'info.dark' },
-              label: t('LABEL.VIEW'),
-              icon: 'lets-icons:view',
+              label: t('LABEL.EDIT'),
               onClick: (item) => {
-                router.push(`${paths.dashboard.clients}/${item.id}`);
+                // router.push(`${paths.dashboard.centers}/${item.id}`);
               },
             },
             {
-              sx: { color: 'info.dark' },
-              label: t('LABEL.SEND_NOTIFICATION'),
-              icon: 'mingcute:notification-fill',
-              onClick: (item) => {
-                setShowSendNotification(true);
-                setSelectedSubscribers(
-                  item?.students.map((student: any) => student.client.user_id)
-                );
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              onClick: (item: any) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
             },
           ]}
           customRender={{
-            students: (item: any) => (
-              <Box>
-                {item?.students.length + ' '}
-                {t('LABEL.STUDENT')}
-              </Box>
+            color: (item: any) => (
+              <Typography sx={{ direction: 'rtl', fontSize: '14px' }}>
+                {item?.color?.charAt(0) === '#' ? item?.color : `#${item?.color}`}
+              </Typography>
             ),
-            seats: (item: any) => (
-              <Box>
-                {item?.seats + ' '}
-                {t('LABEL.SEAT')}
-              </Box>
-            ),
-            field: (item: any) =>
-              i18n.language === 'ar' ? item?.field?.name : item?.field?.name_en,
-            average_rate: (item: any) => item?.average_rate.slice(0, 3),
-            start_date: (item: any) =>
-              i18n.language === 'ar' ? arabicDate(item?.start_date) : englishDate(item?.start_date),
-            end_date: (item: any) =>
-              i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date),
-            // phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
-            price: (item: any) => (
-              <Box>
-                {Math.round(item?.price) + ' '} {t('LABEL.SAR')}
-              </Box>
-            ),
+            avatar: (item: any) => <Avatar alt={item?.name} src={item?.avatar} />,
           }}
         />
       </Container>
-      {showSendNotification && (
-        <SendNotification
-          open={showSendNotification}
-          onClose={() => {
-            setShowSendNotification(false);
-            set;
-          }}
-          selectedSubscribers={selectedSubscribers}
-        />
-      )}
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_FIELD')}
+        content={t('MESSAGE.CONFIRM_DELETE_FIELD')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleConfirmBlock();
+            }}
+          >
+            {t('BUTTON.DELETE')}
+          </Button>
+        }
+      />
     </>
   );
 };
 
-export default CoursesView;
+export default CategoriesView;

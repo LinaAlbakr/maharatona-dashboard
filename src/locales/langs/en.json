@@ -4,7 +4,8 @@
     "BLOCK_CENTER": "Block Center",
     "UNBLOCK_CENTER": "Unblock Center",
     "SEND_NOTIFICATON": "Send Notification",
-    "DELETE_REASON": "Delete Reason"
+    "DELETE_REASON": "Delete Reason",
+    "DELETE_FIELD": "Delete Field"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -80,7 +81,12 @@
     "DELETE": "Delete",
     "EDIT": "Edit",
     "NAME": "Name",
-    "AGE": "Age"
+    "AGE": "Age",
+    "IMAGE": "Image",
+    "NAME_AR": "Arabic Name",
+    "NAME_EN": " English Name",
+    "COLOR": "Color",
+    "FIELDS_AND_SPECIALTIES": "Fields and Specialties"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -90,7 +96,8 @@
     "CANCEL": "Cancel",
     "SEND": "Send",
     "DELETE": "Delete",
-    "EDIT": "Edit"
+    "EDIT": "Edit",
+    "ADD_FIELD": "Add Field"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -98,7 +105,8 @@
     "CLIENTS": "Clients",
     "COURSES": "Courses",
     "SUPPORT": "Support",
-    "CALLS_REASONS": "Calls Reasons"
+    "CALLS_REASONS": "Calls Reasons",
+    "FIELDS_AND_SPECIALTIES": "Fields and Specialties"
   },
   "TABLE": {
     "DENSE": "Dense",
@@ -130,6 +138,7 @@
     "BLOCK_SUCCESSFULLY": "Center blocked successfully",
     "UNBLOCK_SUCCESSFULLY": "Center unblocked successfully",
     "DELETED_SUCCESS": "Review deleted successfully",
-    "CONFIRM_DELETE_REASON": "Are you sure you want to delete this reason?"
+    "CONFIRM_DELETE_REASON": "Are you sure you want to delete this reason?",
+    "CONFIRM_DELETE_FIELD": "Are you sure you want to delete this field?"
   }
 }

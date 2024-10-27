@@ -16,7 +16,7 @@ export type headCellType = {
 };
 export type Action<T> = {
   label: string;
-  icon: string;
+  icon?: string;
   sx?: SxStyle;
   onClick: (row: T) => void;
   hide?: (row: T) => Boolean;
