@@ -37,21 +37,51 @@ export const fetchCategories = async ({
   }
 };
 
-export const deleteField = async (fieldId: string): Promise<any> => {
+export const deleteField = async (field: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const lang = cookies().get('Language')?.value;
-
-    const res = await axiosInstance.delete(endpoints.categories.deleteField(fieldId), {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Accept-Language': lang,
-      },
-    });
+    const res = await axiosInstance.patch(
+      endpoints.categories.edit(field.id),
+      { is_active: !field.is_active },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    revalidatePath(`/dashboard/categories/`);
+    return res.data;
   } catch (error) {
     return {
       error: getErrorMessage(error),
     };
   }
-  revalidatePath(`/dashboard/categories/`);
+};
+
+export const newCategoriey = async (reqBody: FormData): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  try {
+    const res = await axiosInstance.post(endpoints.categories.new, reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const editCategoriey = async (reqBody: FormData, id: string): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  try {
+    const res = await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    revalidatePath(`/dashboard/categories`);
+  } catch (error) {
+    throw new Error(error);
+  }
 };

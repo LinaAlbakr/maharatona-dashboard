@@ -70,7 +70,6 @@ export const newReason = async (reqBody: any): Promise<any> => {
     });
     revalidatePath('/dashboard/support/calls-reasons/');
   } catch (error) {
-    console.log(error);
     throw new Error(error);
   }
 };
@@ -86,7 +85,6 @@ export const editReason = async (reqBody: any, reasonId: string): Promise<any> =
     });
     revalidatePath('/dashboard/support/calls-reasons/');
   } catch (error) {
-    console.log(error);
     throw new Error(error);
   }
 };

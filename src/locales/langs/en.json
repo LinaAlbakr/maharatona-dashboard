@@ -159,7 +159,8 @@
     "CONFIRM_DELETE_FIELD": "Are you sure you want to delete this field?",
     "DELETE_SUCCESSFULLY": "Deleted successfully",
     "REASON_CREATED_SUCCESSFULLY": "Reason created successfully",
-    "REASON_UPDATED_SUCCESSFULLY": "Reason updated successfully"
+    "REASON_UPDATED_SUCCESSFULLY": "Reason updated successfully",
+    "DELETED_SUCCESSFULLY": "Deleted successfully"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

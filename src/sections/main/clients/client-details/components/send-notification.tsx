@@ -100,14 +100,14 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
             />
           </Box>
           <Grid rowGap={2} mt={1} container columnSpacing={{ xs: 1, sm: 2 }}>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField name="title_ar" label={t('LABEL.TITLE_AR')} type="text" />
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField name="title_en" label={t('LABEL.TITLE_EN')} type="text" />
             </Grid>
 
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField
                 multiline
                 rows={4}
@@ -117,7 +117,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
                 label={t('LABEL.CONTENT_AR')}
               />
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField
                 multiline
                 rows={4}

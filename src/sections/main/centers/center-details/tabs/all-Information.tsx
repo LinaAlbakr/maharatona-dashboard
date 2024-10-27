@@ -2,7 +2,6 @@
 
 import { Box, Card, Container, Divider, ListItemText, Rating, Typography } from '@mui/material';
 import Image from 'next/image';
-import Link from 'next/link';
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
@@ -32,7 +31,18 @@ const AllInformation = ({ CenterInfo }: Props) => {
 
         <Divider sx={{ my: 3 }} />
 
-        <Box sx={{ display: 'grid', gridTemplateColumns: '1.2fr  repeat(5, 1fr)', gap: 4, px: 2 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: 'repeat(2, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              md: '1.2fr  repeat(5, 1fr)',
+            },
+            gap: 4,
+            px: 2,
+          }}
+        >
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.DESCRIPTION')}
@@ -154,7 +164,13 @@ const AllInformation = ({ CenterInfo }: Props) => {
           {t('LABEL.IMAGES')}
         </Typography>
         <Divider sx={{ my: 3 }} />
-        <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            flexDirection: { xs: 'column', sm: 'column', md: 'row ' },
+          }}
+        >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
             <Image
               src={CenterInfo?.commercial_register || '/assets/images/centers/gray.jpeg'}

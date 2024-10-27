@@ -37,7 +37,7 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
     title_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
     title_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
   });
-console.log(selectedSubscribers);
+
 
   const defaultValues = useMemo(
     () => ({
@@ -91,14 +91,14 @@ console.log(selectedSubscribers);
         <DialogTitle>{t('TITLE.SEND_NOTIFICATON')}</DialogTitle>
         <DialogContent>
           <Grid rowGap={2} mt={1} container columnSpacing={{ xs: 1, sm: 2 }}>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField name="title_ar" label={t('LABEL.TITLE_AR')} type="text" />
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField name="title_en" label={t('LABEL.TITLE_EN')} type="text" />
             </Grid>
 
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField
                 multiline
                 rows={4}
@@ -108,7 +108,7 @@ console.log(selectedSubscribers);
                 label={t('LABEL.CONTENT_AR')}
               />
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={6} xs={12}>
               <RHFTextField
                 multiline
                 rows={4}

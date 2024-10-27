@@ -45,7 +45,10 @@ const Reports = ({ CenterCourses, CenterReports, CenterReviews }: Props) => {
     [pathname, router, searchParams]
   );
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ margin: '0px !important', padding: '0px !important' }}>
+    <Container
+      maxWidth={settings.themeStretch ? false : 'xl'}
+      sx={{ margin: '0px !important', padding: { xs: '5px !important', sm: '0px !important' } }}
+    >
       <Grid container spacing={1}>
         <Grid
           item
@@ -195,7 +198,13 @@ const Reports = ({ CenterCourses, CenterReports, CenterReviews }: Props) => {
           <Typography variant="h5" color="secondary" sx={{ my: 4 }}>
             {t('LABEL.TOP_THREE_COURSES')}
           </Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
+              gap: 2,
+            }}
+          >
             {CenterCourses.data.slice(0, 3).map((item: any) => (
               <CourseCard key={item.id} course={item} />
             ))}

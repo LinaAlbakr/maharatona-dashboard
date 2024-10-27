@@ -10,7 +10,6 @@ interface Props {
   CourseInfo?: any;
 }
 const CourseDetailsView = ({ CourseInfo }: Props) => {
-  console.log(CourseInfo);
   const settings = useSettingsContext();
   const { t } = useTranslate();
 
@@ -205,7 +204,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
             display: 'flex',
             justifyContent: 'space-evenly',
             gap: 2,
-            flexDirection: { md: 'row', sm: 'column' },
+            flexDirection: { md: 'row', sm: 'column' ,xs: 'column'},
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
