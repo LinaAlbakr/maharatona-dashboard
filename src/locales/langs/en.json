@@ -5,7 +5,9 @@
     "UNBLOCK_CENTER": "Unblock Center",
     "SEND_NOTIFICATON": "Send Notification",
     "DELETE_REASON": "Delete Reason",
-    "DELETE_FIELD": "Delete Field"
+    "DELETE_FIELD": "Delete Field",
+    "DEACTIVATE_FIELD": "Deactivate Field",
+    "ACTIVATE_FIELD": "Activate Field"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -101,7 +103,9 @@
     "REASON_NAME_IN_ENGLISH": "Reason name in english",
     "REASON_NAME_IN_ARABIC": "Reason name in arabic",
     "EDIT_REASON": "Edit Reason",
-    "NEW_REASON": "New Reason"
+    "NEW_REASON": "New Reason",
+    "ACTIVATE": "Activate",
+    "DEACTIVATE": "Deactivate"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -114,7 +118,9 @@
     "EDIT": "Edit",
     "ADD_FIELD": "Add Field",
     "ADD_REASON": "Add Reason",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "ACTIVATE": "Activate",
+    "DEACTIVATE": "Deactivate"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -160,7 +166,13 @@
     "DELETE_SUCCESSFULLY": "Deleted successfully",
     "REASON_CREATED_SUCCESSFULLY": "Reason created successfully",
     "REASON_UPDATED_SUCCESSFULLY": "Reason updated successfully",
-    "DELETED_SUCCESSFULLY": "Deleted successfully"
+    "DELETED_SUCCESSFULLY": "Deleted successfully",
+    "CONFIRM_ACTIVATE_FIELD": "Are you sure you want to activate this field?",
+    "CONFIRM_DEACTIVATE_FIELD": "Are you sure you want to deactivate this field?",
+    "DEACTIVATED_SUCCESSFULLY": "Field deactivated successfully",
+    "ACTIVATED_SUCCESSFULLY": "Field activated successfully",
+    "FEILD_CREATED_SUCCESSFULLY": "Field created successfully",
+    "FEILD_UPDATED_SUCCESSFULLY": "Field updated successfully"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

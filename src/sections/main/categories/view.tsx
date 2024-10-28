@@ -28,7 +28,7 @@ import { paths } from 'src/routes/paths';
 import { changeCenterStatus } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
 import { deleteField } from 'src/actions/categories';
-import { NewEditBrandDialog } from './new-edit-category-dialog';
+import { NewEditCategoryDialog } from './new-edit-category-dialog';
 
 type props = {
   categories: any[];
@@ -42,7 +42,8 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const confirmDelete = useBoolean();
+  const confirmActivate = useBoolean();
+  const confirmDeactivate = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
   const [selectedCategory, setSelectedCategory] = useState<ICenter | undefined>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
@@ -62,7 +63,6 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const formDefaultValues = {
     name: '',
   };
-
   const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
@@ -85,12 +85,20 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
     [pathname, router, searchParams, setValue]
   );
 
-  const handleConfirmBlock = async () => {
+  const handleConfirmActivate = async () => {
     const res = await deleteField(selectedCategory);
-    console.log(res);
     if (res.statusCode === 200) {
-      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESSFULLY'));
-      confirmDelete.onFalse();
+      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
+      confirmActivate.onFalse();
+    } else {
+      enqueueSnackbar(`${res.error}`, { variant: 'error' });
+    }
+  };
+  const handleConfirmDeactivate = async () => {
+    const res = await deleteField(selectedCategory);
+    if (res.statusCode === 200) {
+      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
+      confirmDeactivate.onFalse();
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
     }
@@ -184,13 +192,25 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'eva:trash-2-outline',
+              sx: { color: 'info.dark' },
+
+              label: t('LABEL.ACTIVATE'),
+              icon: 'uim:process',
               onClick: (item: any) => {
                 setSelectedCategory(item);
-                confirmDelete.onTrue();
+                confirmActivate.onTrue();
               },
+              hide: (row) => row.is_active === true,
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DEACTIVATE'),
+              icon: 'streamline:synchronize-disable-solid',
+              onClick: (item: any) => {
+                setSelectedCategory(item);
+                confirmDeactivate.onTrue();
+              },
+              hide: (row) => row.is_active === false,
             },
           ]}
           customRender={{
@@ -204,25 +224,42 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
         />
       </Container>
       <ConfirmDialog
-        open={confirmDelete.value}
-        onClose={confirmDelete.onFalse}
-        title={t('TITLE.DELETE_FIELD')}
-        content={t('MESSAGE.CONFIRM_DELETE_FIELD')}
+        open={confirmActivate.value}
+        onClose={confirmActivate.onFalse}
+        title={t('TITLE.ACTIVATE_FIELD')}
+        content={t('MESSAGE.CONFIRM_ACTIVATE_FIELD')}
+        action={
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              handleConfirmActivate();
+            }}
+          >
+            {t('BUTTON.ACTIVATE')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDeactivate.value}
+        onClose={confirmDeactivate.onFalse}
+        title={t('TITLE.DEACTIVATE_FIELD')}
+        content={t('MESSAGE.CONFIRM_DEACTIVATE_FIELD')}
         action={
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              handleConfirmBlock();
+              handleConfirmDeactivate();
             }}
           >
-            {t('BUTTON.DELETE')}
+            {t('BUTTON.DEACTIVATE')}
           </Button>
         }
       />
 
       {isFormDialogOpen ? (
-        <NewEditBrandDialog
+        <NewEditCategoryDialog
           open={isFormDialogOpen}
           onClose={() => {
             setIsFormDialogOpen(false);
