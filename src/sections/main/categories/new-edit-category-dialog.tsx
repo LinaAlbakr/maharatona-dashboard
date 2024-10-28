@@ -2,7 +2,7 @@
 
 import * as yup from 'yup';
 import { toFormData } from 'axios';
-import { use, useCallback, useEffect, useState } from 'react';
+import {  useCallback,  useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -29,7 +29,6 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
 import { RHFUploadAvatar } from 'src/components/hook-form';
 import { SketchPicker } from 'react-color';
-import { set } from 'lodash';
 import { editCategoriey, newCategoriey } from 'src/actions/categories';
 
 interface Props {
@@ -38,7 +37,7 @@ interface Props {
   category?: any | null;
 }
 
-export function NewEditBrandDialog({ open, onClose, category }: Props) {
+export function NewEditCategoryDialog({ open, onClose, category }: Props) {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const [color, setColor] = useState(
@@ -56,14 +55,14 @@ export function NewEditBrandDialog({ open, onClose, category }: Props) {
         name_ar: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         name_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         color: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-        avatar: yup.mixed<File | string>().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        avatar: yup.mixed<any>().nullable().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
       })
     ),
     defaultValues: {
       name_ar: category?.name_ar || '',
       name_en: category?.name_en || '',
-      color: category?.color || '',
-      avatar: category?.avatar || '',
+      color: category?.color || '#ffffff',
+      avatar: category?.avatar || null,
     },
   });
   const {
@@ -75,10 +74,15 @@ export function NewEditBrandDialog({ open, onClose, category }: Props) {
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const file = Object.assign(acceptedFiles[0], {
-        preview: URL.createObjectURL(acceptedFiles[0]),
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
       });
-      setValue('avatar', file);
+
+      if (file) {
+        setValue('avatar', newFile, { shouldValidate: true });
+      }
     },
     [setValue]
   );
@@ -86,13 +90,16 @@ export function NewEditBrandDialog({ open, onClose, category }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     const formData = new FormData();
     toFormData(data, formData);
+    if (typeof data?.avatar === 'string') {
+      formData.delete('avatar');
+    }
     try {
       if (category) {
         await editCategoriey(formData, category.id);
-        enqueueSnackbar(t('Brand updated successfully'));
+        enqueueSnackbar(t('MESSAGE.FEILD_UPDATED_SUCCESSFULLY'));
       } else {
         await newCategoriey(formData);
-        enqueueSnackbar(t('Brand created successfully'));
+        enqueueSnackbar(t('MESSAGE.FEILD_CREATED_SUCCESSFULLY'));
       }
       invalidatePath(paths.dashboard.categories);
       onClose();

@@ -7,7 +7,9 @@
     "BLOCK_CLIENT": "حظر العميل",
     "UNBLOCK_CLIENT": "الغاء حظر العميل",
     "DELETE_REASON": "حذف السبب",
-    "DELETE_FIELD": "حذف مجال"
+    "DELETE_FIELD": "حذف مجال",
+    "DEACTIVATE_FIELD": "تعطيل مجال",
+    "ACTIVATE_FIELD": "تفعيل مجال"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -104,7 +106,9 @@
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
     "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
     "EDIT_REASON": "تعديل سبب",
-    "NEW_REASON": "اضافة سبب"
+    "NEW_REASON": "اضافة سبب",
+    "ACTIVATE": "تفعيل",
+    "DEACTIVATE": "تعطيل"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -117,7 +121,9 @@
     "EDIT": "تعديل",
     "ADD_FIELD": "اضافة مجال",
     "ADD_REASON": "اضافه سبب",
-    "SAVE": "حفظ"
+    "SAVE": "حفظ",
+    "ACTIVATE": "تفعيل",
+    "DEACTIVATE": "تعطيل"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -165,7 +171,13 @@
     "DELETE_SUCCESSFULLY": "تم الحذف بنجاح",
     "REASON_CREATED_SUCCESSFULLY": "تم انشاء السبب بنجاح",
     "REASON_UPDATED_SUCCESSFULLY": "تم تعديل السبب بنجاح",
-    "DELETED_SUCCESSFULLY":"تم الحذف بنجاح"
+    "DELETED_SUCCESSFULLY": "تم الحذف بنجاح",
+    "CONFIRM_ACTIVATE_FIELD": "هل تريد تفعيل هذا المجال؟",
+    "CONFIRM_DEACTIVATE_FIELD": "هل تريد تعطيل هذا المجال؟",
+    "DEACTIVATED_SUCCESSFULLY": "تم تعطيل المجال بنجاح",
+    "ACTIVATED_SUCCESSFULLY": "تم تفعيل المجال بنجاح",
+    "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
+    "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
