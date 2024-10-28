@@ -131,15 +131,15 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
           >
             <RHFTextField
               name="name_ar"
-              label={t('Name in Arabic')}
-              placeholder={t('Name in Arabic')}
+              label={t('LABEL.NAME_AR')}
+              placeholder={t('LABEL.NAME_AR')}
               fullWidth
               value={watch('name_ar')}
             />
             <RHFTextField
               name="name_en"
-              label={t('Name in English')}
-              placeholder={t('Name in English')}
+              label={t('LABEL.NAME_EN')}
+              placeholder={t('LABEL.NAME_EN')}
               fullWidth
               value={watch('name_en')}
             />
