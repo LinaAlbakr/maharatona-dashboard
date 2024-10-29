@@ -40,6 +40,7 @@ export const primary = {
   dark: '#992A74',
   darker: '#7F225F',
   contrastText: '#FFFFFF',
+  cancel: '#804DA0',
 };
 
 export const secondary = {

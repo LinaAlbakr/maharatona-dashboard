@@ -38,7 +38,6 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
     title_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
   });
 
-
   const defaultValues = useMemo(
     () => ({
       message_ar: '',
@@ -121,7 +120,19 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
+          <Button
+            variant="contained"
+            sx={{
+              color: 'primary.cancel',
+              bgcolor: 'white',
+              border: '1px solid #DBE0E4',
+              '&:hover': {
+                bgcolor: '#DBE0E5',
+                border: '1px solid #DBE0E4',
+              },
+            }}
+            onClick={onClose}
+          >
             {t('BUTTON.CANCEL')}
           </Button>
 

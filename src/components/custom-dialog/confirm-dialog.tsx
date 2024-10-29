@@ -30,7 +30,19 @@ export default function ConfirmDialog({
       <DialogActions>
         {action}
 
-        <Button variant="outlined" color="inherit" onClick={onClose}>
+        <Button
+          variant="contained"
+          sx={{
+            color: 'primary.cancel',
+            bgcolor: 'white',
+            border: '1px solid #DBE0E4',
+            '&:hover': {
+              bgcolor: '#DBE0E5',
+              border: '1px solid #DBE0E4',
+            },
+          }}
+          onClick={onClose}
+        >
           {t('BUTTON.CANCEL')}
         </Button>
       </DialogActions>

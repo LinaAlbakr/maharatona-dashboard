@@ -96,7 +96,19 @@ export function NewEditReasonDialog({ open, onClose, reason }: Props) {
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" color="inherit" onClick={onClose}>
+          <Button
+            variant="contained"
+            sx={{
+              color: 'primary.cancel',
+              bgcolor: 'white',
+              border: '1px solid #DBE0E4',
+              '&:hover': {
+                bgcolor: '#DBE0E5',
+                border: '1px solid #DBE0E4',
+              },
+            }}
+            onClick={onClose}
+          >
             {t('BUTTON.CANCEL')}
           </Button>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
