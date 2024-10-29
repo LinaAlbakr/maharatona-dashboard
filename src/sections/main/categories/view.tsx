@@ -14,18 +14,14 @@ import {
   Typography,
 } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
+import { useCallback, useEffect,  useState } from 'react';
 import { ICenter } from 'src/types/centers';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { paths } from 'src/routes/paths';
-import { changeCenterStatus } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
 import { deleteField } from 'src/actions/categories';
 import { NewEditCategoryDialog } from './new-edit-category-dialog';

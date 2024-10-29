@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Card, Container, Divider, ListItemText, Rating, Typography } from '@mui/material';
+import { Box, Card, Container, Divider, ListItemText,  Typography } from '@mui/material';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';

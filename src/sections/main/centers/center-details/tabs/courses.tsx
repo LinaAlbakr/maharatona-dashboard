@@ -1,16 +1,14 @@
 'use client';
 
 import { Container, Pagination, Stack } from '@mui/material';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useSettingsContext } from 'src/components/settings';
-import { useTranslate } from 'src/locales';
 import CourseCard from '../components/course-card';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 type Props = {
   CenterCourses: any;
 };
 const Courses = ({ CenterCourses }: Props) => {
-  const { t } = useTranslate();
   const settings = useSettingsContext();
   const searchParams = useSearchParams();
   const router = useRouter();

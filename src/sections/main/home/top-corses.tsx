@@ -1,6 +1,6 @@
 'use client';
 import { useTranslate } from 'src/locales';
-import { Avatar, Box, Card, Typography } from '@mui/material';
+import { Avatar,  Card, Typography } from '@mui/material';
 
 import i18n from 'src/locales/i18n';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';

@@ -5,7 +5,7 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import { Box, Button, Card, Grid, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect,  useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 import { ICenter } from 'src/types/centers';
 import { useForm } from 'react-hook-form';

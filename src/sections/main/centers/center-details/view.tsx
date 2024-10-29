@@ -1,8 +1,7 @@
 'use client';
 
-import { Box, Card, Container, ListItemText, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Card, Container, Tab, Tabs, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
-import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { useQueryString } from 'src/hooks/use-queryString';
 import { useTranslate } from 'src/locales';
@@ -10,7 +9,7 @@ import AllInformation from './tabs/all-Information';
 import Reports from './tabs/reports';
 import Courses from './tabs/courses';
 import Image from 'next/image';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import i18n from 'src/locales/i18n';
 
 export const tabs = [

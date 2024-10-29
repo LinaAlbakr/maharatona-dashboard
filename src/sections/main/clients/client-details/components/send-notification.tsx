@@ -11,9 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-// import { Units } from 'src/@types/units';
 import { useTranslate } from 'src/locales';
-// import { addUnit, updateUnit } from 'src/actions/units-actions';
 
 import { Grid } from '@mui/material';
 
