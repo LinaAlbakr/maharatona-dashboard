@@ -75,6 +75,10 @@ export const endpoints = {
     login: '/auth/signin',
     register: '/auth/register',
   },
+  home: {
+    topCourses: '/admin-panel/top-courses',
+    statistics: '/admin-panel/education-summary',
+  },
   centers: {
     fetch: '/admin-panel/all-centers',
     cities: '/city-neighborhood/all-cities',
@@ -114,6 +118,6 @@ export const endpoints = {
     fetch: '/admin-panel/all-fields',
     deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
     new: `/admin-panel/create-field`,
-    edit: (fieldId:string) => `/admin-panel/update-field/${fieldId}`,
+    edit: (fieldId: string) => `/admin-panel/update-field/${fieldId}`,
   },
 };

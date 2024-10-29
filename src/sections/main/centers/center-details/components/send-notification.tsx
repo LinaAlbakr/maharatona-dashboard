@@ -134,7 +134,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
           <Button
             variant="contained"
             sx={{
-              color: 'primary.cancel',
+              color: 'primary.common',
               bgcolor: 'white',
               border: '1px solid #DBE0E4',
               '&:hover': {

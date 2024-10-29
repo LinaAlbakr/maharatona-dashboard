@@ -99,7 +99,7 @@ export function NewEditReasonDialog({ open, onClose, reason }: Props) {
           <Button
             variant="contained"
             sx={{
-              color: 'primary.cancel',
+              color: 'primary.common',
               bgcolor: 'white',
               border: '1px solid #DBE0E4',
               '&:hover': {

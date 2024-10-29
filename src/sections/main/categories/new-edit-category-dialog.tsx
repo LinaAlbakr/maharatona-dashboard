@@ -191,7 +191,7 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
           <Button
             variant="contained"
             sx={{
-              color: 'primary.cancel',
+              color: 'primary.common',
               bgcolor: 'white',
               border: '1px solid #DBE0E4',
               '&:hover': {

@@ -25,6 +25,7 @@ export default function SharedTable<T extends { id: string }>({
   disablePagination,
   customRender,
   count,
+  headColor,
 }: SharedTableProps<T>) {
   const table = useTable();
   const searchParams = useSearchParams();
@@ -40,7 +41,7 @@ export default function SharedTable<T extends { id: string }>({
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <Scrollbar>
           <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 400 }}>
-            <TableHeadCustom headLabel={tableHead} />
+            <TableHeadCustom headLabel={tableHead}headColor={headColor} />
 
             <TableBody>
               {data.map((row) => (
