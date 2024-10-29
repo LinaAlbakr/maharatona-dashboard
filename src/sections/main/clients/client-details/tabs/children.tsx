@@ -3,11 +3,10 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
+import {  Card,  InputAdornment, TextField } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import Iconify from 'src/components/iconify';

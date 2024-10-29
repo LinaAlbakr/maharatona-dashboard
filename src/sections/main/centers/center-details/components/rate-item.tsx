@@ -3,11 +3,11 @@ import { useParams } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { deleteRate } from 'src/actions/centers';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import  { usePopover } from 'src/components/custom-popover';
 import Iconify from 'src/components/iconify';
 import { useTranslate } from 'src/locales';
 import { fDate } from 'src/utils/format-time';
-import { IconButton } from 'yet-another-react-lightbox';
+
 type props = {
   rate: any;
 };

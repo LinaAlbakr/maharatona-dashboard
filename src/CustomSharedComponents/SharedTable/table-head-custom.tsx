@@ -9,9 +9,10 @@ import { headCellType } from './types';
 
 type Props = {
   headLabel: headCellType[];
+  headColor?: string;
 };
 
-export default function TableHeadCustom({ headLabel }: Props) {
+export default function TableHeadCustom({ headLabel, headColor }: Props) {
   const { t } = useTranslate();
   return (
     <TableHead>
@@ -23,7 +24,7 @@ export default function TableHeadCustom({ headLabel }: Props) {
             sx={{
               width: headCell.width,
               textWrap: 'nowrap',
-              color: 'secondary.main',
+              color: headColor ? headColor : 'secondary.main',
             }}
           >
             {t(headCell?.label || '')}

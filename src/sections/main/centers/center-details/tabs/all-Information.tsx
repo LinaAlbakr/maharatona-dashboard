@@ -55,9 +55,6 @@ const AllInformation = ({ CenterInfo }: Props) => {
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.WEBSITE')}
             secondary={
-              // <Link href={`${CenterInfo?.website}`} passHref>
-              //   {CenterInfo?.website}
-              // </Link>
               <a href={`https://${CenterInfo?.website}`} target="_blank" rel="noopener noreferrer">
                 {CenterInfo?.website}
               </a>

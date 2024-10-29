@@ -108,7 +108,12 @@
     "EDIT_REASON": "تعديل سبب",
     "NEW_REASON": "اضافة سبب",
     "ACTIVATE": "تفعيل",
-    "DEACTIVATE": "تعطيل"
+    "DEACTIVATE": "تعطيل",
+    "CENTERS_NUMBER": "عدد مراكز التعليم",
+    "CLIENTS_WHO_BOOKED_COURSES": "عدد العملاء الذين حجزوا كورسات",
+    "CLIENTS_NUMBER": "عدد العملاء",
+    "NUMBER_OF_USERS": "عدد المستخدمين",
+    "TOP_COURSES": "اشهر الدورات"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",

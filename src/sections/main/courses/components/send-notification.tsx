@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -11,16 +10,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-// import { Units } from 'src/@types/units';
 import { useTranslate } from 'src/locales';
-// import { addUnit, updateUnit } from 'src/actions/units-actions';
 
 import { Grid } from '@mui/material';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { sendMessage } from 'src/actions/notifications';
-import { toFormData } from 'axios';
+
 
 type Props = {
   open: boolean;
@@ -37,7 +34,6 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
     title_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
     title_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
   });
-
 
   const defaultValues = useMemo(
     () => ({
@@ -121,7 +117,19 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
+          <Button
+            variant="contained"
+            sx={{
+              color: 'primary.common',
+              bgcolor: 'white',
+              border: '1px solid #DBE0E4',
+              '&:hover': {
+                bgcolor: '#DBE0E5',
+                border: '1px solid #DBE0E4',
+              },
+            }}
+            onClick={onClose}
+          >
             {t('BUTTON.CANCEL')}
           </Button>
 

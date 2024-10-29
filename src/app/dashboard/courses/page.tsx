@@ -1,6 +1,10 @@
 import { fetchCourses } from 'src/actions/courses';
 import CoursesView from 'src/sections/main/courses/view';
 
+export const metadata = {
+  title: 'Courses',
+};
+
 type props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };

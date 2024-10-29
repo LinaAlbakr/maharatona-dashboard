@@ -1,5 +1,5 @@
 'use client';
-import { Box, Card, Container, Divider, Grid, Typography } from '@mui/material';
+import { Box, Card, Container, Divider,  Typography } from '@mui/material';
 import Image from 'next/image';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';

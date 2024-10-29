@@ -1,7 +1,7 @@
 'use client';
 
 import { Container, Pagination, Stack } from '@mui/material';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import CourseCard from '../components/course-card';

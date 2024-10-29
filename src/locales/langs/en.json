@@ -105,7 +105,12 @@
     "EDIT_REASON": "Edit Reason",
     "NEW_REASON": "New Reason",
     "ACTIVATE": "Activate",
-    "DEACTIVATE": "Deactivate"
+    "DEACTIVATE": "Deactivate",
+    "CENTERS_NUMBER": "Number of Centers",
+    "CLIENTS_WHO_BOOKED_COURSES": "Clients who booked courses",
+    "CLIENTS_NUMBER": "Number of Clients",
+    "NUMBER_OF_USERS": "Number of Users",
+    "TOP_COURSES": "Top Courses"
   },
   "BUTTON": {
     "LOGIN": "Login",

@@ -11,9 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-// import { Units } from 'src/@types/units';
 import { useTranslate } from 'src/locales';
-// import { addUnit, updateUnit } from 'src/actions/units-actions';
 
 import { Grid } from '@mui/material';
 
@@ -130,7 +128,19 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
+          <Button
+            variant="contained"
+            sx={{
+              color: 'primary.common',
+              bgcolor: 'white',
+              border: '1px solid #DBE0E4',
+              '&:hover': {
+                bgcolor: '#DBE0E5',
+                border: '1px solid #DBE0E4',
+              },
+            }}
+            onClick={onClose}
+          >
             {t('BUTTON.CANCEL')}
           </Button>
 

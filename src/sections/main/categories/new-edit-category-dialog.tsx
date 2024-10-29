@@ -2,7 +2,7 @@
 
 import * as yup from 'yup';
 import { toFormData } from 'axios';
-import {  useCallback,  useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -188,7 +188,19 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" color="inherit" onClick={onClose}>
+          <Button
+            variant="contained"
+            sx={{
+              color: 'primary.common',
+              bgcolor: 'white',
+              border: '1px solid #DBE0E4',
+              '&:hover': {
+                bgcolor: '#DBE0E5',
+                border: '1px solid #DBE0E4',
+              },
+            }}
+            onClick={onClose}
+          >
             {t('BUTTON.CANCEL')}
           </Button>
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

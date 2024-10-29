@@ -28,6 +28,7 @@ export interface SharedTableProps<T> {
   disablePagination?: boolean;
   customRender?: Partial<Record<keyof T, (row: T) => ReactNode>>;
   count: number;
+  headColor?: string;
 }
 export interface SharedTableRowProps<T> {
   row: T;
