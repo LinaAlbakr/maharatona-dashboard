@@ -6,6 +6,10 @@ import { ICenter } from 'src/types/centers';
 type props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
+export const metadata = {
+  title: 'Clients',
+};
+
 
 const Page = async ({ searchParams }: Readonly<props>) => {
   const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;

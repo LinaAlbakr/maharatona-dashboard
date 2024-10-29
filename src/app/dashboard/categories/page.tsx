@@ -1,7 +1,10 @@
 import { fetchCategories } from 'src/actions/categories';
-import { fetchCenters } from 'src/actions/centers';
 import CategoriesView from 'src/sections/main/categories/view';
 import { ICenter } from 'src/types/centers';
+
+export const metadata = {
+  title: 'Caterories',
+};
 
 type props = {
   searchParams: { [key: string]: string | string[] | undefined };

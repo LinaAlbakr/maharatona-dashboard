@@ -1,7 +1,11 @@
 // import { fetchCallsReasons } from 'src/actions/support';
 
-import { fetchCallsReasons } from "src/actions/support";
-import CallsReasonsView from "src/sections/main/support/calls-reasons/view";
+import { fetchCallsReasons } from 'src/actions/support';
+import CallsReasonsView from 'src/sections/main/support/calls-reasons/view';
+
+export const metadata = {
+  title: 'Reasons for contacting',
+};
 
 type props = {
   searchParams: { [key: string]: string | string[] | undefined };
