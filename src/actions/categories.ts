@@ -37,7 +37,7 @@ export const fetchCategories = async ({
   }
 };
 
-export const deleteField = async (field: any): Promise<any> => {
+export const editFieldStatus = async (field: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
     const res = await axiosInstance.patch(
@@ -78,6 +78,7 @@ export const editCategoriey = async (reqBody: FormData, id: string): Promise<any
     const res = await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
     revalidatePath(`/dashboard/categories`);
