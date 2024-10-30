@@ -9,7 +9,9 @@
     "DELETE_REASON": "حذف السبب",
     "DELETE_FIELD": "حذف مجال",
     "DEACTIVATE_FIELD": "تعطيل مجال",
-    "ACTIVATE_FIELD": "تفعيل مجال"
+    "ACTIVATE_FIELD": "تفعيل مجال",
+    "NEW_CATEGORY": "اضافة مجال",
+    "EDIT_CATEGORY": "تعديل مجال"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
