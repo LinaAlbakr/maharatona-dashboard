@@ -120,7 +120,9 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogContent style={{ height: '600px' }}>
-          <RHFUploadAvatar name="avatar" maxSize={3145728} onDrop={handleDrop} sx={{ mb: 2 }} />
+          <RHFUploadAvatar name="avatar"
+            // maxSize={3145728}
+            onDrop={handleDrop} sx={{ mb: 2 }} />
           <Stack
             spacing={1}
             sx={{

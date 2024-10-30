@@ -23,7 +23,7 @@ import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
-import { deleteField } from 'src/actions/categories';
+import { editFieldStatus } from 'src/actions/categories';
 import { NewEditCategoryDialog } from './new-edit-category-dialog';
 
 type props = {
@@ -82,7 +82,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   );
 
   const handleConfirmActivate = async () => {
-    const res = await deleteField(selectedCategory);
+    const res = await editFieldStatus(selectedCategory);
     if (res.statusCode === 200) {
       enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
       confirmActivate.onFalse();
@@ -91,7 +91,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
     }
   };
   const handleConfirmDeactivate = async () => {
-    const res = await deleteField(selectedCategory);
+    const res = await editFieldStatus(selectedCategory);
     if (res.statusCode === 200) {
       enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
       confirmDeactivate.onFalse();
