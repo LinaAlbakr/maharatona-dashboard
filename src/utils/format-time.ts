@@ -81,3 +81,10 @@ export function convertTime24to12(time: string) {
   // Return formatted time
   return `${hourNum}:${minute} ${period}`;
 }
+
+export const englishDate = (date: string) => {
+  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long' }).format(new Date(date));
+};
+export const arabicDate = (date: string) => {
+  return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long' }).format(new Date(date));
+};

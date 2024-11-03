@@ -14,6 +14,7 @@ import SendNotification from './components/send-notification';
 import i18n from 'src/locales/i18n';
 import { set } from 'lodash';
 import Iconify from 'src/components/iconify';
+import { arabicDate, englishDate } from 'src/utils/format-time';
 
 type props = {
   count: number;
@@ -73,16 +74,6 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     [pathname, router, searchParams, setValue]
   );
 
-  const englishDate = (date: string) => {
-    return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long' }).format(
-      new Date(date)
-    );
-  };
-  const arabicDate = (date: string) => {
-    return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long' }).format(
-      new Date(date)
-    );
-  };
   return (
     <>
       <Container

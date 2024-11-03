@@ -7,7 +7,8 @@
     "DELETE_REASON": "Delete Reason",
     "DELETE_FIELD": "Delete Field",
     "DEACTIVATE_FIELD": "Deactivate Field",
-    "ACTIVATE_FIELD": "Activate Field"
+    "ACTIVATE_FIELD": "Activate Field",
+    "DELETE_COUPON": "Delete Coupon"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -110,7 +111,21 @@
     "CLIENTS_WHO_BOOKED_COURSES": "Clients who booked courses",
     "CLIENTS_NUMBER": "Number of Clients",
     "NUMBER_OF_USERS": "Number of Users",
-    "TOP_COURSES": "Top Courses"
+    "TOP_COURSES": "Top Courses",
+    "COUPONS": "Coupons",
+    "SEARCH_BY_COUPON_NAME": "Search By Coupon Name",
+    "TYPE": "Type",
+    "NUMBER_OF_USAGES": "Number Of Usages",
+    "DISCOUNT_TYPE": "Discount Type",
+    "DISCOUNT_AMOUNT": "Discount Amount",
+    "COUPON": "Coupon",
+    "VALUE": "Value",
+    "PERCENTAGE": "Percentage",
+    "CENTER": "Center",
+    "ADMIN": "Admin",
+    "TIME": "مره",
+    "END_DATE_MUST_BE_AFTER_START_DATE": "End date must be after start date",
+    "CREATE_COUPON": "Create Coupon"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -125,7 +140,9 @@
     "ADD_REASON": "Add Reason",
     "SAVE": "Save",
     "ACTIVATE": "Activate",
-    "DEACTIVATE": "Deactivate"
+    "DEACTIVATE": "Deactivate",
+    "ADD_COUPON": "Add Coupon",
+    "CREATE": "Create"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -134,7 +151,8 @@
     "COURSES": "Courses",
     "SUPPORT": "Support",
     "CALLS_REASONS": "Calls Reasons",
-    "FIELDS_AND_SPECIALTIES": "Fields and Specialties"
+    "FIELDS_AND_SPECIALTIES": "Fields and Specialties",
+    "COUPONS": "Coupons"
   },
   "TABLE": {
     "DENSE": "Dense",
@@ -177,10 +195,14 @@
     "DEACTIVATED_SUCCESSFULLY": "Field deactivated successfully",
     "ACTIVATED_SUCCESSFULLY": "Field activated successfully",
     "FEILD_CREATED_SUCCESSFULLY": "Field created successfully",
-    "FEILD_UPDATED_SUCCESSFULLY": "Field updated successfully"
+    "FEILD_UPDATED_SUCCESSFULLY": "Field updated successfully",
+    "COUPON_CREATED_SUCCESSFULLY": "Coupon created successfully",
+    "CONFIRM_DELETE_BANNER": "Are you sure you want to delete this Banner?"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",
-    "REASON_NAME_IN_ARABIC": "Reason name in arabic"
+    "REASON_NAME_IN_ARABIC": "Reason name in arabic",
+    "VALUE": "Value",
+    "NUMBER_OF_USAGES": "Number of usages"
   }
 }

@@ -59,6 +59,7 @@ const ICONS = {
   building: icon('fa-solid:building'),
   bag: icon('lets-icons:bag-fill'),
   cartegries: icon('fluent:playing-cards-20-filled'),
+  coupon: icon('ri:coupon-3-fill'),
 };
 
 export function useNavData() {
@@ -88,6 +89,7 @@ export function useNavData() {
               },
             ],
           },
+          { title: t('SIDEBAR.COUPONS'), path: paths.dashboard.coupons, icon: ICONS.coupon },
         ],
       },
     ],

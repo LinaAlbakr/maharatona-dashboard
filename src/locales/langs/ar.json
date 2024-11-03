@@ -11,7 +11,8 @@
     "DEACTIVATE_FIELD": "تعطيل مجال",
     "ACTIVATE_FIELD": "تفعيل مجال",
     "NEW_CATEGORY": "اضافة مجال",
-    "EDIT_CATEGORY": "تعديل مجال"
+    "EDIT_CATEGORY": "تعديل مجال",
+    "DELETE_COUPON": "حذف البنر"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -115,7 +116,23 @@
     "CLIENTS_WHO_BOOKED_COURSES": "عدد العملاء الذين حجزوا كورسات",
     "CLIENTS_NUMBER": "عدد العملاء",
     "NUMBER_OF_USERS": "عدد المستخدمين",
-    "TOP_COURSES": "اشهر الدورات"
+    "TOP_COURSES": "اشهر الدورات",
+    "COUPONS": "الكوبونات",
+    "SEARCH_BY_COUPON_NAME": "بحث باسم الكوبون",
+    "TYPE": "النوع",
+    "NUMBER_OF_USAGES": "عدد  مرات الاستخدامات",
+    "DISCOUNT_TYPE": "نوع الخصم",
+    "DISCOUNT_AMOUNT": "قيمه الخصم",
+    "COUPON": "الكوبون",
+    "VALUE": "قيمه",
+    "PERCENTAGE": "نسبه",
+    "CENTER": "مركز",
+    "ADMIN": "ادمن",
+    "TIME": "مره",
+    "END_DATE_MUST_BE_AFTER_START_DATE": "يجب ان يكون تاريخ النهاية بعد تاريخ البداية",
+    "USAGE_START_DATE": "تاريخ بدايه الاستخدام",
+    "USAGE_END_DATE": "تاريخ نهايه الاستخدام",
+    "CREATE_COUPON": "انشاء كوبون"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -130,7 +147,9 @@
     "ADD_REASON": "اضافه سبب",
     "SAVE": "حفظ",
     "ACTIVATE": "تفعيل",
-    "DEACTIVATE": "تعطيل"
+    "DEACTIVATE": "تعطيل",
+    "ADD_COUPON": "اضافة كوبون",
+    "CREATE": "انشاء"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -139,7 +158,8 @@
     "COURSES": "الدورات التدريبية",
     "SUPPORT": "الدعم الفني",
     "CALLS_REASONS": "اسباب الاتصال",
-    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات"
+    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات",
+    "COUPONS": "البنرات الاعلانيه"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -184,10 +204,14 @@
     "DEACTIVATED_SUCCESSFULLY": "تم تعطيل المجال بنجاح",
     "ACTIVATED_SUCCESSFULLY": "تم تفعيل المجال بنجاح",
     "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
-    "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح"
+    "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح",
+    "BANNER_CREATED_SUCCESSFULLY": "تم انشاء البنر بنجاح",
+    "CONFIRM_DELETE_BANNER": "هل تريد حذف هذا البنر؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
-    "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية"
+    "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
+    "VALUE": "قيمه",
+    "NUMBER_OF_USAGES": "عدد  مرات الاستخدامات"
   }
 }
