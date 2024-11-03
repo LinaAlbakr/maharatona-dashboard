@@ -122,7 +122,7 @@ export const endpoints = {
   },
   coupons: {
     fetch: '/admin-panel/all-discount-code',
-    deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
+    deleteCoupon: (couponId: string) => `/admin-panel/delete-discount-code/${couponId}`,
     new: `/admin-panel/create-field`,
 
   },

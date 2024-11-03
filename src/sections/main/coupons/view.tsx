@@ -6,8 +6,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useState } from 'react';
-import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
-import { ICenter } from 'src/types/centers';
+import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -15,11 +14,10 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { paths } from 'src/routes/paths';
-import { changeCenterStatus } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
+import { deleteCoupon } from 'src/actions/coupons';
 
 type props = {
   coupons: any[];
@@ -83,9 +81,9 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
 
   const handleconfirmDelete = async () => {
     if (selectedId) {
-      const res = await changeCenterStatus(selectedId, { userStatus: 'BlockedClient' });
+      const res = await deleteCoupon(selectedId);
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
+        enqueueSnackbar(t('MESSAGE.DELETE_SUCCESSFULLY'));
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }

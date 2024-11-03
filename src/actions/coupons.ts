@@ -23,8 +23,6 @@ export const fetchCoupons = async ({
 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
-  console.log(page, limit, filters, type);
-
   try {
     const res = await axiosInstance.get(endpoints.coupons.fetch, {
       params: {
@@ -35,8 +33,6 @@ export const fetchCoupons = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res?.data);
-
     return res?.data;
   } catch (error) {
     console.log(error);
@@ -48,18 +44,17 @@ export const fetchCoupons = async ({
 export const deleteCoupon = async (couponId: string): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const lang = cookies().get('Language')?.value;
 
-    const res = await axiosInstance.delete(endpoints.centers.deleteReview(couponId), {
+    const res = await axiosInstance.delete(endpoints.coupons.deleteCoupon(couponId), {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Accept-Language': lang,
       },
     });
+    revalidatePath(`/dashboard/coupons`);
+    return res?.status;
   } catch (error) {
     return {
       error: getErrorMessage(error),
     };
   }
-  revalidatePath(`/dashboard/coupons`);
 };
