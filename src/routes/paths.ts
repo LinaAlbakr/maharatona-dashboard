@@ -29,5 +29,6 @@ export const paths = {
       calls_reasons: `${ROOTS.DASHBOARD}/support/calls-reasons`,
     },
     categories: `${ROOTS.DASHBOARD}/categories`,
+    coupons: `${ROOTS.DASHBOARD}/coupons`,
   },
 };

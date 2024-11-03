@@ -115,7 +115,19 @@
     "CLIENTS_WHO_BOOKED_COURSES": "عدد العملاء الذين حجزوا كورسات",
     "CLIENTS_NUMBER": "عدد العملاء",
     "NUMBER_OF_USERS": "عدد المستخدمين",
-    "TOP_COURSES": "اشهر الدورات"
+    "TOP_COURSES": "اشهر الدورات",
+    "COUPONS": "الكوبونات",
+    "SEARCH_BY_COUPON_NAME": "بحث باسم الكوبون",
+    "TYPE": "النوع",
+    "NUMBER_OF_USAGES": "عدد  مرات الاستخدامات",
+    "DISCOUNT_TYPE": "نوع الخصم",
+    "DISCOUNT_AMOUNT": "قيمه الخصم",
+    "COUPON": "الكوبون",
+    "VALUE": "قيمه",
+    "PERCENTAGE": "نسبه",
+    "CENTER": "مركز",
+    "ADMIN": "ادمن",
+    "TIME": "مره"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -130,7 +142,8 @@
     "ADD_REASON": "اضافه سبب",
     "SAVE": "حفظ",
     "ACTIVATE": "تفعيل",
-    "DEACTIVATE": "تعطيل"
+    "DEACTIVATE": "تعطيل",
+    "ADD_COUPON": "اضافة كوبون"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -139,7 +152,8 @@
     "COURSES": "الدورات التدريبية",
     "SUPPORT": "الدعم الفني",
     "CALLS_REASONS": "اسباب الاتصال",
-    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات"
+    "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات",
+    "COUPONS": "البنرات الاعلانيه"
   },
   "TABLE": {
     "DENSE": "تكديس",

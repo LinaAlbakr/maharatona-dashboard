@@ -120,4 +120,10 @@ export const endpoints = {
     new: `/admin-panel/create-field`,
     edit: (fieldId: string) => `/admin-panel/update-field/${fieldId}`,
   },
+  coupons: {
+    fetch: '/admin-panel/all-discount-code',
+    deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
+    new: `/admin-panel/create-field`,
+
+  },
 };
