@@ -19,6 +19,7 @@ import { paths } from 'src/routes/paths';
 import SendNotification from './center-details/components/send-notification';
 import { changeCenterStatus } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
+import { bg } from 'date-fns/locale';
 
 type props = {
   centers: ICenter[];
@@ -238,9 +239,49 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             },
           ]}
           customRender={{
-            neighborhood: (item: any) => item?.neighborhood.name,
-            id: (item: any) => item?.neighborhood.city.name,
-            phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
+            name: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.name}
+              </Box>
+            ),
+            neighborhood: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.neighborhood.name}
+              </Box>
+            ),
+            id: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.neighborhood.city.name}
+              </Box>
+            ),
+            phone: (item: any) => (
+              <Box
+                style={{
+                  direction: 'ltr',
+                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                }}
+              >
+                {item?.phone}
+              </Box>
+            ),
+            number_of_registrants: (item: any) => (
+              <Box
+                style={{
+                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                }}
+              >
+                {item?.number_of_registrants}
+              </Box>
+            ),
+            number_of_courses: (item: any) => (
+              <Box
+                style={{
+                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                }}
+              >
+                {item?.number_of_courses}
+              </Box>
+            ),
           }}
         />
       </Container>
