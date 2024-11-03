@@ -11,7 +11,8 @@
     "DEACTIVATE_FIELD": "تعطيل مجال",
     "ACTIVATE_FIELD": "تفعيل مجال",
     "NEW_CATEGORY": "اضافة مجال",
-    "EDIT_CATEGORY": "تعديل مجال"
+    "EDIT_CATEGORY": "تعديل مجال",
+    "DELETE_COUPON": "حذف البنر"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -127,7 +128,11 @@
     "PERCENTAGE": "نسبه",
     "CENTER": "مركز",
     "ADMIN": "ادمن",
-    "TIME": "مره"
+    "TIME": "مره",
+    "END_DATE_MUST_BE_AFTER_START_DATE": "يجب ان يكون تاريخ النهاية بعد تاريخ البداية",
+    "USAGE_START_DATE": "تاريخ بدايه الاستخدام",
+    "USAGE_END_DATE": "تاريخ نهايه الاستخدام",
+    "CREATE_COUPON": "انشاء كوبون"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -143,7 +148,8 @@
     "SAVE": "حفظ",
     "ACTIVATE": "تفعيل",
     "DEACTIVATE": "تعطيل",
-    "ADD_COUPON": "اضافة كوبون"
+    "ADD_COUPON": "اضافة كوبون",
+    "CREATE": "انشاء"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -198,10 +204,14 @@
     "DEACTIVATED_SUCCESSFULLY": "تم تعطيل المجال بنجاح",
     "ACTIVATED_SUCCESSFULLY": "تم تفعيل المجال بنجاح",
     "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
-    "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح"
+    "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح",
+    "BANNER_CREATED_SUCCESSFULLY": "تم انشاء البنر بنجاح",
+    "CONFIRM_DELETE_BANNER": "هل تريد حذف هذا البنر؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
-    "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية"
+    "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
+    "VALUE": "قيمه",
+    "NUMBER_OF_USAGES": "عدد  مرات الاستخدامات"
   }
 }

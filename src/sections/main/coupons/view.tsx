@@ -18,13 +18,14 @@ import Iconify from 'src/components/iconify';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import { deleteCoupon } from 'src/actions/coupons';
+import { NewCouponDialog } from './new-coupon-dialog';
 
 type props = {
   coupons: any[];
   count: number;
 };
 
-const types = [
+export const types = [
   { name_en: 'ADMIN', name_ar: 'ادمن', value: 'ADMIN' },
   { name_en: 'CENTER', name_ar: 'مركز', value: 'CENTER' },
 ];
@@ -38,6 +39,7 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
   const router = useRouter();
   const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -173,7 +175,7 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
               '&:hover': { bgcolor: 'primary.main', color: 'white' },
             }}
             onClick={() => {
-              // setIsFormDialogOpen(true);
+              setIsFormDialogOpen(true);
             }}
           >
             {t('BUTTON.ADD_COUPON')}{' '}
@@ -210,7 +212,7 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_COUPON')}
-        content={t('MESSAGE.CONFIRM_DELETE')}
+        content={t('MESSAGE.CONFIRM_DELETE_BANNER')}
         action={
           <Button
             variant="contained"
@@ -223,6 +225,14 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
           </Button>
         }
       />
+      {isFormDialogOpen ? (
+        <NewCouponDialog
+          open={isFormDialogOpen}
+          onClose={() => {
+            setIsFormDialogOpen(false);
+          }}
+        />
+      ) : null}
     </>
   );
 };

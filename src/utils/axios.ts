@@ -123,7 +123,7 @@ export const endpoints = {
   coupons: {
     fetch: '/admin-panel/all-discount-code',
     deleteCoupon: (couponId: string) => `/admin-panel/delete-discount-code/${couponId}`,
-    new: `/admin-panel/create-field`,
+    new: `/admin-panel/create-discount-code`,
 
   },
 };

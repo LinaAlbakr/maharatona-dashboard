@@ -35,8 +35,6 @@ export const fetchCoupons = async ({
     });
     return res?.data;
   } catch (error) {
-    console.log(error);
-
     throw new Error(error);
   }
 };
@@ -57,4 +55,20 @@ export const deleteCoupon = async (couponId: string): Promise<any> => {
       error: getErrorMessage(error),
     };
   }
+};
+
+export const newCoupon = async (reqBody: any): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  try {
+    const res = await axiosInstance.post(endpoints.coupons.new, reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath('/dashboard/coupons/');
 };
