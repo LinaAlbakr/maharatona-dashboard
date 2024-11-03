@@ -5,7 +5,7 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import { Box, Button, Card, Grid, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect,  useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 import { ICenter } from 'src/types/centers';
 import { useForm } from 'react-hook-form';
@@ -224,11 +224,42 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             },
           ]}
           customRender={{
-            neighborhood: (item: any) => item?.neighborhood.name,
-            id: (item: any) => item?.neighborhood.city.name,
-            phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
+            email: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.email}
+              </Box>
+            ),
+            name: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.name}
+              </Box>
+            ),
+            neighborhood: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.neighborhood.name}
+              </Box>
+            ),
+            id: (item: any) => (
+              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+                {item?.neighborhood.city.name}
+              </Box>
+            ),
+            phone: (item: any) => (
+              <Box
+                style={{
+                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                  direction: 'ltr',
+                }}
+              >
+                {item?.phone}
+              </Box>
+            ),
             children: (item: any) => (
-              <Box>
+              <Box
+                style={{
+                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                }}
+              >
                 {item?.children} {t('TABLE.CHILDREN')}
               </Box>
             ),
