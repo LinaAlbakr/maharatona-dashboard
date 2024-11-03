@@ -59,10 +59,12 @@ export const deleteCoupon = async (couponId: string): Promise<any> => {
 
 export const newCoupon = async (reqBody: any): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
   try {
     const res = await axiosInstance.post(endpoints.coupons.new, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
       },
     });
   } catch (error) {
