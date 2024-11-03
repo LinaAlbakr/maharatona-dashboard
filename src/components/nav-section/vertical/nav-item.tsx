@@ -225,7 +225,7 @@ const StyledNavItem = styled(ListItemButton, {
         },
       }),
       ...(opened && {
-        color: theme.palette.text.primary,
+        color: theme.palette.primary.main,
         backgroundColor: theme.palette.action.hover,
       }),
     }),
@@ -270,7 +270,7 @@ const StyledNavItem = styled(ListItemButton, {
         ...baseStyles.arrow,
       },
       ...(active && {
-        color: theme.palette.text.primary,
+        color: theme.palette.primary.main,
       }),
     }),
 
