@@ -132,7 +132,13 @@
     "END_DATE_MUST_BE_AFTER_START_DATE": "يجب ان يكون تاريخ النهاية بعد تاريخ البداية",
     "USAGE_START_DATE": "تاريخ بدايه الاستخدام",
     "USAGE_END_DATE": "تاريخ نهايه الاستخدام",
-    "CREATE_COUPON": "انشاء كوبون"
+    "CREATE_COUPON": "انشاء كوبون",
+    "CLIENT": "عميل",
+    "DATE": "التاريخ",
+    "TECHNICAL_SUPPORT": "الدعم الفني",
+    "REASON_TITLE": "عنوان السبب",
+    "LOGOUT": "تسجيل الخروج",
+    "HOME": "الرئيسية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -159,7 +165,8 @@
     "SUPPORT": "الدعم الفني",
     "CALLS_REASONS": "اسباب الاتصال",
     "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات",
-    "COUPONS": "البنرات الاعلانيه"
+    "COUPONS": "الكوبونات",
+    "TECHNICAL_SUPPORT": "الدعم الفني"
   },
   "TABLE": {
     "DENSE": "تكديس",

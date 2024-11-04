@@ -17,12 +17,13 @@ import { useAuthContext } from 'src/auth/hooks';
 
 import { varHover } from 'src/components/animate';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { useTranslate } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
 const OPTIONS = [
   {
-    label: 'Home',
+    label: 'HOME',
     linkTo: '/',
   },
 ];
@@ -32,9 +33,9 @@ const OPTIONS = [
 export default function AccountPopover() {
   const router = useRouter();
 
-
   const { userData } = useMockedUser();
   const { logout } = useAuthContext();
+  const { t } = useTranslate();
 
   const popover = usePopover();
 
@@ -73,7 +74,6 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-
           src={userData?.photoURL}
           alt={userData?.displayName}
           sx={{
@@ -100,7 +100,7 @@ export default function AccountPopover() {
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
-              {option.label}
+              {t('LABEL.' + option.label)}
             </MenuItem>
           ))}
         </Stack>
@@ -111,7 +111,7 @@ export default function AccountPopover() {
           onClick={handleLogout}
           sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
         >
-          Logout
+          {t('LABEL.LOGOUT')}
         </MenuItem>
       </CustomPopover>
     </>
