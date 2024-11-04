@@ -136,7 +136,9 @@
     "CLIENT": "عميل",
     "DATE": "التاريخ",
     "TECHNICAL_SUPPORT": "الدعم الفني",
-    "REASON_TITLE": "عنوان السبب"
+    "REASON_TITLE": "عنوان السبب",
+    "LOGOUT": "تسجيل الخروج",
+    "HOME": "الرئيسية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",

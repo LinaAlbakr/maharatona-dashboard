@@ -129,7 +129,9 @@
     "CLIENT": "Client",
     "DATE": "Date",
     "TECHNICAL_SUPPORT": "Technical Support",
-    "REASON_TITLE": "Reason Title"
+    "REASON_TITLE": "Reason Title",
+    "LOGOUT": "Logout",
+    "HOME": "Home"
   },
   "BUTTON": {
     "LOGIN": "Login",
