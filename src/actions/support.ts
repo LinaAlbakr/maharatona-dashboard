@@ -13,6 +13,7 @@ interface IParams {
   page: number;
   limit: number;
   filters?: string;
+  type?: null | string;
 }
 export const fetchCallsReasons = async ({
   page = 1,
@@ -84,6 +85,50 @@ export const editReason = async (reqBody: any, reasonId: string): Promise<any> =
       },
     });
     revalidatePath('/dashboard/support/calls-reasons/');
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const fetchTechnicalSupportItems = async ({
+  page = 1,
+  limit = 50,
+  filters = '',
+  type = null,
+}: IParams): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.support.technical_support.fetch, {
+      params: {
+        page,
+        limit,
+        by_name: filters,
+        callUsType: type,
+      },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    console.log(res.data);
+
+    return res?.data;
+  } catch (error) {
+    console.log(error);
+
+    throw new Error(error);
+  }
+};
+
+export const fetchTechnicalSupportItemInfo = async (itemId: string): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.support.technical_support.details(itemId), {
+      params: {},
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data?.data;
   } catch (error) {
     throw new Error(error);
   }

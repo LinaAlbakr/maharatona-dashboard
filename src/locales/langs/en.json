@@ -123,9 +123,13 @@
     "PERCENTAGE": "Percentage",
     "CENTER": "Center",
     "ADMIN": "Admin",
-    "TIME": "مره",
+    "TIME": "Time",
     "END_DATE_MUST_BE_AFTER_START_DATE": "End date must be after start date",
-    "CREATE_COUPON": "Create Coupon"
+    "CREATE_COUPON": "Create Coupon",
+    "CLIENT": "Client",
+    "DATE": "Date",
+    "TECHNICAL_SUPPORT": "Technical Support",
+    "REASON_TITLE": "Reason Title"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -152,7 +156,8 @@
     "SUPPORT": "Support",
     "CALLS_REASONS": "Calls Reasons",
     "FIELDS_AND_SPECIALTIES": "Fields and Specialties",
-    "COUPONS": "Coupons"
+    "COUPONS": "Coupons",
+    "TECHNICAL_SUPPORT": "Technical Support"
   },
   "TABLE": {
     "DENSE": "Dense",

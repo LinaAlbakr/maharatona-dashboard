@@ -113,6 +113,10 @@ export const endpoints = {
       new: '/admin-panel/create-reason-call-us',
       edit: (reasonId: string) => `/admin-panel/update-call-us-reason/${reasonId}`,
     },
+    technical_support: {
+      fetch: '/admin-panel/all-call-us',
+      details: (itemId: string) => `/admin-panel/call-us/${itemId}`,
+    },
   },
   categories: {
     fetch: '/admin-panel/all-fields',
