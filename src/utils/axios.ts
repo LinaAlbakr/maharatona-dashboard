@@ -4,7 +4,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
-import { stat } from 'fs';
+
 
 export interface Params {
   page: number;
@@ -78,6 +78,7 @@ export const endpoints = {
   home: {
     topCourses: '/admin-panel/top-courses',
     statistics: '/admin-panel/education-summary',
+    notifications: '/admin-panel/all-notification',
   },
   centers: {
     fetch: '/admin-panel/all-centers',

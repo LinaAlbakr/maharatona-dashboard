@@ -131,7 +131,9 @@
     "TECHNICAL_SUPPORT": "Technical Support",
     "REASON_TITLE": "Reason Title",
     "LOGOUT": "Logout",
-    "HOME": "Home"
+    "HOME": "Home",
+    "NOTIFICATIONS": "Notifications",
+    "NO_NOTIFICATIONS": "No Notifications"
   },
   "BUTTON": {
     "LOGIN": "Login",

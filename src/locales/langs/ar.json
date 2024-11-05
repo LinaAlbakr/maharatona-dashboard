@@ -138,7 +138,9 @@
     "TECHNICAL_SUPPORT": "الدعم الفني",
     "REASON_TITLE": "عنوان السبب",
     "LOGOUT": "تسجيل الخروج",
-    "HOME": "الرئيسية"
+    "HOME": "الرئيسية",
+    "NOTIFICATIONS": "الاشعارات",
+    "NO_NOTIFICATIONS": "لا يوجد اشعارات"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
