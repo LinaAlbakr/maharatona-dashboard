@@ -52,6 +52,7 @@ export const fetchNotifications = async ({
   select_date = null,
 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
 
   try {
     const res = await axiosInstance.get(endpoints.home.notifications, {
@@ -61,7 +62,7 @@ export const fetchNotifications = async ({
         notification_type,
         select_date,
       },
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     return res?.data;
   } catch (error) {

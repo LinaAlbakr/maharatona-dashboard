@@ -149,7 +149,7 @@ const NotificationView = ({ notifications }: Props) => {
       )}
       {notifications.data.length > 0 && (
         <Pagination
-          sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}
+          sx={{ display: 'flex', justifyContent: 'center' }}
           count={count(notifications.meta.itemCount)}
           page={Number(searchParams.get('notifications_page')) || 1}
           color="secondary"
