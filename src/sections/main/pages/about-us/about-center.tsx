@@ -40,7 +40,7 @@ const AboutCenterView = ({ aboutCenter }: IProps) => {
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.BANNER_CREATED_SUCCESSFULLY'), {
+      enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
         variant: 'success',
       });
     }
