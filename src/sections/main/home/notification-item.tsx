@@ -10,7 +10,6 @@ type props = {
 };
 
 const NotificationItem = ({ data }: props) => {
-  console.log(data);
 
   return (
     <>

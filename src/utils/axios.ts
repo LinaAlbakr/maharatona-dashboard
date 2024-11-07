@@ -5,7 +5,6 @@ import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
 
-
 export interface Params {
   page: number;
   limit: number;
@@ -129,6 +128,9 @@ export const endpoints = {
     fetch: '/admin-panel/all-discount-code',
     deleteCoupon: (couponId: string) => `/admin-panel/delete-discount-code/${couponId}`,
     new: `/admin-panel/create-discount-code`,
-
+  },
+  staticPage: {
+    fetch: (type: string) => `/admin-panel/static-page/${type}`,
+    edit: `/admin-panel/update-static-page`,
   },
 };

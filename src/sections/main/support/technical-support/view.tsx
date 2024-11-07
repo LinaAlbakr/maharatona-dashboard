@@ -25,7 +25,7 @@ export const types = [
 ];
 const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
   const settings = useSettingsContext();
-  console.log(items);
+
 
   const { t } = useTranslate();
   const searchParams = useSearchParams();

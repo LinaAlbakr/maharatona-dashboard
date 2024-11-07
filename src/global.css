@@ -13,6 +13,9 @@
 @import 'yet-another-react-lightbox/plugins/captions.css';
 @import 'yet-another-react-lightbox/plugins/thumbnails.css';
 
+/* editor */
+@import "react-quill/dist/quill.snow.css";
+
 .rtl-av3qjc-MuiContainer-root {
   padding: 0px !important;
 }

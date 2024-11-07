@@ -66,7 +66,6 @@ export const fetchNotifications = async ({
     });
     return res?.data;
   } catch (error) {
-    console.log(error);
     throw new Error(error);
   }
 };

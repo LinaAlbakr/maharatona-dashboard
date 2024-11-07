@@ -140,7 +140,11 @@
     "LOGOUT": "تسجيل الخروج",
     "HOME": "الرئيسية",
     "NOTIFICATIONS": "الاشعارات",
-    "NO_NOTIFICATIONS": "لا يوجد اشعارات"
+    "NO_NOTIFICATIONS": "لا يوجد اشعارات",
+    "ABOUT_APP": "عن التطبيق",
+    "STEUDENT": "طالب",
+    "ENGLISH_CONTENT": "المحتوى باللغة الانجليزية",
+    "ARABIC_CONTENT": "المحتوى باللغة العربية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -157,7 +161,8 @@
     "ACTIVATE": "تفعيل",
     "DEACTIVATE": "تعطيل",
     "ADD_COUPON": "اضافة كوبون",
-    "CREATE": "انشاء"
+    "CREATE": "انشاء",
+    "PUBLISH": "نشر"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -168,7 +173,9 @@
     "CALLS_REASONS": "اسباب الاتصال",
     "FIELDS_AND_SPECIALTIES": "المجالات والتخصصات",
     "COUPONS": "الكوبونات",
-    "TECHNICAL_SUPPORT": "الدعم الفني"
+    "TECHNICAL_SUPPORT": "الدعم الفني",
+    "PAGES": "الصفحات",
+    "ABOUT_APP": "عن التطبيق"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -215,7 +222,8 @@
     "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
     "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح",
     "BANNER_CREATED_SUCCESSFULLY": "تم انشاء البنر بنجاح",
-    "CONFIRM_DELETE_BANNER": "هل تريد حذف هذا البنر؟"
+    "CONFIRM_DELETE_BANNER": "هل تريد حذف هذا البنر؟",
+    "CONTENT_PUBLISHED_SUCCESSFULLY": "تم نشر المحتوى بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
