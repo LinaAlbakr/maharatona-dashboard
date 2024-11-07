@@ -109,12 +109,8 @@ export const fetchTechnicalSupportItems = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res.data);
-
     return res?.data;
   } catch (error) {
-    console.log(error);
-
     throw new Error(error);
   }
 };

@@ -60,6 +60,7 @@ const ICONS = {
   bag: icon('lets-icons:bag-fill'),
   cartegries: icon('fluent:playing-cards-20-filled'),
   coupon: icon('ri:coupon-3-fill'),
+  pages: icon('iconoir:multiple-pages-empty'),
 };
 
 export function useNavData() {
@@ -94,6 +95,18 @@ export function useNavData() {
             ],
           },
           { title: t('SIDEBAR.COUPONS'), path: paths.dashboard.coupons, icon: ICONS.coupon },
+          {
+            title: t('SIDEBAR.PAGES'),
+            path: paths.dashboard.pages.root,
+            icon: ICONS.pages,
+            module: 'PAGES',
+            children: [
+              {
+                title: t('SIDEBAR.ABOUT_APP'),
+                path: paths.dashboard.pages.about,
+              },
+            ],
+          },
         ],
       },
     ],

@@ -23,12 +23,9 @@ type props = {
 
 const CoursesView = ({ count, courses }: Readonly<props>) => {
   const settings = useSettingsContext();
-
-
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedSubscribers, setSelectedSubscribers] = useState<any[] | undefined>();
 

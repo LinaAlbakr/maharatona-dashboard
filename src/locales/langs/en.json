@@ -131,7 +131,13 @@
     "TECHNICAL_SUPPORT": "Technical Support",
     "REASON_TITLE": "Reason Title",
     "LOGOUT": "Logout",
-    "HOME": "Home"
+    "HOME": "Home",
+    "NOTIFICATIONS": "Notifications",
+    "NO_NOTIFICATIONS": "No Notifications",
+    "ABOUT_APP": "About App",
+    "STEUDENT": "Student",
+    "ENGLISH_CONTENT": "English Content",
+    "ARABIC_CONTENT": "Arabic Content"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -148,7 +154,8 @@
     "ACTIVATE": "Activate",
     "DEACTIVATE": "Deactivate",
     "ADD_COUPON": "Add Coupon",
-    "CREATE": "Create"
+    "CREATE": "Create",
+    "PUBLISH": "Publish"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -159,7 +166,9 @@
     "CALLS_REASONS": "Calls Reasons",
     "FIELDS_AND_SPECIALTIES": "Fields and Specialties",
     "COUPONS": "Coupons",
-    "TECHNICAL_SUPPORT": "Technical Support"
+    "TECHNICAL_SUPPORT": "Technical Support",
+    "PAGES": "Pages",
+    "ABOUT_APP": "About App"
   },
   "TABLE": {
     "DENSE": "Dense",
@@ -204,7 +213,8 @@
     "FEILD_CREATED_SUCCESSFULLY": "Field created successfully",
     "FEILD_UPDATED_SUCCESSFULLY": "Field updated successfully",
     "COUPON_CREATED_SUCCESSFULLY": "Coupon created successfully",
-    "CONFIRM_DELETE_BANNER": "Are you sure you want to delete this Banner?"
+    "CONFIRM_DELETE_BANNER": "Are you sure you want to delete this Banner?",
+    "CONTENT_PUBLISHED_SUCCESSFULLY": "Content published successfully"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

@@ -31,5 +31,9 @@ export const paths = {
     },
     categories: `${ROOTS.DASHBOARD}/categories`,
     coupons: `${ROOTS.DASHBOARD}/coupons`,
+    pages: {
+      root: `${ROOTS.DASHBOARD}/pages`,
+      about: `${ROOTS.DASHBOARD}/pages/about-app`,
+    },
   },
 };

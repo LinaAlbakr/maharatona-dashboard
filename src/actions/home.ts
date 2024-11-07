@@ -3,15 +3,16 @@
 /* eslint-disable consistent-return */
 
 import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
-
-import { paths } from 'src/routes/paths';
 
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
-  limit: number;
+  page?: number;
+  limit?: number;
+  notifications_page?: number;
+  notifications_limit?: number;
+  notification_type?: string | null;
+  select_date?: string | null;
 }
 export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
@@ -37,6 +38,31 @@ export const fetchStatistics = async (): Promise<any> => {
   try {
     const res = await axiosInstance.get(endpoints.home.statistics, {
       headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const fetchNotifications = async ({
+  notifications_page = 1,
+  notifications_limit = 50,
+  notification_type = null,
+  select_date = null,
+}: IParams): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.home.notifications, {
+      params: {
+        page: notifications_page,
+        limit: notifications_limit,
+        notification_type,
+        select_date,
+      },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     return res?.data;
   } catch (error) {

@@ -4,7 +4,6 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
-import { stat } from 'fs';
 
 export interface Params {
   page: number;
@@ -78,6 +77,7 @@ export const endpoints = {
   home: {
     topCourses: '/admin-panel/top-courses',
     statistics: '/admin-panel/education-summary',
+    notifications: '/admin-panel/all-notification',
   },
   centers: {
     fetch: '/admin-panel/all-centers',
@@ -128,6 +128,9 @@ export const endpoints = {
     fetch: '/admin-panel/all-discount-code',
     deleteCoupon: (couponId: string) => `/admin-panel/delete-discount-code/${couponId}`,
     new: `/admin-panel/create-discount-code`,
-
+  },
+  staticPage: {
+    fetch: (type: string) => `/admin-panel/static-page/${type}`,
+    edit: `/admin-panel/update-static-page`,
   },
 };
