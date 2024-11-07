@@ -98,7 +98,7 @@ const AboutClientView = ({ aboutClient }: IProps) => {
               loading={isSubmitting}
               sx={{
                 color: 'primary.contrastText',
-                backgroundColor: 'primary.main',
+                backgroundColor: 'secondary.main',
               }}
             >
               {t('BUTTON.PUBLISH')}
