@@ -246,7 +246,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                 setSelectedId(item.id);
                 confirmClearWallet.onTrue();
               },
-              // hide: (center) => center.walletBalance <= 0,
+              hide: (center) => center.walletBalance <= 0,
             },
             {
               sx: { color: 'info.dark' },
