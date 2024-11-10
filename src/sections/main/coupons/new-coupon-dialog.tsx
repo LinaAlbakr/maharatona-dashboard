@@ -96,7 +96,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.BANNER_CREATED_SUCCESSFULLY'), {
+      enqueueSnackbar(t('MESSAGE.COUPON_CREATED_SUCCESSFULLY'), {
         variant: 'success',
       });
 

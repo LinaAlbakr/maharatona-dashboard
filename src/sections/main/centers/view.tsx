@@ -17,9 +17,8 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import SendNotification from './center-details/components/send-notification';
-import { changeCenterStatus } from 'src/actions/centers';
+import { changeCenterStatus, clearWallet } from 'src/actions/centers';
 import Iconify from 'src/components/iconify';
-import { bg } from 'date-fns/locale';
 
 type props = {
   centers: ICenter[];
@@ -37,6 +36,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const router = useRouter();
   const confirmBlock = useBoolean();
   const confirmUnblock = useBoolean();
+  const confirmClearWallet = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
@@ -54,6 +54,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     { id: 'phone', label: 'LABEL.PHONE' },
     { id: 'number_of_courses', label: 'LABEL.NUMBER_OF_COURSES' },
     { id: 'number_of_registrants', label: 'LABEL.NUMBER_OF_REGISTRANTS' },
+    { id: 'walletBalance', label: 'LABEL.WALLET_BALANCE' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -111,6 +112,15 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       }
     }
     confirmUnblock.onFalse();
+  };
+  const handleConfirmClearWallet = async () => {
+    const res = await clearWallet(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.WALLET_CLEARED_SUCCESSFULLY'));
+      confirmClearWallet.onFalse();
+    }
   };
 
   return (
@@ -230,6 +240,16 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             },
             {
               sx: { color: 'info.dark' },
+              label: t('LABEL.CLEAR_WALLET'),
+              icon: 'mingcute:wallet-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmClearWallet.onTrue();
+              },
+              // hide: (center) => center.walletBalance <= 0,
+            },
+            {
+              sx: { color: 'info.dark' },
               label: t('LABEL.SEND_NOTIFICATION'),
               icon: 'mingcute:notification-fill',
               onClick: (item) => {
@@ -282,6 +302,15 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                 {item?.number_of_courses}
               </Box>
             ),
+            walletBalance: (item: any) => (
+              <Box
+                style={{
+                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                }}
+              >
+                {Math.ceil(item?.walletBalance)}
+              </Box>
+            ),
           }}
         />
       </Container>
@@ -316,6 +345,17 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             }}
           >
             {t('BUTTON.UNBLOCK')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmClearWallet.value}
+        onClose={confirmClearWallet.onFalse}
+        title={t('TITLE.CLEAR_WALLET')}
+        content={t('MESSAGE.CONFIRM_CLEAR_WALLET')}
+        action={
+          <Button variant="contained" color="error" onClick={() => handleConfirmClearWallet()}>
+            {t('BUTTON.CLEAR')}
           </Button>
         }
       />

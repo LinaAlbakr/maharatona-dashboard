@@ -144,7 +144,7 @@ export async function changeCenterStatus(centerId: string, reqBody: any): Promis
   }
 }
 
-export const deleteRate = async (rateId: string, centerid: any): Promise<any> => {
+export const deleteRate = async (rateId: string, centerId: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
     const lang = cookies().get('Language')?.value;
@@ -160,5 +160,27 @@ export const deleteRate = async (rateId: string, centerid: any): Promise<any> =>
       error: getErrorMessage(error),
     };
   }
-  revalidatePath(`/dashboard/centers/${centerid}/?tab=reports`);
+  revalidatePath(`/dashboard/centers/${centerId}/?tab=reports`);
+};
+
+export const clearWallet = async (centerId: any): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+    const res = await axiosInstance.put(
+      endpoints.centers.clearWallet(centerId),
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Accept-Language': lang,
+        },
+      }
+    );
+    revalidatePath(`/dashboard/centers/`);
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
 };

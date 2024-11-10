@@ -212,7 +212,7 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_COUPON')}
-        content={t('MESSAGE.CONFIRM_DELETE_BANNER')}
+        content={t('MESSAGE.CONFIRM_DELETE_COUPON')}
         action={
           <Button
             variant="contained"

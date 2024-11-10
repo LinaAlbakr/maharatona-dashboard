@@ -12,7 +12,8 @@
     "ACTIVATE_FIELD": "تفعيل مجال",
     "NEW_CATEGORY": "اضافة مجال",
     "EDIT_CATEGORY": "تعديل مجال",
-    "DELETE_COUPON": "حذف البنر"
+    "DELETE_COUPON": "حذف الكوبون",
+    "CLEAR_WALLET": "تصفير المحفظة"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -144,7 +145,9 @@
     "ABOUT_APP": "عن التطبيق",
     "STEUDENT": "طالب",
     "ENGLISH_CONTENT": "المحتوى باللغة الانجليزية",
-    "ARABIC_CONTENT": "المحتوى باللغة العربية"
+    "ARABIC_CONTENT": "المحتوى باللغة العربية",
+    "WALLET_BALANCE": "رصيد المحفظة",
+    "CLEAR_WALLET": "تصفير المحفظة"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -162,7 +165,8 @@
     "DEACTIVATE": "تعطيل",
     "ADD_COUPON": "اضافة كوبون",
     "CREATE": "انشاء",
-    "PUBLISH": "نشر"
+    "PUBLISH": "نشر",
+    "CLEAR": "تصفير"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -221,9 +225,11 @@
     "ACTIVATED_SUCCESSFULLY": "تم تفعيل المجال بنجاح",
     "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
     "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح",
-    "BANNER_CREATED_SUCCESSFULLY": "تم انشاء البنر بنجاح",
-    "CONFIRM_DELETE_BANNER": "هل تريد حذف هذا البنر؟",
-    "CONTENT_PUBLISHED_SUCCESSFULLY": "تم نشر المحتوى بنجاح"
+    "COUPON_CREATED_SUCCESSFULLY": "تم انشاء الكوبون بنجاح",
+    "CONFIRM_DELETE_COUPON": "هل تريد حذف هذا كوبون؟",
+    "CONTENT_PUBLISHED_SUCCESSFULLY": "تم نشر المحتوى بنجاح",
+    "CONFIRM_CLEAR_WALLET": "هل تريد تصفير المحفظة ؟",
+    "WALLET_CLEARED_SUCCESSFULLY": "تم تصفير المحفظة بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

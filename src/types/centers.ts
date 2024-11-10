@@ -14,6 +14,7 @@ export type ICenter = {
     };
   };
   userStatus: string;
+  walletBalance: number;
 };
 
 export type ICity = {
