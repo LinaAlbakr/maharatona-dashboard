@@ -26,6 +26,8 @@ enum Types {
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
   LOGOUT = 'LOGOUT',
+  FORGOT = 'FORGOT',
+  VERIFY = 'VERIFY'
 }
 
 type Payload = {
@@ -34,6 +36,12 @@ type Payload = {
   };
   [Types.LOGIN]: {
     user: AuthUserType;
+  };
+  [Types.FORGOT]: {
+    phone: string;
+  };
+  [Types.VERIFY]: {
+    code: string;
   };
   [Types.REGISTER]: {
     user: AuthUserType;
@@ -48,6 +56,8 @@ type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
 const initialState: AuthStateType = {
   user: null,
   loading: true,
+  phone: '',
+  code: ''
 };
 
 const reducer = (state: AuthStateType, action: ActionsType) => {
@@ -55,12 +65,27 @@ const reducer = (state: AuthStateType, action: ActionsType) => {
     return {
       loading: false,
       user: action.payload.user,
+      phone:'',
+      code: ''
+
     };
   }
   if (action.type === Types.LOGIN) {
     return {
       ...state,
       user: action.payload.user,
+    };
+  }
+  if (action.type === Types.FORGOT) {
+    return {
+      ...state,
+      phone: action.payload.phone,
+    };
+  }
+  if (action.type === Types.VERIFY) {
+    return {
+      ...state,
+      code: action.payload.code,
     };
   }
   if (action.type === Types.REGISTER) {
@@ -127,10 +152,11 @@ export function AuthProvider({ children }: Readonly<Props>) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (phone: string, password: string) => {
     const credentials = {
-      email,
-      authType: 'EMAIL',
+      phone,
+      email: '',
+      authType: 'PHONE',
       password,
     };
 
@@ -150,6 +176,36 @@ export function AuthProvider({ children }: Readonly<Props>) {
         user,
       },
     });
+  }, []);
+
+  const forgot = useCallback(async (phone: string) => {
+    sessionStorage.setItem('verify_phone', JSON.stringify(phone))
+    const credentials = {
+        "phone_or_email": phone,
+        "authType": "PHONE"
+    };
+
+   const res = await axios.post(endpoints.auth.forgot,credentials );
+
+  }, []);
+  const verify = useCallback(async (code:string) => {
+    sessionStorage.setItem('verify_code', JSON.stringify(code));
+
+  }, []);
+  const changePassword = useCallback(async ( password: string) => {
+    const savedPhone = JSON.parse(sessionStorage.getItem('verify_phone') as string);
+    const savedCode = JSON.parse(sessionStorage.getItem('verify_code') as string)
+
+    const credentials = {
+      "phone_or_email": savedPhone,
+      "authType": "PHONE",
+      "newPassword": password,
+      "otp": savedCode
+    };
+    const res = await axios.post(endpoints.auth.verify,credentials );
+     sessionStorage.removeItem('verify_phone');
+     sessionStorage.removeItem('verify_code');
+
   }, []);
 
   // REGISTER
@@ -202,12 +258,14 @@ export function AuthProvider({ children }: Readonly<Props>) {
       loading: status === 'loading',
       authenticated: status === 'authenticated',
       unauthenticated: status === 'unauthenticated',
-      //
+      forgot,
+      changePassword,
+      verify,
       login,
       register,
       logout,
     }),
-    [login, logout, register, state.user, status]
+    [login, logout,forgot, verify,changePassword, register, state.user,state.code, state.phone, status]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
