@@ -19,6 +19,8 @@ export type AuthStateType = {
   status?: string;
   loading: boolean;
   user: AuthUserType;
+  phone:string;
+  code: string;
 };
 
 // ----------------------------------------------------------------------
@@ -53,6 +55,9 @@ export type JWTContextType = CanRemove & {
   authenticated: boolean;
   unauthenticated: boolean;
   login: (phone: string, password: string) => Promise<void>;
+  changePassword: (password:string) => Promise<void>;
+  forgot: (phone:string) => Promise<void>;
+  verify: (code:string) => Promise<void>;
   register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   logout: () => Promise<void>;
 };

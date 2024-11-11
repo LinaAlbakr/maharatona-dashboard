@@ -13,6 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { RouterLink } from 'src/routes/components';
 
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
@@ -28,6 +29,7 @@ import Image from 'next/image';
 import { useTheme } from '@mui/material';
 import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
 import { countries } from 'src/assets/data';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -105,14 +107,14 @@ export default function JwtLoginView() {
   const renderForm = (
     <Stack spacing={2.5} sx={{ minWidth: '100%' }}>
        <RHFAutocomplete
-                  name="country"
-                  type="country"
-                  fullWidth
-                  label={t("LABEL.COUNTRY_CODE")}
-                  placeholder={t("LABEL.COUNTRY_CODE")}
-                  options={countries.map((option) => option.label)}
-                  getOptionLabel={(option) => option}
-                />
+         name="country"
+         type="country"
+         fullWidth
+         label={t("LABEL.COUNTRY_CODE")}
+         placeholder={t("LABEL.COUNTRY_CODE")}
+         options={countries.map((option) => option.label)}
+         getOptionLabel={(option) => option}
+            />
       <RHFTextField
         sx={{
           color: 'red',
@@ -152,7 +154,8 @@ export default function JwtLoginView() {
         }}
       />
 
-      <Link variant="body2" color="secondary" underline="always">
+      <Link  variant="body2" color="secondary" underline="always"  href={paths.auth.jwt.forgot}
+        component={RouterLink}>
         {t('BUTTON.FORGOT_PASSWORD')}
       </Link>
 

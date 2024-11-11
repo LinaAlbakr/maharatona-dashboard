@@ -73,6 +73,8 @@ export const endpoints = {
     me: '/auth/me',
     login: '/auth/signin',
     register: '/auth/register',
+    forgot: `/auth/send-password-reset-otp`,
+    verify: `/auth/verify-otp-and-reset-password`
   },
   home: {
     topCourses: '/admin-panel/top-courses',
