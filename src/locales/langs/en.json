@@ -143,7 +143,9 @@
   "BUTTON": {
     "LOGIN": "Login",
     "FORGOT_PASSWORD": "Forgot Password?",
+    "UPDATE_PASSWORD":"Update Password",
     "BLOCK": "Block",
+    "VERIFY":"verify",
     "UNBLOCK": "Unblock",
     "CANCEL": "Cancel",
     "SEND": "Send",
@@ -195,6 +197,14 @@
     "CHILDREN": "Children"
   },
   "MESSAGE": {
+    "FORGOT_PASSWORD_MESSAGE":"Please enter the phone number associated with your account and we will send a message to with otp code for reset your password.",
+    "FORGOT_PASSWORD":"Forgot your password?",
+    "SEND_CODE":"Send code",
+    "WE_SENT_CODE":"We have messaged a 4-digit confirmation code to your phone, please enter the code in below box to verify your account.",
+    "CHECK_MESSAGE":"Please check your messages!",
+    "RETURN_TO_lOGIN":"Return to sign in",
+    "NEW_PASSWORD":"New Password",
+    "SUCCESSFUL_UPDATED_PASSWORD":"Successful updates enable access using the new password",
     "CONFIRM_BLOCK": "Are you sure you want to block this center?",
     "CONFIRM_UNBLOCK": "Are you sure you want to unblock this center?",
     "SEND_SUCCESSFULLY": "Notification sent successfully",
