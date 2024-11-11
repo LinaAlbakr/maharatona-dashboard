@@ -26,6 +26,9 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import Image from 'next/image';
 import { useTheme } from '@mui/material';
+import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
+import { countries } from 'src/assets/data';
+
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
@@ -45,13 +48,15 @@ export default function JwtLoginView() {
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
-    username: Yup.string().required(t('email_is_required')),
+    phone: Yup.string().required(t('phone_is_required')),
+    country: Yup.string().required(t('country_is_required')),
     password: Yup.string().required(t('password_is_required')),
   });
 
   const defaultValues = {
-    username: 'kalid@admin.com',
-    password: '123456',
+    phone: "555554433",
+    country: 'Saudi Arabia',
+    password: 'Admin3@1234'
   };
 
   const methods = useForm({
@@ -67,8 +72,10 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await login?.(data.username, data.password);
-      router.push(returnTo || PATH_AFTER_LOGIN);
+      const code = countries?.find((item)=>item.label === data?.country)
+      const phone =  code?.phone.concat(data?.phone) as string;
+       await login?.(`+${phone}`, data.password);
+       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
@@ -97,14 +104,24 @@ export default function JwtLoginView() {
 
   const renderForm = (
     <Stack spacing={2.5} sx={{ minWidth: '100%' }}>
+       <RHFAutocomplete
+                  name="country"
+                  type="country"
+                  fullWidth
+                  label={t("LABEL.COUNTRY_CODE")}
+                  placeholder={t("LABEL.COUNTRY_CODE")}
+                  options={countries.map((option) => option.label)}
+                  getOptionLabel={(option) => option}
+                />
       <RHFTextField
         sx={{
           color: 'red',
         }}
-        name="username"
-        label={t('LABEL.EMAIL')}
+        name="phone"
+        type="tel"
+        label={t('LABEL.PHONE')}
         InputProps={{
-          startAdornment: InputIcon('ic:round-email'),
+          startAdornment: InputIcon('ic:round-phone-iphone'),
         }}
       />
 

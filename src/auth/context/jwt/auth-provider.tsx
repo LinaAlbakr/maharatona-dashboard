@@ -127,10 +127,11 @@ export function AuthProvider({ children }: Readonly<Props>) {
   }, [initialize]);
 
   // LOGIN
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (phone: string, password: string) => {
     const credentials = {
-      email,
-      authType: 'EMAIL',
+      phone,
+      email: '',
+      authType: 'PHONE',
       password,
     };
 
