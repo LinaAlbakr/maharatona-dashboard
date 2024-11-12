@@ -105,6 +105,14 @@ export function useNavData() {
                 title: t('SIDEBAR.ABOUT_APP'),
                 path: paths.dashboard.pages.about,
               },
+              {
+                title: t('SIDEBAR.PRIVACY_POLICY'),
+                path: paths.dashboard.pages.privacyPolicy,
+              },
+              {
+                title: t('SIDEBAR.TERMS_AND_CONDITIONS'),
+                path: paths.dashboard.pages.termsAndConditions,
+              },
             ],
           },
         ],

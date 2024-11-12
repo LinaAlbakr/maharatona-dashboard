@@ -37,6 +37,8 @@ export const paths = {
     pages: {
       root: `${ROOTS.DASHBOARD}/pages`,
       about: `${ROOTS.DASHBOARD}/pages/about-app`,
+      privacyPolicy: `${ROOTS.DASHBOARD}/pages/privacy-policy`,
+      termsAndConditions: `${ROOTS.DASHBOARD}/pages/terms-and-conditions`,
     },
   },
 };
