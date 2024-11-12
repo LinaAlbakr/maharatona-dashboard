@@ -50,7 +50,7 @@ export default function RHFAutocomplete<
   const { control, setValue, watch } = useFormContext();
   const { setQuery } = useCostomSearchParams({ searchQuery });
   const { multiple } = other;
-  // console.log(name, watch(name));
+
 
   return (
     <Controller
