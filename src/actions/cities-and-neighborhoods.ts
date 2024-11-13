@@ -103,11 +103,7 @@ export const editNeighborhoodStatus = async (neighborhood: any): Promise<any> =>
       }
     );
     revalidatePath(paths.dashboard.citiesAndNeighborhoods);
-    console.log(res);
-
   } catch (error) {
-    console.log(error);
-
     return {
       error: getErrorMessage(error),
     };
