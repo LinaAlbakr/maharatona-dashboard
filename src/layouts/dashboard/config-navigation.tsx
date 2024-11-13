@@ -61,6 +61,7 @@ const ICONS = {
   cartegries: icon('fluent:playing-cards-20-filled'),
   coupon: icon('ri:coupon-3-fill'),
   pages: icon('iconoir:multiple-pages-empty'),
+  questions: icon('mdi:frequently-asked-questions')
 };
 
 export function useNavData() {
@@ -105,8 +106,18 @@ export function useNavData() {
                 title: t('SIDEBAR.ABOUT_APP'),
                 path: paths.dashboard.pages.about,
               },
+              {
+                title: t('SIDEBAR.PRIVACY_POLICY'),
+                path: paths.dashboard.pages.privacyPolicy,
+              },
+              {
+                title: t('SIDEBAR.TERMS_AND_CONDITIONS'),
+                path: paths.dashboard.pages.termsAndConditions,
+              },
             ],
           },
+          { title: t('SIDEBAR.FAQ'), path: paths.dashboard.faq, icon: ICONS.questions },
+
         ],
       },
     ],

@@ -14,7 +14,10 @@
     "ACTIVATE_FIELD": "تفعيل مجال",
     "NEW_CATEGORY": "اضافة مجال",
     "EDIT_CATEGORY": "تعديل مجال",
-    "DELETE_COUPON": "حذف البنر"
+    "DELETE_COUPON": "حذف الكوبون",
+    "CLEAR_WALLET": "تصفير المحفظة",
+    "DELETE_CATEGORY": "حذف القسم",
+    "DELETE_QUESTION": "حذف السؤال"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -149,7 +152,24 @@
     "ABOUT_APP": "عن التطبيق",
     "STEUDENT": "طالب",
     "ENGLISH_CONTENT": "المحتوى باللغة الانجليزية",
-    "ARABIC_CONTENT": "المحتوى باللغة العربية"
+    "ARABIC_CONTENT": "المحتوى باللغة العربية",
+    "WALLET_BALANCE": "رصيد المحفظة",
+    "CLEAR_WALLET": "تصفير المحفظة",
+    "PRIVACY_POLICY": "سياسة الخصوصية",
+    "TERMS_AND_CONDITIONS": "الشروط و الأحكام",
+    "FAQ_CATEGORIES": "اقسام الاسئلة الشائعة",
+    "FAQ": "الاسئلة الشائعة",
+    "CATEGORY_NAME_IN_ARABIC": "اسم القسم باللغة العربية",
+    "CATEGORY_NAME_IN_ENGLISH": "اسم القسم باللغة الانجليزية",
+    "NEW_CATEGORY": "اضافة قسم",
+    "EDIT_CATEGORY": "تعديل قسم",
+    "QUESTION_NAME": "اسم السؤال",
+    "QUESTION_NAME_IN_ARABIC": "اسم السؤال باللغة العربية",
+    "QUESTION_NAME_IN_ENGLISH": "اسم السؤال باللغة الإنجليزية",
+    "QUESTION_ANSWER_IN_ARABIC": "إجابة السؤال باللغة العربية",
+    "QUESTION_ANSWER_IN_ENGLISH": "إجابة السؤال باللغة الإنجليزية",
+    "NEW_QUESTION": "اضافة سؤال",
+    "EDIT_QUESTION": "تعديل سؤال"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -157,7 +177,7 @@
     "UPDATE_PASSWORD":"تحديث كلمة المرور",
     "CHANGE_PHONE":"تغير الرقم",
     "BLOCK": "حظر",
-    "VERIFY":"تحقق",
+    "VERIFY": "تحقق",
     "UNBLOCK": "الغاء الحظر",
     "CANCEL": "الغاء",
     "SEND": "ارسال",
@@ -170,7 +190,10 @@
     "DEACTIVATE": "تعطيل",
     "ADD_COUPON": "اضافة كوبون",
     "CREATE": "انشاء",
-    "PUBLISH": "نشر"
+    "PUBLISH": "نشر",
+    "CLEAR": "تصفير",
+    "ADD_CATEGORY": "اضافة قسم",
+    "ADD_QUESTION": "اضافة سؤال"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -183,7 +206,10 @@
     "COUPONS": "الكوبونات",
     "TECHNICAL_SUPPORT": "الدعم الفني",
     "PAGES": "الصفحات",
-    "ABOUT_APP": "عن التطبيق"
+    "ABOUT_APP": "عن التطبيق",
+    "PRIVACY_POLICY": "سياسة الخصوصية",
+    "TERMS_AND_CONDITIONS": "الشروط و الأحكام",
+    "FAQ": "الاسئلة الشائعة"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -209,15 +235,15 @@
     "CHILDREN": "أطفال"
   },
   "MESSAGE": {
-    "FORGOT_PASSWORD_MESSAGE":"يرجى إدخال رقم الهاتف المرتبط بحسابك وسنرسل لك رسالة تحتوي على رمز OTP لإعادة تعيين كلمة المرور الخاصة بك.",
-    "FORGOT_PASSWORD":"هل نسيت كلمة المرور ؟",
+    "FORGOT_PASSWORD_MESSAGE": "يرجى إدخال رقم الهاتف المرتبط بحسابك وسنرسل لك رسالة تحتوي على رمز OTP لإعادة تعيين كلمة المرور الخاصة بك.",
+    "FORGOT_PASSWORD": "هل نسيت كلمة المرور ؟",
     "CONFIRM_BLOCK": "هل تريد حظر هذا المركز؟",
-    "CHECK_MESSAGE":"يرجى التحقق من رسائلك!",
-    "WE_SENT_CODE":"لقد قمنا بإرسال رمز تأكيد مكون من 4 أرقام إلى هاتفك، يرجى إدخال الرمز في المربع أدناه للتحقق من حسابك.",
-    "SEND_CODE":"إرسال الرمز",
-    "NEW_PASSWORD":"كلمة المرور الجديدة",
-    "SUCCESSFUL_UPDATED_PASSWORD":"تتيح التحديثات الناجحة إمكانية الوصول باستخدام كلمة المرور الجديدة",
-    "RETURN_TO_lOGIN":"العودة لتسجيل الدخول",
+    "CHECK_MESSAGE": "يرجى التحقق من رسائلك!",
+    "WE_SENT_CODE": "لقد قمنا بإرسال رمز تأكيد مكون من 4 أرقام إلى هاتفك، يرجى إدخال الرمز في المربع أدناه للتحقق من حسابك.",
+    "SEND_CODE": "إرسال الرمز",
+    "NEW_PASSWORD": "كلمة المرور الجديدة",
+    "SUCCESSFUL_UPDATED_PASSWORD": "تتيح التحديثات الناجحة إمكانية الوصول باستخدام كلمة المرور الجديدة",
+    "RETURN_TO_lOGIN": "العودة لتسجيل الدخول",
     "CONFIRM_UNBLOCK": "هل تريد الغاء الحظر هذا المركز؟",
     "SEND_SUCCESSFULLY": "تم الارسال بنجاح",
     "SOMETHING_WRONG":"هناك شيء خاطئ!",
@@ -239,14 +265,22 @@
     "ACTIVATED_SUCCESSFULLY": "تم تفعيل المجال بنجاح",
     "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
     "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح",
-    "BANNER_CREATED_SUCCESSFULLY": "تم انشاء البنر بنجاح",
-    "CONFIRM_DELETE_BANNER": "هل تريد حذف هذا البنر؟",
-    "CONTENT_PUBLISHED_SUCCESSFULLY": "تم نشر المحتوى بنجاح"
+    "COUPON_CREATED_SUCCESSFULLY": "تم انشاء الكوبون بنجاح",
+    "CONFIRM_DELETE_COUPON": "هل تريد حذف هذا كوبون؟",
+    "CONTENT_PUBLISHED_SUCCESSFULLY": "تم نشر المحتوى بنجاح",
+    "CONFIRM_CLEAR_WALLET": "هل تريد تصفير المحفظة ؟",
+    "WALLET_CLEARED_SUCCESSFULLY": "تم تصفير المحفظة بنجاح",
+    "CREATED_SUCCESSFULLY": "تم الانشاء بنجاح",
+    "UPDATED_SUCCESSFULLY": "تم التعديل بنجاح",
+    "CONFIRM_DELETE_CATEGORY": "هل تريد حذف هذا القسم؟",
+    "CONFIRM_DELETE_QUESTION": "هل تريد حذف هذا السؤال؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
     "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
     "VALUE": "قيمه",
-    "NUMBER_OF_USAGES": "عدد  مرات الاستخدامات"
+    "NUMBER_OF_USAGES": "عدد  مرات الاستخدامات",
+    "CATEGORY_NAME_IN_ARABIC": "اسم القسم باللغة العربية",
+    "CATEGORY_NAME_IN_ENGLISH": "اسم القسم باللغة الانجليزية"
   }
 }
