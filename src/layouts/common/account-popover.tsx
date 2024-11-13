@@ -23,9 +23,10 @@ import { useTranslate } from 'src/locales';
 
 const OPTIONS = [
   {
-    label: 'HOME',
-    linkTo: '/',
+    label: 'CHANGE_PHONE',
+    linkTo: '/dashboard/change-phone',
   },
+
 ];
 
 // ----------------------------------------------------------------------
@@ -74,7 +75,7 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={userData?.photoURL}
+          src="/assets/images/popover/setting.png"
           alt={userData?.displayName}
           sx={{
             width: 36,
@@ -85,22 +86,10 @@ export default function AccountPopover() {
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
-        <Box sx={{ p: 2, pb: 1.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {userData?.displayName}
-          </Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {userData?.email}
-          </Typography>
-        </Box>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
-              {t('LABEL.' + option.label)}
+            <MenuItem sx={{color: 'primary.main', fontWeight: 'fontWeightBold'}} key={option.label} onClick={() => handleClickItem(option.linkTo)}>
+              {t('TITLE.' + option.label)}
             </MenuItem>
           ))}
         </Stack>
