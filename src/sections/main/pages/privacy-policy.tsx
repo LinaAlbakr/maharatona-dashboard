@@ -1,6 +1,7 @@
 'use client';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui/material';
+import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { editStaticPage } from 'src/actions/static-pages';
@@ -35,10 +36,14 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
+      content_ar: data.content_ar.replace('"', "'"),
+      content_en: data.content_en.replace('"', "'"),
       static_page_type: 'PRIVACY_POLICY',
     };
+    const formData = new FormData();
+    toFormData(reqBody, formData);
+    const res = await editStaticPage(formData);
 
-    const res = await editStaticPage(reqBody);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {

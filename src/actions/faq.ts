@@ -99,9 +99,6 @@ export const fetchCategoryQuestions = async ({
 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
-console.log(categoryId);
-console.log(filters);
-
   try {
     const res = await axiosInstance.get(endpoints.faq.fetchQuestions, {
       params: {

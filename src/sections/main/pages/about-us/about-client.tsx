@@ -1,6 +1,7 @@
 'use client';
 import { LoadingButton, TabPanel } from '@mui/lab';
 import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { editStaticPage } from 'src/actions/static-pages';
@@ -32,10 +33,15 @@ const AboutClientView = ({ aboutClient }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
+      content_ar: data.content_ar.replace('"', "'"),
+      content_en: data.content_en.replace('"', "'"),
       static_page_type: 'ABOUT_US_CLIENT',
     };
 
-    const res = await editStaticPage(reqBody);
+    const formData = new FormData();
+    toFormData(reqBody, formData);
+
+    const res = await editStaticPage(formData);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
