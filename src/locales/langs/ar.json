@@ -17,7 +17,9 @@
     "DELETE_COUPON": "حذف الكوبون",
     "CLEAR_WALLET": "تصفير المحفظة",
     "DELETE_CATEGORY": "حذف القسم",
-    "DELETE_QUESTION": "حذف السؤال"
+    "DELETE_QUESTION": "حذف السؤال",
+    "DEACTIVATE_CITY": "تعطيل المدينة",
+    "ACTIVATE_CITY": "تفعيل المدينة"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -170,7 +172,9 @@
     "QUESTION_ANSWER_IN_ENGLISH": "إجابة السؤال باللغة الإنجليزية",
     "NEW_QUESTION": "اضافة سؤال",
     "EDIT_QUESTION": "تعديل سؤال",
-    "HOME_SCREEN": "الصفحة الرئيسية"
+    "HOME_SCREEN": "الصفحة الرئيسية",
+    "SHOW_NEIGHBORHOODS": "عرض الأحياء",
+    "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -211,7 +215,8 @@
     "PRIVACY_POLICY": "سياسة الخصوصية",
     "TERMS_AND_CONDITIONS": "الشروط و الأحكام",
     "FAQ": "الاسئلة الشائعة",
-    "HOME_SCREEN": "الصفحة الرئيسية"
+    "HOME_SCREEN": "الصفحة الرئيسية",
+    "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء"
   },
   "TABLE": {
     "DENSE": "تكديس",
@@ -263,8 +268,8 @@
     "DELETED_SUCCESSFULLY": "تم الحذف بنجاح",
     "CONFIRM_ACTIVATE_FIELD": "هل تريد تفعيل هذا المجال؟",
     "CONFIRM_DEACTIVATE_FIELD": "هل تريد تعطيل هذا المجال؟",
-    "DEACTIVATED_SUCCESSFULLY": "تم تعطيل المجال بنجاح",
-    "ACTIVATED_SUCCESSFULLY": "تم تفعيل المجال بنجاح",
+    "DEACTIVATED_SUCCESSFULLY": "تم التعطيل  بنجاح",
+    "ACTIVATED_SUCCESSFULLY": "تم التفعيل بنجاح",
     "FEILD_CREATED_SUCCESSFULLY": "تم انشاء المجال بنجاح",
     "FEILD_UPDATED_SUCCESSFULLY": "تم تعديل المجال بنجاح",
     "COUPON_CREATED_SUCCESSFULLY": "تم انشاء الكوبون بنجاح",
@@ -275,7 +280,9 @@
     "CREATED_SUCCESSFULLY": "تم الانشاء بنجاح",
     "UPDATED_SUCCESSFULLY": "تم التعديل بنجاح",
     "CONFIRM_DELETE_CATEGORY": "هل تريد حذف هذا القسم؟",
-    "CONFIRM_DELETE_QUESTION": "هل تريد حذف هذا السؤال؟"
+    "CONFIRM_DELETE_QUESTION": "هل تريد حذف هذا السؤال؟",
+    "CONFIRM_DEACTIVATE_CITY": "هل تريد تعطيل هذه المدينة؟",
+    "CONFIRM_ACTIVATE_CITY": "هل تريد تفعيل هذه المدينة؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
