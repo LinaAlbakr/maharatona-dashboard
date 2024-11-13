@@ -109,6 +109,9 @@ export const endpoints = {
   notifications: {
     send: '/notification/send-to-users',
   },
+  profile:{
+    changePhone:`/auth/update-phone-or-email`
+  },
   support: {
     calls_reasons: {
       fetch: '/admin-panel/all-call-us-reasons',

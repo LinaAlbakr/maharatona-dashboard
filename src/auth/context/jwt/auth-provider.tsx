@@ -240,6 +240,8 @@ export function AuthProvider({ children }: Readonly<Props>) {
   // LOGOUT
   const logout = useCallback(async () => {
     setSession(null);
+    Cookie.remove(ACCESS_TOKEN);
+    Cookie.remove(USER_KEY);
     dispatch({
       type: Types.LOGOUT,
     });
