@@ -5,12 +5,7 @@ type IProps = {
   params: {
     clientId: string;
   };
-  searchParams: {
-    tab: string | string[] | undefined;
-    page: string | string[] | undefined;
-    limit: string | string[] | undefined;
-    search: string | string[] | undefined;
-  };
+  searchParams: { [key: string]: string | string[] | undefined }
 };
 const Page = async ({ params, searchParams }: IProps) => {
   const tab = typeof searchParams.tab === 'string' ? searchParams.tab : undefined;
@@ -21,7 +16,7 @@ const Page = async ({ params, searchParams }: IProps) => {
   const ClientInfo = await fetchClientInfo(params.clientId);
   const ClientCourses = await fetchClientCourses(page, limit, params.clientId);
   const ClientChildren = await fetchClientChildren(page, limit, child_name, params.clientId);
-  
+
   return (
     <ClientDetailsView
       tab={tab}

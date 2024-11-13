@@ -19,7 +19,9 @@
     "DELETE_CATEGORY": "حذف القسم",
     "DELETE_QUESTION": "حذف السؤال",
     "DEACTIVATE_CITY": "تعطيل المدينة",
-    "ACTIVATE_CITY": "تفعيل المدينة"
+    "ACTIVATE_CITY": "تفعيل المدينة",
+    "DEACTIVATE_NEIGHBORHOOD": "تعطيل الحى",
+    "ACTIVATE_NEIGHBORHOOD": "تفعيل الحى"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -282,7 +284,9 @@
     "CONFIRM_DELETE_CATEGORY": "هل تريد حذف هذا القسم؟",
     "CONFIRM_DELETE_QUESTION": "هل تريد حذف هذا السؤال؟",
     "CONFIRM_DEACTIVATE_CITY": "هل تريد تعطيل هذه المدينة؟",
-    "CONFIRM_ACTIVATE_CITY": "هل تريد تفعيل هذه المدينة؟"
+    "CONFIRM_ACTIVATE_CITY": "هل تريد تفعيل هذه المدينة؟",
+    "CONFIRM_DEACTIVATE_NEIGHBORHOOD": "هل تريد تعطيل هذه الحي؟",
+    "CONFIRM_ACTIVATE_NEIGHBORHOOD": "هل تريد تفعيل هذه الحي؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
