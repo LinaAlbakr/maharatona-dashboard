@@ -74,7 +74,7 @@ export const endpoints = {
     login: '/auth/signin',
     register: '/auth/register',
     forgot: `/auth/send-password-reset-otp`,
-    verify: `/auth/verify-otp-and-reset-password`
+    verify: `/auth/verify-otp-and-reset-password`,
   },
   home: {
     topCourses: '/admin-panel/top-courses',
@@ -109,6 +109,9 @@ export const endpoints = {
   notifications: {
     send: '/notification/send-to-users',
   },
+  profile:{
+    changePhone:`/auth/update-phone-or-email`
+  },
   support: {
     calls_reasons: {
       fetch: '/admin-panel/all-call-us-reasons',
@@ -135,5 +138,16 @@ export const endpoints = {
   staticPage: {
     fetch: (type: string) => `/admin-panel/static-page/${type}`,
     edit: `/admin-panel/update-static-page`,
+  },
+  faq: {
+    fetchFaqCategories: '/admin-panel/all-faq-categories',
+    newCategory: '/admin-panel/create-faq-category',
+    editCategory: (categoryId: string) => `/admin-panel/update-faq-item/${categoryId}`,
+    deleteCategory: (categoryId: string) => `/admin-panel/delete-faq-category/${categoryId}`,
+    fetchQuestions: '/admin-panel/all-faq-items',
+    newQuestion: '/admin-panel/create-faq-item',
+    editQuestion: (questionId: string) => `/admin-panel/update-faq-item/${questionId}`,
+    deleteQuestion: (questionId: string) => `/admin-panel/faq-item/${questionId}`,
+
   },
 };

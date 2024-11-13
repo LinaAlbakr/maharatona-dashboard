@@ -6,17 +6,23 @@
     "SEND_NOTIFICATON": "Send Notification",
     "DELETE_REASON": "Delete Reason",
     "DELETE_FIELD": "Delete Field",
+    "CHANGE_PHONE":"Change phone",
+    "LOGOUT":"Logout",
     "DEACTIVATE_FIELD": "Deactivate Field",
     "ACTIVATE_FIELD": "Activate Field",
     "DELETE_COUPON": "Delete Coupon",
-    "CLEAR_WALLET": "Clear Wallet"
+    "CLEAR_WALLET": "Clear Wallet",
+    "DELETE_CATEGORY": "Delete Category",
+    "DELETE_QUESTION": "Delete Question"
   },
   "LABEL": {
     "USER_NAME": "User Name",
     "PASSWORD": "Password",
+    "CHANGE_PHONE_NUMBER":"Change phone number!",
     "EMAIL": "Email",
     "DASHBOARD": "Dashboard",
     "MAHARATONA": "Maharatona",
+    "New_PHONE":"New phone",
     "CENTER_NAME": "Center Name",
     "CITY": "City",
     "NEIGHBORHOOD": "Neighborhood",
@@ -141,14 +147,28 @@
     "ENGLISH_CONTENT": "English Content",
     "ARABIC_CONTENT": "Arabic Content",
     "WALLET_BALANCE": "Wallet Balance",
-    "CLEAR_WALLET": "Clear Wallet"
+    "CLEAR_WALLET": "Clear Wallet",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "TERMS_AND_CONDITIONS": "Terms And Conditions",
+    "FAQ_CATEGORIES": "FAQ Categories",
+    "CATEGORY_NAME_IN_ARABIC": "Category name in arabic",
+    "NEW_CATEGORY": "New Category",
+    "EDIT_CATEGORY": "Edit Category",
+    "QUESTION_NAME": "Question Name",
+    "QUESTION_NAME_IN_ARABIC": "Question name in arabic",
+    "QUESTION_NAME_IN_ENGLISH": "Question name in english",
+    "QUESTION_ANSWER_IN_ARABIC": "Question answer in arabic",
+    "QUESTION_ANSWER_IN_ENGLISH": "Question answer in english",
+    "NEW_QUESTION": "New Question",
+    "EDIT_QUESTION": "Edit Question"
   },
   "BUTTON": {
     "LOGIN": "Login",
     "FORGOT_PASSWORD": "Forgot Password?",
     "UPDATE_PASSWORD":"Update Password",
+    "CHANGE_PHONE":"Change phone",
     "BLOCK": "Block",
-    "VERIFY":"verify",
+    "VERIFY": "verify",
     "UNBLOCK": "Unblock",
     "CANCEL": "Cancel",
     "SEND": "Send",
@@ -162,7 +182,9 @@
     "ADD_COUPON": "Add Coupon",
     "CREATE": "Create",
     "PUBLISH": "Publish",
-    "CLEAR": "Clear"
+    "CLEAR": "Clear",
+    "ADD_CATEGORY": "Add Category",
+    "ADD_QUESTION": "Add Question"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -175,7 +197,10 @@
     "COUPONS": "Coupons",
     "TECHNICAL_SUPPORT": "Technical Support",
     "PAGES": "Pages",
-    "ABOUT_APP": "About App"
+    "ABOUT_APP": "About App",
+    "PRIVACY_POLICY": "Privacy Policy",
+    "TERMS_AND_CONDITIONS": "Terms And Conditions",
+    "FAQ": "FAQ"
   },
   "TABLE": {
     "DENSE": "Dense",
@@ -208,6 +233,8 @@
     "CHECK_MESSAGE":"Please check your messages!",
     "RETURN_TO_lOGIN":"Return to sign in",
     "NEW_PASSWORD":"New Password",
+    "SOMETHING_WRONG":"There is something wrong",
+    "CHANGE_PHONE_SUCCESS":"Change phone successful!",
     "SUCCESSFUL_UPDATED_PASSWORD":"Successful updates enable access using the new password",
     "CONFIRM_BLOCK": "Are you sure you want to block this center?",
     "CONFIRM_UNBLOCK": "Are you sure you want to unblock this center?",
@@ -231,12 +258,17 @@
     "CONFIRM_DELETE_coupon": "Are you sure you want to delete this coupon?",
     "CONTENT_PUBLISHED_SUCCESSFULLY": "Content published successfully",
     "CONFIRM_CLEAR_WALLET": "Are you sure you want to clear your wallet?",
-    "WALLET_CLEARED_SUCCESSFULLY": "Wallet cleared successfully"
+    "WALLET_CLEARED_SUCCESSFULLY": "Wallet cleared successfully",
+    "CREATED_SUCCESSFULLY": "Created successfully",
+    "UPDATED_SUCCESSFULLY": "Updated successfully",
+    "CONFIRM_DELETE_CATEGORY": "Are you sure you want to delete this category?",
+    "CONFIRM_DELETE_QUESTION": "Are you sure you want to delete this question?"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",
     "REASON_NAME_IN_ARABIC": "Reason name in arabic",
     "VALUE": "Value",
-    "NUMBER_OF_USAGES": "Number of usages"
+    "NUMBER_OF_USAGES": "Number of usages",
+    "CATEGORY_NAME_IN_ARABIC": "Category name in arabic"
   }
 }

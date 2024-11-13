@@ -11,7 +11,15 @@ type Props = TextFieldProps & {
   value?: any;
 };
 
-export default function RHFTextarea({ rules, name, value, helperText, type, ...other }: Props) {
+export default function RHFTextarea({
+  rules,
+  name,
+  value,
+  helperText,
+  type,
+  minRows,
+  ...other
+}: Props) {
   const { control, setValue } = useFormContext();
   useEffect(() => {
     setValue(name, value);
@@ -29,7 +37,7 @@ export default function RHFTextarea({ rules, name, value, helperText, type, ...o
           fullWidth
           type={type}
           multiline
-          rows={3}
+          rows={minRows || 3}
           value={field?.value}
           onChange={(event) => {
             if (type === 'number') {
