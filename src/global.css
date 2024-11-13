@@ -14,8 +14,17 @@
 @import 'yet-another-react-lightbox/plugins/thumbnails.css';
 
 /* editor */
-@import "react-quill/dist/quill.snow.css";
+@import 'react-quill/dist/quill.snow.css';
 
 .rtl-av3qjc-MuiContainer-root {
   padding: 0px !important;
+}
+
+.ql-formats {
+  margin-inline: 0px !important;
+}
+@media (min-width: 1600px) {
+  .ql-formats {
+    margin-inline: 10px !important;
+  }
 }

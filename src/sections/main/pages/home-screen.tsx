@@ -1,36 +1,46 @@
 'use client';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { editStaticPage } from 'src/actions/static-pages';
-import FormProvider from 'src/components/hook-form';
+import FormProvider, { RHFUploadAvatar } from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import { StaticPage } from 'src/types/static-pages';
+import { useCallback } from 'react';
 
 interface IProps {
-  termsAndConditions: StaticPage;
+  HomeScreen: StaticPage;
 }
 
-const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
+const HomeScreenView = ({ HomeScreen }: IProps) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
-
   const defaultValues = {
-    content_ar: termsAndConditions.content_ar.replace("'", '"') || '' || '',
-    content_en: termsAndConditions.content_en.replace("'", '"') || '' || '',
+    content_ar: HomeScreen.content_ar.replace("'", '"') || '' || '',
+    content_en: HomeScreen.content_en.replace("'", '"') || '' || '',
+    image: HomeScreen?.image || null,
   };
   const methods = useForm({
+    resolver: yupResolver(
+      yup.object().shape({
+        content_ar: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        content_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        image: yup.mixed<any>().nullable().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+      })
+    ),
     defaultValues,
   });
 
   const {
     handleSubmit,
-
+    setValue,
     formState: { isSubmitting },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
@@ -38,10 +48,13 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
       ...data,
       content_ar: data.content_ar.replace('"', "'"),
       content_en: data.content_en.replace('"', "'"),
-      static_page_type: 'TERMS_AND_CONDITIONS',
+      static_page_type: 'HOME_SCREEN',
     };
     const formData = new FormData();
     toFormData(reqBody, formData);
+    if (typeof data?.image === 'string') {
+      formData.delete('image');
+    }
     const res = await editStaticPage(formData);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
@@ -51,6 +64,20 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
       });
     }
   });
+  const handleDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
 
   return (
     <Container
@@ -60,8 +87,8 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
       <Box
         sx={{
           width: '100%',
-          backgroundImage: `url(/assets/images/pages/terms-and-conditions.jpg)`,
-          height: '200px',
+          backgroundImage: `url(/assets/images/pages/home-screen.jpg)`,
+          height: '300px',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           p: 0,
@@ -73,7 +100,7 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
         }}
       >
         <Typography variant="h2" color="white">
-          {t('LABEL.TERMS_AND_CONDITIONS')}
+          {t('LABEL.HOME_SCREEN')}
         </Typography>
       </Box>
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -83,32 +110,35 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
             borderRadius: 0,
           }}
         >
-          <CardContent sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            <Box>
-              <Typography variant="h4" color="info.dark" marginBlock={1}>
-                {t('LABEL.ARABIC_CONTENT')}
-              </Typography>
-              <RHFEditor
-                name="content_ar"
-                sx={{
-                  '& .ql-editor': {
-                    minHeight: '200px',
-                  },
-                }}
-              />{' '}
-            </Box>
-            <Box>
-              <Typography variant="h4" color="info.dark" marginBlock={1}>
-                {t('LABEL.ENGLISH_CONTENT')}
-              </Typography>
-              <RHFEditor
-                name="content_en"
-                sx={{
-                  '& .ql-editor': {
-                    minHeight: '200px',
-                  },
-                }}
-              />
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <RHFUploadAvatar name="image" onDrop={handleDrop} sx={{ mb: 2 }} />
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+              <Box>
+                <Typography variant="h4" color="info.dark" marginBlock={1}>
+                  {t('LABEL.ARABIC_CONTENT')}
+                </Typography>
+                <RHFEditor
+                  name="content_ar"
+                  sx={{
+                    '& .ql-editor': {
+                      minHeight: '200px',
+                    },
+                  }}
+                />{' '}
+              </Box>
+              <Box>
+                <Typography variant="h4" color="info.dark" marginBlock={1}>
+                  {t('LABEL.ENGLISH_CONTENT')}
+                </Typography>
+                <RHFEditor
+                  name="content_en"
+                  sx={{
+                    '& .ql-editor': {
+                      minHeight: '200px',
+                    },
+                  }}
+                />
+              </Box>
             </Box>
           </CardContent>
           <CardActions
@@ -134,4 +164,4 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
   );
 };
 
-export default TermsAndConditionsView;
+export default HomeScreenView;

@@ -25,17 +25,13 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
   }
 };
 
-export const editStaticPage = async (data: StaticPageReqBody): Promise<any> => {
-  const reqBody = {
-    ...data,
-    content_ar: data.content_ar.replace('"', "'"),
-    content_en: data.content_en.replace('"', "'"),
-  };
+export const editStaticPage = async (data: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    const res = await axiosInstance.patch(endpoints.staticPage.edit, reqBody, {
+  const res=   await axiosInstance.patch(endpoints.staticPage.edit, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
   } catch (error) {

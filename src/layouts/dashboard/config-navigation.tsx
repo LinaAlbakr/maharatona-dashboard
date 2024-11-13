@@ -114,6 +114,10 @@ export function useNavData() {
                 title: t('SIDEBAR.TERMS_AND_CONDITIONS'),
                 path: paths.dashboard.pages.termsAndConditions,
               },
+              {
+                title: t('SIDEBAR.HOME_SCREEN'),
+                path: paths.dashboard.pages.homeScreen,
+              },
             ],
           },
           { title: t('SIDEBAR.FAQ'), path: paths.dashboard.faq, icon: ICONS.questions },
