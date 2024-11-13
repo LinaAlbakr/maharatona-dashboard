@@ -109,8 +109,8 @@ export const endpoints = {
   notifications: {
     send: '/notification/send-to-users',
   },
-  profile:{
-    changePhone:`/auth/update-phone-or-email`
+  profile: {
+    changePhone: `/auth/update-phone-or-email`,
   },
   support: {
     calls_reasons: {
@@ -142,12 +142,16 @@ export const endpoints = {
   faq: {
     fetchFaqCategories: '/admin-panel/all-faq-categories',
     newCategory: '/admin-panel/create-faq-category',
-    editCategory: (categoryId: string) => `/admin-panel/update-faq-item/${categoryId}`,
+    editCategory: (categoryId: string) => `/admin-panel/update-faq-category/${categoryId}`,
     deleteCategory: (categoryId: string) => `/admin-panel/delete-faq-category/${categoryId}`,
     fetchQuestions: '/admin-panel/all-faq-items',
     newQuestion: '/admin-panel/create-faq-item',
     editQuestion: (questionId: string) => `/admin-panel/update-faq-item/${questionId}`,
     deleteQuestion: (questionId: string) => `/admin-panel/faq-item/${questionId}`,
-
+  },
+  citiesAndNeighborhoods: {
+    fetchCities: '/admin-panel/all-cities',
+    changeCityStatus: (cityId: string, cityStatus: boolean) =>
+      `/admin-panel/update-activation-city/${cityId}/${cityStatus}`,
   },
 };

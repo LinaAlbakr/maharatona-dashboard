@@ -42,5 +42,6 @@ export const paths = {
       homeScreen: `${ROOTS.DASHBOARD}/pages/home-screen`,
     },
     faq: `${ROOTS.DASHBOARD}/faq`,
+    citiesAndNeighborhoods: `${ROOTS.DASHBOARD}/cities-and-neighborhoods`,
   },
 };

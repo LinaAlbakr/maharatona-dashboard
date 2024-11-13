@@ -61,7 +61,8 @@ const ICONS = {
   cartegries: icon('fluent:playing-cards-20-filled'),
   coupon: icon('ri:coupon-3-fill'),
   pages: icon('iconoir:multiple-pages-empty'),
-  questions: icon('mdi:frequently-asked-questions')
+  questions: icon('mdi:frequently-asked-questions'),
+  city: icon('healthicons:city-outline'),
 };
 
 export function useNavData() {
@@ -121,7 +122,11 @@ export function useNavData() {
             ],
           },
           { title: t('SIDEBAR.FAQ'), path: paths.dashboard.faq, icon: ICONS.questions },
-
+          {
+            title: t('SIDEBAR.CITIES_AND_NEIGHBORHOODS'),
+            path: paths.dashboard.citiesAndNeighborhoods,
+            icon: ICONS.city,
+          },
         ],
       },
     ],
