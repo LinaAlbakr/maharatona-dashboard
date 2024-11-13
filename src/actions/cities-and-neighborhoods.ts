@@ -69,16 +69,47 @@ export const fetchNeighborhoods = async ({
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.categories.fetch, {
-      params: {
-        page,
-        limit,
-        by_name: filters,
-      },
-      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
-    });
+    const res = await axiosInstance.get(
+      endpoints.citiesAndNeighborhoods.fetchNeighborhoods(cityId),
+      {
+        params: {
+          page,
+          limit,
+          by_name: filters,
+          cityId,
+        },
+        headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+      }
+    );
     return res?.data;
   } catch (error) {
     throw new Error(error);
+  }
+};
+
+export const editNeighborhoodStatus = async (neighborhood: any): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const res = await axiosInstance.put(
+      endpoints.citiesAndNeighborhoods.changeNeighborhoodStatus(
+        neighborhood.id,
+        !neighborhood.is_active
+      ),
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    revalidatePath(paths.dashboard.citiesAndNeighborhoods);
+    console.log(res);
+
+  } catch (error) {
+    console.log(error);
+
+    return {
+      error: getErrorMessage(error),
+    };
   }
 };

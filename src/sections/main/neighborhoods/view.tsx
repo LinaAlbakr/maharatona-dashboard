@@ -24,14 +24,14 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import { editFieldStatus } from 'src/actions/categories';
-import { editCityStatus } from 'src/actions/cities-and-neighborhoods';
+import { editCityStatus, editNeighborhoodStatus } from 'src/actions/cities-and-neighborhoods';
 
 type props = {
-  cities: any[];
+  neighborhoods: any[];
   count: number;
 };
 
-const CitiesView = ({ count, cities }: Readonly<props>) => {
+const NeighborhoodsView = ({ count, neighborhoods }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -79,21 +79,25 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
   );
 
   const handleConfirmActivate = async () => {
-    const res = await editCityStatus(selectedCity);
-    if (res.statusCode === 200) {
-      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
-      confirmActivate.onFalse();
+    const res = await editNeighborhoodStatus(selectedCity);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(`${res.error}`, { variant: 'error' });
+      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'), {
+        variant: 'success',
+      });
+      confirmActivate.onFalse();
     }
   };
   const handleConfirmDeactivate = async () => {
-    const res = await editCityStatus(selectedCity);
-    if (res.statusCode === 200) {
-      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
-      confirmDeactivate.onFalse();
+    const res = await editNeighborhoodStatus(selectedCity);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(`${res.error}`, { variant: 'error' });
+      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'), {
+        variant: 'success',
+      });
+      confirmDeactivate.onFalse();
     }
   };
 
@@ -155,19 +159,9 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
         </Box>
         <SharedTable
           count={count}
-          data={cities}
+          data={neighborhoods}
           tableHead={TABLE_HEAD}
           actions={[
-            {
-              sx: { color: 'info.dark' },
-
-              label: t('LABEL.SHOW_NEIGHBORHOODS'),
-              icon: 'hugeicons:city-03',
-              onClick: (item: any) => {
-                setSelectedCity(item);
-                confirmActivate.onTrue();
-              },
-            },
             {
               sx: { color: 'info.dark' },
 
@@ -190,13 +184,21 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
               hide: (row) => row.is_active === false,
             },
           ]}
+          customRender={{
+            name_ar: (item: any) => (
+              <Box sx={{ color: item.is_active ? 'inherit' : 'red' }}>{item?.name_ar}</Box>
+            ),
+            name_en: (item: any) => (
+              <Box sx={{ color: item.is_active ? 'inherit' : 'red' }}>{item?.name_en}</Box>
+            ),
+          }}
         />
       </Container>
       <ConfirmDialog
         open={confirmActivate.value}
         onClose={confirmActivate.onFalse}
-        title={t('TITLE.ACTIVATE_CITY')}
-        content={t('MESSAGE.CONFIRM_ACTIVATE_CITY')}
+        title={t('TITLE.ACTIVATE_NEIGHBORHOOD')}
+        content={t('MESSAGE.CONFIRM_ACTIVATE_NEIGHBORHOOD')}
         action={
           <Button
             variant="contained"
@@ -212,8 +214,8 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
       <ConfirmDialog
         open={confirmDeactivate.value}
         onClose={confirmDeactivate.onFalse}
-        title={t('TITLE.DEACTIVATE_CITY')}
-        content={t('MESSAGE.CONFIRM_DEACTIVATE_CITY')}
+        title={t('TITLE.DEACTIVATE_NEIGHBORHOOD')}
+        content={t('MESSAGE.CONFIRM_DEACTIVATE_NEIGHBORHOOD')}
         action={
           <Button
             variant="contained"
@@ -230,4 +232,4 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
   );
 };
 
-export default CitiesView;
+export default NeighborhoodsView;

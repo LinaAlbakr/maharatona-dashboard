@@ -1,6 +1,6 @@
 import { fetchCities } from 'src/actions/cities-and-neighborhoods';
 import CategoriesView from 'src/sections/main/categories/view';
-import CitiesView from 'src/sections/main/cities-and-neighborhoods/view';
+import CitiesView from 'src/sections/main/cities/view';
 import { ICenter } from 'src/types/centers';
 
 export const metadata = {
