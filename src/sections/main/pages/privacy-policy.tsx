@@ -21,8 +21,8 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
-    content_ar: privacyPolicy.content_ar.replace("'", '"') || '' || '',
-    content_en: privacyPolicy.content_en.replace("'", '"') || '' || '',
+    content_ar: privacyPolicy.content_ar || '',
+    content_en: privacyPolicy.content_en || '',
   };
   const methods = useForm({
     defaultValues,
@@ -36,8 +36,8 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', "'"),
-      content_en: data.content_en.replace('"', "'"),
+      content_ar: data.content_ar.replace('"', '\n"'),
+      content_en: data.content_en.replace('"', '\n"'),
       static_page_type: 'PRIVACY_POLICY',
     };
     const formData = new FormData();

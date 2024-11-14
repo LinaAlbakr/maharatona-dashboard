@@ -19,12 +19,14 @@ interface IProps {
 }
 
 const HomeScreenView = ({ HomeScreen }: IProps) => {
+  console.log(HomeScreen);
+
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const defaultValues = {
-    content_ar: HomeScreen.content_ar.replace("'", '"') || '' || '',
-    content_en: HomeScreen.content_en.replace("'", '"') || '' || '',
+    content_ar: HomeScreen.content_ar || '',
+    content_en: HomeScreen.content_en || '',
     image: HomeScreen?.image || null,
   };
   const methods = useForm({
@@ -44,10 +46,12 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
     formState: { isSubmitting },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
+
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', "'"),
-      content_en: data.content_en.replace('"', "'"),
+      content_ar: data.content_ar.replace('"', '\n"'),
+      content_en: data.content_en.replace('"', '\n"'),
       static_page_type: 'HOME_SCREEN',
     };
     const formData = new FormData();

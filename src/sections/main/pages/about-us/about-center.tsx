@@ -19,8 +19,8 @@ const AboutCenterView = ({ aboutCenter }: IProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
-    content_ar: aboutCenter.content_ar.replace("'", '"') || '' || '',
-    content_en: aboutCenter.content_en.replace("'", '"') || '' || '',
+    content_ar: aboutCenter.content_ar || '',
+    content_en: aboutCenter.content_en || '',
   };
   const methods = useForm({
     defaultValues,
@@ -34,8 +34,8 @@ const AboutCenterView = ({ aboutCenter }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', "'"),
-      content_en: data.content_en.replace('"', "'"),
+      content_ar: data.content_ar.replace('"', '\n"'),
+      content_en: data.content_en.replace('"', '\n"'),
       static_page_type: 'ABOUT_US_CENTER',
     };
 

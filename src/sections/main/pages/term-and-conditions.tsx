@@ -21,8 +21,8 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
-    content_ar: termsAndConditions.content_ar.replace("'", '"') || '' || '',
-    content_en: termsAndConditions.content_en.replace("'", '"') || '' || '',
+    content_ar: termsAndConditions.content_ar || '',
+    content_en: termsAndConditions.content_en || '',
   };
   const methods = useForm({
     defaultValues,
@@ -36,8 +36,8 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', "'"),
-      content_en: data.content_en.replace('"', "'"),
+      content_ar: data.content_ar.replace('"', '\n"'),
+      content_en: data.content_en.replace('"', '\n"'),
       static_page_type: 'TERMS_AND_CONDITIONS',
     };
     const formData = new FormData();
