@@ -23,6 +23,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import { IBanner, IBannerCenter } from 'src/types/banners';
 import { fDate } from 'src/utils/format-time';
+import { BannerCenterDialog } from './banner-center-dialog';
 
 type props = {
   centers:IBannerCenter[];
@@ -35,10 +36,8 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState<string | null>();
-  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
-  console.log(count)
-
+  const open = useBoolean();
+  const [selectedCenter, seSelectedCenter] = useState<IBannerCenter | undefined>(undefined);
 
   const TABLE_HEAD = [
     { id: 'center_name', label: 'LABEL.CENTER_NAME' },
@@ -51,7 +50,7 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
 
   const pathname = usePathname();
 
-
+/*
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -67,7 +66,7 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
     },
     [pathname, router, searchParams]
   );
-
+ */
   return (
     <>
       <Container
@@ -138,12 +137,11 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
             <Typography fontWeight="bold" color="primary.dark" variant="subtitle2" sx={{ mb: 1 }}>
             {t("LABEL.CENTER_IMAGE")}
             </Typography>
-            {
-              banner?.image_cover && (
+
                 <Box
                   component="img"
                   alt="image"
-                  src={banner?.image_cover }
+                  src={banner?.image_cover || '/assets/images/centers/gray.jpeg'}
                   sx={{
                     height: 100,
                     width: 200,
@@ -151,8 +149,8 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
                     borderRadius: 1,
                     }}
                 />
-              )
-            }
+
+
           </Stack>
         </Box>
       </Card>
@@ -169,7 +167,8 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
-                console.log('f');
+                seSelectedCenter(item);
+                open.onTrue();
               },
             },
           ]}
@@ -205,16 +204,16 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
       </Container>
 
 
-     {/*  {isFormDialogOpen ? (
-        <NewEditCategoryDialog
-          open={isFormDialogOpen}
+      {open.value && (
+        <BannerCenterDialog
+          open={open.value}
           onClose={() => {
-            setIsFormDialogOpen(false);
-            setSelectedCategory(undefined);
+            open.onFalse()
+            seSelectedCenter(undefined);
           }}
-          category={selectedCategory}
+          center={selectedCenter}
         />
-      ) : null} */}
+      )}
     </>
   );
 };
