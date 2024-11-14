@@ -127,7 +127,7 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
                         </InputAdornment>
                       ),
                     }}
-                    placeholder={t('LABEL.SEARCH_CENTER')}
+                    placeholder={t('LABEL.SEARCH_BY_NAME')}
                     type="search"
                     onChange={(e) => createQueryString('search', e.target.value)}
                   />
