@@ -33,8 +33,8 @@ const AboutClientView = ({ aboutClient }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', "'"),
-      content_en: data.content_en.replace('"', "'"),
+      content_ar: data.content_ar.replace('"', '\n"'),
+      content_en: data.content_en.replace('"', '\n"'),
       static_page_type: 'ABOUT_US_CLIENT',
     };
 
