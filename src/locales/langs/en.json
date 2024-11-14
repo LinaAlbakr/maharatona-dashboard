@@ -167,7 +167,14 @@
     "EDIT_QUESTION": "Edit Question",
     "HOME_SCREEN": "Home Screen",
     "SHOW_NEIGHBORHOODS": "Show Neighborhoods",
-    "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods"
+    "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods",
+    "BANNERS": "Banners",
+    "PACKAGE_NAME": "Package Name",
+    "DURATION": "Duration",
+    "NUMBER_OF_CENTERS": "Number of Centers",
+    "BOTH": "Both",
+    "MAIN": "Main",
+    "WEEKS": "Weeks"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -209,7 +216,8 @@
     "TERMS_AND_CONDITIONS": "Terms And Conditions",
     "FAQ": "FAQ",
     "HOME_SCREEN": "Home Screen",
-    "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods"
+    "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods",
+    "BANNERS": "Banners"
   },
   "TABLE": {
     "DENSE": "Dense",
