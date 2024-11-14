@@ -21,7 +21,9 @@
     "DEACTIVATE_CITY": "تعطيل المدينة",
     "ACTIVATE_CITY": "تفعيل المدينة",
     "DEACTIVATE_NEIGHBORHOOD": "تعطيل الحى",
-    "ACTIVATE_NEIGHBORHOOD": "تفعيل الحى"
+    "ACTIVATE_NEIGHBORHOOD": "تفعيل الحى",
+    "NEW_BANNER": "اضافه بانر",
+    "EDIT_BANNER": "تعديل بانر"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -192,7 +194,9 @@
     "NUMBER_OF_CENTERS": "عدد المراكز",
     "BOTH": "كلاهما",
     "MAIN": "الصفحة الرئيسية",
-    "WEEKS": "اسابيع"
+    "WEEKS": "اسابيع",
+    "DESCRIPTION_IN_ARABIC": "الوصف باللغة العربية",
+    "DESCRIPTION_IN_ENGLISH": "الوصف باللغة الانجليزية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -216,7 +220,8 @@
     "PUBLISH": "نشر",
     "CLEAR": "تصفير",
     "ADD_CATEGORY": "اضافة قسم",
-    "ADD_QUESTION": "اضافة سؤال"
+    "ADD_QUESTION": "اضافة سؤال",
+    "ADD_BANNER": "اضافه بانر"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",

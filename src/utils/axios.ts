@@ -160,7 +160,9 @@ export const endpoints = {
   banners: {
     fetch: '/admin-panel/all-advertisements',
     bannerDetails: (id: string) => `/admin-panel/single-advertisement/${id}`,
-    bannerCenters:(id: string, page:number, limit:number) => `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`
-
+    bannerCenters: (id: string, page: number, limit: number) =>
+      `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`,
+    newBanner: `/admin-panel/center-buy-advertisement`,
+    editBanner: (bannerId: string) => `/admin-panel/update-advertisement/${bannerId}`,
   },
 };

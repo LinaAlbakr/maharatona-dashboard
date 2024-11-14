@@ -19,8 +19,6 @@ interface IProps {
 }
 
 const HomeScreenView = ({ HomeScreen }: IProps) => {
-  console.log(HomeScreen);
-
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
@@ -46,7 +44,6 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
     formState: { isSubmitting },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
 
     const reqBody = {
       ...data,

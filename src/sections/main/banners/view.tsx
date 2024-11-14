@@ -5,7 +5,7 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
@@ -16,6 +16,8 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import Iconify from 'src/components/iconify';
 import { Banner } from 'src/types/banners';
+import i18n from 'src/locales/i18n';
+import { NewEditBannerDialog } from './new-edit-banner-dialog';
 
 type props = {
   banners: Banner[];
@@ -31,13 +33,14 @@ const types = [
 const BannersView = ({ banners, count }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const [selectedBanner, setSelectedBanner] = useState<Banner | undefined>();
 
   const TABLE_HEAD = [
-    { id: 'name', label: 'LABEL.PACKAGE_NAME' },
+    { id: 'name_ar', label: 'LABEL.PACKAGE_NAME' },
     { id: 'advertisementType', label: 'LABEL.TYPE' },
     { id: 'duration', label: 'LABEL.DURATION' },
     { id: 'price', label: 'LABEL.PRICE' },
@@ -142,6 +145,22 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
               </FormProvider>
             </Card>
           </Grid>
+          <Button
+            variant="contained"
+            sx={{
+              px: 8,
+              py: 2,
+              bgcolor: 'white',
+              borderRadius: 4,
+              color: 'primary.main',
+              '&:hover': { bgcolor: 'primary.main', color: 'white' },
+            }}
+            onClick={() => {
+              setIsFormDialogOpen(true);
+            }}
+          >
+            {t('BUTTON.ADD_BANNER')}
+          </Button>
         </Box>
         <SharedTable
           count={count}
@@ -160,7 +179,10 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
               sx: { color: 'info.dark' },
               label: t('LABEL.EDIT'),
               icon: 'solar:pen-new-square-outline',
-              onClick: (item) => {},
+              onClick: (item) => {
+                setIsFormDialogOpen(true);
+                setSelectedBanner(item);
+              },
             },
           ]}
           customRender={{
@@ -170,9 +192,20 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
                 : t(`LABEL.${item.advertisementType}`),
             price: (item) => Math.floor(+item.price) + ' ' + t('LABEL.SAR'),
             duration: (item) => item.duration + ' ' + t('LABEL.WEEKS'),
+            name_ar: (item) => (i18n.language === 'ar' ? item.name_ar : item.name_en),
           }}
         />
       </Container>
+      {isFormDialogOpen && (
+        <NewEditBannerDialog
+          open={isFormDialogOpen}
+          onClose={() => {
+            setIsFormDialogOpen(false);
+            setSelectedBanner(undefined);
+          }}
+          banner={selectedBanner}
+        />
+      )}
     </>
   );
 };

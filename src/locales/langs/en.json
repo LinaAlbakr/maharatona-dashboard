@@ -17,7 +17,9 @@
     "DEACTIVATE_CITY": "Deactivate City",
     "ACTIVATE_CITY": "Activate City",
     "DEACTIVATE_NEIGHBORHOOD": "Deactivate Neighborhood",
-    "ACTIVATE_NEIGHBORHOOD": "Activate Neighborhood"
+    "ACTIVATE_NEIGHBORHOOD": "Activate Neighborhood",
+    "NEW_BANNER": "New Banner",
+    "EDIT_BANNER": "Edit Banner"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -183,7 +185,9 @@
     "NUMBER_OF_CENTERS": "Number of Centers",
     "BOTH": "Both",
     "MAIN": "Main",
-    "WEEKS": "Weeks"
+    "WEEKS": "Weeks",
+    "DESCRIPTION_IN_ARABIC": "Description in arabic",
+    "DESCRIPTION_IN_ENGLISH": "Description in english"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -207,7 +211,8 @@
     "PUBLISH": "Publish",
     "CLEAR": "Clear",
     "ADD_CATEGORY": "Add Category",
-    "ADD_QUESTION": "Add Question"
+    "ADD_QUESTION": "Add Question",
+    "ADD_BANNER": "Add banner"
   },
   "SIDEBAR": {
     "MAIN": "Main",
