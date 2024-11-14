@@ -63,6 +63,7 @@ const ICONS = {
   pages: icon('iconoir:multiple-pages-empty'),
   questions: icon('mdi:frequently-asked-questions'),
   city: icon('healthicons:city-outline'),
+  banner: icon('solar:bill-linear'),
 };
 
 export function useNavData() {
@@ -126,6 +127,11 @@ export function useNavData() {
             title: t('SIDEBAR.CITIES_AND_NEIGHBORHOODS'),
             path: paths.dashboard.citiesAndNeighborhoods,
             icon: ICONS.city,
+          },
+          {
+            title: t('SIDEBAR.BANNERS'),
+            path: paths.dashboard.banners,
+            icon: ICONS.banner,
           },
         ],
       },

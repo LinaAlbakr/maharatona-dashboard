@@ -43,5 +43,6 @@ export const paths = {
     },
     faq: `${ROOTS.DASHBOARD}/faq`,
     citiesAndNeighborhoods: `${ROOTS.DASHBOARD}/cities-and-neighborhoods`,
+    banners: `${ROOTS.DASHBOARD}/banners`,
   },
 };

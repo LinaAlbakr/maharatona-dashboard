@@ -157,4 +157,7 @@ export const endpoints = {
     changeNeighborhoodStatus: (cityId: string, cityStatus: boolean) =>
       `/admin-panel/update-activation-neighborhood/${cityId}/${cityStatus}`,
   },
+  banners: {
+    fetch: '/admin-panel/all-advertisements',
+  },
 };

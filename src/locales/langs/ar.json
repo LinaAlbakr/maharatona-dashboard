@@ -176,7 +176,14 @@
     "EDIT_QUESTION": "تعديل سؤال",
     "HOME_SCREEN": "الصفحة الرئيسية",
     "SHOW_NEIGHBORHOODS": "عرض الأحياء",
-    "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء"
+    "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء",
+    "BANNERS": "البنرات الاعلانية",
+    "PACKAGE_NAME": "اسم الباقة",
+    "DURATION": "مده",
+    "NUMBER_OF_CENTERS": "عدد المراكز",
+    "BOTH": "كلاهما",
+    "MAIN": "الصفحة الرئيسية",
+    "WEEKS": "اسابيع"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -218,7 +225,8 @@
     "TERMS_AND_CONDITIONS": "الشروط و الأحكام",
     "FAQ": "الاسئلة الشائعة",
     "HOME_SCREEN": "الصفحة الرئيسية",
-    "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء"
+    "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء",
+    "BANNERS": "البنرات الاعلانية"
   },
   "TABLE": {
     "DENSE": "تكديس",
