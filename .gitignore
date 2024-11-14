@@ -37,3 +37,10 @@ yarn-error.log*
 
 .idea
 
+
+# next-video
+src/app/videos/*
+!src/app/videos/*.json
+!src/app/videos/*.js
+!src/app/videos/*.ts
+public/_next-video

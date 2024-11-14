@@ -1,3 +1,5 @@
+const { withNextVideo } = require('next-video/process')
+
 module.exports = {
   trailingSlash: true,
   eslint: {
