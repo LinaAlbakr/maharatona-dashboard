@@ -39,3 +39,41 @@ export const fetchBanners = async ({
     throw new Error(error);
   }
 };
+
+
+export const fetchSingleBannder = async (id: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const res = await axiosInstance.get(
+      endpoints.banners.bannerDetails(id),
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
+export const fetchSingleBannderCenters = async (id: string, page:number, limit:number): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const res = await axiosInstance.get(
+      endpoints.banners.bannerCenters(id, page,limit),
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
