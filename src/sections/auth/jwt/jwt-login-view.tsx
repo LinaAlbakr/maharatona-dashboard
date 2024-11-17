@@ -56,9 +56,9 @@ export default function JwtLoginView() {
   });
 
   const defaultValues = {
-    phone: "555554433",
+    phone: '',
     country: 'Saudi Arabia',
-    password: 'Admin3@1234'
+    password: '',
   };
 
   const methods = useForm({
@@ -74,10 +74,10 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const code = countries?.find((item)=>item.label === data?.country)
-      const phone =  code?.phone.concat(data?.phone) as string;
-       await login?.(`+${phone}`, data.password);
-       router.push(returnTo || PATH_AFTER_LOGIN);
+      const code = countries?.find((item) => item.label === data?.country);
+      const phone = code?.phone.concat(data?.phone) as string;
+      await login?.(`+${phone}`, data.password);
+      router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
@@ -106,15 +106,15 @@ export default function JwtLoginView() {
 
   const renderForm = (
     <Stack spacing={2.5} sx={{ minWidth: '100%' }}>
-       <RHFAutocomplete
-         name="country"
-         type="country"
-         fullWidth
-         label={t("LABEL.COUNTRY_CODE")}
-         placeholder={t("LABEL.COUNTRY_CODE")}
-         options={countries.map((option) => option.label)}
-         getOptionLabel={(option) => option}
-            />
+      <RHFAutocomplete
+        name="country"
+        type="country"
+        fullWidth
+        label={t('LABEL.COUNTRY_CODE')}
+        placeholder={t('LABEL.COUNTRY_CODE')}
+        options={countries.map((option) => option.label)}
+        getOptionLabel={(option) => option}
+      />
       <RHFTextField
         sx={{
           color: 'red',
@@ -154,8 +154,13 @@ export default function JwtLoginView() {
         }}
       />
 
-      <Link  variant="body2" color="secondary" underline="always"  href={paths.auth.jwt.forgot}
-        component={RouterLink}>
+      <Link
+        variant="body2"
+        color="secondary"
+        underline="always"
+        href={paths.auth.jwt.forgot}
+        component={RouterLink}
+      >
         {t('BUTTON.FORGOT_PASSWORD')}
       </Link>
 
