@@ -56,9 +56,9 @@ export default function JwtLoginView() {
   });
 
   const defaultValues = {
-    phone: "555554433",
+    phone: "",
     country: 'Saudi Arabia',
-    password: 'Admin3@1234'
+    password: ''
   };
 
   const methods = useForm({
