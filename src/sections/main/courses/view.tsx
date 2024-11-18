@@ -1,10 +1,14 @@
 'use client';
+import * as yup from 'yup';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LoadingButton } from '@mui/lab';
 
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
+import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -15,6 +19,8 @@ import i18n from 'src/locales/i18n';
 import { set } from 'lodash';
 import Iconify from 'src/components/iconify';
 import { arabicDate, englishDate } from 'src/utils/format-time';
+import { getErrorMessage } from 'src/utils/axios';
+import { editPercentage } from 'src/actions/courses';
 
 type props = {
   count: number;
@@ -48,11 +54,17 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const formDefaultValues = {
     name: '',
   };
-
+  const formDefaultPrice= {
+    price_profit: 0,
+  };
   const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
+  const methods2 = useForm({
+    defaultValues: formDefaultPrice,
+  });
+  const {handleSubmit, formState: { isSubmitting } } = methods2;
   const { setValue } = methods;
 
   const createQueryString = useCallback(
@@ -70,6 +82,23 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     },
     [pathname, router, searchParams, setValue]
   );
+  const onSubmit = handleSubmit(async (data) => {
+
+
+    try {
+      console.log(data)
+      const res = await editPercentage(data);
+
+        if (res?.error) {
+          console.log(res)
+          enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+        } else {
+          enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
+        }
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
+    }
+  });
 
   return (
     <>
@@ -124,6 +153,34 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             </Card>
           </Grid>
         </Box>
+        <FormProvider methods={methods2} onSubmit={onSubmit}>
+
+        <Box sx={{
+          p:6,
+          bgcolor:(theme)=> theme.palette.grey[100],
+          display: 'flex',
+          justifyContent:'center',
+          alignItems:'center',
+        }}>
+          <Box sx={{display:'flex', justifyContent:'center', alignItems:'stretch'}}>
+          <RHFTextField
+                fullWidth
+                name="price_profit"
+                label={t('LABEL.PERCENTAGE_OF_PROFITS')}
+                inputMode="search"
+                InputProps={{sx:{borderBottomRightRadius:0, borderTopRightRadius:0}  }}
+                type="number"
+              />
+          <LoadingButton
+
+           color="secondary"
+           sx={{borderBottomLeftRadius:0, borderTopLeftRadius:0}}
+          type="submit" variant="contained" loading={isSubmitting}>
+            {t( 'LABEL.APPLY')}
+          </LoadingButton>
+          </Box>
+        </Box>
+        </FormProvider>
         <SharedTable
           count={count}
           data={courses}

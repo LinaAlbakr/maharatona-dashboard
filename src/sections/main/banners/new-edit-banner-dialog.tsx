@@ -90,7 +90,6 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
   );
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data); //TODO remove
 
     const formData = new FormData();
     toFormData(data, formData);
