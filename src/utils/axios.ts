@@ -97,6 +97,7 @@ export const endpoints = {
   },
   courses: {
     fetch: '/admin-panel/all-courses',
+    percentage:() => `/admin-panel/update-price-profit`,
     info: (courseId: string) => `/admin-panel/course/${courseId}`,
   },
   clients: {

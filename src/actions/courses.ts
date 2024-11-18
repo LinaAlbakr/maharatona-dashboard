@@ -51,3 +51,20 @@ export const fetchCourseInfo = async (courseId: string): Promise<any> => {
     throw new Error(error);
   }
 };
+
+
+export const editPercentage = async (data: any): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.patch(endpoints.courses.percentage(),
+      data,
+      {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang }},
+    );
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
