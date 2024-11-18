@@ -183,7 +183,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                 value={watch('duration')}
                 type="number"
               />
-               <RHFSelect name="advertisement_type" label={`${t("LABEL.PERCENTAGE_OF_PROFITS")}`}>
+               <RHFSelect name="advertisement_type" label={`${t("LABEL.TYPE")}`}>
             {/*     <MenuItem value="">None</MenuItem>
                 <Divider sx={{ borderStyle: 'dashed' }} /> */}
                 {OPTIONS.map((option:string, index:number) => (
