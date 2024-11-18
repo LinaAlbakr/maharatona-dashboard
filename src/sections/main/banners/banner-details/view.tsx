@@ -103,7 +103,7 @@ const SingleBannerView = ({centers, count, banner }: Readonly<props>) => {
             <Typography fontWeight="bold" color="primary.dark"  variant="subtitle2" sx={{ mb: 1 }}>
             {t("LABEL.CENTER_TYPE")}
             </Typography>
-            {banner?.advertisementType || '- - - -'}
+            {t(`LABEL.${banner?.advertisementType}`) || '- - - -'}
             <br />
             <br />
           </Stack>

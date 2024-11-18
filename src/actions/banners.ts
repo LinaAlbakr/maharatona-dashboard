@@ -4,6 +4,7 @@
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import {getCookie} from "cookies-next";
 
 import { paths } from 'src/routes/paths';
 
@@ -42,12 +43,15 @@ export const fetchBanners = async ({
 
 export const fetchSingleBannder = async (id: string): Promise<any> => {
   try {
-    const accessToken = cookies().get('access_token')?.value;
+
+    const accessToken = getCookie('access_token',{cookies});
     const res = await axiosInstance.get(endpoints.banners.bannerDetails(id), {
       headers: {
+        'Accept-Language':  getCookie('Language',{cookies}) ,
         Authorization: `Bearer ${accessToken}`,
       },
     });
+  //  console.log(res.data)
     return res.data;
   } catch (error) {
     return {
@@ -61,10 +65,11 @@ export const fetchSingleBannderCenters = async (
   limit: number
 ): Promise<any> => {
   try {
-    const accessToken = cookies().get('access_token')?.value;
+    const accessToken = getCookie('access_token',{cookies});
     const res = await axiosInstance.get(endpoints.banners.bannerCenters(id, page, limit), {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Accept-Language':  getCookie('Language',{cookies}),
       },
     });
     return res.data;
