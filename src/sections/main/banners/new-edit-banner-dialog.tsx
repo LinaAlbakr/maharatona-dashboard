@@ -16,6 +16,7 @@ import {
   DialogActions,
   DialogContent,
   Box,
+  MenuItem,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -27,10 +28,11 @@ import { invalidatePath } from 'src/actions/cache-invalidation';
 
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
-import { RHFTextarea, RHFUploadAvatar } from 'src/components/hook-form';
+import { RHFSelect, RHFTextarea, RHFUploadAvatar } from 'src/components/hook-form';
 import { Banner } from 'src/types/banners';
 import { editBanner, newBanner } from 'src/actions/banners';
 
+const OPTIONS = ["MAIN","FIELD", "BOTH"];
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -51,6 +53,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
         description_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         price: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         duration: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        advertisement_type:yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
       })
     ),
     defaultValues: {
@@ -61,6 +64,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
       description_en: banner?.description_en || '',
       duration: banner?.duration || undefined,
       price: banner?.price || undefined,
+      advertisement_type :banner?.advertisementType || ''
     },
   });
   const {
@@ -127,7 +131,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
       </DialogTitle>
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogContent style={{ height: '600px' }}>
+        <DialogContent>
           <Stack spacing={1}>
             <RHFUploadAvatar name="image_cover" onDrop={handleDrop} sx={{ mb: 2 }} />
             <Box
@@ -136,6 +140,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                 gridTemplateColumns: { sm: ' 1fr', md: ' 1fr 1fr' },
                 alignItems: 'center',
                 gap: 2,
+
               }}
             >
               <RHFTextField
@@ -178,6 +183,15 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                 value={watch('duration')}
                 type="number"
               />
+               <RHFSelect name="advertisement_type" label={`${t("LABEL.PERCENTAGE_OF_PROFITS")}`}>
+            {/*     <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} /> */}
+                {OPTIONS.map((option:string, index:number) => (
+                  <MenuItem key={index} value={option}>
+                    {t(`LABEL.${option}`)}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
             </Box>
           </Stack>
         </DialogContent>

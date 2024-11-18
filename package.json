@@ -37,6 +37,7 @@
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
+    "cookies-next": "^4.2.1",
     "firebase": "^10.12.0",
     "framer-motion": "^10.16.16",
     "highlight.js": "^11.10.0",

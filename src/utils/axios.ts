@@ -1,6 +1,8 @@
 import Cookie from 'js-cookie';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import {getCookie} from "cookies-next";
+
 import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
@@ -17,16 +19,16 @@ const axiosInstance: AxiosInstance = axios.create({
   baseURL: HOST_API,
   headers: {
     'Content-Type': 'application/json',
-    'Accept-Language': Cookie.get('Language') ? Cookie.get('Language') : 'en',
+    'Accept-Language': getCookie('Language') ? getCookie('Language') : 'en',
     'Access-Control-Allow-Origin': '*',
     Accept: 'application/json',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    Authorization: `Bearer ${Cookie.get(ACCESS_TOKEN)}`,
+    Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
   },
 });
-axios.interceptors.request.use(
+axiosInstance.interceptors.request.use(
   (config) => {
-    config.headers['Accept-Language'] = Cookie.get('Language');
+    config.headers['Accept-Language'] = getCookie('Language');
     return config;
   },
   (error) => Promise.reject(error)
@@ -46,8 +48,8 @@ export const fetcher = async ({ url, config }: { url: string; config?: AxiosRequ
   const response = await axiosInstance.get(url, {
     ...config,
     headers: {
-      Authorization: `Bearer ${Cookie.get(ACCESS_TOKEN)}`,
-      'Accept-Language': Cookie.get('Language') || 'en',
+      Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
+      'Accept-Language': getCookie('Language') || 'en',
     },
   });
 

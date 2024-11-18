@@ -32,6 +32,7 @@
     "CENTER_NAME": "Center Name",
     "CITY": "City",
     "NEIGHBORHOOD": "Neighborhood",
+    "PERCENTAGE_OF_PROFITS":"Percentage of profits from courses",
     "COUNTRY_CODE": "Country code",
     "PHONE": "Phone",
     "NUMBER_OF_COURSES": "Number of courses",
