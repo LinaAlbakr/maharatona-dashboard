@@ -29,7 +29,6 @@ const RateItem = ({ rate }: props) => {
         variant: 'success',
       });
     }
-
     setAnchorEl(null);
   };
   const popover = usePopover();
@@ -89,7 +88,7 @@ const RateItem = ({ rate }: props) => {
           <Button sx={{ width: 'fit-content' }} onClick={handleClick}>
             <Iconify icon="eva:more-vertical-fill" />
           </Button>
-          <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
+          <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={()=>setAnchorEl(null)}>
             <MenuItem onClick={handleClose}>delete</MenuItem>
           </Menu>
         </Box>

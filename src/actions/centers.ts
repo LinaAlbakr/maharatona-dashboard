@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { paths } from 'src/routes/paths';
 
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
+import { getCookie } from 'cookies-next';
 
 interface IParams {
   page: number;
@@ -25,11 +26,13 @@ export const fetchCenters = async ({
   city_id = '',
   neighborhood_id = '',
 }: IParams): Promise<any> => {
-  const accessToken = cookies().get('access_token')?.value;
-  const lang = cookies().get('Language')?.value;
+
+  const accessToken = getCookie('access_token',{cookies});
+  const lang = getCookie('Language',{cookies});
 
   try {
     const res = await axiosInstance.get(endpoints.centers.fetch, {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
       params: {
         page,
         limit,
@@ -37,7 +40,6 @@ export const fetchCenters = async ({
         by_city_id: city_id,
         by_neighborhood_id: neighborhood_id,
       },
-      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     return res?.data;
   } catch (error) {
