@@ -122,7 +122,7 @@ const NotificationView = ({ notifications }: Props) => {
                     error: !!error,
                     helperText: error?.message,
                   },
-                  actionBar: { actions: ['clear'] },
+                  actionBar: { /* actions: ['clear']  */},
                 }}
               />
             )}

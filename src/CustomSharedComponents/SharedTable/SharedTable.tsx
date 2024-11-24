@@ -44,7 +44,7 @@ export default function SharedTable<T extends { id: string }>({
             <TableHeadCustom headLabel={tableHead}headColor={headColor} />
 
             <TableBody>
-              {data.map((row) => (
+              {data && data?.map((row) => (
                 <SharedTableRow<T>
                   key={row.id}
                   row={row}
@@ -58,7 +58,7 @@ export default function SharedTable<T extends { id: string }>({
                 />
               ))}
 
-              <TableNoData notFound={!data.length} />
+              <TableNoData notFound={!data} />
             </TableBody>
           </Table>
         </Scrollbar>

@@ -6,7 +6,7 @@ import {getCookie} from "cookies-next";
 import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
-
+import { localStorageGetItem } from './storage-available';
 export interface Params {
   page: number;
   limit: number;
@@ -14,13 +14,13 @@ export interface Params {
   filters?: string;
   created_at?: string;
   headers?: { access_token: string };
-}
+};
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: HOST_API,
   headers: {
     'Content-Type': 'application/json',
-    'Accept-Language': getCookie('Language') ? getCookie('Language') : 'en',
-    'Access-Control-Allow-Origin': '*',
+/*     'Accept-Language':lang,
+ */    'Access-Control-Allow-Origin': '*',
     Accept: 'application/json',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
     Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
@@ -28,8 +28,8 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 axiosInstance.interceptors.request.use(
   (config) => {
-    config.headers['Accept-Language'] = getCookie('Language');
-    return config;
+/*     config.headers['Accept-Language'] = lang;
+ */    return config;
   },
   (error) => Promise.reject(error)
 );
@@ -49,8 +49,8 @@ export const fetcher = async ({ url, config }: { url: string; config?: AxiosRequ
     ...config,
     headers: {
       Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
-      'Accept-Language': getCookie('Language') || 'en',
-    },
+/*       'Accept-Language': lang,
+ */    },
   });
 
   return response.data;
