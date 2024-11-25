@@ -145,7 +145,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
                       error: !!error,
                       helperText: error?.message,
                     },
-                    actionBar: { actions: ['clear'] },
+                    /* actionBar: { actions: ['clear'] }, */
                   }}
                 />
               )}
@@ -168,7 +168,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
                       error: !!error,
                       helperText: error?.message,
                     },
-                    actionBar: { actions: ['clear'] },
+                   /*  actionBar: { actions: ['clear'] }, */
                   }}
                 />
               )}

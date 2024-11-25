@@ -61,11 +61,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const methods2 = useForm({
-    defaultValues: formDefaultPrice,
-  });
-  const {handleSubmit, formState: { isSubmitting } } = methods2;
-  const { setValue } = methods;
+
+  const {handleSubmit, setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -82,23 +79,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     },
     [pathname, router, searchParams, setValue]
   );
-  const onSubmit = handleSubmit(async (data) => {
 
-
-    try {
-      console.log(data)
-      const res = await editPercentage(data);
-
-        if (res?.error) {
-          console.log(res)
-          enqueueSnackbar(`${res?.error}`, { variant: 'error' });
-        } else {
-          enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
-        }
-    } catch (error) {
-      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
-    }
-  });
 
   return (
     <>
@@ -153,34 +134,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             </Card>
           </Grid>
         </Box>
-        <FormProvider methods={methods2} onSubmit={onSubmit}>
 
-        <Box sx={{
-          p:6,
-          bgcolor:(theme)=> theme.palette.grey[100],
-          display: 'flex',
-          justifyContent:'center',
-          alignItems:'center',
-        }}>
-          <Box sx={{display:'flex', justifyContent:'center', alignItems:'stretch'}}>
-          <RHFTextField
-                fullWidth
-                name="price_profit"
-                label={t('LABEL.PERCENTAGE_OF_PROFITS')}
-                inputMode="search"
-                InputProps={{sx:{borderBottomRightRadius:0, borderTopRightRadius:0}  }}
-                type="number"
-              />
-          <LoadingButton
-
-           color="secondary"
-           sx={{borderBottomLeftRadius:0, borderTopLeftRadius:0}}
-          type="submit" variant="contained" loading={isSubmitting}>
-            {t( 'LABEL.APPLY')}
-          </LoadingButton>
-          </Box>
-        </Box>
-        </FormProvider>
         <SharedTable
           count={count}
           data={courses}

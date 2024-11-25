@@ -211,8 +211,18 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           ]}
           customRender={{
             color: (item: any) => (
-              <Typography sx={{ direction: 'rtl', fontSize: '14px' }}>
+              <Typography sx={{color: !item?.is_active  ? 'red' : 'inherit', direction: 'rtl', fontSize: '14px' }}>
                 {item?.color?.charAt(0) === '#' ? item?.color : `#${item?.color}`}
+              </Typography>
+            ),
+            name_ar: (item: any) => (
+              <Typography sx={{color: !item?.is_active  ? 'red' : 'inherit',  fontSize: '14px' }}>
+                 {item?.name_ar}
+              </Typography>
+            ),
+            name_en: (item: any) => (
+              <Typography sx={{color: !item?.is_active  ? 'red' : 'inherit', fontSize: '14px' }}>
+               {item?.name_en}
               </Typography>
             ),
             avatar: (item: any) => <Avatar alt={item?.name} src={item?.avatar} />,

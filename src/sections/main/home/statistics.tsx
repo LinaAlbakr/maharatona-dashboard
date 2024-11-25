@@ -1,16 +1,45 @@
 'use client';
 import { useTranslate } from 'src/locales';
 import { Box, Typography } from '@mui/material';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { LoadingButton } from '@mui/lab';
+import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import { useForm } from 'react-hook-form';
 
 import Image from 'next/image';
+import { editPercentage } from 'src/actions/courses';
+import { getErrorMessage } from 'src/utils/axios';
 
 type props = {
   statistics: any;
 };
 
 const Statistics = ({ statistics }: Readonly<props>) => {
+  const formDefaultPrice= {
+    price_profit: 0,
+  };
+  const methods2 = useForm({
+    defaultValues: formDefaultPrice,
+  });
+  const {handleSubmit, formState: { isSubmitting } } = methods2;
   const { t } = useTranslate();
+  const onSubmit = handleSubmit(async (data) => {
+
+
+    try {
+      const res = await editPercentage(data);
+
+        if (res?.error) {
+          enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+        } else {
+          enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
+        }
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
+    }
+  });
   return (
+    <>
     <Box
       sx={{
         display: 'grid',
@@ -80,7 +109,40 @@ const Statistics = ({ statistics }: Readonly<props>) => {
         </Box>
         <Image src="/assets/images/home/centers.svg" alt="image" width={50} height={50} />
       </Box>
+
     </Box>
+       <FormProvider methods={methods2} onSubmit={onSubmit}>
+       <Box
+         sx={{
+           p: 6,
+           bgcolor: (theme) => theme.palette.grey[100],
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+         }}
+       >
+         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'stretch' }}>
+           <RHFTextField
+             fullWidth
+             name="price_profit"
+             label={t('LABEL.PERCENTAGE_OF_PROFITS')}
+             inputMode="search"
+             InputProps={{ sx: { borderBottomRightRadius: 0, borderTopRightRadius: 0 } }}
+             type="number"
+           />
+           <LoadingButton
+             color="secondary"
+             sx={{ borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
+             type="submit"
+             variant="contained"
+             loading={isSubmitting}
+           >
+             {t('LABEL.APPLY')}
+           </LoadingButton>
+         </Box>
+       </Box>
+     </FormProvider>
+     </>
   );
 };
 
