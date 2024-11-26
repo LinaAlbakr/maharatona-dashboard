@@ -14,6 +14,7 @@ interface IParams {
   limit: number;
   city_id?: string;
   by_client_field_ids?: string;
+  by_name?:string;
 
   sort?: 'order_by' | 'new';
 }
@@ -22,6 +23,7 @@ export const fetchClients = async ({
   limit = 50,
   city_id = '',
   by_client_field_ids = '',
+  by_name = '',
 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
@@ -31,8 +33,8 @@ export const fetchClients = async ({
         page,
         limit,
         by_city_id: city_id,
-
         by_client_field_ids: by_client_field_ids ? by_client_field_ids : null,
+        by_name:by_name,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
