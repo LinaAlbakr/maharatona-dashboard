@@ -24,9 +24,8 @@ export async function sendMessage(reqBody: any): Promise<any> {
   const lang = cookies().get('Language')?.value;
   try {
     const res = await axiosInstance.post(`${endpoints.notifications.send}`, reqBody, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+
     });
     return res?.status;
   } catch (error) {

@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
@@ -18,6 +18,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import { changeClientStatus } from 'src/actions/clients';
 import SendNotification from './client-details/components/send-notification';
+import Iconify from 'src/components/iconify';
 
 type props = {
   clients: any[];
@@ -152,10 +153,22 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(2 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    xs: 'repeat(3 1fr)',
+                    sm: 'repeat(3, 1fr)',
                   }}
                 >
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Iconify icon="mingcute:search-line" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder={t('LABEL.SEARCH_BY_CLIENT')}
+                    type="search"
+                    onChange={(e) => createQueryString('search', e.target.value)}
+                  />
                   <CutomAutocompleteView
                     items={fields as unknown as ITems[]}
                     label={t('LABEL.FEILDS')}
