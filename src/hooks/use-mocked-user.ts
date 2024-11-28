@@ -33,11 +33,11 @@ export function useMockedUser() {
   let userData: USERDATA;
   if (user) {
     userData = {
-      id: user.user.id,
-      displayName: user.user.username,
-      email: user.user.email,
+      id: user?.user?.id,
+      displayName: user?.user?.username,
+      email: user?.user?.email,
       photoURL: '/assets/images/avatar.png',
-      phoneNumber: user.user.phone,
+      phoneNumber: user?.user?.phone,
       role: 'admin',
     };
   } else {

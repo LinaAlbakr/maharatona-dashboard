@@ -22,6 +22,8 @@
     "ACTIVATE_CITY": "تفعيل المدينة",
     "DEACTIVATE_NEIGHBORHOOD": "تعطيل الحى",
     "ACTIVATE_NEIGHBORHOOD": "تفعيل الحى",
+    "DEACTIVATE_CENTER_MEDIA": "تعطيل صوره/فيديو المركز",
+    "ACTIVATE_CENTER_MEDIA":"تفعيل صوره/فيديو المركز",
     "NEW_BANNER": "اضافه بانر",
     "EDIT_BANNER": "تعديل بانر"
   },
@@ -312,7 +314,9 @@
     "CONFIRM_DEACTIVATE_CITY": "هل تريد تعطيل هذه المدينة؟",
     "CONFIRM_ACTIVATE_CITY": "هل تريد تفعيل هذه المدينة؟",
     "CONFIRM_DEACTIVATE_NEIGHBORHOOD": "هل تريد تعطيل هذه الحي؟",
-    "CONFIRM_ACTIVATE_NEIGHBORHOOD": "هل تريد تفعيل هذه الحي؟"
+    "CONFIRM_ACTIVATE_NEIGHBORHOOD": "هل تريد تفعيل هذه الحي؟",
+    "CONFIRM_DEACTIVATE_CENTER_MEDIA": "هل تريد تعطيل هذه صوره/فيديو المركز؟",
+    "CONFIRM_ACTIVATE_CENTER_MEDIA": "هل تريد تفعيل هذه صوره/فيديو المركز؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

@@ -16,6 +16,8 @@
     "DELETE_QUESTION": "Delete Question",
     "DEACTIVATE_CITY": "Deactivate City",
     "ACTIVATE_CITY": "Activate City",
+    "DEACTIVATE_CENTER_MEDIA": "Deactivate image/video center",
+    "ACTIVATE_CENTER_MEDIA": "Activate image/video center",
     "DEACTIVATE_NEIGHBORHOOD": "Deactivate Neighborhood",
     "ACTIVATE_NEIGHBORHOOD": "Activate Neighborhood",
     "NEW_BANNER": "New Banner",
@@ -301,7 +303,9 @@
     "CONFIRM_DEACTIVATE_CITY": "Are you sure you want to deactivate this city?",
     "CONFIRM_ACTIVATE_CITY": "Are you sure you want to activate this city?",
     "CONFIRM_DEACTIVATE_NEIGHBORHOOD": "Are you sure you want to deactivate this neighborhood?",
-    "CONFIRM_ACTIVATE_NEIGHBORHOOD": "Are you sure you want to activate this neighborhood?"
+    "CONFIRM_ACTIVATE_NEIGHBORHOOD": "Are you sure you want to activate this neighborhood?",
+    "CONFIRM_DEACTIVATE_CENTER_MEDIA":"Are you sure you want to deactivate this photo/video center?",
+    "CONFIRM_ACTIVATE_CENTER_MEDIA": "Are you sure you want to activate this photo/video center?"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

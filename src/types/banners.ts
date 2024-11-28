@@ -26,6 +26,7 @@ export type IBanner = {
 
 export type IBannerCenter = {
   id: string;
+  is_active:boolean;
   path: string;
   mediaType: string;
   advertisementCenterType: string;
