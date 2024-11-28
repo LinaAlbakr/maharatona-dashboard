@@ -167,5 +167,7 @@ export const endpoints = {
       `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`,
     newBanner: `/admin-panel/center-buy-advertisement`,
     editBanner: (bannerId: string) => `/admin-panel/update-advertisement/${bannerId}`,
+    changeCenterMediaStatus: (centerId: string, centerStatus: boolean) =>
+      `/admin-panel/update-activation-advertisement-center/${centerId}/${centerStatus}`,
   },
 };

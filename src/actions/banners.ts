@@ -120,3 +120,27 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
     };
   }
 };
+
+
+export const editCenterMediaStatus = async (center: any): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const res = await axiosInstance.put(
+      endpoints.banners.changeCenterMediaStatus(
+        center.id,
+        !center.is_active
+      ),
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    revalidatePath(paths.dashboard.citiesAndNeighborhoods);
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};

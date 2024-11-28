@@ -89,7 +89,7 @@ const RateItem = ({ rate }: props) => {
             <Iconify icon="eva:more-vertical-fill" />
           </Button>
           <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={()=>setAnchorEl(null)}>
-            <MenuItem onClick={handleClose}>delete</MenuItem>
+            <MenuItem onClick={handleClose}>{t(`LABEL.DELETE`)}</MenuItem>
           </Menu>
         </Box>
       </Box>
