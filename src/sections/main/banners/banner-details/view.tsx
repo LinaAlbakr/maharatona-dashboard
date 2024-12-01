@@ -205,27 +205,27 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
             customRender={
               {
                 center_name: (item: IBannerCenter) => (
-                  <Typography variant="body2" sx={{ color: 'info.dark' }}>
+                  <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
                     {item?.center?.name || '- - - -'}
                   </Typography>
                 ),
                 center_phone: (item: IBannerCenter) => (
-                  <Typography variant="body2" sx={{ color: 'info.dark' }}>
+                  <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
                     {item?.center?.phone || '- - - -'}
                   </Typography>
                 ),
                 center_website: (item: IBannerCenter) => (
-                  <Typography variant="body2" sx={{ color: 'info.dark' }}>
+                  <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
                     {item?.center?.website || '- - - -'}
                   </Typography>
                 ),
                 created_at: (item: IBannerCenter) => (
-                  <Typography variant="body2" sx={{ color: 'info.dark' }}>
+                  <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
                     {fDate(item?.created_at)}
                   </Typography>
                 ),
                 expires_at: (item: IBannerCenter) => (
-                  <Typography variant="body2" sx={{ color: 'info.dark' }}>
+                  <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
                     {fDate(item?.expires_at)}
                   </Typography>
                 ),
