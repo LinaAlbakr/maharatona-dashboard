@@ -26,6 +26,7 @@ import Iconify from 'src/components/iconify';
 import { editFieldStatus } from 'src/actions/categories';
 import { editCityStatus } from 'src/actions/cities-and-neighborhoods';
 import { paths } from 'src/routes/paths';
+import { NewCityDialog } from './new-city-dialog';
 
 type props = {
   cities: any[];
@@ -43,6 +44,7 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
   const confirmDeactivate = useBoolean();
 
   const [selectedCity, setSelectedCity] = useState<ICenter | undefined>();
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -153,6 +155,22 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
               </FormProvider>
             </Card>
           </Grid>
+          <Button
+            variant="contained"
+            sx={{
+              px: 8,
+              py: 2,
+              bgcolor: 'white',
+              borderRadius: 4,
+              color: 'primary.main',
+              '&:hover': { bgcolor: 'primary.main', color: 'white' },
+            }}
+            onClick={() => {
+              setIsFormDialogOpen(true);
+            }}
+          >
+            {t('BUTTON.ADD_CITY')}
+          </Button>
         </Box>
         <SharedTable
           count={count}
@@ -234,6 +252,14 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
           </Button>
         }
       />
+      {isFormDialogOpen && (
+        <NewCityDialog
+          open={isFormDialogOpen}
+          onClose={() => {
+            setIsFormDialogOpen(false);
+          }}
+        />
+      )}
     </>
   );
 };

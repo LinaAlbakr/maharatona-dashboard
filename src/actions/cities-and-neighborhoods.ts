@@ -1,3 +1,4 @@
+import { cities } from './../_mock/map/cities';
 'use server';
 
 /* eslint-disable consistent-return */
@@ -109,3 +110,22 @@ export const editNeighborhoodStatus = async (neighborhood: any): Promise<any> =>
     };
   }
 };
+
+export const newCity = async (reqBody: any): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(endpoints.citiesAndNeighborhoods.newCity, reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath('/dashboard/cities-and-neighborhoods//');
+};
+

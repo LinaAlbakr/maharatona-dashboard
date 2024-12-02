@@ -32,21 +32,21 @@
     "MAHARATONA": "Maharatona",
     "New_PHONE": "New phone",
     "CENTER_NAME": "Center Name",
-    "APPLY":"Apply",
+    "APPLY": "Apply",
     "CITY": "City",
     "NEIGHBORHOOD": "Neighborhood",
-    "PERCENTAGE_OF_PROFITS":"Percentage of profits from courses",
+    "PERCENTAGE_OF_PROFITS": "Percentage of profits from courses",
     "COUNTRY_CODE": "Country code",
     "PHONE": "Phone",
     "NUMBER_OF_COURSES": "Number of courses",
     "NUMBER_OF_REGISTRANTS": "Number of registrants",
     "SETTINGS": "Settings",
-    "SEARCH_BY_CLIENT":"Client Search",
+    "SEARCH_BY_CLIENT": "Client Search",
     "SEARCH_CENTER": "Center Search",
     "EDUCATIONAL_CENTERS": "Educational Centers",
     "SEND_NOTIFICATION": "Send Notification",
     "BLOCK": "Block",
-    "DETAILS":"Details",
+    "DETAILS": "Details",
     "VIEW": "View",
     "PHONE_NUMBER": "Phone number",
     "EXPIRY_DATE": "Expiry date",
@@ -193,7 +193,10 @@
     "MAIN": "Main",
     "WEEKS": "Weeks",
     "DESCRIPTION_IN_ARABIC": "Description in arabic",
-    "DESCRIPTION_IN_ENGLISH": "Description in english"
+    "DESCRIPTION_IN_ENGLISH": "Description in english",
+    "NAME_IN_ENGLISH": "Name in english",
+    "NAME_IN_ARABIC": "Name in arabic",
+    "NEW_CITY": "New City"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -218,7 +221,8 @@
     "CLEAR": "Clear",
     "ADD_CATEGORY": "Add Category",
     "ADD_QUESTION": "Add Question",
-    "ADD_BANNER": "Add banner"
+    "ADD_BANNER": "Add banner",
+    "ADD_CITY": "Add City"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -304,8 +308,9 @@
     "CONFIRM_ACTIVATE_CITY": "Are you sure you want to activate this city?",
     "CONFIRM_DEACTIVATE_NEIGHBORHOOD": "Are you sure you want to deactivate this neighborhood?",
     "CONFIRM_ACTIVATE_NEIGHBORHOOD": "Are you sure you want to activate this neighborhood?",
-    "CONFIRM_DEACTIVATE_CENTER_MEDIA":"Are you sure you want to deactivate this photo/video center?",
-    "CONFIRM_ACTIVATE_CENTER_MEDIA": "Are you sure you want to activate this photo/video center?"
+    "CONFIRM_DEACTIVATE_CENTER_MEDIA": "Are you sure you want to deactivate this photo/video center?",
+    "CONFIRM_ACTIVATE_CENTER_MEDIA": "Are you sure you want to activate this photo/video center?",
+    "CITY_CREATED_SUCCESSFULLY": "City created successfully"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

@@ -23,7 +23,7 @@
     "DEACTIVATE_NEIGHBORHOOD": "تعطيل الحى",
     "ACTIVATE_NEIGHBORHOOD": "تفعيل الحى",
     "DEACTIVATE_CENTER_MEDIA": "تعطيل صوره/فيديو المركز",
-    "ACTIVATE_CENTER_MEDIA":"تفعيل صوره/فيديو المركز",
+    "ACTIVATE_CENTER_MEDIA": "تفعيل صوره/فيديو المركز",
     "NEW_BANNER": "اضافه بانر",
     "EDIT_BANNER": "تعديل بانر"
   },
@@ -34,12 +34,12 @@
     "EMAIL": "البريد الالكتروني",
     "DASHBOARD": "لوحة تحكم",
     "New_PHONE": "الهاتف الجديد",
-    "SEARCH_BY_CLIENT":"ابحث عن العميل",
+    "SEARCH_BY_CLIENT": "ابحث عن العميل",
     "MAHARATONA": "مهاراتنا",
     "CENTER_NAME": "إسم المركز",
     "CITY": "المدينة",
     "NEIGHBORHOOD": "الحى",
-    "DETAILS":"تفاصيل",
+    "DETAILS": "تفاصيل",
     "COUNTRY_CODE": "رمز البلد",
     "PHONE": "رقم الجوال",
     "NUMBER_OF_COURSES": "عدد الدورات",
@@ -134,7 +134,7 @@
     "AGE_TO": "الفئة العمريه الي",
     "AM": "صباحاً",
     "PM": "مساءاً",
-    "APPLY":"تطبيق",
+    "APPLY": "تطبيق",
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
     "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
     "EDIT_REASON": "تعديل سبب",
@@ -154,7 +154,7 @@
     "DISCOUNT_AMOUNT": "قيمه الخصم",
     "COUPON": "الكوبون",
     "VALUE": "قيمه",
-    "PERCENTAGE_OF_PROFITS":"نسبه الربح من الدورات",
+    "PERCENTAGE_OF_PROFITS": "نسبه الربح من الدورات",
     "PERCENTAGE": "نسبه",
     "CENTER": "مركز",
     "ADMIN": "ادمن",
@@ -202,7 +202,10 @@
     "MAIN": "الصفحة الرئيسية",
     "WEEKS": "اسابيع",
     "DESCRIPTION_IN_ARABIC": "الوصف باللغة العربية",
-    "DESCRIPTION_IN_ENGLISH": "الوصف باللغة الانجليزية"
+    "DESCRIPTION_IN_ENGLISH": "الوصف باللغة الانجليزية",
+    "NAME_IN_ENGLISH": "اسم باللغة الانجليزية",
+    "NAME_IN_ARABIC": "اسم باللغة العربية",
+    "NEW_CITY": "اضافة مدينة"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -227,7 +230,8 @@
     "CLEAR": "تصفير",
     "ADD_CATEGORY": "اضافة قسم",
     "ADD_QUESTION": "اضافة سؤال",
-    "ADD_BANNER": "اضافه بانر"
+    "ADD_BANNER": "اضافه بانر",
+    "ADD_CITY": "اضافة مدينة"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -316,7 +320,8 @@
     "CONFIRM_DEACTIVATE_NEIGHBORHOOD": "هل تريد تعطيل هذه الحي؟",
     "CONFIRM_ACTIVATE_NEIGHBORHOOD": "هل تريد تفعيل هذه الحي؟",
     "CONFIRM_DEACTIVATE_CENTER_MEDIA": "هل تريد تعطيل هذه صوره/فيديو المركز؟",
-    "CONFIRM_ACTIVATE_CENTER_MEDIA": "هل تريد تفعيل هذه صوره/فيديو المركز؟"
+    "CONFIRM_ACTIVATE_CENTER_MEDIA": "هل تريد تفعيل هذه صوره/فيديو المركز؟",
+    "CITY_CREATED_SUCCESSFULLY": "تم انشاء المدينة بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
