@@ -196,7 +196,8 @@
     "DESCRIPTION_IN_ENGLISH": "Description in english",
     "NAME_IN_ENGLISH": "Name in english",
     "NAME_IN_ARABIC": "Name in arabic",
-    "NEW_CITY": "New City"
+    "NEW_CITY": "New City",
+    "NEW_NEIGHBORHOOD": "New Neighborhood"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -222,7 +223,8 @@
     "ADD_CATEGORY": "Add Category",
     "ADD_QUESTION": "Add Question",
     "ADD_BANNER": "Add banner",
-    "ADD_CITY": "Add City"
+    "ADD_CITY": "Add City",
+    "ADD_NEIGHBORHOOD": "Add Neighborhood"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -310,7 +312,8 @@
     "CONFIRM_ACTIVATE_NEIGHBORHOOD": "Are you sure you want to activate this neighborhood?",
     "CONFIRM_DEACTIVATE_CENTER_MEDIA": "Are you sure you want to deactivate this photo/video center?",
     "CONFIRM_ACTIVATE_CENTER_MEDIA": "Are you sure you want to activate this photo/video center?",
-    "CITY_CREATED_SUCCESSFULLY": "City created successfully"
+    "CITY_CREATED_SUCCESSFULLY": "City created successfully",
+    "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "Neighborhood created successfully"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

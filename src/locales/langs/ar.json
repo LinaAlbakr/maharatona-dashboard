@@ -205,7 +205,8 @@
     "DESCRIPTION_IN_ENGLISH": "الوصف باللغة الانجليزية",
     "NAME_IN_ENGLISH": "اسم باللغة الانجليزية",
     "NAME_IN_ARABIC": "اسم باللغة العربية",
-    "NEW_CITY": "اضافة مدينة"
+    "NEW_CITY": "اضافة مدينة",
+    "NEW_NEIGHBORHOOD": "اضافة حي"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -231,7 +232,8 @@
     "ADD_CATEGORY": "اضافة قسم",
     "ADD_QUESTION": "اضافة سؤال",
     "ADD_BANNER": "اضافه بانر",
-    "ADD_CITY": "اضافة مدينة"
+    "ADD_CITY": "اضافة مدينة",
+    "ADD_NEIGHBORHOOD": "اضافة حي"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -321,7 +323,8 @@
     "CONFIRM_ACTIVATE_NEIGHBORHOOD": "هل تريد تفعيل هذه الحي؟",
     "CONFIRM_DEACTIVATE_CENTER_MEDIA": "هل تريد تعطيل هذه صوره/فيديو المركز؟",
     "CONFIRM_ACTIVATE_CENTER_MEDIA": "هل تريد تفعيل هذه صوره/فيديو المركز؟",
-    "CITY_CREATED_SUCCESSFULLY": "تم انشاء المدينة بنجاح"
+    "CITY_CREATED_SUCCESSFULLY": "تم انشاء المدينة بنجاح",
+    "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "تم انشاء الحي بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

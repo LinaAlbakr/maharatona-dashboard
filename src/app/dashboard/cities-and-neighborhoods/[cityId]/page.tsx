@@ -20,7 +20,7 @@ const Page = async ({ params, searchParams }: IProps) => {
   const neighborhoods = await fetchNeighborhoods({ page, limit, filters, cityId: params.cityId });
 
   return (
-    <NeighborhoodsView neighborhoods={neighborhoods?.data} count={neighborhoods?.meta?.itemCount} />
+    <NeighborhoodsView neighborhoods={neighborhoods?.data} count={neighborhoods?.meta?.itemCount} cityId={params.cityId} />
   );
 };
 

@@ -160,6 +160,7 @@ export const endpoints = {
     changeNeighborhoodStatus: (cityId: string, cityStatus: boolean) =>
       `/admin-panel/update-activation-neighborhood/${cityId}/${cityStatus}`,
     newCity: '/admin-panel/create-city',
+    newNeighborhood: '/admin-panel/create-neighborhood',
   },
   banners: {
     fetch: '/admin-panel/all-advertisements',

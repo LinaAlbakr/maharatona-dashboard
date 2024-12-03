@@ -126,6 +126,23 @@ export const newCity = async (reqBody: any): Promise<any> => {
       error: getErrorMessage(error),
     };
   }
-  revalidatePath('/dashboard/cities-and-neighborhoods//');
+  revalidatePath('/dashboard/cities-and-neighborhoods/');
+};
+export const NewNeighborhood = async (reqBody: any): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(endpoints.citiesAndNeighborhoods.newNeighborhood, reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath('/dashboard/cities-and-neighborhoods/');
 };
 

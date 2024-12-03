@@ -25,13 +25,15 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import { editFieldStatus } from 'src/actions/categories';
 import { editCityStatus, editNeighborhoodStatus } from 'src/actions/cities-and-neighborhoods';
+import { NewNeighborhoodDialog } from './new-neighborhood-dialog';
 
 type props = {
   neighborhoods: any[];
   count: number;
+  cityId: string;
 };
 
-const NeighborhoodsView = ({ count, neighborhoods }: Readonly<props>) => {
+const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -42,6 +44,7 @@ const NeighborhoodsView = ({ count, neighborhoods }: Readonly<props>) => {
   const confirmDeactivate = useBoolean();
 
   const [selectedCity, setSelectedCity] = useState<ICenter | undefined>();
+  const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -156,6 +159,22 @@ const NeighborhoodsView = ({ count, neighborhoods }: Readonly<props>) => {
               </FormProvider>
             </Card>
           </Grid>
+          <Button
+            variant="contained"
+            sx={{
+              px: 8,
+              py: 2,
+              bgcolor: 'white',
+              borderRadius: 4,
+              color: 'primary.main',
+              '&:hover': { bgcolor: 'primary.main', color: 'white' },
+            }}
+            onClick={() => {
+              setIsFormDialogOpen(true);
+            }}
+          >
+            {t('BUTTON.ADD_NEIGHBORHOOD')}{' '}
+          </Button>
         </Box>
         <SharedTable
           count={count}
@@ -228,6 +247,15 @@ const NeighborhoodsView = ({ count, neighborhoods }: Readonly<props>) => {
           </Button>
         }
       />
+      {isFormDialogOpen && (
+        <NewNeighborhoodDialog
+          cityId={cityId}
+          open={isFormDialogOpen}
+          onClose={() => {
+            setIsFormDialogOpen(false);
+          }}
+        />
+      )}
     </>
   );
 };
