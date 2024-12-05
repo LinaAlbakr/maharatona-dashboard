@@ -1,4 +1,9 @@
-import { fetchNotifications, fetchStatistics, fetchTopCourses } from 'src/actions/home';
+import {
+  fetchNotifications,
+  fetchPriceProfit,
+  fetchStatistics,
+  fetchTopCourses,
+} from 'src/actions/home';
 import MainPage from 'src/sections/main/view';
 
 // ----------------------------------------------------------------------
@@ -23,7 +28,10 @@ export default async function Page({ searchParams }: Readonly<props>) {
       : 5;
   const notification_type =
     typeof searchParams?.notification_type === 'string' ? searchParams?.notification_type : null;
-  const select_date = typeof searchParams?.select_date === 'string' ? searchParams?.select_date : null;
+  const select_date =
+    typeof searchParams?.select_date === 'string' ? searchParams?.select_date : null;
+
+  const profitPercentage = await fetchPriceProfit();
 
   const courses = await fetchTopCourses({
     limit,
@@ -41,6 +49,7 @@ export default async function Page({ searchParams }: Readonly<props>) {
 
   return (
     <MainPage
+      priceProfit={Number(profitPercentage?.data)}
       courses={filteredProducts}
       count={courses?.meta?.itemCount}
       statistics={statistics}

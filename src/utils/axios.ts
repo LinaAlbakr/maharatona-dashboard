@@ -1,7 +1,7 @@
 import Cookie from 'js-cookie';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-import {getCookie} from "cookies-next";
+import { getCookie } from 'cookies-next';
 
 import { HOST_API } from 'src/config-global';
 
@@ -14,13 +14,13 @@ export interface Params {
   filters?: string;
   created_at?: string;
   headers?: { access_token: string };
-};
+}
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: HOST_API,
   headers: {
     'Content-Type': 'application/json',
-/*     'Accept-Language':lang,
- */    'Access-Control-Allow-Origin': '*',
+    /*     'Accept-Language':lang,
+     */ 'Access-Control-Allow-Origin': '*',
     Accept: 'application/json',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
     Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
@@ -28,8 +28,8 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 axiosInstance.interceptors.request.use(
   (config) => {
-/*     config.headers['Accept-Language'] = lang;
- */    return config;
+    /*     config.headers['Accept-Language'] = lang;
+     */ return config;
   },
   (error) => Promise.reject(error)
 );
@@ -49,8 +49,9 @@ export const fetcher = async ({ url, config }: { url: string; config?: AxiosRequ
     ...config,
     headers: {
       Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
-/*       'Accept-Language': lang,
- */    },
+      /*       'Accept-Language': lang,
+       */
+    },
   });
 
   return response.data;
@@ -79,6 +80,7 @@ export const endpoints = {
     verify: `/auth/verify-otp-and-reset-password`,
   },
   home: {
+    priceProfit: '/admin-panel/get-price-profit',
     topCourses: '/admin-panel/top-courses',
     statistics: '/admin-panel/education-summary',
     notifications: '/admin-panel/all-notification',
@@ -97,7 +99,7 @@ export const endpoints = {
   },
   courses: {
     fetch: '/admin-panel/all-courses',
-    percentage:() => `/admin-panel/update-price-profit`,
+    percentage: () => `/admin-panel/update-price-profit`,
     info: (courseId: string) => `/admin-panel/course/${courseId}`,
   },
   clients: {

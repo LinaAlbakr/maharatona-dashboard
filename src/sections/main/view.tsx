@@ -12,13 +12,20 @@ type props = {
   courses: any[];
   count: number;
   notifications: any[];
+  priceProfit: number;
 };
 
-export default function MainPage({ statistics, courses, notifications, count }: Readonly<props>) {
+export default function MainPage({
+  statistics,
+  courses,
+  notifications,
+  count,
+  priceProfit,
+}: Readonly<props>) {
   const settings = useSettingsContext();
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Statistics statistics={statistics} />
+      <Statistics statistics={statistics} priceProfit={priceProfit} />
       <TopCoursesTableView count={count} courses={courses} />
       <NotificationView notifications={notifications} />
     </Container>
