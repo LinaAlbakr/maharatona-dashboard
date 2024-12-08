@@ -71,7 +71,11 @@ const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.REASON_TITLE')}
-            secondary={ItemInfo?.reasonCallUs || '-'}
+            secondary={
+              i18n.language === 'ar'
+                ? ItemInfo?.reasonCallUs.name_ar
+                : ItemInfo?.reasonCallUs?.name_en
+            }
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}
           />

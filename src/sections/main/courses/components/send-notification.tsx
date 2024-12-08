@@ -61,7 +61,7 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
   const onSubmit = handleSubmit(async (data) => {
     const newMessage = {
       ...data,
-      users_id: [selectedSubscribers],
+      users_id: selectedSubscribers,
     };
 
     const res = await sendMessage(newMessage);
