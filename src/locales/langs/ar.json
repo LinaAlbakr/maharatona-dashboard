@@ -206,7 +206,9 @@
     "NAME_IN_ENGLISH": "اسم باللغة الانجليزية",
     "NAME_IN_ARABIC": "اسم باللغة العربية",
     "NEW_CITY": "اضافة مدينة",
-    "NEW_NEIGHBORHOOD": "اضافة حي"
+    "NEW_NEIGHBORHOOD": "اضافة حي",
+    "ADD_BANNER": "اضافه بانر",
+    "UPLOAD_FILE": "تحميل الملف"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -324,7 +326,8 @@
     "CONFIRM_DEACTIVATE_CENTER_MEDIA": "هل تريد تعطيل هذه صوره/فيديو المركز؟",
     "CONFIRM_ACTIVATE_CENTER_MEDIA": "هل تريد تفعيل هذه صوره/فيديو المركز؟",
     "CITY_CREATED_SUCCESSFULLY": "تم انشاء المدينة بنجاح",
-    "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "تم انشاء الحي بنجاح"
+    "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "تم انشاء الحي بنجاح",
+    "BANNER_ADDED_SUCCESSFULLY": "تم اضافة البانر بنجاح"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

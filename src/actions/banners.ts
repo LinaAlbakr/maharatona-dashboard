@@ -4,7 +4,7 @@
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import {getCookie} from "cookies-next";
+import { getCookie } from 'cookies-next';
 
 import { paths } from 'src/routes/paths';
 
@@ -43,15 +43,14 @@ export const fetchBanners = async ({
 
 export const fetchSingleBannder = async (id: string): Promise<any> => {
   try {
-
-    const accessToken = getCookie('access_token',{cookies});
+    const accessToken = getCookie('access_token', { cookies });
     const res = await axiosInstance.get(endpoints.banners.bannerDetails(id), {
       headers: {
-        'Accept-Language':  getCookie('Language',{cookies}) ,
+        'Accept-Language': getCookie('Language', { cookies }),
         Authorization: `Bearer ${accessToken}`,
       },
     });
-  //  console.log(res.data)
+    //  console.log(res.data)
     return res.data;
   } catch (error) {
     return {
@@ -65,11 +64,11 @@ export const fetchSingleBannderCenters = async (
   limit: number
 ): Promise<any> => {
   try {
-    const accessToken = getCookie('access_token',{cookies});
+    const accessToken = getCookie('access_token', { cookies });
     const res = await axiosInstance.get(endpoints.banners.bannerCenters(id, page, limit), {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Accept-Language':  getCookie('Language',{cookies}),
+        'Accept-Language': getCookie('Language', { cookies }),
       },
     });
     return res.data;
@@ -121,15 +120,11 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
   }
 };
 
-
 export const editCenterMediaStatus = async (center: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
     const res = await axiosInstance.put(
-      endpoints.banners.changeCenterMediaStatus(
-        center.id,
-        !center.is_active
-      ),
+      endpoints.banners.changeCenterMediaStatus(center.id, !center.is_active),
       {},
       {
         headers: {
@@ -139,6 +134,40 @@ export const editCenterMediaStatus = async (center: any): Promise<any> => {
     );
     revalidatePath(paths.dashboard.citiesAndNeighborhoods);
   } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
+
+export const fetchfields = async (): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.banners.fields, {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const addBanner = async (reqBody: FormData): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(endpoints.banners.addBanner, reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
     return {
       error: getErrorMessage(error),
     };

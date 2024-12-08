@@ -197,7 +197,9 @@
     "NAME_IN_ENGLISH": "Name in english",
     "NAME_IN_ARABIC": "Name in arabic",
     "NEW_CITY": "New City",
-    "NEW_NEIGHBORHOOD": "New Neighborhood"
+    "NEW_NEIGHBORHOOD": "New Neighborhood",
+    "ADD_BANNER": "Add banner",
+    "UPLOAD_FILE": "Upload File"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -313,7 +315,8 @@
     "CONFIRM_DEACTIVATE_CENTER_MEDIA": "Are you sure you want to deactivate this photo/video center?",
     "CONFIRM_ACTIVATE_CENTER_MEDIA": "Are you sure you want to activate this photo/video center?",
     "CITY_CREATED_SUCCESSFULLY": "City created successfully",
-    "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "Neighborhood created successfully"
+    "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "Neighborhood created successfully",
+    "BANNER_ADDED_SUCCESSFULLY": "Banner added successfully"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

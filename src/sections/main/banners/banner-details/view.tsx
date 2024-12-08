@@ -176,7 +176,7 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
                 label: t('LABEL.VIEW'),
                 icon: 'lets-icons:view',
                 onClick: (item) => {
-                  console.log(item);
+
                   seSelectedCenter(item);
                   open.onTrue();
                 },

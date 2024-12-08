@@ -15,13 +15,15 @@ import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import { useBoolean } from 'src/hooks/use-boolean';
 import { paths } from 'src/routes/paths';
 import Iconify from 'src/components/iconify';
-import { Banner } from 'src/types/banners';
+import { Banner, Field } from 'src/types/banners';
 import i18n from 'src/locales/i18n';
 import { NewEditBannerDialog } from './new-edit-banner-dialog';
+import FileManagerNewFolderDialog from './add-banner';
 
 type props = {
   banners: Banner[];
   count: number;
+  fields: Field[];
 };
 
 const types = [
@@ -30,7 +32,7 @@ const types = [
   { name_en: 'Both', name_ar: 'كلاهما', value: 'BOTH' },
 ];
 
-const BannersView = ({ banners, count }: Readonly<props>) => {
+const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
@@ -38,7 +40,7 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
   const router = useRouter();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState<Banner | undefined>();
-
+  const upload = useBoolean();
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.PACKAGE_NAME' },
     { id: 'advertisementType', label: 'LABEL.TYPE' },
@@ -184,6 +186,15 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
                 setSelectedBanner(item);
               },
             },
+            {
+              sx: { color: 'info.dark' },
+              label: t('LABEL.ADD_BANNER'),
+              icon: 'mingcute:plus-fill',
+              onClick: (item) => {
+                setSelectedBanner(item);
+                upload.onTrue();
+              },
+            },
           ]}
           customRender={{
             advertisementType: (item) =>
@@ -206,6 +217,7 @@ const BannersView = ({ banners, count }: Readonly<props>) => {
           banner={selectedBanner}
         />
       )}
+      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} fields={fields} id={ selectedBanner?.id} />
     </>
   );
 };

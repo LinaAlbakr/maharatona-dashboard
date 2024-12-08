@@ -8,7 +8,7 @@ export type Banner = {
   image_cover: null | string;
   created_at: string;
   duration: number;
-  price: number ;
+  price: number;
   center_num: number;
   advertisementType: string;
 };
@@ -26,7 +26,7 @@ export type IBanner = {
 
 export type IBannerCenter = {
   id: string;
-  is_active:boolean;
+  is_active: boolean;
   path: string;
   mediaType: string;
   advertisementCenterType: string;
@@ -36,10 +36,18 @@ export type IBannerCenter = {
     id: string;
     name: string;
     website: string;
-    phone: string
+    phone: string;
   };
   course: {
-    id: string
-    name: string
-  } | null
+    id: string;
+    name: string;
+  } | null;
+};
+
+export type Field = {
+  id: string;
+  name: string;
+  name_en?: string;
+  avatar: string;
+  color: string;
 };
