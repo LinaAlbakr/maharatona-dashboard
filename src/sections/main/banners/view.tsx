@@ -194,6 +194,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
                 setSelectedBanner(item);
                 upload.onTrue();
               },
+              hide: (item) => item?.advertisementType === 'MAIN',
             },
           ]}
           customRender={{
@@ -217,7 +218,12 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
           banner={selectedBanner}
         />
       )}
-      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} fields={fields} id={ selectedBanner?.id} />
+      <FileManagerNewFolderDialog
+        open={upload.value}
+        onClose={upload.onFalse}
+        fields={fields}
+        id={selectedBanner?.id}
+      />
     </>
   );
 };

@@ -44,8 +44,7 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
     });
     return res?.data;
   } catch (error) {
-    console.log(error);
-    // throw new Error(error);
+    throw new Error(error);
   }
 };
 

@@ -78,14 +78,16 @@ export default function FileManagerNewFolderDialog({ open, onClose, fields, id }
     };
     const formData = new FormData();
     toFormData(reqBody, formData);
-    try {
-      await addBanner(formData);
+
+    const res = await addBanner(formData);
+
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
       enqueueSnackbar(t('MESSAGE.BANNER_ADDED_SUCCESSFULLY'));
       setSelectedFiles([]);
       reset();
       onClose();
-    } catch (error) {
-      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
     }
   });
 
