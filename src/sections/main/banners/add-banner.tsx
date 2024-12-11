@@ -52,7 +52,7 @@ export default function FileManagerNewFolderDialog({ open, onClose, fields, id }
     resolver: yupResolver(
       yup.object().shape({
         media: yup.mixed<any>().nullable().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-        field: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        field: yup.string(),
       })
     ),
     defaultValues: {
