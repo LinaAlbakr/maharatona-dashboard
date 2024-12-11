@@ -31,12 +31,13 @@ interface Props extends DialogProps {
   onClose: VoidFunction;
   fields: Field[];
   id: string | undefined;
+  isMain: boolean;
 }
 
 type FormValues = {
   media: FileList;
 };
-export default function FileManagerNewFolderDialog({ open, onClose, fields, id }: Props) {
+export default function FileManagerNewFolderDialog({ open, onClose, fields, id, isMain }: Props) {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -52,7 +53,15 @@ export default function FileManagerNewFolderDialog({ open, onClose, fields, id }
     resolver: yupResolver(
       yup.object().shape({
         media: yup.mixed<any>().nullable().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-        field: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        field: yup
+          .string()
+          .nullable()
+          .when([], () => {
+            if (!isMain) {
+              return yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED'));
+            }
+            return yup.string().nullable();
+          }),
       })
     ),
     defaultValues: {

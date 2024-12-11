@@ -194,7 +194,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
                 setSelectedBanner(item);
                 upload.onTrue();
               },
-              hide: (item) => item?.advertisementType === 'MAIN',
+              // hide: (item) => item?.advertisementType === 'MAIN',
             },
           ]}
           customRender={{
@@ -223,6 +223,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
         onClose={upload.onFalse}
         fields={fields}
         id={selectedBanner?.id}
+        isMain={selectedBanner?.advertisementType === 'MAIN'}
       />
     </>
   );
