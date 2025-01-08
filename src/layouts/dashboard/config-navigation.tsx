@@ -129,7 +129,7 @@ export function useNavData() {
             icon: ICONS.city,
           },
           {
-            title: t('SIDEBAR.BANNERS'),
+            title: t('SIDEBAR.PACKAGES_BANNERS'),
             path: paths.dashboard.banners,
             icon: ICONS.banner,
           },

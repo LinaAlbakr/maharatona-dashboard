@@ -21,7 +21,9 @@
     "DEACTIVATE_NEIGHBORHOOD": "Deactivate Neighborhood",
     "ACTIVATE_NEIGHBORHOOD": "Activate Neighborhood",
     "NEW_BANNER": "New Banner",
-    "EDIT_BANNER": "Edit Banner"
+    "EDIT_BANNER": "Edit Banner",
+    "EDIT_PACKAGE": "Edit Package",
+    "NEW_PACKAGE": "New Package"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -199,7 +201,8 @@
     "NEW_CITY": "New City",
     "NEW_NEIGHBORHOOD": "New Neighborhood",
     "ADD_BANNER": "Add banner",
-    "UPLOAD_FILE": "Upload File"
+    "UPLOAD_FILE": "Upload File",
+    "PACKAGES_BANNERS": "Packages Banners"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -226,7 +229,8 @@
     "ADD_QUESTION": "Add Question",
     "ADD_BANNER": "Add banner",
     "ADD_CITY": "Add City",
-    "ADD_NEIGHBORHOOD": "Add Neighborhood"
+    "ADD_NEIGHBORHOOD": "Add Neighborhood",
+    "ADD_PACKAGES": "Add packages"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -245,7 +249,8 @@
     "FAQ": "FAQ",
     "HOME_SCREEN": "Home Screen",
     "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods",
-    "BANNERS": "Banners"
+    "BANNERS": "Banners",
+    "PACKAGES_BANNERS": "Packages Banners"
   },
   "TABLE": {
     "DENSE": "Dense",

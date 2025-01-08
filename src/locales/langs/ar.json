@@ -25,7 +25,9 @@
     "DEACTIVATE_CENTER_MEDIA": "تعطيل صوره/فيديو المركز",
     "ACTIVATE_CENTER_MEDIA": "تفعيل صوره/فيديو المركز",
     "NEW_BANNER": "اضافه بانر",
-    "EDIT_BANNER": "تعديل بانر"
+    "EDIT_BANNER": "تعديل بانر",
+    "EDIT_PACKAGE": "تعديل الباقة",
+    "NEW_PACKAGE": "اضافه باقة"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -208,7 +210,8 @@
     "NEW_CITY": "اضافة مدينة",
     "NEW_NEIGHBORHOOD": "اضافة حي",
     "ADD_BANNER": "اضافه بانر",
-    "UPLOAD_FILE": "تحميل الملف"
+    "UPLOAD_FILE": "تحميل الملف",
+    "PACKAGES_BANNERS": "باقات البانرات الإعلانية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -235,7 +238,8 @@
     "ADD_QUESTION": "اضافة سؤال",
     "ADD_BANNER": "اضافه بانر",
     "ADD_CITY": "اضافة مدينة",
-    "ADD_NEIGHBORHOOD": "اضافة حي"
+    "ADD_NEIGHBORHOOD": "اضافة حي",
+    "ADD_PACKAGES": "اضافه باقة"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -254,7 +258,8 @@
     "FAQ": "الاسئلة الشائعة",
     "HOME_SCREEN": "الصفحة الرئيسية",
     "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء",
-    "BANNERS": "البنرات الاعلانية"
+    "BANNERS": "البنرات الاعلانية",
+    "PACKAGES_BANNERS": "باقات البانرات الإعلانية"
   },
   "TABLE": {
     "DENSE": "تكديس",

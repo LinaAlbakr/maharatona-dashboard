@@ -1,24 +1,29 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useState } from 'react';
-import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 import { useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useState, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { useBoolean } from 'src/hooks/use-boolean';
+import Container from '@mui/material/Container';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import Iconify from 'src/components/iconify';
-import { Banner, Field } from 'src/types/banners';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import i18n from 'src/locales/i18n';
-import { NewEditBannerDialog } from './new-edit-banner-dialog';
+import { useTranslate } from 'src/locales';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
+import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
+
+import { Field, Banner } from 'src/types/banners';
+
 import FileManagerNewFolderDialog from './add-banner';
+import { NewEditBannerDialog } from './new-edit-banner-dialog';
 
 type props = {
   banners: Banner[];
@@ -34,7 +39,6 @@ const types = [
 
 const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const settings = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -59,7 +63,6 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -73,7 +76,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   return (
@@ -98,7 +101,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
           }}
         >
           <Typography variant="h2" color="white">
-            {t('LABEL.BANNERS')}
+            {t('LABEL.PACKAGES_BANNERS')}
           </Typography>
           <Grid
             sx={{
@@ -161,7 +164,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
               setIsFormDialogOpen(true);
             }}
           >
-            {t('BUTTON.ADD_BANNER')}
+            {t('BUTTON.ADD_PACKAGES')}
           </Button>
         </Box>
         <SharedTable
@@ -201,8 +204,8 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
               item.advertisementType === 'FIELD'
                 ? t(`LABEL.${item.advertisementType}S`)
                 : t(`LABEL.${item.advertisementType}`),
-            price: (item) => Math.floor(+item.price) + ' ' + t('LABEL.SAR'),
-            duration: (item) => item.duration + ' ' + t('LABEL.WEEKS'),
+            price: (item) => `${Math.floor(+item.price)  } ${  t('LABEL.SAR')}`,
+            duration: (item) => `${item.duration  } ${  t('LABEL.WEEKS')}`,
             name_ar: (item) => (i18n.language === 'ar' ? item.name_ar : item.name_en),
           }}
         />

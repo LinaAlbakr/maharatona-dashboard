@@ -1,21 +1,25 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Avatar, Box, Button, Card, Divider, Grid, Stack, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import Container from '@mui/material/Container';
+import { Box, Card, Stack, Button, Divider, Typography } from '@mui/material';
+
 import { useBoolean } from 'src/hooks/use-boolean';
-import Iconify from 'src/components/iconify';
-import { IBanner, IBannerCenter } from 'src/types/banners';
+
 import { fDate } from 'src/utils/format-time';
-import { BannerCenterDialog } from './banner-center-dialog';
+
+import { useTranslate } from 'src/locales';
 import { editCenterMediaStatus } from 'src/actions/banners';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { IBanner, IBannerCenter } from 'src/types/banners';
+
+import { BannerCenterDialog } from './banner-center-dialog';
 
 type props = {
   centers: IBannerCenter[];
@@ -28,8 +32,7 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
   const { t } = useTranslate();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+
   const open = useBoolean();
   const [selectedCenter, seSelectedCenter] = useState<IBannerCenter | undefined>(undefined);
 
@@ -43,25 +46,7 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
   ];
   const { enqueueSnackbar } = useSnackbar();
 
-  const pathname = usePathname();
 
-  /*
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      if (value) {
-        params.set(name, value);
-        localStorage.setItem(name, value);
-      } else {
-        params.delete(name);
-      }
-
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [pathname, router, searchParams]
-  );
- */
   const handleConfirmActivate = async () => {
     const res = await editCenterMediaStatus(selectedCenter);
     if (res?.error) {
@@ -92,7 +77,7 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
       >
         <Card sx={{ p: 4 }}>
           <Typography color="secondary" variant="h4">
-            {t('LABEL.BANNERS_TITLE')}
+            {t('LABEL.PACKAGES_BANNERS')}
           </Typography>
           <Divider sx={{ my: 3 }} />
 

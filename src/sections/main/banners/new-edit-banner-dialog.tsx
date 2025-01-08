@@ -2,21 +2,21 @@
 
 import * as yup from 'yup';
 import { toFormData } from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { LoadingButton } from '@mui/lab';
 import {
+  Box,
   Stack,
   Button,
   Dialog,
+  MenuItem,
   DialogTitle,
   DialogActions,
   DialogContent,
-  Box,
-  MenuItem,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -24,15 +24,16 @@ import { paths } from 'src/routes/paths';
 import { getErrorMessage } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
+import { newBanner, editBanner } from 'src/actions/banners';
 import { invalidatePath } from 'src/actions/cache-invalidation';
 
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
 import { RHFSelect, RHFTextarea, RHFUploadAvatar } from 'src/components/hook-form';
-import { Banner } from 'src/types/banners';
-import { editBanner, newBanner } from 'src/actions/banners';
 
-const OPTIONS = ["MAIN","FIELD", "BOTH"];
+import { Banner } from 'src/types/banners';
+
+const OPTIONS = ['MAIN', 'FIELD', 'BOTH'];
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -53,7 +54,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
         description_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         price: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         duration: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-        advertisement_type:yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+        advertisement_type: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
       })
     ),
     defaultValues: {
@@ -64,7 +65,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
       description_en: banner?.description_en || '',
       duration: banner?.duration || undefined,
       price: banner?.price || undefined,
-      advertisement_type :banner?.advertisementType || ''
+      advertisement_type: banner?.advertisementType || '',
     },
   });
   const {
@@ -90,7 +91,6 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
   );
 
   const onSubmit = handleSubmit(async (data) => {
-
     const formData = new FormData();
     toFormData(data, formData);
     if (typeof data?.image_cover === 'string') {
@@ -100,7 +100,6 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
       if (banner) {
         const res = await editBanner(formData, banner.id);
 
-        console.log(res); //TODO remove
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });
         } else {
@@ -108,7 +107,6 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
         }
       } else {
         const res = await newBanner(formData);
-        console.log(res); //TODO remove
 
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });
@@ -126,7 +124,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 2 }}>
-        {t(banner ? 'TITLE.EDIT_BANNER' : 'TITLE.NEW_BANNER')}
+        {t(banner ? 'TITLE.EDIT_PACKAGE' : 'TITLE.NEW_PACKAGE')}
       </DialogTitle>
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -139,7 +137,6 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                 gridTemplateColumns: { sm: ' 1fr', md: ' 1fr 1fr' },
                 alignItems: 'center',
                 gap: 2,
-
               }}
             >
               <RHFTextField
@@ -182,10 +179,10 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                 value={watch('duration')}
                 type="number"
               />
-               <RHFSelect name="advertisement_type" label={`${t("LABEL.TYPE")}`}>
-            {/*     <MenuItem value="">None</MenuItem>
+              <RHFSelect name="advertisement_type" label={`${t('LABEL.TYPE')}`}>
+                {/*     <MenuItem value="">None</MenuItem>
                 <Divider sx={{ borderStyle: 'dashed' }} /> */}
-                {OPTIONS.map((option:string, index:number) => (
+                {OPTIONS.map((option: string, index: number) => (
                   <MenuItem key={index} value={option}>
                     {t(`LABEL.${option}`)}
                   </MenuItem>

@@ -1,9 +1,11 @@
-import { fetchBanners, fetchfields } from 'src/actions/banners';
+import { fetchfields, fetchBanners } from 'src/actions/banners';
+
 import BannersView from 'src/sections/main/banners/view';
+
 import { Banner } from 'src/types/banners';
 
 export const metadata = {
-  title: 'Centers',
+  title: 'Banners',
 };
 
 type props = {
@@ -15,7 +17,7 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 5;
   const advertisement_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
   const advertisementType = typeof searchParams?.type === 'string' ? searchParams?.type : null;
-const fields = await fetchfields()
+  const fields = await fetchfields();
   const centers = await fetchBanners({
     limit,
     page,
@@ -25,7 +27,9 @@ const fields = await fetchfields()
 
   const filteredProducts: Banner[] = centers?.data;
 
-  return <BannersView banners={filteredProducts} count={centers?.meta?.itemCount} fields={fields} />;
+  return (
+    <BannersView banners={filteredProducts} count={centers?.meta?.itemCount} fields={fields} />
+  );
 };
 
 export default Page;
