@@ -11,7 +11,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { fDate } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
-import { editCenterMediaStatus } from 'src/actions/banners';
+import { deletebannerCenters, editCenterMediaStatus } from 'src/actions/banners';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
 import { useSettingsContext } from 'src/components/settings';
@@ -32,9 +32,11 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
   const { t } = useTranslate();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
+  const confirmDelete = useBoolean();
 
   const open = useBoolean();
   const [selectedCenter, seSelectedCenter] = useState<IBannerCenter | undefined>(undefined);
+  const [selectedId, seSelectedId] = useState<string>('');
 
   const TABLE_HEAD = [
     { id: 'center_name', label: 'LABEL.CENTER_NAME' },
@@ -45,7 +47,6 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
     { id: '', label: 'LABEL.SETTINGS' },
   ];
   const { enqueueSnackbar } = useSnackbar();
-
 
   const handleConfirmActivate = async () => {
     const res = await editCenterMediaStatus(selectedCenter);
@@ -67,6 +68,17 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
         variant: 'success',
       });
       confirmDeactivate.onFalse();
+    }
+  };
+  const handleConfirmDelete = async () => {
+    const res = await deletebannerCenters(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESSFULLY'), {
+        variant: 'success',
+      });
+      confirmDelete.onFalse();
     }
   };
   return (
@@ -161,7 +173,6 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
                 label: t('LABEL.VIEW'),
                 icon: 'lets-icons:view',
                 onClick: (item) => {
-
                   seSelectedCenter(item);
                   open.onTrue();
                 },
@@ -183,6 +194,16 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
                 onClick: (item: any) => {
                   seSelectedCenter(item);
                   confirmActivate.onTrue();
+                },
+                hide: (center) => center?.is_active === true,
+              },
+              {
+                sx: { color: 'error.dark' },
+                label: t('BUTTON.DELETE'),
+                icon: 'ant-design:delete-outlined',
+                onClick: (item: any) => {
+                  seSelectedId(item.id);
+                  confirmDelete.onTrue();
                 },
                 hide: (center) => center?.is_active === true,
               },
@@ -261,6 +282,23 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
             }}
           >
             {t('BUTTON.ACTIVATE')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_CENTER_MEDIA')}
+        content={t('MESSAGE.CONFIRM_DELETE_CENTER_MEDIA')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleConfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
           </Button>
         }
       />

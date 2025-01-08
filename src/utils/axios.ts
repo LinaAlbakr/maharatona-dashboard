@@ -27,10 +27,10 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 axiosInstance.interceptors.request.use(
-  (config) => {
+  (config) =>
     /*     config.headers['Accept-Language'] = lang;
-     */ return config;
-  },
+     */  config
+  ,
   (error) => Promise.reject(error)
 );
 
@@ -175,5 +175,6 @@ export const endpoints = {
       `/admin-panel/update-activation-advertisement-center/${centerId}/${centerStatus}`,
     fields: '/field/all-fields',
     addBanner: '/admin-panel/admin-buy-advertisement',
+    deletebannerCenters: (bannerId: string) => `/admin-panel/delete-advertisement-center/${bannerId}`,
   },
 };

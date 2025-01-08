@@ -173,3 +173,21 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
     };
   }
 };
+
+export const deletebannerCenters = async (centerId: string ): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+
+    const res = await axiosInstance.delete(endpoints.banners.deletebannerCenters(centerId), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    revalidatePath(`/dashboard/banners`);
+    return res?.status;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};

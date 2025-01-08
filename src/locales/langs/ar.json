@@ -27,7 +27,8 @@
     "NEW_BANNER": "اضافه بانر",
     "EDIT_BANNER": "تعديل بانر",
     "EDIT_PACKAGE": "تعديل الباقة",
-    "NEW_PACKAGE": "اضافه باقة"
+    "NEW_PACKAGE": "اضافه باقة",
+    "DELETE_CENTER_MEDIA": "حذف ملف المركز"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -332,7 +333,8 @@
     "CONFIRM_ACTIVATE_CENTER_MEDIA": "هل تريد تفعيل هذه صوره/فيديو المركز؟",
     "CITY_CREATED_SUCCESSFULLY": "تم انشاء المدينة بنجاح",
     "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "تم انشاء الحي بنجاح",
-    "BANNER_ADDED_SUCCESSFULLY": "تم اضافة البانر بنجاح"
+    "BANNER_ADDED_SUCCESSFULLY": "تم اضافة البانر بنجاح",
+    "CONFIRM_DELETE_CENTER_MEDIA": "هل تريد حذف هذه ملف المركز؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
