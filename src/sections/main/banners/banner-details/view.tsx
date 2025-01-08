@@ -205,7 +205,6 @@ const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
                   seSelectedId(item.id);
                   confirmDelete.onTrue();
                 },
-                hide: (center) => center?.is_active === true,
               },
             ]}
             customRender={
