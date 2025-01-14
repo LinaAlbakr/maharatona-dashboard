@@ -28,7 +28,9 @@
     "EDIT_BANNER": "تعديل بانر",
     "EDIT_PACKAGE": "تعديل الباقة",
     "NEW_PACKAGE": "اضافه باقة",
-    "DELETE_CENTER_MEDIA": "حذف ملف المركز"
+    "DELETE_CENTER_MEDIA": "حذف ملف المركز",
+    "ACTIVATE_BANNER": "تفعيل باقة",
+    "DEACTIVATE_BANNER": "تعطيل باقة"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -212,7 +214,9 @@
     "NEW_NEIGHBORHOOD": "اضافة حي",
     "ADD_BANNER": "اضافه بانر",
     "UPLOAD_FILE": "تحميل الملف",
-    "PACKAGES_BANNERS": "باقات البانرات الإعلانية"
+    "PACKAGES_BANNERS": "باقات البانرات الإعلانية",
+    "BLOCKED": "معطلة",
+    "ACTIVE": "نشط"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -334,7 +338,9 @@
     "CITY_CREATED_SUCCESSFULLY": "تم انشاء المدينة بنجاح",
     "NEIGHBORHOOD_CREATED_SUCCESSFULLY": "تم انشاء الحي بنجاح",
     "BANNER_ADDED_SUCCESSFULLY": "تم اضافة البانر بنجاح",
-    "CONFIRM_DELETE_CENTER_MEDIA": "هل تريد حذف هذه ملف المركز؟"
+    "CONFIRM_DELETE_CENTER_MEDIA": "هل تريد حذف هذه ملف المركز؟",
+    "CONFIRM_DEACTIVATE_BANNER": "هل تريد تعطيل هذه الباقة",
+    "CONFIRM_ACTIVATE_BANNER": "هل تريد تفعيل هذه الباقة"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

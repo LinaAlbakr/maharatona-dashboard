@@ -1,31 +1,36 @@
 'use client';
 
+import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+
 import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
 import {
-  Avatar,
   Box,
-  Button,
   Card,
   Grid,
-  InputAdornment,
+  Button,
   TextField,
   Typography,
+  InputAdornment,
 } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import { ICenter } from 'src/types/centers';
-import { useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useBoolean } from 'src/hooks/use-boolean';
-import Iconify from 'src/components/iconify';
-import { editFieldStatus } from 'src/actions/categories';
-import { editCityStatus } from 'src/actions/cities-and-neighborhoods';
+
 import { paths } from 'src/routes/paths';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useTranslate } from 'src/locales';
+import { editCityStatus } from 'src/actions/cities-and-neighborhoods';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
+import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { ICenter } from 'src/types/centers';
+
 import { NewCityDialog } from './new-city-dialog';
 
 type props = {
@@ -45,10 +50,11 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
 
   const [selectedCity, setSelectedCity] = useState<ICenter | undefined>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.NAME_AR' },
@@ -59,7 +65,6 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
   const formDefaultValues = {
     name: '',
   };
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -78,7 +83,7 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   const handleConfirmActivate = async () => {

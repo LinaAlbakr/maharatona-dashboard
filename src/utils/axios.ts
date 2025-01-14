@@ -29,8 +29,7 @@ const axiosInstance: AxiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) =>
     /*     config.headers['Accept-Language'] = lang;
-     */  config
-  ,
+     */ config,
   (error) => Promise.reject(error)
 );
 

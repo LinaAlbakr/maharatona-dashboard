@@ -1,9 +1,10 @@
 import {
-  fetchNotifications,
-  fetchPriceProfit,
   fetchStatistics,
   fetchTopCourses,
+  fetchPriceProfit,
+  fetchNotifications,
 } from 'src/actions/home';
+
 import MainPage from 'src/sections/main/view';
 
 // ----------------------------------------------------------------------

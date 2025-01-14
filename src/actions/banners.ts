@@ -3,12 +3,14 @@
 /* eslint-disable consistent-return */
 
 import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
 import { getCookie } from 'cookies-next';
+import { revalidatePath } from 'next/cache';
 
 import { paths } from 'src/routes/paths';
 
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
+
+import { Banner } from 'src/types/banners';
 
 interface IParams {
   page: number;
@@ -35,6 +37,8 @@ export const fetchBanners = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
+    console.log(res.data);
+
     return res?.data;
   } catch (error) {
     throw new Error(error);
@@ -174,7 +178,7 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
   }
 };
 
-export const deletebannerCenters = async (centerId: string ): Promise<any> => {
+export const deletebannerCenters = async (centerId: string): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
 
@@ -185,6 +189,26 @@ export const deletebannerCenters = async (centerId: string ): Promise<any> => {
     });
     revalidatePath(`/dashboard/banners`);
     return res?.status;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};
+
+export const editBannerStatus = async (banner: Banner): Promise<any> => {
+  const reqBody = {
+    advertisement_status: banner.advertisement_status === 'Active' ? 'Blocked' : 'Active',
+  };
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const res = await axiosInstance.put(endpoints.banners.editBanner(banner.id), reqBody, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    revalidatePath(paths.dashboard.citiesAndNeighborhoods);
+    return res.data;
   } catch (error) {
     return {
       error: getErrorMessage(error),

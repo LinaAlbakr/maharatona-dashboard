@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { enqueueSnackbar } from 'notistack';
 import { useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
@@ -13,11 +14,14 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
+import { editBannerStatus } from 'src/actions/banners';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
+import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 
 import { Field, Banner } from 'src/types/banners';
@@ -45,12 +49,17 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState<Banner | undefined>();
   const upload = useBoolean();
+  const confirmActivate = useBoolean();
+  const confirmDeactivate = useBoolean();
+  console.log(banners);
+
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.PACKAGE_NAME' },
     { id: 'advertisementType', label: 'LABEL.TYPE' },
     { id: 'duration', label: 'LABEL.DURATION' },
     { id: 'price', label: 'LABEL.PRICE' },
     { id: 'center_num', label: 'LABEL.NUMBER_OF_CENTERS' },
+    { id: 'advertisement_status', label: 'LABEL.STATUS' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -78,6 +87,28 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
     },
     [pathname, router, searchParams]
   );
+  const handleConfirmActivate = async () => {
+    if (selectedBanner) {
+      const res = await editBannerStatus(selectedBanner);
+      if (res.statusCode === 200) {
+        enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
+        confirmActivate.onFalse();
+      } else {
+        enqueueSnackbar(`${res.error}`, { variant: 'error' });
+      }
+    }
+  };
+  const handleConfirmDeactivate = async () => {
+    if (selectedBanner) {
+      const res = await editBannerStatus(selectedBanner);
+      if (res.statusCode === 200) {
+        enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
+        confirmDeactivate.onFalse();
+      } else {
+        enqueueSnackbar(`${res.error}`, { variant: 'error' });
+      }
+    }
+  };
 
   return (
     <>
@@ -198,15 +229,48 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
                 upload.onTrue();
               },
             },
+            {
+              sx: { color: 'info.dark' },
+
+              label: t('LABEL.ACTIVATE'),
+              icon: 'uim:process',
+              onClick: (item: any) => {
+                setSelectedBanner(item);
+                confirmActivate.onTrue();
+              },
+              hide: (row) => row.advertisement_status === 'Active',
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DEACTIVATE'),
+              icon: 'streamline:synchronize-disable-solid',
+              onClick: (item: any) => {
+                setSelectedBanner(item);
+                confirmDeactivate.onTrue();
+              },
+              hide: (row) => row.advertisement_status === 'Blocked',
+            },
           ]}
           customRender={{
             advertisementType: (item) =>
               item.advertisementType === 'FIELD'
                 ? t(`LABEL.${item.advertisementType}S`)
                 : t(`LABEL.${item.advertisementType}`),
-            price: (item) => `${Math.floor(+item.price)  } ${  t('LABEL.SAR')}`,
-            duration: (item) => `${item.duration  } ${  t('LABEL.WEEKS')}`,
+            price: (item) => `${Math.floor(+item.price)} ${t('LABEL.SAR')}`,
+            duration: (item) => `${item.duration} ${t('LABEL.WEEKS')}`,
             name_ar: (item) => (i18n.language === 'ar' ? item.name_ar : item.name_en),
+            advertisement_status: (row: any) => (
+              <Label
+                variant="soft"
+                color={
+                  (row.advertisement_status === 'Active' && 'success') ||
+                  (row.advertisement_status === 'Blocked' && 'error') ||
+                  'error'
+                }
+              >
+                {row.advertisement_status === 'Active' ? t('LABEL.ACTIVE') : t('LABEL.BLOCKED')}
+              </Label>
+            ),
           }}
         />
       </Container>
@@ -226,6 +290,40 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
         fields={fields}
         id={selectedBanner?.id}
         isMain={selectedBanner?.advertisementType === 'MAIN'}
+      />
+      <ConfirmDialog
+        open={confirmActivate.value}
+        onClose={confirmActivate.onFalse}
+        title={t('TITLE.ACTIVATE_BANNER')}
+        content={t('MESSAGE.CONFIRM_ACTIVATE_BANNER')}
+        action={
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              handleConfirmActivate();
+            }}
+          >
+            {t('BUTTON.ACTIVATE')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDeactivate.value}
+        onClose={confirmDeactivate.onFalse}
+        title={t('TITLE.DEACTIVATE_BANNER')}
+        content={t('MESSAGE.CONFIRM_DEACTIVATE_BANNER')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleConfirmDeactivate();
+            }}
+          >
+            {t('BUTTON.DEACTIVATE')}
+          </Button>
+        }
       />
     </>
   );

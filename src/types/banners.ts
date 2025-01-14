@@ -11,6 +11,7 @@ export type Banner = {
   price: number;
   center_num: number;
   advertisementType: string;
+  advertisement_status: string;
 };
 export type IBanner = {
   id: string;

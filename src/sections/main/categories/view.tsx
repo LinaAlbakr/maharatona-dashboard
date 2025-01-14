@@ -43,10 +43,11 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const [selectedId, setSelectedId] = useState<string | null>();
   const [selectedCategory, setSelectedCategory] = useState<ICenter | undefined>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
 
   const TABLE_HEAD = [
     { id: 'avatar', label: 'LABEL.IMAGE' },
@@ -59,7 +60,6 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const formDefaultValues = {
     name: '',
   };
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -78,7 +78,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   const handleConfirmActivate = async () => {
