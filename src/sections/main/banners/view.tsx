@@ -256,7 +256,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
                 ? t(`LABEL.${item.advertisementType}S`)
                 : t(`LABEL.${item.advertisementType}`),
             price: (item) => `${Math.floor(+item.price)} ${t('LABEL.SAR')}`,
-            duration: (item) => `${item.duration} ${t('LABEL.WEEKS')}`,
+            duration: (item) => `${item.duration} ${t('LABEL.DAY')}`,
             name_ar: (item) => (i18n.language === 'ar' ? item.name_ar : item.name_en),
             advertisement_status: (row: any) => (
               <Label

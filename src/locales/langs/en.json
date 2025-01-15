@@ -207,7 +207,8 @@
     "UPLOAD_FILE": "Upload File",
     "PACKAGES_BANNERS": "Packages Banners",
     "BLOCKED": "Blocked",
-    "ACTIVE": "Active"
+    "ACTIVE": "Active",
+    "DAY": "Day"
   },
   "BUTTON": {
     "LOGIN": "Login",

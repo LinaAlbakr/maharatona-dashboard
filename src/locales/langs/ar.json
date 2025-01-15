@@ -216,7 +216,8 @@
     "UPLOAD_FILE": "تحميل الملف",
     "PACKAGES_BANNERS": "باقات البانرات الإعلانية",
     "BLOCKED": "معطلة",
-    "ACTIVE": "نشط"
+    "ACTIVE": "نشط",
+    "DAY": "يوم"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
