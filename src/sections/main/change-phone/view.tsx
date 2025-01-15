@@ -84,8 +84,7 @@ export default function ChangePhoneView() {
       }
     //  router.push(`${paths.auth.jwt.verify}`)
     } catch (error) {
-      console.log(error)
-    }
+      console.error(error);}
   });
 
 

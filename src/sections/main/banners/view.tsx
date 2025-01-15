@@ -51,7 +51,6 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const upload = useBoolean();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
-  console.log(banners);
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.PACKAGE_NAME' },

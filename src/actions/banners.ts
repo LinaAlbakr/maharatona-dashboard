@@ -37,7 +37,6 @@ export const fetchBanners = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log(res.data);
 
     return res?.data;
   } catch (error) {
@@ -54,7 +53,6 @@ export const fetchSingleBannder = async (id: string): Promise<any> => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    //  console.log(res.data)
     return res.data;
   } catch (error) {
     return {
@@ -86,7 +84,6 @@ export const fetchSingleBannderCenters = async (
 export const newBanner = async (reqBody: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
-  console.log(reqBody);
   try {
     await axiosInstance.post(endpoints.banners.newBanner, reqBody, {
       headers: {
@@ -106,8 +103,6 @@ export const newBanner = async (reqBody: FormData): Promise<any> => {
 export const editBanner = async (reqBody: FormData, bannerId: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
-  console.log(reqBody);
-
   try {
     const res = await axiosInstance.put(endpoints.banners.editBanner(bannerId), reqBody, {
       headers: {
@@ -170,8 +165,6 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
       },
     });
   } catch (error) {
-    console.log(error);
-
     return {
       error: getErrorMessage(error),
     };
