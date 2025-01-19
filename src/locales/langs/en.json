@@ -208,7 +208,8 @@
     "PACKAGES_BANNERS": "Packages Banners",
     "BLOCKED": "Blocked",
     "ACTIVE": "Active",
-    "DAY": "Day"
+    "DAY": "Day",
+    "STATUS": "Status"
   },
   "BUTTON": {
     "LOGIN": "Login",
