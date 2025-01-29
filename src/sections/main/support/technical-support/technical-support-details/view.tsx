@@ -56,7 +56,7 @@ const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.TYPE')}
-            secondary={t('LABEL.' + ItemInfo?.callUsType)}
+            secondary={t(`LABEL.${ItemInfo?.callUsType}`)}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}
           />
