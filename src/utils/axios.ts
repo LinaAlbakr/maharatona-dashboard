@@ -1,12 +1,10 @@
-import Cookie from 'js-cookie';
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-
 import { getCookie } from 'cookies-next';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { HOST_API } from 'src/config-global';
 
 import { ACCESS_TOKEN } from '../auth/constants';
-import { localStorageGetItem } from './storage-available';
+
 export interface Params {
   page: number;
   limit: number;
@@ -100,6 +98,8 @@ export const endpoints = {
     fetch: '/admin-panel/all-courses',
     percentage: () => `/admin-panel/update-price-profit`,
     info: (courseId: string) => `/admin-panel/course/${courseId}`,
+    deleteCourse: (courseId: string) => `/admin-panel/delete-course/${courseId}`,
+    editStatus: (courseId: string) => `/admin-panel/update-course/${courseId}`,
   },
   clients: {
     fetch: '/admin-panel/all-clients',
@@ -174,6 +174,7 @@ export const endpoints = {
       `/admin-panel/update-activation-advertisement-center/${centerId}/${centerStatus}`,
     fields: '/field/all-fields',
     addBanner: '/admin-panel/admin-buy-advertisement',
-    deletebannerCenters: (bannerId: string) => `/admin-panel/delete-advertisement-center/${bannerId}`,
+    deletebannerCenters: (bannerId: string) =>
+      `/admin-panel/delete-advertisement-center/${bannerId}`,
   },
 };

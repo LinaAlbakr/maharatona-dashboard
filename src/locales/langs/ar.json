@@ -30,7 +30,10 @@
     "NEW_PACKAGE": "اضافه باقة",
     "DELETE_CENTER_MEDIA": "حذف ملف المركز",
     "ACTIVATE_BANNER": "تفعيل باقة",
-    "DEACTIVATE_BANNER": "تعطيل باقة"
+    "DEACTIVATE_BANNER": "تعطيل باقة",
+    "DELETE_COURSE": "حذف الدورة",
+    "DEACTIVATE_COURSE": "تعطيل الدورة",
+    "ACTIVATE_COURSE": "تفعيل الدورة"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -342,7 +345,10 @@
     "BANNER_ADDED_SUCCESSFULLY": "تم اضافة البانر بنجاح",
     "CONFIRM_DELETE_CENTER_MEDIA": "هل تريد حذف هذه ملف المركز؟",
     "CONFIRM_DEACTIVATE_BANNER": "هل تريد تعطيل هذه الباقة",
-    "CONFIRM_ACTIVATE_BANNER": "هل تريد تفعيل هذه الباقة"
+    "CONFIRM_ACTIVATE_BANNER": "هل تريد تفعيل هذه الباقة",
+    "CONFIRM_DELETE_COURSE": "هل تريد حذف هذا الدورة؟",
+    "CONFIRM_ACTIVATE_COURSE": "هل تريد تفعيل هذا الدورة؟",
+    "CONFIRM_DEACTIVATE_COURSE": "هل تريد تعطيل هذا الدورة؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

@@ -1,26 +1,30 @@
 'use client';
-import * as yup from 'yup';
-import { enqueueSnackbar, useSnackbar } from 'notistack';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { LoadingButton } from '@mui/lab';
+
+import { useForm } from 'react-hook-form';
+import { enqueueSnackbar } from 'notistack';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Box, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import SendNotification from './components/send-notification';
-import i18n from 'src/locales/i18n';
-import { set } from 'lodash';
-import Iconify from 'src/components/iconify';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import { arabicDate, englishDate } from 'src/utils/format-time';
-import { getErrorMessage } from 'src/utils/axios';
-import { editPercentage } from 'src/actions/courses';
+
+import i18n from 'src/locales/i18n';
+import { useTranslate } from 'src/locales';
+import { deleteCousre, editCourseStatus } from 'src/actions/courses';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
+import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import SendNotification from './components/send-notification';
 
 type props = {
   count: number;
@@ -32,12 +36,18 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedSubscribers, setSelectedSubscribers] = useState<any[] | undefined>();
+  const [selectedCourse, setSelectedCourse] = useState<any>();
+  const [selectedId, setSelectedId] = useState<string>('');
+  const confirmDelete = useBoolean();
+  const confirmActivate = useBoolean();
+  const confirmDeactivate = useBoolean();
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
 
   const TABLE_HEAD = [
     { id: 'name', label: 'LABEL.COURSE_NAME' },
@@ -54,15 +64,10 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const formDefaultValues = {
     name: '',
   };
-  const formDefaultPrice= {
-    price_profit: 0,
-  };
-  const pathname = usePathname();
+
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-
-  const {handleSubmit, setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -77,9 +82,39 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
+  const handleconfirmDelete = async () => {
+    const res = await deleteCousre(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+        variant: 'success',
+      });
+    }
+    confirmDelete.onFalse();
+  };
+
+  const handleConfirmActivate = async () => {
+    const res = await editCourseStatus(selectedCourse);
+    if (res.statusCode === 200) {
+      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
+      confirmActivate.onFalse();
+    } else {
+      enqueueSnackbar(`${res.error}`, { variant: 'error' });
+    }
+  };
+  const handleConfirmDeactivate = async () => {
+    const res = await editCourseStatus(selectedCourse);
+    if (res.statusCode === 200) {
+      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
+      confirmDeactivate.onFalse();
+    } else {
+      enqueueSnackbar(`${res.error}`, { variant: 'error' });
+    }
+  };
 
   return (
     <>
@@ -159,17 +194,47 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 );
               },
             },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+            },
+            {
+              sx: { color: 'info.dark' },
+
+              label: t('LABEL.ACTIVATE'),
+              icon: 'uim:process',
+              onClick: (item: any) => {
+                setSelectedCourse(item);
+                confirmActivate.onTrue();
+              },
+              hide: (row) => row.is_active === true,
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DEACTIVATE'),
+              icon: 'streamline:synchronize-disable-solid',
+              onClick: (item: any) => {
+                setSelectedCourse(item);
+                confirmDeactivate.onTrue();
+              },
+              hide: (row) => row.is_active === false,
+            },
           ]}
           customRender={{
             students: (item: any) => (
               <Box>
-                {item?.students.length + ' '}
+                {`${item?.students.length} `}
                 {t('LABEL.STUDENT')}
               </Box>
             ),
             seats: (item: any) => (
               <Box>
-                {item?.seats + ' '}
+                {`${item?.seats} `}
                 {t('LABEL.SEAT')}
               </Box>
             ),
@@ -183,7 +248,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             // phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
             price: (item: any) => (
               <Box>
-                {Math.round(item?.price) + ' '} {t('LABEL.SAR')}
+                {`${Math.round(item?.price)} `} {t('LABEL.SAR')}
               </Box>
             ),
           }}
@@ -194,11 +259,62 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           open={showSendNotification}
           onClose={() => {
             setShowSendNotification(false);
-            set;
+            setSelectedSubscribers(undefined);
           }}
           selectedSubscribers={selectedSubscribers}
         />
       )}
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_COURSE')}
+        content={t('MESSAGE.CONFIRM_DELETE_COURSE')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmActivate.value}
+        onClose={confirmActivate.onFalse}
+        title={t('TITLE.ACTIVATE_COURSE')}
+        content={t('MESSAGE.CONFIRM_ACTIVATE_COURSE')}
+        action={
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => {
+              handleConfirmActivate();
+            }}
+          >
+            {t('BUTTON.ACTIVATE')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDeactivate.value}
+        onClose={confirmDeactivate.onFalse}
+        title={t('TITLE.DEACTIVATE_COURSE')}
+        content={t('MESSAGE.CONFIRM_DEACTIVATE_COURSE')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleConfirmDeactivate();
+            }}
+          >
+            {t('BUTTON.DEACTIVATE')}
+          </Button>
+        }
+      />
     </>
   );
 };
