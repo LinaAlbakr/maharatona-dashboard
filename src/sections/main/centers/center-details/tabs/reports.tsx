@@ -1,13 +1,18 @@
 'use client';
 
-import { Box, Card, Container, Grid, Pagination, Typography } from '@mui/material';
 import Image from 'next/image';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
-import { useSettingsContext } from 'src/components/settings';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+
+import { Box, Card, Grid, Container, Pagination, Typography } from '@mui/material';
+
 import { useTranslate } from 'src/locales';
+
+import { useSettingsContext } from 'src/components/settings';
+
 import RateItem from '../components/rate-item';
 import CourseCard from '../components/course-card';
+
 interface Props {
   CenterReports?: any;
 
@@ -21,10 +26,12 @@ const Reports = ({ CenterCourses, CenterReports, CenterReviews }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const count = (count: number) => {
     if (count / 6 > 1) {
       return Math.ceil(count / 6);
-    } else return 1;
+    }
+    return 1;
   };
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -132,7 +139,13 @@ const Reports = ({ CenterCourses, CenterReports, CenterReviews }: Props) => {
                 {t('LABEL.TOTAL_PROFIT')}
               </Typography>
               <Typography variant="h3" color="#EF1844">
-                {CenterReports.profits} {t('LABEL.SAR')}
+                {CenterReports.profits}{' '}
+                <Image
+                  src="/assets/images/red-sar-logo.svg"
+                  alt="sar logo"
+                  height={40}
+                  width={40}
+                />
               </Typography>
             </Box>
             <Image src="/assets/images/centers/profit.svg" alt="image" width={50} height={50} />

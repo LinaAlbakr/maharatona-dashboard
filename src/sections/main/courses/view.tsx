@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { useState, useEffect, useCallback } from 'react';
@@ -248,7 +249,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             // phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
             price: (item: any) => (
               <Box>
-                {`${Math.round(item?.price)} `} {t('LABEL.SAR')}
+                {`${Math.round(item?.price)} `}{' '}
+                <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
               </Box>
             ),
           }}

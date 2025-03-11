@@ -1,10 +1,15 @@
 'use client';
-import { Box, Card, Container, Divider,  Typography } from '@mui/material';
+
 import Image from 'next/image';
-import { useSettingsContext } from 'src/components/settings';
-import { useTranslate } from 'src/locales';
-import i18n from 'src/locales/i18n';
+
+import { Box, Card, Divider, Container, Typography } from '@mui/material';
+
 import { convertTime24to12 } from 'src/utils/format-time';
+
+import i18n from 'src/locales/i18n';
+import { useTranslate } from 'src/locales';
+
+import { useSettingsContext } from 'src/components/settings';
 
 interface Props {
   CourseInfo?: any;
@@ -103,7 +108,8 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.PRICE')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {Math.floor(CourseInfo?.price) + '  ' + t('LABEL.SAR') || '-'}
+                {Math.floor(CourseInfo?.price)}{' '}
+                <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -204,7 +210,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
             display: 'flex',
             justifyContent: 'space-evenly',
             gap: 2,
-            flexDirection: { md: 'row', sm: 'column' ,xs: 'column'},
+            flexDirection: { md: 'row', sm: 'column', xs: 'column' },
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>

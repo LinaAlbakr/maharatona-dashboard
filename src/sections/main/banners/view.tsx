@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { useState, useCallback } from 'react';
@@ -255,7 +256,17 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
               item.advertisementType === 'FIELD'
                 ? t(`LABEL.${item.advertisementType}S`)
                 : t(`LABEL.${item.advertisementType}`),
-            price: (item) => `${Math.floor(+item.price)} ${t('LABEL.SAR')}`,
+            price: (item) => (
+              <>
+                {Math.floor(+item.price)}{' '}
+                <Image
+                  src="/assets/images/sar-logo.svg"
+                  alt="sar logo"
+                  height={20}
+                  width={20}
+                />
+              </>
+            ),
             duration: (item) => `${item.duration} ${t('LABEL.DAY')}`,
             name_ar: (item) => (i18n.language === 'ar' ? item.name_ar : item.name_en),
             advertisement_status: (row: any) => (
