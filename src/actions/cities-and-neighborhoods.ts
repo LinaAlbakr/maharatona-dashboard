@@ -1,4 +1,3 @@
-import { cities } from './../_mock/map/cities';
 'use server';
 
 /* eslint-disable consistent-return */
@@ -91,7 +90,7 @@ export const fetchNeighborhoods = async ({
 export const editNeighborhoodStatus = async (neighborhood: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const res = await axiosInstance.put(
+    await axiosInstance.put(
       endpoints.citiesAndNeighborhoods.changeNeighborhoodStatus(
         neighborhood.id,
         !neighborhood.is_active
@@ -115,7 +114,7 @@ export const newCity = async (reqBody: any): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    const res = await axiosInstance.post(endpoints.citiesAndNeighborhoods.newCity, reqBody, {
+    await axiosInstance.post(endpoints.citiesAndNeighborhoods.newCity, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
@@ -132,7 +131,7 @@ export const NewNeighborhood = async (reqBody: any): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    const res = await axiosInstance.post(endpoints.citiesAndNeighborhoods.newNeighborhood, reqBody, {
+    await axiosInstance.post(endpoints.citiesAndNeighborhoods.newNeighborhood, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
@@ -146,3 +145,21 @@ export const NewNeighborhood = async (reqBody: any): Promise<any> => {
   revalidatePath('/dashboard/cities-and-neighborhoods/');
 };
 
+export const deleteCity = async (cityId: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    await axiosInstance.delete(endpoints.citiesAndNeighborhoods.deleteCity(cityId), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/cities-and-neighborhoods/`);
+};

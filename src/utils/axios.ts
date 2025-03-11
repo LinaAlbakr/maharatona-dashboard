@@ -162,6 +162,7 @@ export const endpoints = {
       `/admin-panel/update-activation-neighborhood/${cityId}/${cityStatus}`,
     newCity: '/admin-panel/create-city',
     newNeighborhood: '/admin-panel/create-neighborhood',
+    deleteCity: (cityId: string) => `/admin-panel/delete-city/${cityId}`,
   },
   banners: {
     fetch: '/admin-panel/all-advertisements',

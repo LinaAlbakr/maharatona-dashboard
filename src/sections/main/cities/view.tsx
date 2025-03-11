@@ -6,23 +6,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import {
-  Box,
-  Card,
-  Grid,
-  Button,
-  TextField,
-  Typography,
-  InputAdornment,
-} from '@mui/material';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { useTranslate } from 'src/locales';
-import { editCityStatus } from 'src/actions/cities-and-neighborhoods';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { deleteCity, editCityStatus } from 'src/actions/cities-and-neighborhoods';
 
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
@@ -47,9 +39,11 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
   const router = useRouter();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
+  const confirmDelete = useBoolean();
 
   const [selectedCity, setSelectedCity] = useState<ICenter | undefined>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
   const pathname = usePathname();
 
   useEffect(() => {
@@ -68,7 +62,6 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -103,6 +96,18 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
     }
+  };
+
+  const handleconfirmDelete = async () => {
+    const res = await deleteCity(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+        variant: 'success',
+      });
+    }
+    confirmDelete.onFalse();
   };
 
   return (
@@ -192,6 +197,15 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
               },
             },
             {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+            },
+            {
               sx: { color: 'info.dark' },
 
               label: t('LABEL.ACTIVATE'),
@@ -265,6 +279,23 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
           }}
         />
       )}
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_CITY')}
+        content={t('MESSAGE.CONFIRM_DELETE_CITY')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
+          </Button>
+        }
+      />
     </>
   );
 };

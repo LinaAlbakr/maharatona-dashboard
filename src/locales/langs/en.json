@@ -29,7 +29,8 @@
     "DEACTIVATE_BANNER": "Deactivate Banner",
     "DELETE_COURSE": "Delete Course",
     "DEACTIVATE_COURSE": "Deactivate Course",
-    "ACTIVATE_COURSE": "Activate Course"
+    "ACTIVATE_COURSE": "Activate Course",
+    "DELETE_CITY": "Delete City"
   },
   "LABEL": {
     "USER_NAME": "User Name",
@@ -337,7 +338,8 @@
     "CONFIRM_ACTIVATE_BANNER": "Are you sure you want to activate this banner",
     "CONFIRM_DELETE_COURSE": "Are you sure you want to delete this course?",
     "CONFIRM_ACTIVATE_COURSE": "Are you sure you want to activate this course?",
-    "CONFIRM_DEACTIVATE_COURSE": "Are you sure you want to deactivate this course?"
+    "CONFIRM_DEACTIVATE_COURSE": "Are you sure you want to deactivate this course?",
+    "CONFIRM_DELETE_CITY": "Are you sure you want to delete this city?"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",
