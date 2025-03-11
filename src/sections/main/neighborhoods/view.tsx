@@ -1,30 +1,26 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  Grid,
-  InputAdornment,
-  TextField,
-  Typography,
-} from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import { ICenter } from 'src/types/centers';
-import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+
+import Container from '@mui/material/Container';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useTranslate } from 'src/locales';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { deleteNeighborhood, editNeighborhoodStatus } from 'src/actions/cities-and-neighborhoods';
+
 import Iconify from 'src/components/iconify';
-import { editFieldStatus } from 'src/actions/categories';
-import { editCityStatus, editNeighborhoodStatus } from 'src/actions/cities-and-neighborhoods';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { ICenter } from 'src/types/centers';
+
 import { NewNeighborhoodDialog } from './new-neighborhood-dialog';
 
 type props = {
@@ -43,12 +39,15 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
 
-  const [selectedCity, setSelectedCity] = useState<ICenter | undefined>();
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState<ICenter | undefined>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
+  const pathname = usePathname();
+  const confirmDelete = useBoolean();
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.NAME_AR' },
@@ -59,11 +58,9 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
   const formDefaultValues = {
     name: '',
   };
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -78,11 +75,11 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   const handleConfirmActivate = async () => {
-    const res = await editNeighborhoodStatus(selectedCity);
+    const res = await editNeighborhoodStatus(selectedNeighborhood);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
@@ -93,7 +90,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
     }
   };
   const handleConfirmDeactivate = async () => {
-    const res = await editNeighborhoodStatus(selectedCity);
+    const res = await editNeighborhoodStatus(selectedNeighborhood);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
@@ -102,6 +99,18 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
       });
       confirmDeactivate.onFalse();
     }
+  };
+
+  const handleconfirmDelete = async () => {
+    const res = await deleteNeighborhood(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+        variant: 'success',
+      });
+    }
+    confirmDelete.onFalse();
   };
 
   return (
@@ -182,12 +191,21 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
           tableHead={TABLE_HEAD}
           actions={[
             {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+            },
+            {
               sx: { color: 'info.dark' },
 
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
               onClick: (item: any) => {
-                setSelectedCity(item);
+                setSelectedNeighborhood(item);
                 confirmActivate.onTrue();
               },
               hide: (row) => row.is_active === true,
@@ -197,7 +215,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
               label: t('LABEL.DEACTIVATE'),
               icon: 'streamline:synchronize-disable-solid',
               onClick: (item: any) => {
-                setSelectedCity(item);
+                setSelectedNeighborhood(item);
                 confirmDeactivate.onTrue();
               },
               hide: (row) => row.is_active === false,
@@ -244,6 +262,23 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
             }}
           >
             {t('BUTTON.DEACTIVATE')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_NEIGHBORHOOD')}
+        content={t('MESSAGE.CONFIRM_DELETE_NEIGHBORHOOD')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
           </Button>
         }
       />

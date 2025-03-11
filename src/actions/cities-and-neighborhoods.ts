@@ -163,3 +163,22 @@ export const deleteCity = async (cityId: string): Promise<any> => {
   }
   revalidatePath(`/dashboard/cities-and-neighborhoods/`);
 };
+
+export const deleteNeighborhood = async (neighborhoodId: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    await axiosInstance.delete(endpoints.citiesAndNeighborhoods.deleteNeighborhood(neighborhoodId), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/cities-and-neighborhoods/`);
+};

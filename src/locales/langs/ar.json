@@ -34,7 +34,8 @@
     "DELETE_COURSE": "حذف الدورة",
     "DEACTIVATE_COURSE": "تعطيل الدورة",
     "ACTIVATE_COURSE": "تفعيل الدورة",
-    "DELETE_CITY": "حذف المدينة"
+    "DELETE_CITY": "حذف المدينة",
+    "DELETE_NEIGHBORHOOD": "حذف الحى"
   },
   "LABEL": {
     "USER_NAME": "اسم المستخدم",
@@ -350,7 +351,8 @@
     "CONFIRM_DELETE_COURSE": "هل تريد حذف هذا الدورة؟",
     "CONFIRM_ACTIVATE_COURSE": "هل تريد تفعيل هذا الدورة؟",
     "CONFIRM_DEACTIVATE_COURSE": "هل تريد تعطيل هذا الدورة؟",
-    "CONFIRM_DELETE_CITY": "هل تريد حذف هذه المدينة؟"
+    "CONFIRM_DELETE_CITY": "هل تريد حذف هذه المدينة؟",
+    "CONFIRM_DELETE_NEIGHBORHOOD": "هل تريد حذف هذه الحي؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

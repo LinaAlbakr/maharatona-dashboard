@@ -163,6 +163,7 @@ export const endpoints = {
     newCity: '/admin-panel/create-city',
     newNeighborhood: '/admin-panel/create-neighborhood',
     deleteCity: (cityId: string) => `/admin-panel/delete-city/${cityId}`,
+    deleteNeighborhood: (id: string) => `admin-panel/delete-neighborhood/${id}`,
   },
   banners: {
     fetch: '/admin-panel/all-advertisements',
