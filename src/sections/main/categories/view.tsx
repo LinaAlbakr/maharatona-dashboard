@@ -58,6 +58,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
 
   const TABLE_HEAD = [
     { id: 'avatar', label: 'LABEL.IMAGE' },
+    { id: 'order', label: 'LABEL.ORDER' },
     { id: 'name_ar', label: 'LABEL.NAME_AR' },
     { id: 'name_en', label: 'LABEL.NAME_EN' },
     { id: 'color', label: 'LABEL.COLOR' },
@@ -255,6 +256,11 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
             name_en: (item: any) => (
               <Typography sx={{ color: !item?.is_active ? 'red' : 'inherit', fontSize: '14px' }}>
                 {item?.name_en}
+              </Typography>
+            ),
+            order: (item: any) => (
+              <Typography sx={{ color: !item?.is_active ? 'red' : 'inherit', fontSize: '14px' }}>
+                {item?.order}
               </Typography>
             ),
             avatar: (item: any) => <Avatar alt={item?.name} src={item?.avatar} />,

@@ -2,20 +2,21 @@
 
 import * as yup from 'yup';
 import { toFormData } from 'axios';
-import { useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { SketchPicker } from 'react-color';
+import { useState, useCallback } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { LoadingButton } from '@mui/lab';
 import {
+  Box,
   Stack,
   Button,
   Dialog,
   DialogTitle,
   DialogActions,
   DialogContent,
-  Box,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -24,12 +25,11 @@ import { getErrorMessage } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
 import { invalidatePath } from 'src/actions/cache-invalidation';
+import { newCategoriey, editCategoriey } from 'src/actions/categories';
 
+import { RHFUploadAvatar } from 'src/components/hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
-import { RHFUploadAvatar } from 'src/components/hook-form';
-import { SketchPicker } from 'react-color';
-import { editCategoriey, newCategoriey } from 'src/actions/categories';
 
 interface Props {
   open: boolean;
@@ -41,6 +41,7 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const [color, setColor] = useState(
+    // eslint-disable-next-line no-nested-ternary
     category?.color.charAt(0) === '#'
       ? category?.color
       : category?.color.charAt(0) !== '#'
@@ -56,6 +57,7 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
         name_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         color: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         avatar: yup.mixed<any>().nullable().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        order: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
       })
     ),
     defaultValues: {
@@ -63,6 +65,7 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
       name_en: category?.name_en || '',
       color: category?.color || '#ffffff',
       avatar: category?.avatar || null,
+      order: category?.order || undefined,
     },
   });
   const {
@@ -120,9 +123,12 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogContent style={{ height: '600px' }}>
-          <RHFUploadAvatar name="avatar"
+          <RHFUploadAvatar
+            name="avatar"
             // maxSize={3145728}
-            onDrop={handleDrop} sx={{ mb: 2 }} />
+            onDrop={handleDrop}
+            sx={{ mb: 2 }}
+          />
           <Stack
             spacing={1}
             sx={{
@@ -146,6 +152,13 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
               value={watch('name_en')}
             />
             <RHFTextField
+              name="order"
+              label={t('LABEL.ORDER')}
+              placeholder={t('LABEL.ORDER')}
+              fullWidth
+              value={watch('order')}
+            />
+            <RHFTextField
               name="color"
               label={t('color')}
               placeholder={t('color')}
@@ -164,7 +177,7 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
               <Box
                 style={{
                   backgroundColor: color,
-                  color: color,
+                  color,
                   marginInline: '5px',
                   border: '1px solid #000',
                   cursor: 'unset',
