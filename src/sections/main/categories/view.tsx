@@ -1,29 +1,35 @@
 'use client';
 
+import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+
 import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
 import {
-  Avatar,
   Box,
-  Button,
   Card,
   Grid,
-  InputAdornment,
+  Avatar,
+  Button,
   TextField,
   Typography,
+  InputAdornment,
 } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect,  useState } from 'react';
-import { ICenter } from 'src/types/centers';
-import { useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useTranslate } from 'src/locales';
+import { deleteCategory, editFieldStatus } from 'src/actions/categories';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
 import Iconify from 'src/components/iconify';
-import { editFieldStatus } from 'src/actions/categories';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { ICenter } from 'src/types/centers';
+
 import { NewEditCategoryDialog } from './new-edit-category-dialog';
 
 type props = {
@@ -40,7 +46,8 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const router = useRouter();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
-  const [selectedId, setSelectedId] = useState<string | null>();
+  const confirmDelete = useBoolean();
+  const [selectedId, setSelectedId] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<ICenter | undefined>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const pathname = usePathname();
@@ -63,7 +70,6 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -100,6 +106,17 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
     }
   };
 
+  const handleconfirmDelete = async () => {
+    const res = await deleteCategory(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+        variant: 'success',
+      });
+    }
+    confirmDelete.onFalse();
+  };
   return (
     <>
       <Container
@@ -188,6 +205,15 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
               },
             },
             {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+            },
+            {
               sx: { color: 'info.dark' },
 
               label: t('LABEL.ACTIVATE'),
@@ -211,18 +237,24 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           ]}
           customRender={{
             color: (item: any) => (
-              <Typography sx={{color: !item?.is_active  ? 'red' : 'inherit', direction: 'rtl', fontSize: '14px' }}>
+              <Typography
+                sx={{
+                  color: !item?.is_active ? 'red' : 'inherit',
+                  direction: 'rtl',
+                  fontSize: '14px',
+                }}
+              >
                 {item?.color?.charAt(0) === '#' ? item?.color : `#${item?.color}`}
               </Typography>
             ),
             name_ar: (item: any) => (
-              <Typography sx={{color: !item?.is_active  ? 'red' : 'inherit',  fontSize: '14px' }}>
-                 {item?.name_ar}
+              <Typography sx={{ color: !item?.is_active ? 'red' : 'inherit', fontSize: '14px' }}>
+                {item?.name_ar}
               </Typography>
             ),
             name_en: (item: any) => (
-              <Typography sx={{color: !item?.is_active  ? 'red' : 'inherit', fontSize: '14px' }}>
-               {item?.name_en}
+              <Typography sx={{ color: !item?.is_active ? 'red' : 'inherit', fontSize: '14px' }}>
+                {item?.name_en}
               </Typography>
             ),
             avatar: (item: any) => <Avatar alt={item?.name} src={item?.avatar} />,
@@ -274,6 +306,23 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           category={selectedCategory}
         />
       ) : null}
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_FIELD')}
+        content={t('MESSAGE.CONFIRM_DELETE_FIELD')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
+          </Button>
+        }
+      />
     </>
   );
 };

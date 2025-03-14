@@ -5,8 +5,6 @@
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
-import { paths } from 'src/routes/paths';
-
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
@@ -61,7 +59,7 @@ export const editFieldStatus = async (field: any): Promise<any> => {
 export const newCategoriey = async (reqBody: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    const res = await axiosInstance.post(endpoints.categories.new, reqBody, {
+    await axiosInstance.post(endpoints.categories.new, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/form-data',
@@ -75,7 +73,7 @@ export const newCategoriey = async (reqBody: FormData): Promise<any> => {
 export const editCategoriey = async (reqBody: FormData, id: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    const res = await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
+    await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/form-data',
@@ -85,4 +83,23 @@ export const editCategoriey = async (reqBody: FormData, id: string): Promise<any
   } catch (error) {
     throw new Error(error);
   }
+};
+
+export const deleteCategory = async (categoryId: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    await axiosInstance.delete(endpoints.categories.deleteCategory(categoryId), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/categories/`);
 };

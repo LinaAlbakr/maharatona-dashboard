@@ -352,7 +352,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
           </Button>
         }
       />
-            <ConfirmDialog
+      <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_BANNER')}
