@@ -227,30 +227,58 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             },
           ]}
           customRender={{
+            name: (item: any) => (
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>{item?.name}</Box>
+            ),
             students: (item: any) => (
-              <Box>
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
                 {`${item?.students.length} `}
                 {t('LABEL.STUDENT')}
               </Box>
             ),
             seats: (item: any) => (
-              <Box>
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
                 {`${item?.seats} `}
                 {t('LABEL.SEAT')}
               </Box>
             ),
-            field: (item: any) =>
-              i18n.language === 'ar' ? item?.field?.name : item?.field?.name_en,
-            average_rate: (item: any) => item?.average_rate.slice(0, 3),
-            start_date: (item: any) =>
-              i18n.language === 'ar' ? arabicDate(item?.start_date) : englishDate(item?.start_date),
-            end_date: (item: any) =>
-              i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date),
-            // phone: (item: any) => <Box style={{ direction: 'ltr' }}>{item?.phone}</Box>,
+            field: (item: any) => (
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
+                {' '}
+                {i18n.language === 'ar' ? item?.field?.name : item?.field?.name_en}
+              </Box>
+            ),
+            average_rate: (item: any) => (
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
+                {item?.average_rate.slice(0, 3)}
+              </Box>
+            ),
+            start_date: (item: any) => (
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
+                {i18n.language === 'ar'
+                  ? arabicDate(item?.start_date)
+                  : englishDate(item?.start_date)}
+              </Box>
+            ),
+            end_date: (item: any) => (
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
+                {i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date)}{' '}
+              </Box>
+            ),
+
             price: (item: any) => (
-              <Box>
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
                 {`${Math.round(item?.price)} `}{' '}
-                <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+                {item?.is_active ? (
+                  <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+                ) : (
+                  <Image
+                    src="/assets/images/red-sar-logo.svg"
+                    alt="sar logo"
+                    height={20}
+                    width={20}
+                  />
+                )}
               </Box>
             ),
           }}
