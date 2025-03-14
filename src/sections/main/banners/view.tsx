@@ -57,6 +57,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.PACKAGE_NAME' },
+    { id: 'order', label: 'LABEL.ORDER' },
     { id: 'advertisementType', label: 'LABEL.TYPE' },
     { id: 'duration', label: 'LABEL.DURATION' },
     { id: 'price', label: 'LABEL.PRICE' },

@@ -55,6 +55,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
         price: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         duration: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         advertisement_type: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        order: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
       })
     ),
     defaultValues: {
@@ -65,6 +66,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
       description_en: banner?.description_en || '',
       duration: banner?.duration || undefined,
       price: banner?.price || undefined,
+      order: banner?.order || undefined,
       advertisement_type: banner?.advertisementType || '',
     },
   });
@@ -188,6 +190,14 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                   </MenuItem>
                 ))}
               </RHFSelect>
+              <RHFTextField
+                minRows={10}
+                name="order"
+                label={t('LABEL.ORDER')}
+                fullWidth
+                value={watch('order')}
+                type="number"
+              />
             </Box>
           </Stack>
         </DialogContent>

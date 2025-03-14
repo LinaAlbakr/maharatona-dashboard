@@ -12,6 +12,7 @@ export type Banner = {
   center_num: number;
   advertisementType: string;
   advertisement_status: string;
+  order: number;
 };
 export type IBanner = {
   id: string;
