@@ -104,7 +104,7 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    const res = await axiosInstance.put(endpoints.banners.editBanner(bannerId), reqBody, {
+    await axiosInstance.put(endpoints.banners.editBanner(bannerId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
@@ -122,7 +122,7 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
 export const editCenterMediaStatus = async (center: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const res = await axiosInstance.put(
+    await axiosInstance.put(
       endpoints.banners.changeCenterMediaStatus(center.id, !center.is_active),
       {},
       {
@@ -157,7 +157,7 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    const res = await axiosInstance.post(endpoints.banners.addBanner, reqBody, {
+    await axiosInstance.post(endpoints.banners.addBanner, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
@@ -207,4 +207,23 @@ export const editBannerStatus = async (banner: Banner): Promise<any> => {
       error: getErrorMessage(error),
     };
   }
+};
+
+export const deleteBanner = async (bannerId: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    await axiosInstance.delete(endpoints.banners.deleteBanner(bannerId), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/banners/`);
 };

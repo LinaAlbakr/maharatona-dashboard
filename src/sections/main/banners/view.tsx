@@ -15,7 +15,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
-import { editBannerStatus } from 'src/actions/banners';
+import { deleteBanner, editBannerStatus } from 'src/actions/banners';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
 import Label from 'src/components/label';
@@ -49,9 +49,11 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const router = useRouter();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState<Banner | undefined>();
+  const [selectedId, setSelectedId] = useState<string>('');
   const upload = useBoolean();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
+  const confirmDelete = useBoolean();
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.PACKAGE_NAME' },
@@ -110,6 +112,17 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
     }
   };
 
+  const handleconfirmDelete = async () => {
+    const res = await deleteBanner(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+        variant: 'success',
+      });
+    }
+    confirmDelete.onFalse();
+  };
   return (
     <>
       <Container
@@ -230,6 +243,15 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
               },
             },
             {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+            },
+            {
               sx: { color: 'info.dark' },
 
               label: t('LABEL.ACTIVATE'),
@@ -259,12 +281,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
             price: (item) => (
               <>
                 {Math.floor(+item.price)}{' '}
-                <Image
-                  src="/assets/images/sar-logo.svg"
-                  alt="sar logo"
-                  height={20}
-                  width={20}
-                />
+                <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
               </>
             ),
             duration: (item) => `${item.duration} ${t('LABEL.DAY')}`,
@@ -332,6 +349,23 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
             }}
           >
             {t('BUTTON.DEACTIVATE')}
+          </Button>
+        }
+      />
+            <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_BANNER')}
+        content={t('MESSAGE.CONFIRM_DELETE_BANNER')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
           </Button>
         }
       />

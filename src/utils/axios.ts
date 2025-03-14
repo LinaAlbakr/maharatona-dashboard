@@ -178,5 +178,6 @@ export const endpoints = {
     addBanner: '/admin-panel/admin-buy-advertisement',
     deletebannerCenters: (bannerId: string) =>
       `/admin-panel/delete-advertisement-center/${bannerId}`,
+    deleteBanner: (bannerId: string) => `/admin-panel/delete-advertisement/${bannerId}`,
   },
 };
