@@ -1,25 +1,29 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { paths } from 'src/routes/paths';
-import i18n from 'src/locales/i18n';
-import { set } from 'lodash';
-import Iconify from 'src/components/iconify';
-import { arabicDate, englishDate } from 'src/utils/format-time';
-import { CategoryQuestion } from 'src/types/faq';
-import { NewEditQuestionDialog } from './new-edit-question-dialog';
-import { useBoolean } from 'src/hooks/use-boolean';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { useState, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+
+import Container from '@mui/material/Container';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import i18n from 'src/locales/i18n';
+import { useTranslate } from 'src/locales';
 import { deleteQuestion } from 'src/actions/faq';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
+import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
+import { CategoryQuestion } from 'src/types/faq';
+
+import { NewEditQuestionDialog } from './new-edit-question-dialog';
+
 type props = {
   count: number;
   questions: CategoryQuestion[];
@@ -39,6 +43,7 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
 
   const TABLE_HEAD = [
     { id: 'question_ar', label: 'LABEL.QUESTION_NAME' },
+    { id: 'order', label: 'LABEL.ORDER' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -50,7 +55,6 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -65,7 +69,7 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
 
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   const handleConfirmDelete = async () => {

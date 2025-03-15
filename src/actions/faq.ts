@@ -41,7 +41,6 @@ export const fetchFaqCategories = async ({
 export const deleteFaqCategory = async (categoryId: string): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const lang = cookies().get('Language')?.value;
 
     const res = await axiosInstance.delete(endpoints.faq.deleteCategory(categoryId), {
       headers: {
@@ -59,7 +58,7 @@ export const deleteFaqCategory = async (categoryId: string): Promise<any> => {
 
 export const newFaqCategory = async (reqBody: any): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
-  const lang = cookies().get('Language')?.value;
+
   try {
     await axiosInstance.post(endpoints.faq.newCategory, reqBody, {
       headers: {
@@ -76,9 +75,8 @@ export const newFaqCategory = async (reqBody: any): Promise<any> => {
 
 export const editFaqCategory = async (reqBody: any, categoryId: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
-  const lang = cookies().get('Language')?.value;
   try {
-    const res = await axiosInstance.put(endpoints.faq.editCategory(categoryId), reqBody, {
+    await axiosInstance.put(endpoints.faq.editCategory(categoryId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -137,13 +135,13 @@ export const editQuestion = async (reqBody: any, questionId: string): Promise<an
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    const res = await axiosInstance.put(endpoints.faq.editCategory(questionId), reqBody, {
+    await axiosInstance.put(endpoints.faq.editCategory(questionId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
       },
     });
-    revalidatePath(paths.dashboard.faq);
+    revalidatePath(`${paths.dashboard.faq}/${reqBody.faq_category_id}`);
   } catch (error) {
     return {
       error: getErrorMessage(error),

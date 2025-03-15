@@ -1,7 +1,6 @@
 'use client';
 
 import * as yup from 'yup';
-
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,13 +13,13 @@ import { paths } from 'src/routes/paths';
 import { getErrorMessage } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-
+import { newQuestion, editQuestion } from 'src/actions/faq';
 import { invalidatePath } from 'src/actions/cache-invalidation';
 
+import { RHFTextarea } from 'src/components/hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
-import { editQuestion, newQuestion } from 'src/actions/faq';
-import { RHFTextarea } from 'src/components/hook-form';
+
 import { CategoryQuestion } from 'src/types/faq';
 
 interface Props {
@@ -40,6 +39,7 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
         question_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         answer_ar: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         answer_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        order: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
       })
     ),
     defaultValues: {
@@ -47,6 +47,7 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
       question_en: item?.question_en || '',
       answer_ar: item?.answer_ar || '',
       answer_en: item?.answer_en || '',
+      order: item?.order || 1,
     },
   });
   const {
@@ -56,6 +57,8 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
+
     const reqBody = {
       ...data,
       faq_category_id: categoryId,
@@ -126,6 +129,7 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
               fullWidth
               value={watch('answer_en')}
             />
+            <RHFTextField name="order" label={t('LABEL.ORDER')} fullWidth value={watch('order')} />
           </Stack>
         </DialogContent>
 

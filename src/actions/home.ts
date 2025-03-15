@@ -5,7 +5,7 @@
 import { cookies } from 'next/headers';
 import { getCookie } from 'cookies-next';
 
-import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
+import axiosInstance, { endpoints } from 'src/utils/axios';
 
 export const fetchPriceProfit = async (): Promise<any> => {
   const accessToken = getCookie('access_token', { cookies });
@@ -44,7 +44,8 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
     });
     return res?.data;
   } catch (error) {
-    throw new Error(error);
+    console.error(error);
+    return error;
   }
 };
 
