@@ -1,24 +1,30 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { useState, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useBoolean } from 'src/hooks/use-boolean';
+import Container from '@mui/material/Container';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import Iconify from 'src/components/iconify';
-import { NewEditFaqCategoryDialog } from './new-edit-faq-category-dialog';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import i18n from 'src/locales/i18n';
+import { useTranslate } from 'src/locales';
 import { deleteFaqCategory } from 'src/actions/faq';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
+import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
 import { FaqCategory } from 'src/types/faq';
+
+import { NewEditFaqCategoryDialog } from './new-edit-faq-category-dialog';
 
 type props = {
   categories: FaqCategory[];
@@ -40,6 +46,7 @@ const FaqView = ({ count, categories }: Readonly<props>) => {
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.NAME' },
+    { id: 'order', label: 'LABEL.ORDER' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -51,7 +58,6 @@ const FaqView = ({ count, categories }: Readonly<props>) => {
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -64,7 +70,7 @@ const FaqView = ({ count, categories }: Readonly<props>) => {
       }
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   const handleConfirmDelete = async () => {

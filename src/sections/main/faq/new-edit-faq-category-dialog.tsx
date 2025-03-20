@@ -1,7 +1,6 @@
 'use client';
 
 import * as yup from 'yup';
-
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,13 +13,11 @@ import { paths } from 'src/routes/paths';
 import { getErrorMessage } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-
 import { invalidatePath } from 'src/actions/cache-invalidation';
+import { newFaqCategory, editFaqCategory } from 'src/actions/faq';
 
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
-import { editReason, newReason } from 'src/actions/support';
-import { editFaqCategory, newFaqCategory } from 'src/actions/faq';
 
 interface Props {
   open: boolean;
@@ -36,11 +33,13 @@ export function NewEditFaqCategoryDialog({ open, onClose, item }: Props) {
       yup.object().shape({
         name_ar: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         name_en: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        order: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
       })
     ),
     defaultValues: {
       name_ar: item?.name_ar || '',
       name_en: item?.name_en || '',
+      order: item?.order || undefined,
     },
   });
   const {
@@ -98,6 +97,13 @@ export function NewEditFaqCategoryDialog({ open, onClose, item }: Props) {
               placeholder={t('PLACEHOLDER.CATEGORY_NAME_IN_ENGLISH')}
               fullWidth
               value={watch('name_en')}
+            />
+            <RHFTextField
+              name="order"
+              label={t('LABEL.ORDER')}
+              fullWidth
+              type='number'
+              value={watch('order')}
             />
           </Stack>
         </DialogContent>
