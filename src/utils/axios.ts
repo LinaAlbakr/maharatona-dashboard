@@ -93,6 +93,7 @@ export const endpoints = {
     changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
     deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
     clearWallet: (centerId: string) => `/admin-panel/clearing-the-center-wallet/${centerId}`,
+    deleteCenter: (centerId: string) => `/admin-panel/center/${centerId}`,
   },
   courses: {
     fetch: '/admin-panel/all-courses',
@@ -109,6 +110,7 @@ export const endpoints = {
     changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
     courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
     children: (clientId: string) => `/admin-panel/client/${clientId}/children`,
+    delete: (clientId: string) => `/admin-panel/client/${clientId}`,
   },
   notifications: {
     send: '/notification/send-to-users',

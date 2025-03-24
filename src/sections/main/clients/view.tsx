@@ -1,24 +1,30 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
-import { ICenter } from 'src/types/centers';
-import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useBoolean } from 'src/hooks/use-boolean';
+import Container from '@mui/material/Container';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import { changeClientStatus } from 'src/actions/clients';
-import SendNotification from './client-details/components/send-notification';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useTranslate } from 'src/locales';
+import { deleteClient, changeClientStatus } from 'src/actions/clients';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+
 import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
+
+import { ICenter } from 'src/types/centers';
+
+import SendNotification from './client-details/components/send-notification';
 
 type props = {
   clients: any[];
@@ -36,13 +42,15 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const router = useRouter();
   const confirmBlock = useBoolean();
   const confirmUnblock = useBoolean();
-  const [selectedId, setSelectedId] = useState<string | null>();
+  const confirmDelete = useBoolean();
+  const [selectedId, setSelectedId] = useState<string >("");
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
+  const pathname = usePathname();
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
   const city = searchParams?.get('city');
   const field = searchParams?.get('field');
 
@@ -62,7 +70,6 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
     field: { id: field },
   };
 
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -111,6 +118,17 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
     }
     confirmUnblock.onFalse();
   };
+    const handleconfirmDelete = async () => {
+      const res = await deleteClient(selectedId);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+          variant: 'success',
+        });
+      }
+      confirmDelete.onFalse();
+    };
 
   return (
     <>
@@ -204,6 +222,15 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               icon: 'lets-icons:view',
               onClick: (item) => {
                 router.push(`${paths.dashboard.clients}/${item.id}`);
+              },
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'material-symbols:delete-outline-rounded',
+              onClick: (item: any) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
             },
             {
@@ -310,6 +337,23 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             }}
           >
             {t('BUTTON.UNBLOCK')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_CLIENT')}
+        content={t('MESSAGE.CONFIRM_DELETE_CLIENT')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
           </Button>
         }
       />

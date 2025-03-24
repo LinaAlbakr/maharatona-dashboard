@@ -1,11 +1,11 @@
 'use server';
 
+/* eslint-disable @typescript-eslint/default-param-last */
+
 /* eslint-disable consistent-return */
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-
-import { paths } from 'src/routes/paths';
 
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
@@ -14,7 +14,7 @@ interface IParams {
   limit: number;
   city_id?: string;
   by_client_field_ids?: string;
-  by_name?:string;
+  by_name?: string;
 
   sort?: 'order_by' | 'new';
 }
@@ -33,8 +33,8 @@ export const fetchClients = async ({
         page,
         limit,
         by_city_id: city_id,
-        by_client_field_ids: by_client_field_ids ? by_client_field_ids : null,
-        by_name:by_name,
+        by_client_field_ids: by_client_field_ids || null,
+        by_name,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
@@ -137,4 +137,23 @@ export const fetchClientChildren = async (
   } catch (error) {
     throw new Error(error);
   }
+};
+
+export const deleteClient = async (id: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    await axiosInstance.delete(endpoints.clients.delete(id), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/clients/`);
 };

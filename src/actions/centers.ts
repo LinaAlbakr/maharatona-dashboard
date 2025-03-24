@@ -26,9 +26,8 @@ export const fetchCenters = async ({
   city_id = '',
   neighborhood_id = '',
 }: IParams): Promise<any> => {
-
-  const accessToken = getCookie('access_token',{cookies});
-  const lang = getCookie('Language',{cookies});
+  const accessToken = getCookie('access_token', { cookies });
+  const lang = getCookie('Language', { cookies });
 
   try {
     const res = await axiosInstance.get(endpoints.centers.fetch, {
@@ -185,4 +184,23 @@ export const clearWallet = async (centerId: any): Promise<any> => {
       error: getErrorMessage(error),
     };
   }
+};
+
+export const deleteCenter = async (id: string): Promise<any> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+
+    await axiosInstance.delete(endpoints.centers.deleteCenter(id), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+  revalidatePath(`/dashboard/centers/`);
 };

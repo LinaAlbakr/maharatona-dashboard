@@ -1,24 +1,30 @@
 'use client';
 
-import Container from '@mui/material/Container';
-import { useTranslate } from 'src/locales';
-import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
-import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect, useState } from 'react';
-import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
-import { ICenter } from 'src/types/centers';
-import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useBoolean } from 'src/hooks/use-boolean';
+import Container from '@mui/material/Container';
+import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
-import SendNotification from './center-details/components/send-notification';
-import { changeCenterStatus, clearWallet } from 'src/actions/centers';
+
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useTranslate } from 'src/locales';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { clearWallet, deleteCenter, changeCenterStatus } from 'src/actions/centers';
+
 import Iconify from 'src/components/iconify';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
+
+import { ICenter } from 'src/types/centers';
+
+import SendNotification from './center-details/components/send-notification';
 
 type props = {
   centers: ICenter[];
@@ -36,14 +42,16 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const router = useRouter();
   const confirmBlock = useBoolean();
   const confirmUnblock = useBoolean();
+  const confirmDelete = useBoolean();
   const confirmClearWallet = useBoolean();
-  const [selectedId, setSelectedId] = useState<string | null>();
+  const [selectedId, setSelectedId] = useState<string>('');
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
+  const pathname = usePathname();
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
   const city = searchParams?.get('city');
   const neighborhood = searchParams?.get('neighborhood');
 
@@ -64,7 +72,6 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     neighborhood: { id: neighborhood },
   };
 
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -122,7 +129,17 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       confirmClearWallet.onFalse();
     }
   };
-
+  const handleconfirmDelete = async () => {
+    const res = await deleteCenter(selectedId);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+        variant: 'success',
+      });
+    }
+    confirmDelete.onFalse();
+  };
   return (
     <>
       <Container
@@ -216,6 +233,15 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               icon: 'lets-icons:view',
               onClick: (item) => {
                 router.push(`${paths.dashboard.centers}/${item.id}`);
+              },
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'material-symbols:delete-outline-rounded',
+              onClick: (item: any) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
             },
             {
@@ -356,6 +382,23 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         action={
           <Button variant="contained" color="error" onClick={() => handleConfirmClearWallet()}>
             {t('BUTTON.CLEAR')}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_CENTER')}
+        content={t('MESSAGE.CONFIRM_DELETE_CENTER')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleconfirmDelete();
+            }}
+          >
+            {t('BUTTON.DELETE')}
           </Button>
         }
       />
