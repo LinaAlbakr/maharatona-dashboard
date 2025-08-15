@@ -1,4 +1,5 @@
 'use client';
+
 import { useTranslate } from 'src/locales';
 import { Avatar,  Card, Typography } from '@mui/material';
 
@@ -31,7 +32,7 @@ const TopCoursesTableView = ({ count, courses }: Readonly<props>) => {
         tableHead={TABLE_HEAD}
         customRender={{
           logo_url: (item: any) => <Avatar alt={item?.name} src={item?.logo_url} />,
-          field: (item: any) => (i18n.language === 'ar' ? item?.field?.name : item?.field?.name_en),
+          field: (item: any) => (i18n.language === 'ar' ? item?.field?.name : item?.field?.name),
         }}
         headColor="primary.common"
       />

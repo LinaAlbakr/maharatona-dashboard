@@ -33,6 +33,7 @@ type props = {
 };
 
 const CoursesView = ({ count, courses }: Readonly<props>) => {
+  console.log('courses', courses);
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const searchParams = useSearchParams();
@@ -139,6 +140,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           }}
         >
           <Typography variant="h3" color="white">
+          
             {t('LABEL.EDUCATIONAL_COURSES')}
           </Typography>
           <Grid
@@ -245,7 +247,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             field: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
                 {' '}
-                {i18n.language === 'ar' ? item?.field?.name : item?.field?.name_en}
+                {i18n.language === 'ar' ? item?.field?.name : item?.field?.name}
               </Box>
             ),
             average_rate: (item: any) => (
