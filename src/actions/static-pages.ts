@@ -34,6 +34,7 @@ export const editStaticPage = async (data: FormData): Promise<any> => {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return res?.data;
   } catch (error) {
     throw new Error(error);
   }
