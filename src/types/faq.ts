@@ -2,6 +2,7 @@ export type FaqCategory = {
   id: string;
   name_ar: string;
   name_en: string;
+  created_for: string;
 };
 export type CategoryQuestion = {
   id: string;
@@ -14,5 +15,6 @@ export type CategoryQuestion = {
     id: string;
     name_ar: string;
     name_en: string;
+     created_for: string;
   };
 };

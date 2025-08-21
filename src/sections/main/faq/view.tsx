@@ -6,8 +6,7 @@ import { useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Card, Grid, Button, TextField, Typography, InputAdornment, Tab, Stack, Tabs } from '@mui/material';
+import {Tab, Tabs, Box, Card, Grid, Button, TextField,  Typography,    InputAdornment} from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -16,7 +15,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
 import { deleteFaqCategory } from 'src/actions/faq';
-import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import SharedTableFaq from 'src/CustomSharedComponents/SharedTableFaq/SharedTableFaq';
 
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
@@ -27,6 +26,7 @@ import { FaqCategory } from 'src/types/faq';
 
 import { NewEditFaqCategoryDialog } from './new-edit-faq-category-dialog';
 
+
 export enum SubscriberType {
   client = 'client',
   center = 'center',
@@ -34,7 +34,10 @@ export enum SubscriberType {
 
 type props = {
   categories: FaqCategory[];
+  categoriesCenter: FaqCategory[];
   count: number;
+  meta: any;
+  metaCenter: any;
 };
 
 interface TabPanelProps {
@@ -43,7 +46,7 @@ interface TabPanelProps {
   value: number;
 }
 
-const FaqView = ({ count, categories }: Readonly<props>) => {
+const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -171,31 +174,57 @@ const FaqView = ({ count, categories }: Readonly<props>) => {
                 />
               </FormProvider>
             </Card>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs">
-              <Tab label="Student" />
-              <Tab label="Center" />
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs" sx={{
+              borderRadius: '2rem',
+              '& .MuiTabs-indicator': {
+                height: '100%',
+                backgroundColor: 'primary',
+                borderRadius: '2rem',
+              },
+              backgroundColor: 'primary.contrastText',
+            }}>
+              <Tab label={t('LABEL.STUDENT')} sx={{
+                color: 'primary.contrastText',
+                position: 'relative',
+                zIndex: 1,
+                px: 4,
+                m: '0 !important',
+              }} />
+              <Tab label={t('LABEL.CENTER')} sx={{
+                color: 'primary.contrastText',
+                position: 'relative',
+                zIndex: 1,
+                px: 4,
+              }} />
             </Tabs>
-            {/* <Button
-              variant="contained"
-              sx={{
-                px: 8,
-                py: 2,
-                bgcolor: 'white',
-                borderRadius: 4,
-                color: 'primary.main',
-                '&:hover': { bgcolor: 'primary.main', color: 'white' },
-              }}
-              onClick={() => {
-                setIsFormDialogOpen(true);
-              }}
-            >
-              {t('BUTTON.ADD_CATEGORY')}{' '}
-            </Button> */}
           </Grid>
         </Box>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}
+        >
+          <Button
+            variant="outlined"
+            size='large'
+            sx={{
+              // px: 6,
+              // py: 2,
+              bgcolor: 'white',
+              borderRadius: 1,
+              color: 'primary.main',
+              '&:hover': { bgcolor: 'primary.main', color: 'white' },
+            }}
+            onClick={() => {
+              setIsFormDialogOpen(true);
+            }}
+          >
+         {t('BUTTON.ADD_CATEGORY')}{' '}
+          </Button>
+        </Box>
+
         <TabPanel value={value} index={0}>
-          <SharedTable
-            count={count}
+          <SharedTableFaq
+            meta={meta}
+            count={categories.length}
             data={categories}
             tableHead={TABLE_HEAD}
             actions={[
@@ -231,7 +260,45 @@ const FaqView = ({ count, categories }: Readonly<props>) => {
             }}
           />
         </TabPanel>
-
+        <TabPanel value={value} index={1}>
+          <SharedTableFaq
+            meta={metaCenter}
+            count={categoriesCenter.length}
+            data={categoriesCenter}
+            tableHead={TABLE_HEAD}
+            actions={[
+              {
+                sx: { color: 'info.dark' },
+                label: t('LABEL.VIEW'),
+                icon: 'lets-icons:view',
+                onClick: (item) => {
+                  router.push(`${paths.dashboard.faq}/${item.id}`);
+                },
+              },
+              {
+                sx: { color: 'error.dark' },
+                label: t('LABEL.DELETE'),
+                icon: 'eva:trash-2-outline',
+                onClick: (item: any) => {
+                  setSelectedId(item.id);
+                  confirmBlock.onTrue();
+                },
+              },
+              {
+                sx: { color: 'info.dark' },
+                label: t('LABEL.EDIT'),
+                icon: 'material-symbols:edit',
+                onClick: (item) => {
+                  setSelectedCategory(item);
+                  setIsFormDialogOpen(true);
+                },
+              },
+            ]}
+            customRender={{
+              name_ar: (item: any) => (i18n.language === 'ar' ? item?.name_ar : item?.name_en),
+            }}
+          />
+        </TabPanel>
       </Container>
       <ConfirmDialog
         open={confirmBlock.value}
@@ -253,6 +320,7 @@ const FaqView = ({ count, categories }: Readonly<props>) => {
       {isFormDialogOpen && (
         <NewEditFaqCategoryDialog
           open={isFormDialogOpen}
+          value={value}
           onClose={() => {
             setSelectedCategory(undefined);
             setIsFormDialogOpen(false);

@@ -1,1 +1,1 @@
-export const tableRowsPerPageOptions = [5, 10, 25];
+export const tableRowsPerPageOptions = [10];

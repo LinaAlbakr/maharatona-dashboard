@@ -23,9 +23,10 @@ interface Props {
   open: boolean;
   onClose: () => void;
   item?: any | null;
+  value?: number;
 }
 
-export function NewEditFaqCategoryDialog({ open, onClose, item }: Props) {
+export function NewEditFaqCategoryDialog({ open, onClose, item, value }: Props) {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const methods = useForm({
@@ -51,14 +52,23 @@ export function NewEditFaqCategoryDialog({ open, onClose, item }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (item) {
-        const res = await editFaqCategory(data, item.id);
+         const payload = {
+          ...data,
+          created_for: value === 0 ? 'student' : 'center',
+        };
+        const res = await editFaqCategory(payload, item.id);
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });
         } else {
           enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
         }
       } else {
-        const res = await newFaqCategory(data);
+        const payload = {
+          ...data,
+          created_for: value === 0 ? 'student' : 'center',
+        };
+        const res = await newFaqCategory(payload);
+        console.log('res', res);
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });
         } else {
