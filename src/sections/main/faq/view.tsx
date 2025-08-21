@@ -211,7 +211,7 @@ const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Read
               bgcolor: 'white',
               borderRadius: 1,
               color: 'primary.main',
-              '&:hover': { bgcolor: 'primary.main', color: 'white' },
+              // '&:hover': { bgcolor: 'primary.main', color: 'white' },
             }}
             onClick={() => {
               setIsFormDialogOpen(true);
