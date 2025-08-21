@@ -5,14 +5,14 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import { SharedTableRowProps, SxStyle } from './types';
+import { SharedTableRowPropsFaq, SxStyle } from './types';
 
 export default function SharedTableRowFaq<T extends { id: string }>({
   row,
   actions,
   customRender,
   headIds,
-}: SharedTableRowProps<T>) {
+}: SharedTableRowPropsFaq<T>) {
   let rowStyle: SxStyle = {};
 
   if (Object.hasOwn(row, 'rowSx')) {
