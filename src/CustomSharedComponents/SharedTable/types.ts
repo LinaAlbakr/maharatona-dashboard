@@ -24,7 +24,7 @@ export type Action<T> = {
 export interface SharedTableProps<T> {
   tableHead: headCellType[];
   data: T[];
-  meta:{itemCount: number,page: number, limit: number, take: number};
+  // meta:{itemCount: number,page: number, limit: number, take: number};
   actions?: Action<T>[];
   disablePagination?: boolean;
   customRender?: Partial<Record<keyof T, (row: T) => ReactNode>>;

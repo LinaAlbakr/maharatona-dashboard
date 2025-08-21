@@ -12,7 +12,7 @@ import { useTranslate } from 'src/locales';
 import Scrollbar from 'src/components/scrollbar';
 
 import useTable from './use-table';
-import { SharedTableProps } from './types';
+import { SharedTablePropsFag } from './types';
 import TableHeadCustomFaq from './table-head-custom-faq';
 import SharedTableRowFaq from './SharedTableRowFaq';
 import TableNoDataFaq from './table-no-data-faq';
@@ -27,7 +27,7 @@ export default function SharedTableFaq<T extends { id: string }>({
   customRender,
   count,
   headColor,
-}: SharedTableProps<T>) {
+}: SharedTablePropsFag<T>) {
   console.log('data', data);
   const table = useTable();
   const searchParams = useSearchParams();

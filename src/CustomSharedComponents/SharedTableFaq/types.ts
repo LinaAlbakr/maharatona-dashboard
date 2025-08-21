@@ -21,7 +21,7 @@ export type Action<T> = {
   onClick: (row: T) => void;
   hide?: (row: T) => Boolean;
 };
-export interface SharedTableProps<T> {
+export interface SharedTablePropsFag<T> {
   tableHead: headCellType[];
   data: T[];
   meta:{itemCount: number,page: number, limit: number, take: number};
@@ -31,7 +31,7 @@ export interface SharedTableProps<T> {
   count: number;
   headColor?: string;
 }
-export interface SharedTableRowProps<T> {
+export interface SharedTableRowPropsFaq<T> {
   row: T;
   actions?: Action<T>[];
   customRender?: Partial<Record<keyof T, (row: T) => ReactNode>>;
