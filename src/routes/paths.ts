@@ -40,6 +40,7 @@ export const paths = {
       privacyPolicy: `${ROOTS.DASHBOARD}/pages/privacy-policy`,
       termsAndConditions: `${ROOTS.DASHBOARD}/pages/terms-and-conditions`,
       homeScreen: `${ROOTS.DASHBOARD}/pages/home-screen`,
+      contractPage: `${ROOTS.DASHBOARD}/pages/contract-page`,
     },
     faq: `${ROOTS.DASHBOARD}/faq`,
     citiesAndNeighborhoods: `${ROOTS.DASHBOARD}/cities-and-neighborhoods`,

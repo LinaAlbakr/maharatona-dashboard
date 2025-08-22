@@ -1,29 +1,27 @@
 'use client';
 
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { editStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
-import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import { StaticPage } from 'src/types/static-pages';
 
 interface IProps {
-  privacyPolicy: StaticPage;
+  ContractCenter: StaticPage;
 }
 
-const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
-  const settings = useSettingsContext();
+const ContractCenterView = ({ ContractCenter }: IProps) => {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = {
-    content_ar: privacyPolicy.content_ar || '',
-    content_en: privacyPolicy.content_en || '',
+    content_ar: ContractCenter.content_ar || '',
+    content_en: ContractCenter.content_en || '',
   };
   const methods = useForm({
     defaultValues,
@@ -39,10 +37,12 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
       ...data,
       content_ar: data.content_ar.replace('"', '\n"'),
       content_en: data.content_en.replace('"', '\n"'),
-      static_page_type: 'PRIVACY_POLICY',
+      static_page_type: 'CONTRACT_PAGE_CENTER',
     };
+
     const formData = new FormData();
     toFormData(reqBody, formData);
+
     const res = await editStaticPage(formData);
 
     if (res?.error) {
@@ -55,29 +55,7 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
   });
 
   return (
-    <Container
-      maxWidth={settings.themeStretch ? false : 'xl'}
-      sx={{ margin: '0px !important', padding: '0px !important', bgcolor: '#FAFAFA' }}
-    >
-      <Box
-        sx={{
-          width: '100%',
-          backgroundImage: `url(/assets/images/pages/privacy-policy.jpg)`,
-          height: '200px',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          p: 0,
-          boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography variant="h2" color="white">
-          {t('LABEL.PRIVACY_POLICY')}
-        </Typography>
-      </Box>
+ 
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Card
           sx={{
@@ -132,8 +110,7 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
           </CardActions>
         </Card>
       </FormProvider>
-    </Container>
   );
 };
 
-export default PrivacyPolicyView;
+export default ContractCenterView;

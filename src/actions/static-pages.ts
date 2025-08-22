@@ -14,6 +14,7 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
+
   try {
     const res = await axiosInstance.get(endpoints.staticPage.fetch(type), {
       params: { static_page_type: type },
@@ -28,14 +29,15 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
 export const editStaticPage = async (data: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-  const res=   await axiosInstance.patch(endpoints.staticPage.edit, data, {
+    const res = await axiosInstance.patch(endpoints.staticPage.edit, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/form-data',
       },
     });
     return res?.data;
-  } catch (error) {
+  } catch (error: any) {
+    console.log('error', error);
     throw new Error(error);
   }
 };
