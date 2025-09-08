@@ -1,17 +1,22 @@
 'use client';
 
-import { Box, Card, Container, Divider, ListItemText, Rating, Typography } from '@mui/material';
 import Image from 'next/image';
+
+import { Box, Card, Rating, Divider, Container, Typography, ListItemText } from '@mui/material';
+
+import i18n from 'src/locales/i18n';
+import { useTranslate } from 'src/locales';
+
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
-import { useTranslate } from 'src/locales';
-import i18n from 'src/locales/i18n';
+
 type Props = {
   CenterInfo: any;
 };
 const AllInformation = ({ CenterInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
+  console.log("CenterInfo", CenterInfo);
 
   return (
     <Container
@@ -71,7 +76,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
                 rel="noopener noreferrer"
               >
                 {t('LABEL.CENTER_LOCATION')}{' '}
-                <Iconify width={12} icon="pajamas:earth" color={'info.dark'} />
+                <Iconify width={12} icon="pajamas:earth" color="info.dark" />
               </a>
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
@@ -87,6 +92,18 @@ const AllInformation = ({ CenterInfo }: Props) => {
               textAlign: 'left',
             }}
           />
+           <ListItemText
+            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            primary={t('LABEL.EMAIL')}
+            secondary={CenterInfo?.email}
+            secondaryTypographyProps={{
+              color: 'info.dark',
+              fontSize: '12px',
+              dir: 'ltr',
+              textAlign: 'left',
+            }}
+          />
+          
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.COURSES_NUMBER')}
@@ -103,9 +120,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.FIELDS')}
             secondary={CenterInfo?.center_fields
-              .map((field: any) => {
-                return i18n.language === 'ar' ? field.field.name_ar : field.field.name_en;
-              })
+              .map((field: any) => i18n.language === 'ar' ? field.field.name_ar : field.field.name_en)
               .join(', ')}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
