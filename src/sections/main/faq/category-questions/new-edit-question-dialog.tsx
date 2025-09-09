@@ -57,7 +57,6 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
 
     const reqBody = {
       ...data,

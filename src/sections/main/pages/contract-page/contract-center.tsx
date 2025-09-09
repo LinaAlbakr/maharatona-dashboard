@@ -55,61 +55,61 @@ const ContractCenterView = ({ ContractCenter }: IProps) => {
   });
 
   return (
- 
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Card
+
+    <FormProvider methods={methods} onSubmit={onSubmit}>
+      <Card
+        sx={{
+          p: 4,
+          borderRadius: 0,
+        }}
+      >
+        <CardContent sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+          <Box>
+            <Typography variant="h4" color="info.dark" marginBlock={1}>
+              {t('LABEL.ARABIC_CONTENT')}
+            </Typography>
+            <RHFEditor
+              name="content_ar"
+              sx={{
+                '& .ql-editor': {
+                  minHeight: '200px',
+                },
+              }}
+            />{' '}
+          </Box>
+          <Box>
+            <Typography variant="h4" color="info.dark" marginBlock={1}>
+              {t('LABEL.ENGLISH_CONTENT')}
+            </Typography>
+            <RHFEditor
+              name="content_en"
+              sx={{
+                '& .ql-editor': {
+                  minHeight: '200px',
+                },
+              }}
+            />
+          </Box>
+        </CardContent>
+        <CardActions
           sx={{
-            p: 4,
-            borderRadius: 0,
+            alignItems: 'center',
+            justifyContent: 'flex-end',
           }}
         >
-          <CardContent sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
-            <Box>
-              <Typography variant="h4" color="info.dark" marginBlock={1}>
-                {t('LABEL.ARABIC_CONTENT')}
-              </Typography>
-              <RHFEditor
-                name="content_ar"
-                sx={{
-                  '& .ql-editor': {
-                    minHeight: '200px',
-                  },
-                }}
-              />{' '}
-            </Box>
-            <Box>
-              <Typography variant="h4" color="info.dark" marginBlock={1}>
-                {t('LABEL.ENGLISH_CONTENT')}
-              </Typography>
-              <RHFEditor
-                name="content_en"
-                sx={{
-                  '& .ql-editor': {
-                    minHeight: '200px',
-                  },
-                }}
-              />
-            </Box>
-          </CardContent>
-          <CardActions
+          <LoadingButton
+            type="submit"
+            loading={isSubmitting}
             sx={{
-              alignItems: 'center',
-              justifyContent: 'flex-end',
+              color: 'primary.contrastText',
+              backgroundColor: 'secondary.main',
             }}
           >
-            <LoadingButton
-              type="submit"
-              loading={isSubmitting}
-              sx={{
-                color: 'primary.contrastText',
-                backgroundColor: 'secondary.main',
-              }}
-            >
-              {t('BUTTON.PUBLISH')}
-            </LoadingButton>
-          </CardActions>
-        </Card>
-      </FormProvider>
+            {t('BUTTON.PUBLISH')}
+          </LoadingButton>
+        </CardActions>
+      </Card>
+    </FormProvider>
   );
 };
 

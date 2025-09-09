@@ -68,7 +68,6 @@ export function NewEditFaqCategoryDialog({ open, onClose, item, value }: Props) 
           created_for: value === 0 ? 'student' : 'center',
         };
         const res = await newFaqCategory(payload);
-        console.log('res', res);
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });
         } else {

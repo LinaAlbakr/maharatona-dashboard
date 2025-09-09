@@ -21,8 +21,7 @@ type IProps = {
   aboutCenter: StaticPage;
 };
 const AboutAppView = ({ aboutClient, aboutCenter }: IProps) => {
-  console.log('aboutClient', aboutClient);
-  console.log('aboutCenter', aboutCenter);
+
   const settings = useSettingsContext();
   const { t } = useTranslate();
 

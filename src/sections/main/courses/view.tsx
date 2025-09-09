@@ -33,7 +33,6 @@ type props = {
 };
 
 const CoursesView = ({ count, courses }: Readonly<props>) => {
-  console.log('courses', courses);
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const searchParams = useSearchParams();

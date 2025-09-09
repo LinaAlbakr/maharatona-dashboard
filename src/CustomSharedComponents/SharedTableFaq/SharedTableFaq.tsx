@@ -28,7 +28,6 @@ export default function SharedTableFaq<T extends { id: string }>({
   count,
   headColor,
 }: SharedTablePropsFag<T>) {
-  console.log('data', data);
   const table = useTable();
   const searchParams = useSearchParams();
   const { t } = useTranslate();

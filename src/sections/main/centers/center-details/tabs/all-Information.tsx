@@ -16,7 +16,6 @@ type Props = {
 const AllInformation = ({ CenterInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
-  console.log("CenterInfo", CenterInfo);
 
   return (
     <Container
