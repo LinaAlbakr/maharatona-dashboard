@@ -1,9 +1,10 @@
 'use client';
 
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Container, Tab, Tabs, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { editStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
@@ -13,43 +14,70 @@ import { useTranslate } from 'src/locales';
 import { StaticPage } from 'src/types/static-pages';
 
 interface IProps {
-  termsAndConditions: StaticPage;
+  termsAndConditionsStudent: StaticPage;
+  termsAndConditionsCenter: StaticPage;
 }
 
-const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
+const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsCenter }: IProps) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const defaultValues = {
-    content_ar: termsAndConditions.content_ar || '',
-    content_en: termsAndConditions.content_en || '',
-  };
+  const [value, setValue] = useState<number>(0);
+
+  // keep both tab contents in state
+  const [tabContents, setTabContents] = useState({
+    student: {
+      content_ar: termsAndConditionsStudent?.content_ar || '',
+      content_en: termsAndConditionsStudent?.content_en || '',
+    },
+    center: {
+      content_ar: termsAndConditionsCenter?.content_ar || '',
+      content_en: termsAndConditionsCenter?.content_en || '',
+    },
+  });
+
+  // initialize form with student by default
   const methods = useForm({
-    defaultValues,
+    defaultValues: tabContents.student,
   });
 
   const {
     handleSubmit,
-
+    getValues,
+    reset,
     formState: { isSubmitting },
   } = methods;
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    // save current tab values before switching
+    const currentData = getValues();
+    setTabContents((prev) => ({
+      ...prev,
+      [value === 0 ? 'student' : 'center']: currentData,
+    }));
+
+    // load new tab values
+    reset(newValue === 0 ? tabContents.student : tabContents.center);
+    setValue(newValue);
+  };
+
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
       content_ar: data.content_ar.replace('"', '\n"'),
       content_en: data.content_en.replace('"', '\n"'),
-      static_page_type: 'TERMS_AND_CONDITIONS',
+      static_page_type: value === 0 ? 'TERMS_AND_CONDITIONS_STUDENT' : 'TERMS_AND_CONDITIONS_CENTER',
     };
+
     const formData = new FormData();
     toFormData(reqBody, formData);
+
     const res = await editStaticPage(formData);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
-        variant: 'success',
-      });
+      enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), { variant: 'success' });
     }
   });
 
@@ -58,6 +86,7 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
       maxWidth={settings.themeStretch ? false : 'xl'}
       sx={{ margin: '0px !important', padding: '0px !important', bgcolor: '#FAFAFA' }}
     >
+      {/* Hero Section */}
       <Box
         sx={{
           width: '100%',
@@ -71,12 +100,49 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'column',
+          gap: 1,
         }}
       >
         <Typography variant="h2" color="white">
           {t('LABEL.TERMS_AND_CONDITIONS')}
         </Typography>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="terms tabs"
+          sx={{
+            borderRadius: '2rem',
+            '& .MuiTabs-indicator': {
+              height: '100%',
+              backgroundColor: 'primary',
+              borderRadius: '2rem',
+            },
+            backgroundColor: 'primary.contrastText',
+          }}
+        >
+          <Tab
+            label={t('LABEL.STUDENT')}
+            sx={{
+              color: 'primary.contrastText',
+              position: 'relative',
+              zIndex: 1,
+              px: 4,
+              m: '0 !important',
+            }}
+          />
+          <Tab
+            label={t('LABEL.CENTER')}
+            sx={{
+              color: 'primary.contrastText',
+              position: 'relative',
+              zIndex: 1,
+              px: 4,
+            }}
+          />
+        </Tabs>
       </Box>
+
+      {/* Form */}
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Card
           sx={{
@@ -96,8 +162,9 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
                     minHeight: '200px',
                   },
                 }}
-              />{' '}
+              />
             </Box>
+
             <Box>
               <Typography variant="h4" color="info.dark" marginBlock={1}>
                 {t('LABEL.ENGLISH_CONTENT')}
@@ -112,6 +179,7 @@ const TermsAndConditionsView = ({ termsAndConditions }: IProps) => {
               />
             </Box>
           </CardContent>
+
           <CardActions
             sx={{
               alignItems: 'center',
