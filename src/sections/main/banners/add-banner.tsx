@@ -19,7 +19,7 @@ import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Field } from 'src/types/banners';
-import { Box, MenuItem, Typography } from '@mui/material';
+import { Alert, Box, MenuItem, Typography } from '@mui/material';
 import { addBanner } from 'src/actions/banners';
 
 // ----------------------------------------------------------------------
@@ -102,6 +102,7 @@ export default function FileManagerNewFolderDialog({ open, onClose, fields, id, 
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle sx={{ color: 'secondary.main' }}>{t('LABEL.ADD_BANNER')}</DialogTitle>
       <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
+        <Alert severity="info">Recommended dimensions of a picture are 2160 × 1080 px.</Alert>
         <FormProvider methods={methods} onSubmit={onSubmit}>
           <DialogContent>
             <Stack
