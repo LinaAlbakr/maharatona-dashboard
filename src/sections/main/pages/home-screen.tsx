@@ -123,6 +123,8 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
                   sx={{
                     '& .ql-editor': {
                       minHeight: '200px',
+                      // direction: 'rtl',
+                      // textAlign: 'right',
                     },
                   }}
                 />{' '}

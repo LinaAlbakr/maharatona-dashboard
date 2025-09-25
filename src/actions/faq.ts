@@ -24,10 +24,33 @@ export const fetchFaqCategories = async ({
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.faq.fetchFaqCategories, {
+    const res = await axiosInstance.get(endpoints.faq.fetchFaqCategoriesStudent, {
       params: {
         page,
-        limit,
+        limit : 10,
+        by_name: filters,
+      },
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res?.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const fetchFaqCategoriesCenter = async ({
+  page = 1,
+  limit = 50,
+  filters = '',
+}: IParams): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.faq.fetchFaqCategoriesCenter, {
+      params: {
+        page,
+        limit : 10,
         by_name: filters,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },

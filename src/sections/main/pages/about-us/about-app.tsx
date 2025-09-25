@@ -1,4 +1,5 @@
 'use client';
+
 import { TabContext, TabList } from '@mui/lab';
 import { Box, Container, Stack, Tab, Typography } from '@mui/material';
 import React, { useState } from 'react';
@@ -6,9 +7,9 @@ import React, { useState } from 'react';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 
+import { StaticPage } from 'src/types/static-pages';
 import AboutClientView from './about-client';
 import AboutCenterView from './about-center';
-import { StaticPage } from 'src/types/static-pages';
 
 export enum SubscriberType {
   client = 'client',
@@ -20,6 +21,7 @@ type IProps = {
   aboutCenter: StaticPage;
 };
 const AboutAppView = ({ aboutClient, aboutCenter }: IProps) => {
+
   const settings = useSettingsContext();
   const { t } = useTranslate();
 
@@ -29,7 +31,6 @@ const AboutAppView = ({ aboutClient, aboutCenter }: IProps) => {
     setValue(newValue);
   };
   return (
-    <>
       <Container
         maxWidth={settings.themeStretch ? false : 'xl'}
         sx={{ margin: '0px !important', padding: '0px !important', bgcolor: '#FAFAFA' }}
@@ -103,7 +104,6 @@ const AboutAppView = ({ aboutClient, aboutCenter }: IProps) => {
           <AboutCenterView aboutCenter={aboutCenter} />
         </TabContext>
       </Container>
-    </>
   );
 };
 

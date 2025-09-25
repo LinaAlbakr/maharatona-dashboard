@@ -101,7 +101,7 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
         await editCategoriey(formData, category.id);
         enqueueSnackbar(t('MESSAGE.FEILD_UPDATED_SUCCESSFULLY'));
       } else {
-        await newCategoriey(formData);
+       const res = await newCategoriey(formData);
         enqueueSnackbar(t('MESSAGE.FEILD_CREATED_SUCCESSFULLY'));
       }
       invalidatePath(paths.dashboard.categories);

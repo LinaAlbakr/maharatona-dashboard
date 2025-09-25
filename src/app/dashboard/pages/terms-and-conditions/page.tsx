@@ -7,9 +7,10 @@ export const metadata = {
 };
 
 const Page = async () => {
-  const TERMS_AND_CONDITIONS = await fetchStaticPage('TERMS_AND_CONDITIONS');
+  const TERMS_AND_CONDITIONS_STUDENT = await fetchStaticPage('TERMS_AND_CONDITIONS_STUDENT');
+  const TERMS_AND_CONDITIONS_CENTER = await fetchStaticPage('TERMS_AND_CONDITIONS_CENTER');
 
-  return <TermsAndConditionsView termsAndConditions={TERMS_AND_CONDITIONS} />;
+  return <TermsAndConditionsView termsAndConditionsStudent={TERMS_AND_CONDITIONS_STUDENT} termsAndConditionsCenter={TERMS_AND_CONDITIONS_CENTER} />;
 };
 
 export default Page;

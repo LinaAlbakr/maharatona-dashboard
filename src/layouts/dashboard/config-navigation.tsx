@@ -120,6 +120,10 @@ export function useNavData() {
                 title: t('SIDEBAR.HOME_SCREEN'),
                 path: paths.dashboard.pages.homeScreen,
               },
+               {
+                title: t('SIDEBAR.CONTRACT_PAGE'),
+                path: paths.dashboard.pages.contractPage,
+              },
             ],
           },
           { title: t('SIDEBAR.FAQ'), path: paths.dashboard.faq, icon: ICONS.questions },
