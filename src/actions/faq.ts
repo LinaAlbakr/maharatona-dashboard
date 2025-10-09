@@ -158,7 +158,7 @@ export const editQuestion = async (reqBody: any, questionId: string): Promise<an
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    await axiosInstance.put(endpoints.faq.editCategory(questionId), reqBody, {
+    await axiosInstance.put(endpoints.faq.editQuestion(questionId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
