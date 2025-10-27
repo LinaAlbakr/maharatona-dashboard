@@ -85,7 +85,7 @@ export const endpoints = {
   centers: {
     fetch: '/admin/get-all-centers',
     cities: '/admin/get-all-cities',
-    neighborhoods: (cityId: string) => `/city-neighborhood/all-neighborhoods/${cityId}`,
+    neighborhoods: '/admin/get-all-neighbourhoods',
     info: (centerId: string) => `/admin/get-center-details/${centerId}`,
     courses: (centerId: string) => `/admin-panel/center/${centerId}/courses`,
     reports: (centerId: string) => `/admin-panel/center/${centerId}/reports`,

@@ -28,7 +28,9 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   });
 
   const cities = await fetchCities();
-  const neighborhoods = city_id ? await fetchCityNeighborhoods({ cityId: city_id }) : [];
+  // Find the city name from the cityId
+  const selectedCity = cities.find((city) => city.id === city_id);
+  const neighborhoods = city_id && selectedCity ? await fetchCityNeighborhoods({ cityName: selectedCity.name }) : [];
 
   const filteredProducts: ICenter[] = centers?.data?.map((center: any) => ({
     ...center,

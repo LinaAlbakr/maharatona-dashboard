@@ -79,17 +79,26 @@ export const fetchCities = async (): Promise<ITems[]> => {
     throw new Error('Failed to fetch cities');
   }
 };
-export const fetchCityNeighborhoods = async ({ cityId }: { cityId: string }): Promise<any> => {
+export const fetchCityNeighborhoods = async ({ cityName }: { cityName: string }): Promise<ITems[]> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.centers.neighborhoods(cityId), {
+    const res = await axiosInstance.get(endpoints.centers.neighborhoods, {
+      params: { city: cityName },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data.data;
+    
+    // Normalize data to ITems format
+    const neighborhoods = res.data.data.docs.map((neighborhood: any) => ({
+      id: neighborhood._id,
+      name: lang === 'ar' ? neighborhood.name_ar : neighborhood.name_en,
+    }));
+
+    return neighborhoods;
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch neighborhoods:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
