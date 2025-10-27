@@ -131,7 +131,7 @@ export const endpoints = {
     },
   },
   categories: {
-    fetch: '/admin-panel/all-fields',
+    fetch: '/center/get-all-fields',
     deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
     new: `/admin-panel/create-field`,
     edit: (fieldId: string) => `/admin-panel/update-field/${fieldId}`,

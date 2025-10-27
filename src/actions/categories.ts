@@ -29,9 +29,18 @@ export const fetchCategories = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    
+    // Handle the new response structure where docs and pagination are at top level
+    return {
+      docs: res?.data?.docs || [],
+      totalDocs: res?.data?.totalDocs || 0,
+      page: res?.data?.page || page,
+      limit: res?.data?.limit || limit,
+      totalPages: res?.data?.totalPages || 1,
+    };
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch categories:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 

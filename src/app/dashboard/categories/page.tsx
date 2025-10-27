@@ -15,15 +15,15 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 5;
   const categories_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
 
-  const centers = await fetchCategories({
+  const categories = await fetchCategories({
     limit,
     page,
     filters: categories_name,
   });
 
-  const filteredProducts: ICenter[] = centers?.data;
+  const filteredProducts: ICenter[] = categories?.docs;
 
-  return <CategoriesView categories={filteredProducts} count={centers?.meta?.itemCount} />;
+  return <CategoriesView categories={filteredProducts} count={categories?.totalDocs} />;
 };
 
 export default Page;
