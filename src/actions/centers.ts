@@ -9,6 +9,7 @@ import { paths } from 'src/routes/paths';
 
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 import { getCookie } from 'cookies-next';
+import { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 
 interface IParams {
   page: number;
@@ -19,6 +20,13 @@ interface IParams {
 
   sort?: 'order_by' | 'new';
 }
+// interface ITems {
+//   id: string;
+//   name: string;
+//   _id?: string;
+//   name_ar?: string;
+//   name_en?: string;
+// }
 export const  fetchCenters = async ({
   page = 1,
   limit = 50,
@@ -46,17 +54,29 @@ export const  fetchCenters = async ({
   }
 };
 
-export const fetchCities = async (): Promise<any> => {
+export const fetchCities = async (): Promise<ITems[]> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
   try {
     const res = await axiosInstance.get(endpoints.centers.cities, {
-      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+      headers: { 
+        Authorization: `Bearer ${accessToken}`, 
+        'Accept-Language': lang 
+      },
     });
-    return res?.data.data;
+
+    // Normalize data: map _id → id, and choose name based on language
+    const cities = res.data.data.docs.map((city: any) => ({
+      id: city._id,
+      name: lang === 'ar' ? city.name_ar : city.name_en,
+      // or if you want to keep both: name_ar, name_en — adjust ITems accordingly
+    }));
+
+    return cities;
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch cities:', error);
+    throw new Error('Failed to fetch cities');
   }
 };
 export const fetchCityNeighborhoods = async ({ cityId }: { cityId: string }): Promise<any> => {

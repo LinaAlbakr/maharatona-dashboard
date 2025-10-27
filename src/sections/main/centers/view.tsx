@@ -203,8 +203,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                     label={t('LABEL.CITY')}
                     placeholder={t('LABEL.CITY')}
                     name="cityId"
-                    onCustomChange={(selectedCountryId: any) =>
-                      createQueryString('city', selectedCountryId?.id ?? '')
+                    onCustomChange={(selectedCity: ITems | null) =>
+                      createQueryString('city', selectedCity?.id ?? '')
                     }
                   />
                   <CutomAutocompleteView

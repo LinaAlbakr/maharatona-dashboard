@@ -17,6 +17,7 @@ interface IProps {
 export interface ITems {
   product_id?: string;
   id: string;
+  _id?: string;
   name: string;
   name_en: string;
   name_ar: string;
