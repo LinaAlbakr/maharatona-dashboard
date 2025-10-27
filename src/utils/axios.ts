@@ -103,7 +103,7 @@ export const endpoints = {
     editStatus: (courseId: string) => `/admin-panel/update-course/${courseId}`,
   },
   clients: {
-    fetch: '/admin-panel/all-clients',
+    fetch: '/admin/get-all-clients',
     cities: '/city-neighborhood/all-cities',
     fetchfields: '/admin-panel/all-fields',
     info: (clientId: string) => `/admin-panel/client/${clientId}`,

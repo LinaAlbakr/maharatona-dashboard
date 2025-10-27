@@ -1,7 +1,9 @@
+import { fetchCategories } from 'src/actions/categories';
 import { fetchCities } from 'src/actions/centers';
-import { fetchClients, fetchfields } from 'src/actions/clients';
+import { fetchClients } from 'src/actions/clients';
 import ClientsView from 'src/sections/main/clients/view';
 import { ICenter } from 'src/types/centers';
+import { cookies } from 'next/headers';
 
 type props = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -28,7 +30,14 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   });
 
   const cities = await fetchCities();
-  const fields = await fetchfields();
+  const fieldsResponse = await fetchCategories({ page: 1, limit: 100, filters: '' });
+  const lang = cookies().get('Language')?.value;
+  
+  // Transform fields to ITems format
+  const fields = (fieldsResponse?.docs || []).map((field: any) => ({
+    id: field._id,
+    name: lang === 'ar' ? field.name_ar : field.name_en,
+  }));
 
   const filteredProducts: ICenter[] = clients?.data;
 

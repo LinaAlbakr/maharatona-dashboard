@@ -38,9 +38,23 @@ export const fetchClients = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    
+    // Handle new response structure
+    const responseData = res?.data;
+    
+    // Transform the response to match the expected structure
+    return {
+      data: responseData?.data || [],
+      pagination: responseData?.pagination || {},
+      meta: {
+        itemCount: responseData?.pagination?.totalItems || 0,
+        currentPage: responseData?.pagination?.currentPage || page,
+        totalPages: responseData?.pagination?.totalPages || 1,
+      },
+    };
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch clients:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 

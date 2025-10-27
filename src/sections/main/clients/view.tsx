@@ -241,7 +241,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
                 setSelectedId(item.id);
                 confirmBlock.onTrue();
               },
-              hide: (center) => center.userStatus === 'BlockedClient',
+              hide: (center) => center.userStatus === 'BlockedClient' || center.user_status === 'BlockedClient',
             },
             {
               sx: { color: 'info.dark' },
@@ -251,7 +251,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
                 setSelectedId(item.id);
                 confirmUnblock.onTrue();
               },
-              hide: (center) => center.userStatus === 'ActiveClient',
+              hide: (center) => center.userStatus === 'ActiveClient' || center.user_status === 'ActiveClient',
             },
             {
               sx: { color: 'info.dark' },
@@ -265,29 +265,29 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
           ]}
           customRender={{
             email: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
                 {item?.email}
               </Box>
             ),
             name: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
-                {item?.name}
+              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+                {item?.name || item?.username || '-'}
               </Box>
             ),
             neighborhood: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
-                {item?.neighborhood.name}
+              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+                {typeof item?.neighborhood === 'string' ? item?.neighborhood : item?.neighborhood?.name || '-'}
               </Box>
             ),
             id: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
-                {item?.neighborhood.city.name}
+              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+                {typeof item?.city === 'string' ? item?.city : item?.neighborhood?.city?.name || '-'}
               </Box>
             ),
             phone: (item: any) => (
               <Box
                 style={{
-                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                  color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit',
                   direction: 'ltr',
                 }}
               >
@@ -297,10 +297,10 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             children: (item: any) => (
               <Box
                 style={{
-                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                  color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit',
                 }}
               >
-                {item?.children} {t('TABLE.CHILDREN')}
+                {item?.children || item?.total_children || 0} {t('TABLE.CHILDREN')}
               </Box>
             ),
           }}
