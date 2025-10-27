@@ -25,7 +25,7 @@ export default function MainPage({
   const settings = useSettingsContext();
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      {/* <Statistics statistics={statistics} priceProfit={priceProfit} /> */}
+      <Statistics statistics={statistics} priceProfit={priceProfit} />
       <TopCoursesTableView count={count} courses={courses} />
       <NotificationView notifications={notifications} />
     </Container>

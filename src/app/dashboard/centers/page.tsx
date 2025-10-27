@@ -30,14 +30,42 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const cities = await fetchCities();
   const neighborhoods = city_id ? await fetchCityNeighborhoods({ cityId: city_id }) : [];
 
-  const filteredProducts: ICenter[] = centers?.data;
+  const filteredProducts: ICenter[] = centers?.data?.map((center: any) => ({
+    ...center,
+    id: center.id || center._id,
+    phone: center.phone || '',
+    user_id: center.user_id || center.userId || '',
+    userStatus: center.userStatus || center.status || 'ActiveClient',
+    walletBalance: center.walletBalance || center.wallet_balance || 0,
+    number_of_courses: center.number_of_courses || center.numberOfCourses || 0,
+    number_of_registrants: center.number_of_registrants || center.numberOfRegistrants || 0,
+    neighborhood: center.neighborhood
+      ? typeof center.neighborhood === 'string'
+        ? {
+            id: '',
+            name: center.neighborhood,
+            city: {
+              id: '',
+              name: typeof center.city === 'string' ? center.city : center.city?.name || '',
+            },
+          }
+        : center.neighborhood
+      : {
+          id: '',
+          name: '',
+          city: {
+            id: '',
+            name: '',
+          },
+        },
+  }));
 
   return (
     <CentersView
       centers={filteredProducts}
       cities={cities}
       neighborhoods={neighborhoods}
-      count={centers?.meta?.itemCount}
+      count={centers?.pagination?.totalItems}
     />
   );
 };

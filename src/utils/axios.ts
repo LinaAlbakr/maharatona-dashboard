@@ -83,8 +83,8 @@ export const endpoints = {
     notifications: '/admin-panel/all-notification',
   },
   centers: {
-    fetch: '/admin-panel/all-centers',
-    cities: '/city-neighborhood/all-cities',
+    fetch: '/admin/get-all-centers',
+    cities: '/admin/get-all-cities',
     neighborhoods: (cityId: string) => `/city-neighborhood/all-neighborhoods/${cityId}`,
     info: (centerId: string) => `/admin-panel/center/${centerId}`,
     courses: (centerId: string) => `/admin-panel/center/${centerId}/courses`,

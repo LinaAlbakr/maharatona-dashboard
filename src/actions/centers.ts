@@ -19,7 +19,7 @@ interface IParams {
 
   sort?: 'order_by' | 'new';
 }
-export const fetchCenters = async ({
+export const  fetchCenters = async ({
   page = 1,
   limit = 50,
   filters = '',
@@ -42,7 +42,7 @@ export const fetchCenters = async ({
     });
     return res?.data;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
