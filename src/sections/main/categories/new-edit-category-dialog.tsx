@@ -1,7 +1,6 @@
 'use client';
 
 import * as yup from 'yup';
-import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { SketchPicker } from 'react-color';
@@ -90,15 +89,24 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
     [setValue]
   );
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data: any) => {
     const formData = new FormData();
-    toFormData(data, formData);
-    if (typeof data?.avatar === 'string') {
-      formData.delete('avatar');
+    
+    // Add all fields except avatar to FormData
+    Object.keys(data).forEach((key) => {
+      if (key !== 'avatar' && data[key] !== null && data[key] !== undefined) {
+        formData.append(key, data[key]);
+      }
+    });
+    
+    // Handle file upload: rename 'avatar' to 'file' for backend
+    if (data?.avatar && typeof data.avatar === 'object') {
+      formData.append('file', data.avatar);
     }
+    
     try {
       if (category) {
-        await editCategoriey(formData, category.id);
+        await editCategoriey(formData, category.id || category._id);
         enqueueSnackbar(t('MESSAGE.FEILD_UPDATED_SUCCESSFULLY'));
       } else {
        const res = await newCategoriey(formData);

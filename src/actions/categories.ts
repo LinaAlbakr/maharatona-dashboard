@@ -47,8 +47,9 @@ export const fetchCategories = async ({
 export const editFieldStatus = async (field: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
+    const fieldId = field.id || field._id;
     const res = await axiosInstance.patch(
-      endpoints.categories.edit(field.id),
+      endpoints.categories.edit(fieldId),
       { is_active: !field.is_active },
       {
         headers: {
@@ -68,29 +69,35 @@ export const editFieldStatus = async (field: any): Promise<any> => {
 export const newCategoriey = async (reqBody: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    await axiosInstance.post(endpoints.categories.new, reqBody, {
+    const res = await axiosInstance.post(endpoints.categories.new, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/form-data',
       },
     });
+    // Return the data from token field in response
+    return res.data.token;
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to create category:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
 export const editCategoriey = async (reqBody: FormData, id: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
+    const res = await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/form-data',
       },
     });
+    // Return the data from token field in response (if present) or the whole response
     revalidatePath(`/dashboard/categories`);
+    return res.data.token || res.data;
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to update category:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
