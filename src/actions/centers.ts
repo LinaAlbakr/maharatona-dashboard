@@ -99,12 +99,14 @@ export const fetchCenterInfo = async (centerId: string): Promise<any> => {
 
   try {
     const res = await axiosInstance.get(endpoints.centers.info(centerId), {
-      params: {},
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    // Return the nested `data` object
+    return res?.data?.data; // ✅ This is critical
+    console.log("deta2",res);
   } catch (error) {
-    throw new Error(error);
+    console.error('Error fetching center info:', error);
+    throw new Error('Failed to fetch center information');
   }
 };
 export const fetchCenterCourses = async (page = 1, limit = 6, centerId = ''): Promise<any> => {
@@ -132,7 +134,7 @@ export const fetchCenterReports = async (centerId: string): Promise<any> => {
     });
     return res?.data;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 };
 export const fetchCenterReviews = async (page = 1, limit = 50, centerId = ''): Promise<any> => {
@@ -146,7 +148,7 @@ export const fetchCenterReviews = async (page = 1, limit = 50, centerId = ''): P
     });
     return res?.data;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
@@ -161,7 +163,7 @@ export async function changeCenterStatus(centerId: string, reqBody: any): Promis
     revalidatePath('/dashboard/centers/');
     return res?.status;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 }
 

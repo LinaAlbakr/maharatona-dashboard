@@ -76,20 +76,20 @@ const CenterDetailsView = ({
           }}
         >
           <Box>
-            <Image
-              src={CenterInfo.logo}
-              width={130}
-              height={120}
-              alt="image"
-              style={{
-                borderRadius: '50%',
-                position: 'absolute',
-                bottom: '-60px',
-                right: i18n.language === 'ar' ? '25px' : '',
-                left: i18n.language === 'en' ? '25px' : '',
-                outline: '3px solid rgba(192,192,192,0.5)',
-              }}
-            />
+          <Image
+  src={CenterInfo.center_image || '/assets/images/centers/gray.jpeg'} // ✅
+  width={130}
+  height={120}
+  alt="Center logo"
+  style={{
+    borderRadius: '50%',
+    position: 'absolute',
+    bottom: '-60px',
+    right: i18n.language === 'ar' ? '25px' : '',
+    left: i18n.language === 'en' ? '25px' : '',
+    outline: '3px solid rgba(192,192,192,0.5)',
+  }}
+/>
             <Typography
               variant="h4"
               color="primary.main"

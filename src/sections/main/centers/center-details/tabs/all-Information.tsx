@@ -47,24 +47,26 @@ const AllInformation = ({ CenterInfo }: Props) => {
             px: 2,
           }}
         >
-          <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.DESCRIPTION')}
-            secondary={
-              i18n.language === 'ar' ? CenterInfo?.description_ar : CenterInfo?.description_en
-            }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
-          />
-          <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.WEBSITE')}
-            secondary={
-              <a href={`https://${CenterInfo?.website}`} target="_blank" rel="noopener noreferrer">
-                {CenterInfo?.website}
-              </a>
-            }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
-          />
+       <ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.DESCRIPTION')}
+  secondary={t('LABEL.NO_DESCRIPTION_AVAILABLE')} // ❌ description not in API → show placeholder or omit
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
+<ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.WEBSITE')}
+  secondary={
+    CenterInfo?.website ? (
+      <a href={CenterInfo.website.startsWith('http') ? CenterInfo.website : `https://${CenterInfo.website.trim()}`}
+         target="_blank" rel="noopener noreferrer">
+        {CenterInfo.website.trim()}
+      </a>
+    ) : t('LABEL.NOT_AVAILABLE')
+  }
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
+
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.LOCATION')}
@@ -91,24 +93,19 @@ const AllInformation = ({ CenterInfo }: Props) => {
               textAlign: 'left',
             }}
           />
-           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.EMAIL')}
-            secondary={CenterInfo?.email}
-            secondaryTypographyProps={{
-              color: 'info.dark',
-              fontSize: '12px',
-              dir: 'ltr',
-              textAlign: 'left',
-            }}
-          />
+         <ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.EMAIL')}
+  secondary={CenterInfo?.email || t('LABEL.NOT_AVAILABLE')}
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
           
-          <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.COURSES_NUMBER')}
-            secondary={CenterInfo?.courses_count}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
-          />
+<ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.COURSES_NUMBER')}
+  secondary={CenterInfo?.total_courses ?? 0}
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.LOCATION_DESCRIPTION')}
@@ -123,26 +120,19 @@ const AllInformation = ({ CenterInfo }: Props) => {
               .join(', ')}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
-          <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.CITY')}
-            secondary={
-              i18n.language === 'ar'
-                ? CenterInfo?.neighborhood.city.name_ar
-                : CenterInfo?.neighborhood.city.name_en
-            }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
-          />
-          <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.NEIGHBORHOOD')}
-            secondary={
-              i18n.language === 'ar'
-                ? CenterInfo?.neighborhood.name_ar
-                : CenterInfo?.neighborhood.name_en
-            }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
-          />
+        <ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.CITY')}
+  secondary={CenterInfo?.city || t('LABEL.NOT_AVAILABLE')}
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
+
+<ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.NEIGHBORHOOD')}
+  secondary={CenterInfo?.neighborhood || t('LABEL.NOT_AVAILABLE')}
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.BANK_ACCOUNT')}
@@ -155,12 +145,12 @@ const AllInformation = ({ CenterInfo }: Props) => {
             secondary={CenterInfo?.registered_courses_count}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
-          <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.TOTAL_RATE')}
-            secondary={<Rating value={+CenterInfo.average_rate} precision={0.5} readOnly />}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
-          />
+        <ListItemText
+  sx={{ gridColumn: 'span', color: 'primary.main' }}
+  primary={t('LABEL.TOTAL_RATE')}
+  secondary={<Rating value={CenterInfo?.avg_rate || 0} precision={0.5} readOnly />}
+  secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+/>
         </Box>
       </Card>
       <Card
@@ -183,30 +173,26 @@ const AllInformation = ({ CenterInfo }: Props) => {
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Image
-              src={CenterInfo?.commercial_register || '/assets/images/centers/gray.jpeg'}
-              width={250}
-              height={250}
-              alt="image"
-              style={{
-                borderRadius: '10px',
-              }}
-            />
+          <Image
+  src={CenterInfo?.commercial_register_image?.trim() || '/assets/images/centers/gray.jpeg'}
+  width={250}
+  height={250}
+  alt="Commercial Register"
+  style={{ borderRadius: '10px' }}
+/>
             <Typography variant="body1" color="info.dark">
               {t('LABEL.COMMERIAL_REGISTER')}
             </Typography>
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Image
-              src={CenterInfo?.bank_account_image || '/assets/images/centers/gray.jpeg'}
-              width={250}
-              height={250}
-              alt="image"
-              style={{
-                borderRadius: '10px',
-              }}
-            />
+          <Image
+  src={CenterInfo?.bank_image?.trim() || '/assets/images/centers/gray.jpeg'}
+  width={250}
+  height={250}
+  alt="Bank Account"
+  style={{ borderRadius: '10px' }}
+/>
             <Typography variant="body1" color="info.dark">
               {t('LABEL.BANK_ACCOUNT_IMAGE')}
             </Typography>
@@ -220,7 +206,14 @@ const AllInformation = ({ CenterInfo }: Props) => {
                 height: 'fit-content',
               }}
             >
-              <Image
+               <Image
+    src={CenterInfo?.center_image?.trim() || '/assets/images/centers/gray.jpeg'}
+    width={250}
+    height={250}
+    alt="Center"
+    style={{ borderRadius: '10px' }}
+  />
+              {/* <Image
                 src={CenterInfo?.center_images[0].url || '/assets/images/centers/gray.jpeg'}
                 width={120}
                 height={120}
@@ -255,7 +248,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
                 style={{
                   borderRadius: '10px',
                 }}
-              />
+              /> */}
             </Box>
             <Typography variant="body1" color="info.dark">
               {t('LABEL.CENTER_IMAGES')}

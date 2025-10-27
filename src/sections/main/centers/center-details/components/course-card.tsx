@@ -1,5 +1,6 @@
 import { Avatar, Box, Card, ListItemText, Typography } from '@mui/material';
 import { useTranslate } from 'src/locales';
+import i18n from 'src/locales/i18n';
 
 type props = {
   course: any;
@@ -20,10 +21,13 @@ const CourseCard = ({ course }: props) => {
         py: 4,
       }}
     >
-      <Avatar sx={{ width: 150, height: 150 }} src={course.logo_url}></Avatar>
-      <Typography variant="h4" color="info.dark">
-        {course.name}
-      </Typography>
+  <Avatar 
+  sx={{ width: 150, height: 150 }} 
+  src={course.course_images?.[0]?.trim() || '/assets/images/centers/gray.jpeg'}
+/>
+<Typography variant="h4" color="info.dark">
+  {i18n.language === 'ar' ? course.name_ar : course.name_en}
+</Typography>
       <Box
         sx={{
           display: 'flex',
@@ -41,25 +45,13 @@ const CourseCard = ({ course }: props) => {
             flexDirection: 'column',
           }}
           primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
-          secondary={course.registeredStudents}
+          secondary={course.enrolled_children || course.registeredStudents || 0}
           secondaryTypographyProps={{ color: 'info.dark', fontSize: '17px', fontWeight: 'bold' }}
         />{' '}
-        <ListItemText
-          sx={{
-            gridColumn: 'span',
-            color: 'primary.main',
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
-          primary={t('LABEL.FIELD_NAME')}
-          secondary={course.field.name}
-          secondaryTypographyProps={{
-            color: 'info.dark',
-            fontSize: '17px',
-            fontWeight: 'bold',
-          }}
-        />
+    <ListItemText
+  primary={t('LABEL.FIELD_NAME')}
+  secondary={i18n.language === 'ar' ? course.field.name_ar : course.field.name_en}
+/>
       </Box>
     </Card>
   );

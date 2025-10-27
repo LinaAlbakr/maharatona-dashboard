@@ -51,13 +51,13 @@ const Courses = ({ CenterCourses }: Props) => {
           gap: 4,
         }}
       >
-        {CenterCourses.data.map((course: any) => (
-          <CourseCard key={course.id} course={course} />
+        {(CenterCourses?.data || []).map((course: any) => (
+          <CourseCard key={course._id || course.id} course={course} />
         ))}
       </Stack>
       <Pagination
         sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}
-        count={count(CenterCourses.meta.itemCount)}
+        count={count(CenterCourses?.meta?.itemCount || 0)}
         page={Number(searchParams.get('page')) || 1}
         color="secondary"
         onChange={handleChange}
