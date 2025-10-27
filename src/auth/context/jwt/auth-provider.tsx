@@ -117,8 +117,9 @@ export function AuthProvider({ children }: Readonly<Props>) {
       const lang: string = Cookie.get('Language') || 'ar';
       Cookie.set('Language', lang);
       const accessToken = Cookie.get(ACCESS_TOKEN);
+      console.log('accessToken',accessToken)
       const user: User | {} = JSON.parse(Cookie.get(USER_KEY) ?? '');
-
+console.log('user',user)
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
@@ -159,23 +160,32 @@ export function AuthProvider({ children }: Readonly<Props>) {
       authType: 'PHONE',
       password,
     };
-
-    const res = await axios.post(endpoints.auth.login, credentials);
-
-    const { data: user } = res.data;
-    const { access_token: accessToken } = user;
-
-    setSession(accessToken);
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    Cookie.set(ACCESS_TOKEN, accessToken);
-    Cookie.set(USER_KEY, JSON.stringify(user));
-
-    dispatch({
-      type: Types.LOGIN,
-      payload: {
-        user,
-      },
-    });
+  
+    try {
+      const res = await axios.post(endpoints.auth.login, credentials);
+      console.log('reslogin', res);
+  
+      // ✅ Correct path based on your actual API response
+      const { loginResult, accessToken } = res.data.responseData;
+  
+      // Optional: also grab refreshToken if needed later
+      // const { loginResult, accessToken, refreshToken } = res.data.responseData;
+  
+      setSession(accessToken);
+      axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+      Cookie.set(ACCESS_TOKEN, accessToken);
+      Cookie.set(USER_KEY, JSON.stringify(loginResult)); // 👈 loginResult is the user object
+  
+      dispatch({
+        type: Types.LOGIN,
+        payload: {
+          user: loginResult, // 👈 not 'user' from destructuring above
+        },
+      });
+    } catch (error) {
+      console.error('Login failed:', error);
+      // Handle error (e.g., show snackbar)
+    }
   }, []);
 
   const forgot = useCallback(async (phone: string) => {

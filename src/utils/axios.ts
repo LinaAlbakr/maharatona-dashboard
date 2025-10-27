@@ -71,7 +71,7 @@ export const getErrorMessage = (error: unknown): string => {
 export const endpoints = {
   auth: {
     me: '/auth/me',
-    login: '/auth/signin',
+    login: 'admin/auth/login',
     register: '/auth/register',
     forgot: `/auth/send-password-reset-otp`,
     verify: `/auth/verify-otp-and-reset-password`,
