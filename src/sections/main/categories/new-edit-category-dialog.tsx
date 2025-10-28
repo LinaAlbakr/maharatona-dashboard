@@ -89,35 +89,46 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
     [setValue]
   );
 
-  const onSubmit = handleSubmit(async (data: any) => {
+  const handleFormSubmit = async (data: any) => {
+    console.log('Form data before processing:', data);
+    
     const formData = new FormData();
     
     // Add all fields except avatar to FormData
     Object.keys(data).forEach((key) => {
       if (key !== 'avatar' && data[key] !== null && data[key] !== undefined) {
         formData.append(key, data[key]);
+        console.log(`Added to FormData: ${key} = ${data[key]}`);
       }
     });
     
     // Handle file upload: rename 'avatar' to 'file' for backend
     if (data?.avatar && typeof data.avatar === 'object') {
       formData.append('file', data.avatar);
+      console.log('Added file to FormData:', data.avatar.name);
     }
+    
+    console.log('FormData keys:', Array.from(formData.keys()));
     
     try {
       if (category) {
+        console.log('Editing category with ID:', category.id || category._id);
         await editCategoriey(formData, category.id || category._id);
         enqueueSnackbar(t('MESSAGE.FEILD_UPDATED_SUCCESSFULLY'));
       } else {
-       const res = await newCategoriey(formData);
+        console.log('Creating new category');
+        await newCategoriey(formData);
         enqueueSnackbar(t('MESSAGE.FEILD_CREATED_SUCCESSFULLY'));
       }
       invalidatePath(paths.dashboard.categories);
       onClose();
     } catch (error) {
+      console.error('Error in handleFormSubmit:', error);
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
     }
-  });
+  };
+
+  const onSubmit = handleSubmit(handleFormSubmit);
 
   const handleColorChange = (newColor: { hex: any }) => {
     setColor(newColor.hex);
@@ -226,7 +237,11 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
           >
             {t('BUTTON.CANCEL')}
           </Button>
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton 
+            type="submit"
+            variant="contained" 
+            loading={isSubmitting}
+          >
             {t(category ? 'BUTTON.EDIT' : 'BUTTON.SAVE')}
           </LoadingButton>
         </DialogActions>

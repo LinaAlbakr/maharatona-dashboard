@@ -85,19 +85,46 @@ export const newCategoriey = async (reqBody: FormData): Promise<any> => {
 
 export const editCategoriey = async (reqBody: FormData, id: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
+  
+  // Debug logging
+  console.log('Edit category request:', {
+    id,
+    endpoint: endpoints.categories.edit(id),
+    hasAccessToken: !!accessToken,
+    formDataKeys: Array.from(reqBody.keys()),
+  });
+  
   try {
-    const res = await axiosInstance.patch(endpoints.categories.edit(id), reqBody, {
+    const res = await axiosInstance.put(endpoints.categories.edit(id), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'multipart/form-data',
       },
     });
+    
+    console.log('Edit category response:', res.data);
+    
     // Return the data from token field in response (if present) or the whole response
     revalidatePath(`/dashboard/categories`);
     return res.data.token || res.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to update category:', error);
-    throw new Error(getErrorMessage(error));
+    console.error('Error response:', error?.response?.data);
+    console.error('Error status:', error?.response?.status);
+    
+    // Extract more detailed error information
+    let errorMessage = 'Failed to update category';
+    if (error?.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error?.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    } else if (error?.message) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+    
+    throw new Error(errorMessage);
   }
 };
 
