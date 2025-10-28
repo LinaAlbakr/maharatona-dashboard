@@ -154,7 +154,7 @@ export const endpoints = {
     deleteCategory: (categoryId: string) => `/admin-panel/delete-faq-category/${categoryId}`,
     fetchQuestions: '/admin/get-all-faq-items',
     newQuestion: '/admin/create-faq-item',
-    editQuestion: (questionId: string) => `/admin-panel/update-faq-item/${questionId}`,
+    editQuestion: (questionId: string) => `/admin/update-faq-item/${questionId}`,
     deleteQuestion: (questionId: string) => `/admin-panel/faq-item/${questionId}`,
   },
   citiesAndNeighborhoods: {

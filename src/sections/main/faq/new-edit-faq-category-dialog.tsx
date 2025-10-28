@@ -1,6 +1,7 @@
 'use client';
 
 import * as yup from 'yup';
+import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -45,9 +46,34 @@ export function NewEditFaqCategoryDialog({ open, onClose, item, value }: Props) 
   });
   const {
     handleSubmit,
+    reset,
     watch,
     formState: { isSubmitting },
   } = methods;
+
+  useEffect(() => {
+    // Reset form values when opening the dialog or when the item changes
+    if (open) {
+      reset({
+        name_ar:
+          (item as any)?.name_ar ??
+          (item as any)?.question_ar ??
+          (item as any)?.title_ar ??
+          (item as any)?.name ??
+          '',
+        name_en:
+          (item as any)?.name_en ??
+          (item as any)?.question_en ??
+          (item as any)?.title_en ??
+          (item as any)?.name ??
+          '',
+        order:
+          (item as any)?.order ??
+          (item as any)?.faq_order ??
+          undefined,
+      });
+    }
+  }, [open, item, reset]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -56,7 +82,11 @@ export function NewEditFaqCategoryDialog({ open, onClose, item, value }: Props) 
           ...data,
           created_for: value === 0 ? 'student' : 'center',
         };
-        const res = await editFaqCategory(payload, item.id);
+        console.log("payload",payload);
+        console.log("item",item);
+        const categoryId = (item as any).id ?? (item as any)._id;
+        const res = await editFaqCategory(payload, categoryId);
+        console.log("res",res);
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });
         } else {

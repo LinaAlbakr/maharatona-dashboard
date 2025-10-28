@@ -138,6 +138,9 @@ export const newFaqCategory = async (reqBody: any): Promise<any> => {
 };
 
 export const editFaqCategory = async (reqBody: any, categoryId: string): Promise<any> => {
+  console.log("categoryId",categoryId);
+  console.log("reqBody",reqBody);
+  console.log("endpoints.faq.editCategory(categoryId)",endpoints.faq.editCategory(categoryId));
   const accessToken = cookies().get('access_token')?.value;
   try {
     await axiosInstance.put(endpoints.faq.editCategory(categoryId), reqBody, {
