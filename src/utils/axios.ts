@@ -149,8 +149,8 @@ export const endpoints = {
   faq: {
     fetchFaqCategoriesStudent: '/admin/get-all-faq-items',
     fetchFaqCategoriesCenter: '/admin/get-all-faq-items',
-    newCategory: '/admin-panel/create-faq-category',
-    editCategory: (categoryId: string) => `/admin-panel/update-faq-category/${categoryId}`,
+    newCategory: '/admin/create-faq-category',
+    editCategory: (categoryId: string) => `/admin/update-faq-category/${categoryId}`,
     deleteCategory: (categoryId: string) => `/admin-panel/delete-faq-category/${categoryId}`,
     fetchQuestions: '/admin/get-all-faq-items',
     newQuestion: '/admin-panel/create-faq-item',
