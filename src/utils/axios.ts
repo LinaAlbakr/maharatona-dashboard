@@ -164,7 +164,7 @@ export const endpoints = {
     fetchNeighborhoods: (cityId: string) => `/admin-panel/all-neighborhoods/${cityId}`,
     changeNeighborhoodStatus: (cityId: string, cityStatus: boolean) =>
       `/admin-panel/update-activation-neighborhood/${cityId}/${cityStatus}`,
-    newCity: '/admin-panel/create-city',
+    newCity: '/admin/create-city',
     newNeighborhood: '/admin-panel/create-neighborhood',
     deleteCity: (cityId: string) => `/admin-panel/delete-city/${cityId}`,
     deleteNeighborhood: (id: string) => `admin-panel/delete-neighborhood/${id}`,
