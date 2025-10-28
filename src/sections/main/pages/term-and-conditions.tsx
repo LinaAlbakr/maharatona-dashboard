@@ -6,7 +6,7 @@ import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { editStaticPage } from 'src/actions/static-pages';
+import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
 import { useSettingsContext } from 'src/components/settings';
@@ -65,15 +65,27 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', '\n"'),
-      content_en: data.content_en.replace('"', '\n"'),
+      content_ar: data.content_ar,
+      content_en: data.content_en,
       static_page_type: value === 0 ? 'TERMS_AND_CONDITIONS_STUDENT' : 'TERMS_AND_CONDITIONS_CENTER',
     };
 
-    const formData = new FormData();
-    toFormData(reqBody, formData);
-
-    const res = await editStaticPage(formData);
+    const currentPage = value === 0 ? termsAndConditionsStudent : termsAndConditionsCenter;
+    const pageId = (currentPage as any)?.id ?? (currentPage as any)?._id ?? (currentPage as any)?.data?._id;
+    console.log('[TermsAndConditionsView] page id:', pageId);
+    console.log('[TermsAndConditionsView] reqBody:', reqBody);
+    if (!pageId) {
+      // Create new static page if it doesn't exist
+      console.log('[TermsAndConditionsView] Creating new static page for type:', reqBody.static_page_type);
+      const res = await createStaticPage(reqBody);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), { variant: 'success' });
+      }
+      return;
+    }
+    const res = await editStaticPage(pageId, reqBody);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {

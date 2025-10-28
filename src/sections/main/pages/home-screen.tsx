@@ -6,7 +6,7 @@ import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { editStaticPage } from 'src/actions/static-pages';
+import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider, { RHFUploadAvatar } from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
 import { useSettingsContext } from 'src/components/settings';
@@ -44,19 +44,37 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
     formState: { isSubmitting },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
-
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', '\n"'),
-      content_en: data.content_en.replace('"', '\n"'),
+      content_ar: data.content_ar,
+      content_en: data.content_en,
       static_page_type: 'HOME_SCREEN',
     };
+    
+    const pageId = (HomeScreen as any)?.id ?? (HomeScreen as any)?._id ?? (HomeScreen as any)?.data?._id;
+    console.log('[HomeScreenView] page id:', pageId);
+    console.log('[HomeScreenView] reqBody:', reqBody);
+    if (!pageId) {
+      // Create new static page if it doesn't exist
+      console.log('[HomeScreenView] Creating new static page for type:', reqBody.static_page_type);
+      const res = await createStaticPage(reqBody);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
+          variant: 'success',
+        });
+      }
+      return;
+    }
+    
+    // Handle image upload for existing pages
     const formData = new FormData();
     toFormData(reqBody, formData);
     if (typeof data?.image === 'string') {
       formData.delete('image');
     }
-    const res = await editStaticPage(formData);
+    const res = await editStaticPage(pageId, formData);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {

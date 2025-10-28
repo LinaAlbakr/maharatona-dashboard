@@ -4,7 +4,7 @@ import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { editStaticPage } from 'src/actions/static-pages';
+import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
 import { useTranslate } from 'src/locales';
@@ -34,16 +34,28 @@ const AboutCenterView = ({ aboutCenter }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', '\n"'),
-      content_en: data.content_en.replace('"', '\n"'),
+      content_ar: data.content_ar,
+      content_en: data.content_en,
       static_page_type: 'ABOUT_US_CENTER',
     };
 
-    const formData = new FormData();
-    toFormData(reqBody, formData);
-
-    const res = await editStaticPage(formData);
-
+    const pageId = (aboutCenter as any)?.id ?? (aboutCenter as any)?._id ?? (aboutCenter as any)?.data?._id;
+    console.log('[AboutCenterView] aboutCenter id:', pageId);
+    console.log('[AboutCenterView] reqBody:', reqBody);
+    if (!pageId) {
+      // Create new static page if it doesn't exist
+      console.log('[AboutCenterView] Creating new static page for type:', reqBody.static_page_type);
+      const res = await createStaticPage(reqBody);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
+          variant: 'success',
+        });
+      }
+      return;
+    }
+    const res = await editStaticPage(pageId, reqBody);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {

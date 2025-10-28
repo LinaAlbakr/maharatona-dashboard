@@ -144,7 +144,8 @@ export const endpoints = {
   },
   staticPage: {
     fetch: (type: string) => `/admin/get-static-page-by-type/${type}`,
-    edit: `/admin/update-static-page`,
+    create: '/admin/create-static-page',
+    edit: (id: string) => `/admin/update-static-page/${id}`,
   },
   faq: {
     fetchFaqCategoriesStudent: '/admin/get-all-faq-items',

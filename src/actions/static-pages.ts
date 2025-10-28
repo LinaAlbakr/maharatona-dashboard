@@ -27,7 +27,9 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
     
     console.log('[fetchStaticPage] response.data:', res?.data);
     // New API returns { data: { ...page } }
-    return res?.data?.data;
+    const payload = res?.data?.data || {};
+    // Normalize id for downstream editors
+    return { ...payload, id: payload?.id ?? payload?._id };
   } catch (error) {
     const message = getErrorMessage(error);
     console.error('[fetchStaticPage] error raw:', error);
@@ -49,18 +51,54 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
   }
 };
 
-export const editStaticPage = async (data: FormData): Promise<any> => {
+export const createStaticPage = async (data: Record<string, any>): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    const res = await axiosInstance.patch(endpoints.staticPage.edit, data, {
+    console.log('[createStaticPage] payload:', data);
+    
+    const res = await axiosInstance.post(endpoints.staticPage.create, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    console.log('[createStaticPage] response:', res?.data);
+    return res?.data;
+  } catch (error: any) {
+    console.error('[createStaticPage] error:', error);
+    throw new Error(getErrorMessage(error));
+  }
+};
+
+export const editStaticPage = async (
+  pageId: string,
+  data: FormData | Record<string, any>
+): Promise<any> => {
+  const accessToken = cookies().get('access_token')?.value;
+  try {
+    // Normalize incoming data to a plain object for reliability
+    let body: Record<string, any> = {};
+    if (data && typeof (data as any).forEach === 'function' && typeof (data as any).get === 'function') {
+      // FormData path
+      (data as FormData).forEach((value, key) => {
+        body[key] = value;
+      });
+    } else {
+      body = data as Record<string, any>;
+    }
+
+    console.log('[editStaticPage] payload keys:', Object.keys(body));
+
+    const res = await axiosInstance.put(endpoints.staticPage.edit(pageId), body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
       },
     });
     return res?.data;
   } catch (error: any) {
-    console.log('error', error);
-    throw new Error(error);
+    console.error('[editStaticPage] error:', error);
+    throw new Error(getErrorMessage(error));
   }
 };

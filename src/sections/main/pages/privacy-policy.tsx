@@ -5,7 +5,7 @@ import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { editStaticPage } from 'src/actions/static-pages';
+import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
 import { useSettingsContext } from 'src/components/settings';
@@ -37,14 +37,28 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
-      content_ar: data.content_ar.replace('"', '\n"'),
-      content_en: data.content_en.replace('"', '\n"'),
+      content_ar: data.content_ar,
+      content_en: data.content_en,
       static_page_type: 'PRIVACY_POLICY',
     };
-    const formData = new FormData();
-    toFormData(reqBody, formData);
-    const res = await editStaticPage(formData);
-
+    
+    const pageId = (privacyPolicy as any)?.id ?? (privacyPolicy as any)?._id ?? (privacyPolicy as any)?.data?._id;
+    console.log('[PrivacyPolicyView] page id:', pageId);
+    console.log('[PrivacyPolicyView] reqBody:', reqBody);
+    if (!pageId) {
+      // Create new static page if it doesn't exist
+      console.log('[PrivacyPolicyView] Creating new static page for type:', reqBody.static_page_type);
+      const res = await createStaticPage(reqBody);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
+          variant: 'success',
+        });
+      }
+      return;
+    }
+    const res = await editStaticPage(pageId, reqBody);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
