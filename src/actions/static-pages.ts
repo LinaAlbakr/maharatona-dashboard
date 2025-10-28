@@ -14,15 +14,38 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
-
   try {
-    const res = await axiosInstance.get(endpoints.staticPage.fetch(type), {
-      params: { static_page_type: type },
-      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    const url = endpoints.staticPage.fetch(type);
+    const headers = { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang } as const;
+    console.log('[fetchStaticPage] type:', type);
+    console.log('[fetchStaticPage] url:', url);
+    console.log('[fetchStaticPage] headers:', { hasAuth: !!accessToken, lang });
+    
+    const res = await axiosInstance.get(url, {
+      headers,
     });
+    
+    console.log('[fetchStaticPage] response.data:', res?.data);
+    // New API returns { data: { ...page } }
     return res?.data?.data;
   } catch (error) {
-    throw new Error(error);
+    const message = getErrorMessage(error);
+    console.error('[fetchStaticPage] error raw:', error);
+    console.error('[fetchStaticPage] error message:', message);
+    // If the backend replies with not-found, don't crash the page; return a safe default
+    if (typeof message === 'string' && message.toLowerCase().includes('not found')) {
+      console.warn('[fetchStaticPage] returning empty static page for type:', type);
+      return {
+        id: '',
+        static_page_type: type,
+        content_ar: '',
+        content_en: '',
+        image: '',
+        created_at: '',
+        updated_at: '',
+      };
+    }
+    throw new Error(message);
   }
 };
 

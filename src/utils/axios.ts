@@ -143,8 +143,8 @@ export const endpoints = {
     new: `/admin-panel/create-discount-code`,
   },
   staticPage: {
-    fetch: (type: string) => `/admin-panel/static-page/${type}`,
-    edit: `/admin-panel/update-static-page`,
+    fetch: (type: string) => `/admin/get-static-page-by-type/${type}`,
+    edit: `/admin/update-static-page`,
   },
   faq: {
     fetchFaqCategoriesStudent: '/admin/get-all-faq-items',
