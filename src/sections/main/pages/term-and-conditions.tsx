@@ -4,7 +4,8 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, CardActions, CardContent, Container, Tab, Tabs, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
@@ -22,6 +23,7 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const [value, setValue] = useState<number>(0);
 
@@ -42,12 +44,7 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
     defaultValues: tabContents.student,
   });
 
-  const {
-    handleSubmit,
-    getValues,
-    reset,
-    formState: { isSubmitting },
-  } = methods;
+  const { handleSubmit, getValues, reset, formState: { isSubmitting } } = methods;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     // save current tab values before switching
@@ -61,6 +58,11 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
     reset(newValue === 0 ? tabContents.student : tabContents.center);
     setValue(newValue);
   };
+
+  useEffect(() => {
+    // Ensure form shows latest props when props change (after create/edit)
+    reset(value === 0 ? tabContents.student : tabContents.center);
+  }, [termsAndConditionsStudent, termsAndConditionsCenter, value, reset, tabContents]);
 
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
@@ -90,6 +92,12 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
       enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), { variant: 'success' });
+      if (value === 0) {
+        setTabContents((prev) => ({ ...prev, student: { content_ar: reqBody.content_ar, content_en: reqBody.content_en } }));
+      } else {
+        setTabContents((prev) => ({ ...prev, center: { content_ar: reqBody.content_ar, content_en: reqBody.content_en } }));
+      }
+      router.refresh();
     }
   });
 

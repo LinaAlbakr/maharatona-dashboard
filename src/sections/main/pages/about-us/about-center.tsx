@@ -4,6 +4,8 @@ import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
@@ -17,6 +19,7 @@ interface IProps {
 const AboutCenterView = ({ aboutCenter }: IProps) => {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const defaultValues = {
     content_ar: aboutCenter.content_ar || '',
@@ -26,11 +29,14 @@ const AboutCenterView = ({ aboutCenter }: IProps) => {
     defaultValues,
   });
 
-  const {
-    handleSubmit,
+  const { handleSubmit, reset, formState: { isSubmitting } } = methods;
 
-    formState: { isSubmitting },
-  } = methods;
+  useEffect(() => {
+    reset({
+      content_ar: aboutCenter.content_ar || '',
+      content_en: aboutCenter.content_en || '',
+    });
+  }, [aboutCenter, reset]);
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
@@ -62,6 +68,8 @@ const AboutCenterView = ({ aboutCenter }: IProps) => {
       enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
         variant: 'success',
       });
+      reset({ content_ar: reqBody.content_ar, content_en: reqBody.content_en });
+      router.refresh();
     }
   });
 

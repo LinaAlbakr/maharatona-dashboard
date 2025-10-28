@@ -51,15 +51,18 @@ export const fetchStaticPage = async (type: string): Promise<any> => {
   }
 };
 
-export const createStaticPage = async (data: Record<string, any>): Promise<any> => {
+export const createStaticPage = async (
+  data: FormData | Record<string, any>
+): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    console.log('[createStaticPage] payload:', data);
+    const isFormData = typeof (data as any).forEach === 'function' && typeof (data as any).get === 'function';
+    console.log('[createStaticPage] isFormData:', isFormData);
     
     const res = await axiosInstance.post(endpoints.staticPage.create, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        ...(isFormData ? { 'Content-Type': 'multipart/form-data' } : { 'Content-Type': 'application/json' }),
       },
     });
     
@@ -77,23 +80,13 @@ export const editStaticPage = async (
 ): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   try {
-    // Normalize incoming data to a plain object for reliability
-    let body: Record<string, any> = {};
-    if (data && typeof (data as any).forEach === 'function' && typeof (data as any).get === 'function') {
-      // FormData path
-      (data as FormData).forEach((value, key) => {
-        body[key] = value;
-      });
-    } else {
-      body = data as Record<string, any>;
-    }
+    const isFormData = typeof (data as any).forEach === 'function' && typeof (data as any).get === 'function';
+    console.log('[editStaticPage] isFormData:', isFormData);
 
-    console.log('[editStaticPage] payload keys:', Object.keys(body));
-
-    const res = await axiosInstance.put(endpoints.staticPage.edit(pageId), body, {
+    const res = await axiosInstance.put(endpoints.staticPage.edit(pageId), data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        ...(isFormData ? { 'Content-Type': 'multipart/form-data' } : { 'Content-Type': 'application/json' }),
       },
     });
     return res?.data;

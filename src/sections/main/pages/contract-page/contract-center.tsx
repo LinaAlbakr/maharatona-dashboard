@@ -5,6 +5,8 @@ import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
@@ -18,6 +20,7 @@ interface IProps {
 const ContractCenterView = ({ ContractCenter }: IProps) => {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const defaultValues = {
     content_ar: ContractCenter.content_ar || '',
@@ -32,6 +35,13 @@ const ContractCenterView = ({ ContractCenter }: IProps) => {
 
     formState: { isSubmitting },
   } = methods;
+  const { reset } = methods;
+  useEffect(() => {
+    reset({
+      content_ar: ContractCenter.content_ar || '',
+      content_en: ContractCenter.content_en || '',
+    });
+  }, [ContractCenter, reset]);
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
@@ -40,29 +50,20 @@ const ContractCenterView = ({ ContractCenter }: IProps) => {
       static_page_type: 'CONTRACT_PAGE_CENTER',
     };
 
+    const formData = new FormData();
+    toFormData(reqBody, formData);
+
     const pageId = (ContractCenter as any)?.id ?? (ContractCenter as any)?._id ?? (ContractCenter as any)?.data?._id;
-    console.log('[ContractCenterView] page id:', pageId);
-    console.log('[ContractCenterView] reqBody:', reqBody);
-    if (!pageId) {
-      // Create new static page if it doesn't exist
-      console.log('[ContractCenterView] Creating new static page for type:', reqBody.static_page_type);
-      const res = await createStaticPage(reqBody);
-      if (res?.error) {
-        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
-      } else {
-        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
-          variant: 'success',
-        });
-      }
-      return;
-    }
-    const res = await editStaticPage(pageId, reqBody);
+    const res = pageId ? await editStaticPage(pageId, reqBody) : await editStaticPage('', reqBody);
+
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
       enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
         variant: 'success',
       });
+      reset({ content_ar: reqBody.content_ar, content_en: reqBody.content_en });
+      router.refresh();
     }
   });
 

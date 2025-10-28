@@ -19,6 +19,7 @@ interface IProps {
 }
 
 const HomeScreenView = ({ HomeScreen }: IProps) => {
+  console.log("HomeScreen",HomeScreen);
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
@@ -44,37 +45,32 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
     formState: { isSubmitting },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
-    const reqBody = {
-      ...data,
-      content_ar: data.content_ar,
-      content_en: data.content_en,
-      static_page_type: 'HOME_SCREEN',
-    };
-    
     const pageId = (HomeScreen as any)?.id ?? (HomeScreen as any)?._id ?? (HomeScreen as any)?.data?._id;
+
+    const hasNewFile = !!data?.image && typeof data.image !== 'string';
+
+    // Build payload (FormData when file present, JSON otherwise)
+    let payload: any;
+    if (hasNewFile) {
+      const formData = new FormData();
+      formData.append('content_ar', data.content_ar || '');
+      formData.append('content_en', data.content_en || '');
+      formData.append('static_page_type', 'HOME_SCREEN');
+      // Backend expects the file field key to be 'file'
+      formData.append('file', data.image as File);
+      payload = formData;
+    } else {
+      payload = {
+        content_ar: data.content_ar,
+        content_en: data.content_en,
+        static_page_type: 'HOME_SCREEN',
+      };
+    }
+
     console.log('[HomeScreenView] page id:', pageId);
-    console.log('[HomeScreenView] reqBody:', reqBody);
-    if (!pageId) {
-      // Create new static page if it doesn't exist
-      console.log('[HomeScreenView] Creating new static page for type:', reqBody.static_page_type);
-      const res = await createStaticPage(reqBody);
-      if (res?.error) {
-        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
-      } else {
-        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
-          variant: 'success',
-        });
-      }
-      return;
-    }
-    
-    // Handle image upload for existing pages
-    const formData = new FormData();
-    toFormData(reqBody, formData);
-    if (typeof data?.image === 'string') {
-      formData.delete('image');
-    }
-    const res = await editStaticPage(pageId, formData);
+    console.log('[HomeScreenView] payload type:', hasNewFile ? 'FormData' : 'JSON');
+
+    const res = !pageId ? await createStaticPage(payload) : await editStaticPage(pageId, payload);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {

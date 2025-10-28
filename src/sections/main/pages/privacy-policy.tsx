@@ -5,6 +5,8 @@ import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
@@ -20,6 +22,7 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const defaultValues = {
     content_ar: privacyPolicy.content_ar || '',
@@ -34,6 +37,13 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
 
     formState: { isSubmitting },
   } = methods;
+  const { reset } = methods;
+  useEffect(() => {
+    reset({
+      content_ar: privacyPolicy.content_ar || '',
+      content_en: privacyPolicy.content_en || '',
+    });
+  }, [privacyPolicy, reset]);
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       ...data,
@@ -41,6 +51,8 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
       content_en: data.content_en,
       static_page_type: 'PRIVACY_POLICY',
     };
+    const formData = new FormData();
+    toFormData(reqBody, formData);
     
     const pageId = (privacyPolicy as any)?.id ?? (privacyPolicy as any)?._id ?? (privacyPolicy as any)?.data?._id;
     console.log('[PrivacyPolicyView] page id:', pageId);
@@ -58,13 +70,16 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
       }
       return;
     }
-    const res = await editStaticPage(pageId, reqBody);
+    const res = pageId ? await editStaticPage(pageId, reqBody) : await editStaticPage('', reqBody);
+
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
       enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
         variant: 'success',
       });
+      reset({ content_ar: reqBody.content_ar, content_en: reqBody.content_en });
+      router.refresh();
     }
   });
 
