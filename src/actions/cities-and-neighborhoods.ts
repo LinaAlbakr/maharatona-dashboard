@@ -88,14 +88,31 @@ export const fetchNeighborhoods = async ({
           page,
           limit,
           by_name: filters,
-          cityId,
         },
         headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
       }
     );
-    return res?.data;
+    const payload = res?.data?.data || {};
+    return {
+      data: payload?.docs || [],
+      meta: {
+        itemCount: payload?.totalDocs || 0,
+        page: payload?.page || page,
+        limit: payload?.limit || limit,
+        totalPages: payload?.totalPages || 1,
+      },
+    };
   } catch (error) {
-    throw new Error(error);
+    return {
+      data: [],
+      meta: {
+        itemCount: 0,
+        page,
+        limit,
+        totalPages: 0,
+      },
+      error: getErrorMessage(error),
+    };
   }
 };
 
