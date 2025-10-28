@@ -26,7 +26,7 @@ const CourseCard = ({ course }: props) => {
   src={course.course_images?.[0]?.trim() || '/assets/images/centers/gray.jpeg'}
 />
 <Typography variant="h4" color="info.dark">
-  {i18n.language === 'ar' ? course.name_ar : course.name_en}
+  {i18n.language === 'ar' ? (course?.name_ar || course?.name) : (course?.name_en || course?.name)}
 </Typography>
       <Box
         sx={{
@@ -48,10 +48,14 @@ const CourseCard = ({ course }: props) => {
           secondary={course.enrolled_children || course.registeredStudents || 0}
           secondaryTypographyProps={{ color: 'info.dark', fontSize: '17px', fontWeight: 'bold' }}
         />{' '}
-    <ListItemText
-  primary={t('LABEL.FIELD_NAME')}
-  secondary={i18n.language === 'ar' ? course.field.name_ar : course.field.name_en}
-/>
+        <ListItemText
+          primary={t('LABEL.FIELD_NAME')}
+          secondary={
+            course?.field
+              ? (i18n.language === 'ar' ? course.field?.name_ar : course.field?.name_en)
+              : '-'
+          }
+        />
       </Box>
     </Card>
   );

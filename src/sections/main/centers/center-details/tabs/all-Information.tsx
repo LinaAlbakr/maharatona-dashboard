@@ -115,9 +115,14 @@ const AllInformation = ({ CenterInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.FIELDS')}
-            secondary={CenterInfo?.center_fields
-              .map((field: any) => i18n.language === 'ar' ? field.field.name_ar : field.field.name_en)
-              .join(', ')}
+            secondary={
+              Array.isArray(CenterInfo?.fields)
+                ? CenterInfo.fields
+                    .map((field: any) => (i18n.language === 'ar' ? field?.name_ar : field?.name_en))
+                    .filter(Boolean)
+                    .join(', ')
+                : t('LABEL.NOT_AVAILABLE')
+            }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
         <ListItemText
