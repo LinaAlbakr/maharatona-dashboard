@@ -6,7 +6,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { useQueryString } from 'src/hooks/use-queryString';
 import { useTranslate } from 'src/locales';
 import AllInformation from './tabs/all-Information';
-// import Reports from './tabs/reports';
+// ORIGINAL: import Reports from './tabs/reports';
 import Courses from './tabs/courses';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -21,23 +21,23 @@ export const tabs = [
     value: 'center-courses',
     label: 'CENTER_COURSES',
   },
-  // { value: 'reports', label: 'REPORTS' },
+  // ORIGINAL: { value: 'reports', label: 'REPORTS' },
 ];
 
 interface Props {
   tab?: string;
   CenterInfo?: any;
   CenterCourses?: any;
-  // CenterReports?: any;
-  // CenterReviews?: any;
+  // ORIGINAL: CenterReports?: any;
+  // ORIGINAL: CenterReviews?: any;
 }
 
 const CenterDetailsView = ({
   tab,
   CenterInfo,
   CenterCourses,
-  // CenterReports,
-  // CenterReviews,
+  // ORIGINAL: CenterReports,
+  // ORIGINAL: CenterReviews,
 }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
@@ -111,7 +111,16 @@ const CenterDetailsView = ({
       <Box mt={3}>
         {currentTab === 'all-information' && <AllInformation CenterInfo={CenterInfo} />}
         {currentTab === 'center-courses' && <Courses CenterCourses={CenterCourses} />}
-        {/* Reports tab temporarily disabled */}
+        {/**
+         * ORIGINAL:
+         * {currentTab === 'reports' && (
+         *   <Reports
+         *     CenterReviews={CenterReviews}
+         *     CenterReports={CenterReports}
+         *     CenterCourses={CenterCourses}
+         *   />
+         * )}
+         */}
       </Box>
     </Container>
   );
