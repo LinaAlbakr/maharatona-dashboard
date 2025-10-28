@@ -38,6 +38,7 @@ type props = {
 };
 
 const CategoriesView = ({ count, categories }: Readonly<props>) => {
+  console.log('CategoriesView categories:', categories);
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 

@@ -74,7 +74,7 @@ const ClientDetailsView = ({ tab, ClientInfo, ClientCourses, ClientChildren }: P
               color="primary.main"
               sx={{ position: 'absolute', bottom: '-40px', left: '50px' }}
             >
-              {ClientInfo.name}
+              {ClientInfo.username || ClientInfo.name || '-'}
             </Typography>
           </Box>
         </Box>

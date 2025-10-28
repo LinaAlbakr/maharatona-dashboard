@@ -1,4 +1,4 @@
-import { fetchClientChildren, fetchClientCourses, fetchClientInfo } from 'src/actions/clients';
+import { fetchClientInfo } from 'src/actions/clients';
 import ClientDetailsView from 'src/sections/main/clients/client-details/view';
 
 type IProps = {
@@ -9,13 +9,23 @@ type IProps = {
 };
 const Page = async ({ params, searchParams }: IProps) => {
   const tab = typeof searchParams.tab === 'string' ? searchParams.tab : undefined;
-  const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 6;
-  const child_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
 
   const ClientInfo = await fetchClientInfo(params.clientId);
-  const ClientCourses = await fetchClientCourses(page, limit, params.clientId);
-  const ClientChildren = await fetchClientChildren(page, limit, child_name, params.clientId);
+
+  // Transform the client info data to match expected structure for courses and children
+  const ClientCourses = {
+    data: [], // No courses data in the response, but we can add it if needed
+    meta: {
+      itemCount: ClientInfo?.enrolled_courses || 0,
+    },
+  };
+
+  const ClientChildren = {
+    data: ClientInfo?.child || [],
+    meta: {
+      itemCount: ClientInfo?.total_children || 0,
+    },
+  };
 
   return (
     <ClientDetailsView

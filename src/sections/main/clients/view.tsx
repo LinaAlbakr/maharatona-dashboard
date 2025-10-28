@@ -221,7 +221,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
-                router.push(`${paths.dashboard.clients}/${item.id}`);
+                router.push(`${paths.dashboard.clients}/${item._id || item.id}`);
               },
             },
             {
@@ -229,7 +229,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               label: t('LABEL.DELETE'),
               icon: 'material-symbols:delete-outline-rounded',
               onClick: (item: any) => {
-                setSelectedId(item.id);
+                setSelectedId(item._id || item.id);
                 confirmDelete.onTrue();
               },
             },
@@ -238,7 +238,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               label: t('LABEL.BLOCK'),
               icon: 'ic:outline-block',
               onClick: (item: any) => {
-                setSelectedId(item.id);
+                setSelectedId(item._id || item.id);
                 confirmBlock.onTrue();
               },
               hide: (center) => center.userStatus === 'BlockedClient' || center.user_status === 'BlockedClient',
@@ -248,7 +248,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               label: t('LABEL.UNBLOCK'),
               icon: 'gg:unblock',
               onClick: (item: any) => {
-                setSelectedId(item.id);
+                setSelectedId(item._id || item.id);
                 confirmUnblock.onTrue();
               },
               hide: (center) => center.userStatus === 'ActiveClient' || center.user_status === 'ActiveClient',

@@ -39,7 +39,11 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     name: lang === 'ar' ? field.name_ar : field.name_en,
   }));
 
-  const filteredProducts: ICenter[] = clients?.data;
+  // Transform clients data to map _id to id for UI compatibility
+  const filteredProducts: ICenter[] = (clients?.data || []).map((client: any) => ({
+    ...client,
+    id: client._id || client.id,
+  }));
 
   return (
     <ClientsView

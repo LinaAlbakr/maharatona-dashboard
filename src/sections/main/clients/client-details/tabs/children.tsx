@@ -5,7 +5,7 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
 import {  Card,  InputAdornment, TextField } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
@@ -20,6 +20,7 @@ const Children = ({ ClientChildren }: Readonly<props>) => {
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     router.push(`${pathname}/?tab=children`);
@@ -38,22 +39,20 @@ const Children = ({ ClientChildren }: Readonly<props>) => {
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+  // Filter children based on search term
+  const filteredChildren = useMemo(() => {
+    if (!searchTerm) {
+      return ClientChildren?.data || [];
+    }
+    return (ClientChildren?.data || []).filter((child: any) =>
+      child.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [ClientChildren?.data, searchTerm]);
 
-      if (value) {
-        params.set(name, value);
-      } else {
-        params.delete(name);
-      }
-
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [pathname, router, searchParams, setValue]
-  );
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <>
@@ -71,12 +70,13 @@ const Children = ({ ClientChildren }: Readonly<props>) => {
               }}
               placeholder={t('LABEL.SEARCH_BY_NAME')}
               type="search"
-              onChange={(e) => createQueryString('search', e.target.value)}
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
           </FormProvider>
           <SharedTable
-            count={ClientChildren?.meta?.itemCount}
-            data={ClientChildren?.data}
+            count={filteredChildren.length}
+            data={filteredChildren}
             tableHead={TABLE_HEAD}
           />
         </Card>

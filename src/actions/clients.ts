@@ -98,9 +98,12 @@ export const fetchClientInfo = async (clientId: string): Promise<any> => {
       params: {},
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    
+    // Handle new response structure with data wrapper
+    return res?.data?.data || res?.data;
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch client info:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 

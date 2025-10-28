@@ -55,7 +55,7 @@ const AllInformation = ({ ClientInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.NUMBER_OF_CHILDREN')}
-            secondary={ClientInfo?.children.length}
+            secondary={ClientInfo?.total_children || ClientInfo?.child?.length || 0}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
 
@@ -63,19 +63,21 @@ const AllInformation = ({ ClientInfo }: Props) => {
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.INTERESTS')}
             secondary={ClientInfo?.client_fields
-              .map((field: any) => {
+              ?.map((field: any) => {
                 return i18n.language === 'ar' ? field.field.name_ar : field.field.name_en;
               })
-              .join(', ')}
+              .join(', ') || '-'}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.CITY')}
             secondary={
-              i18n.language === 'ar'
-                ? ClientInfo?.neighborhood.city.name_ar
-                : ClientInfo?.neighborhood.city.name_en
+              typeof ClientInfo?.city === 'string' 
+                ? ClientInfo?.city 
+                : i18n.language === 'ar'
+                  ? ClientInfo?.neighborhood?.city?.name_ar
+                  : ClientInfo?.neighborhood?.city?.name_en || '-'
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
@@ -83,9 +85,11 @@ const AllInformation = ({ ClientInfo }: Props) => {
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.NEIGHBORHOOD')}
             secondary={
-              i18n.language === 'ar'
-                ? ClientInfo?.neighborhood.name_ar
-                : ClientInfo?.neighborhood.name_en
+              typeof ClientInfo?.neighborhood === 'string'
+                ? ClientInfo?.neighborhood
+                : i18n.language === 'ar'
+                  ? ClientInfo?.neighborhood?.name_ar
+                  : ClientInfo?.neighborhood?.name_en || '-'
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />

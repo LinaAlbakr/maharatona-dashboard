@@ -106,7 +106,7 @@ export const endpoints = {
     fetch: '/admin/get-all-clients',
     cities: '/city-neighborhood/all-cities',
     fetchfields: '/admin-panel/all-fields',
-    info: (clientId: string) => `/admin-panel/client/${clientId}`,
+    info: (clientId: string) => `/admin/get-client-details/${clientId}`,
     changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
     courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
     children: (clientId: string) => `/admin-panel/client/${clientId}/children`,
