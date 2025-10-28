@@ -102,6 +102,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
   };
 
   const handleconfirmDelete = async () => {
+    console.log("selectedId",selectedId);
     const res = await deleteNeighborhood(selectedId);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
@@ -195,7 +196,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
               label: t('LABEL.DELETE'),
               icon: 'mingcute:delete-fill',
               onClick: (item) => {
-                setSelectedId(item.id);
+                setSelectedId(item.id || item._id);
                 confirmDelete.onTrue();
               },
             },
