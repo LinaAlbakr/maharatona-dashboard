@@ -126,7 +126,7 @@ export const endpoints = {
       edit: (reasonId: string) => `/admin-panel/update-call-us-reason/${reasonId}`,
     },
     technical_support: {
-      fetch: '/admin-panel/all-call-us',
+      fetch: '/client/get-all-technical-support',
       details: (itemId: string) => `/admin-panel/call-us/${itemId}`,
     },
   },

@@ -13,6 +13,7 @@ interface IProps {
   isDisabled?: boolean;
   onCustomChange?: (value: any) => void;
   searchQuery?: string;
+  value?: any;
 }
 export interface ITems {
   product_id?: string;
@@ -30,6 +31,7 @@ function CutomAutocompleteView({
   isDisabled = false,
   onCustomChange,
   searchQuery,
+  value,
 }: IProps) {
   const { t } = useTranslate();
   return (
@@ -40,6 +42,7 @@ function CutomAutocompleteView({
       searchQuery={searchQuery}
       placeholder={t(placeholder)}
       disabled={isDisabled}
+      value={value}
       fullWidth
       options={items ?? []}
       getOptionLabel={(option) =>

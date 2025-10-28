@@ -20,12 +20,11 @@ type props = {
 };
 
 export const types = [
-  { name_en: 'CLIENT', name_ar: 'عميل', value: 'CLIENT' },
-  { name_en: 'CENTER', name_ar: 'مركز', value: 'CENTER' },
+  { id: 'Client', name_en: 'CLIENT', name_ar: 'عميل', value: 'Client' },
+  { id: 'Center', name_en: 'CENTER', name_ar: 'مركز', value: 'Center' },
 ];
 const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
   const settings = useSettingsContext();
-
 
   const { t } = useTranslate();
   const searchParams = useSearchParams();
@@ -36,15 +35,16 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
   }, []);
 
   const TABLE_HEAD = [
-    { id: 'userName', label: 'LABEL.NAME' },
+    { id: 'name', label: 'LABEL.NAME' },
     { id: 'email', label: 'LABEL.EMAIL' },
-    { id: 'created_at', label: 'LABEL.DATE' },
-    { id: 'callUsType', label: 'LABEL.TYPE' },
+    { id: 'createdAt', label: 'LABEL.DATE' },
+    { id: 'type', label: 'LABEL.TYPE' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
   const formDefaultValues = {
     name: '',
+    type: null,
   };
 
   const pathname = usePathname();
@@ -146,6 +146,7 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
                     label={t('LABEL.TYPE')}
                     placeholder={t('LABEL.TYPE')}
                     name="type"
+                    value={null}
                     onCustomChange={(selectedType: any) =>
                       createQueryString('type', selectedType?.value ?? '')
                     }
@@ -165,14 +166,14 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
               label: t('LABEL.VIEW'),
               icon: 'mdi:eye',
               onClick: (item) => {
-                router.push(`/dashboard/support/technical-support/${item?.id}`);
+                router.push(`/dashboard/support/technical-support/${item?._id}`);
               },
             },
           ]}
           customRender={{
-            callUsType: (item) => t(`LABEL.` + item?.callUsType),
-            created_at: (item) =>
-              i18n.language === 'ar' ? arabicDate(item?.created_at) : englishDate(item?.created_at),
+            type: (item) => item?.type ?? '',
+            createdAt: (item) =>
+              i18n.language === 'ar' ? arabicDate(item?.createdAt) : englishDate(item?.createdAt),
           }}
         />
       </Container>

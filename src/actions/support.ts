@@ -109,9 +109,16 @@ export const fetchTechnicalSupportItems = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    console.log("res",res);
+    return {
+      docs: res?.data?.docs || [],
+      totalDocs: res?.data?.totalDocs || 0,
+      page: res?.data?.page || page,
+      limit: res?.data?.limit || limit,
+      totalPages: res?.data?.totalPages || 1,
+    };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 };
 

@@ -21,10 +21,8 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     filters: reason_name,
     type,
   });
-
-  const filteredReasons: any[] = items?.data;
-
-  return <TechnicalSupportView items={filteredReasons} count={items?.meta?.itemCount} />;
+  const filteredReasons: any[] = items?.docs || [];
+  return <TechnicalSupportView items={filteredReasons} count={items?.totalDocs || 0} />;
 };
 
 export default Page;
