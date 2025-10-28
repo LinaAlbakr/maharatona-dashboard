@@ -193,7 +193,7 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
               label: t('LABEL.SHOW_NEIGHBORHOODS'),
               icon: 'hugeicons:city-03',
               onClick: (item: any) => {
-                router.push(`${paths.dashboard.citiesAndNeighborhoods}/${item.id}`);
+                router.push(`${paths.dashboard.citiesAndNeighborhoods}/${item._id || item.id}`);
               },
             },
             {
@@ -201,7 +201,7 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
               label: t('LABEL.DELETE'),
               icon: 'mingcute:delete-fill',
               onClick: (item) => {
-                setSelectedId(item.id);
+                setSelectedId(item._id || item.id);
                 confirmDelete.onTrue();
               },
             },

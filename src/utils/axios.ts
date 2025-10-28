@@ -158,7 +158,7 @@ export const endpoints = {
     deleteQuestion: (questionId: string) => `/admin-panel/faq-item/${questionId}`,
   },
   citiesAndNeighborhoods: {
-    fetchCities: '/admin-panel/all-cities',
+    fetchCities: '/admin/get-all-cities',
     changeCityStatus: (cityId: string, cityStatus: boolean) =>
       `/admin-panel/update-activation-city/${cityId}/${cityStatus}`,
     fetchNeighborhoods: (cityId: string) => `/admin-panel/all-neighborhoods/${cityId}`,

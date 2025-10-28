@@ -22,9 +22,9 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     filters: city_name,
   });
 
-  const filteredProducts: ICenter[] = centers?.data;
+  const filteredProducts: ICenter[] = centers?.docs || [];
 
-  return <CitiesView cities={filteredProducts} count={centers?.meta?.itemCount} />;
+  return <CitiesView cities={filteredProducts} count={centers?.totalDocs || 0} />;
 };
 
 export default Page;

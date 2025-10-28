@@ -32,9 +32,21 @@ export const fetchCities = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    
+    // Handle new response structure with data wrapper
+    const responseData = res?.data;
+    
+    // Transform the response to match the expected structure
+    return {
+      docs: responseData?.data?.docs || [],
+      totalDocs: responseData?.data?.totalDocs || 0,
+      page: responseData?.data?.page || page,
+      limit: responseData?.data?.limit || limit,
+      totalPages: responseData?.data?.totalPages || 1,
+    };
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch cities:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
