@@ -129,6 +129,7 @@ export const editCategoriey = async (reqBody: FormData, id: string): Promise<any
 };
 
 export const deleteCategory = async (categoryId: string): Promise<any> => {
+  console.log('Deleting category:', categoryId);
   try {
     const accessToken = cookies().get('access_token')?.value;
     const lang = cookies().get('Language')?.value;

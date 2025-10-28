@@ -109,6 +109,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   };
 
   const handleconfirmDelete = async () => {
+    console.log('Deleting category:', selectedId);
     const res = await deleteCategory(selectedId);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
@@ -211,7 +212,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
               label: t('LABEL.DELETE'),
               icon: 'mingcute:delete-fill',
               onClick: (item) => {
-                setSelectedId(item.id);
+                setSelectedId(item._id || item.id);
                 confirmDelete.onTrue();
               },
             },

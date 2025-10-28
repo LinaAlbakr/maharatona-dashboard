@@ -135,7 +135,7 @@ export const endpoints = {
     deleteField: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
     new: `/admin/create-field`,
     edit: (fieldId: string) => `/admin/update-field/${fieldId}`,
-    deleteCategory: (categoryId: string) => `/admin-panel/delete-field/${categoryId}`,
+    deleteCategory: (categoryId: string) => `/admin/delete-field/${categoryId}`,
   },
   coupons: {
     fetch: '/admin-panel/all-discount-code',
