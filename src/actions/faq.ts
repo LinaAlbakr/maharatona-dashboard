@@ -19,6 +19,7 @@ export const fetchFaqCategories = async ({
   page = 1,
   limit = 50,
   filters = '',
+  categoryId,
 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
@@ -27,14 +28,25 @@ export const fetchFaqCategories = async ({
     const res = await axiosInstance.get(endpoints.faq.fetchFaqCategoriesStudent, {
       params: {
         page,
-        limit : 10,
+        limit,
         by_name: filters,
+        faq_category_id: categoryId,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    // Normalize to old shape { data, meta }
+    const payload = res?.data?.data || {};
+    return {
+      data: payload?.docs || [],
+      meta: {
+        itemCount: payload?.totalDocs || 0,
+        page: payload?.page || page,
+        limit: payload?.limit || limit,
+        totalPages: payload?.totalPages || 1,
+      },
+    };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error as any);
   }
 };
 
@@ -42,6 +54,7 @@ export const fetchFaqCategoriesCenter = async ({
   page = 1,
   limit = 50,
   filters = '',
+  categoryId,
 }: IParams): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
@@ -50,14 +63,24 @@ export const fetchFaqCategoriesCenter = async ({
     const res = await axiosInstance.get(endpoints.faq.fetchFaqCategoriesCenter, {
       params: {
         page,
-        limit : 10,
+        limit,
         by_name: filters,
+        faq_category_id: categoryId,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    const payload = res?.data?.data || {};
+    return {
+      data: payload?.docs || [],
+      meta: {
+        itemCount: payload?.totalDocs || 0,
+        page: payload?.page || page,
+        limit: payload?.limit || limit,
+        totalPages: payload?.totalPages || 1,
+      },
+    };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error as any);
   }
 };
 
@@ -130,9 +153,18 @@ export const fetchCategoryQuestions = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    const payload = res?.data?.data || {};
+    return {
+      data: payload?.docs || [],
+      meta: {
+        itemCount: payload?.totalDocs || 0,
+        page: payload?.page || page,
+        limit: payload?.limit || limit,
+        totalPages: payload?.totalPages || 1,
+      },
+    };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error as any);
   }
 };
 
