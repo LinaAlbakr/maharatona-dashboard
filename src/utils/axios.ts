@@ -121,7 +121,7 @@ export const endpoints = {
   support: {
     calls_reasons: {
       fetch: '/admin/get-all-calls-reasons',
-      delete_reason: (reasonId: string) => `/admin-panel/delete-call-us-reason/${reasonId}`,
+      delete_reason: (reasonId: string) => `/admin/delete-calls-reason/${reasonId}`,
       new: '/admin/add-calls-reason',
       edit: (reasonId: string) => `/admin/update-calls-reason/${reasonId}`,
     },
