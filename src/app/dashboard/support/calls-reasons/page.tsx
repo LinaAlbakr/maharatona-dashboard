@@ -21,9 +21,12 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     filters: reason_name,
   });
 
-  const filteredReasons: any[] = reasons?.data;
+  const filteredReasons: any[] = (reasons?.docs || []).map((r: any) => ({
+    id: r?._id,
+    ...r,
+  }));
 
-  return <CallsReasonsView reasons={filteredReasons} count={reasons?.meta?.itemCount} />;
+  return <CallsReasonsView reasons={filteredReasons} count={reasons?.totalDocs || 0} />;
 };
 
 export default Page;
