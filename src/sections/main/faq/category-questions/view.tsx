@@ -42,7 +42,7 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
   const TABLE_HEAD = [
-    { id: 'question_ar', label: 'LABEL.QUESTION_NAME' },
+    { id: 'question_en', label: 'LABEL.QUESTION_NAME' },
     { id: 'order', label: 'LABEL.ORDER' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
@@ -181,7 +181,7 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
             },
           ]}
           customRender={{
-            question_ar: (item: any) =>
+            question_en: (item: any) =>
               i18n.language === 'ar' ? item?.question_ar : item?.question_en,
           }}
         />

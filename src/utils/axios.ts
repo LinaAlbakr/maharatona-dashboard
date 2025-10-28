@@ -153,7 +153,7 @@ export const endpoints = {
     editCategory: (categoryId: string) => `/admin/update-faq-category/${categoryId}`,
     deleteCategory: (categoryId: string) => `/admin-panel/delete-faq-category/${categoryId}`,
     fetchQuestions: '/admin/get-all-faq-items',
-    newQuestion: '/admin-panel/create-faq-item',
+    newQuestion: '/admin/create-faq-item',
     editQuestion: (questionId: string) => `/admin-panel/update-faq-item/${questionId}`,
     deleteQuestion: (questionId: string) => `/admin-panel/faq-item/${questionId}`,
   },

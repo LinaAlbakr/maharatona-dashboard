@@ -46,7 +46,16 @@ export const fetchFaqCategories = async ({
       },
     };
   } catch (error) {
-    throw new Error(error as any);
+    return {
+      data: [],
+      meta: {
+        itemCount: 0,
+        page,
+        limit,
+        totalPages: 0,
+      },
+      error: getErrorMessage(error),
+    };
   }
 };
 
@@ -80,7 +89,16 @@ export const fetchFaqCategoriesCenter = async ({
       },
     };
   } catch (error) {
-    throw new Error(error as any);
+    return {
+      data: [],
+      meta: {
+        itemCount: 0,
+        page,
+        limit,
+        totalPages: 0,
+      },
+      error: getErrorMessage(error),
+    };
   }
 };
 
@@ -164,7 +182,16 @@ export const fetchCategoryQuestions = async ({
       },
     };
   } catch (error) {
-    throw new Error(error as any);
+    return {
+      data: [],
+      meta: {
+        itemCount: 0,
+        page,
+        limit,
+        totalPages: 0,
+      },
+      error: getErrorMessage(error),
+    };
   }
 };
 

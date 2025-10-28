@@ -71,6 +71,7 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
           enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
         }
       } else {
+        console.log("reqBody",reqBody);
         const res = await newQuestion(reqBody);
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });

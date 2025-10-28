@@ -49,7 +49,7 @@ interface TabPanelProps {
 const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-
+console.log("categories",categories);
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -233,7 +233,8 @@ const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Read
                 label: t('LABEL.VIEW'),
                 icon: 'lets-icons:view',
                 onClick: (item) => {
-                  router.push(`${paths.dashboard.faq}/${item.id}`);
+                  const categoryId = (item as any).id ?? (item as any)._id;
+                  router.push(`${paths.dashboard.faq}/${categoryId}`);
                 },
               },
               {
@@ -256,7 +257,10 @@ const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Read
               },
             ]}
             customRender={{
-              name_ar: (item: any) => (i18n.language === 'ar' ? item?.name_ar : item?.name_en),
+              name_ar: (item: any) =>
+                i18n.language === 'ar'
+                  ? item?.question_ar ?? item?.name_ar
+                  : item?.question_en ?? item?.name_en,
             }}
           />
         </TabPanel>
@@ -272,7 +276,8 @@ const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Read
                 label: t('LABEL.VIEW'),
                 icon: 'lets-icons:view',
                 onClick: (item) => {
-                  router.push(`${paths.dashboard.faq}/${item.id}`);
+                  const categoryId = (item as any).id ?? (item as any)._id;
+                  router.push(`${paths.dashboard.faq}/${categoryId}`);
                 },
               },
               {
@@ -295,7 +300,10 @@ const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Read
               },
             ]}
             customRender={{
-              name_ar: (item: any) => (i18n.language === 'ar' ? item?.name_ar : item?.name_en),
+              name_ar: (item: any) =>
+                i18n.language === 'ar'
+                  ? item?.question_ar ?? item?.name_ar
+                  : item?.question_en ?? item?.name_en,
             }}
           />
         </TabPanel>

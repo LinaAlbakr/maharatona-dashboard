@@ -20,7 +20,7 @@ const Page = async ({ params, searchParams }: IProps) => {
     categoryId: params.categoryId,
   });
   const filteredProducts: CategoryQuestion[] = categoryQuestions?.data;
-
+console.log("categoryQuestions",categoryQuestions);
   return (
     <CategoryQuestionsView
       questions={filteredProducts}

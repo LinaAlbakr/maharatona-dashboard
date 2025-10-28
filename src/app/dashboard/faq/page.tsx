@@ -29,8 +29,14 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     filters: category_name,
   });
 
-  const filteredProducts: FaqCategory[] = categories?.data;
-  const filteredProductsCenter: FaqCategory[] = categoriesCenter?.data;
+  const filteredProducts: FaqCategory[] = (categories?.data || []).map((c: any) => ({
+    id: c?._id,
+    ...c,
+  }));
+  const filteredProductsCenter: FaqCategory[] = (categoriesCenter?.data || []).map((c: any) => ({
+    id: c?._id,
+    ...c,
+  }));
 
   return <FaqView categories={filteredProducts} categoriesCenter={filteredProductsCenter} metaCenter={categoriesCenter?.meta} meta={categories?.meta} count={categories?.meta?.itemCount} />;
 };
