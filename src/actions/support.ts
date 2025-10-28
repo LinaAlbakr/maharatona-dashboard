@@ -131,7 +131,8 @@ export const fetchTechnicalSupportItemInfo = async (itemId: string): Promise<any
       params: {},
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data?.data;
+    // API now returns item directly, not under data
+    return res?.data;
   } catch (error) {
     throw new Error(error);
   }

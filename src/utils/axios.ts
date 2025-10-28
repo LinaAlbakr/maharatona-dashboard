@@ -127,7 +127,7 @@ export const endpoints = {
     },
     technical_support: {
       fetch: '/client/get-all-technical-support',
-      details: (itemId: string) => `/admin-panel/call-us/${itemId}`,
+      details: (itemId: string) => `/client/get-technical-support-details/${itemId}`,
     },
   },
   categories: {

@@ -33,7 +33,7 @@ const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.NAME')}
-            secondary={ItemInfo?.userName}
+            secondary={ItemInfo?.name}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{
               color: 'info.dark',
@@ -45,18 +45,18 @@ const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.DATE')}
-            secondary={
-              i18n.language === 'ar'
-                ? arabicDate(ItemInfo?.created_at)
-                : englishDate(ItemInfo?.created_at)
-            }
+            secondary={() => {
+              const dateValue = ItemInfo?.createdAt ?? ItemInfo?.date;
+              if (!dateValue) return '';
+              return i18n.language === 'ar' ? arabicDate(dateValue) : englishDate(dateValue);
+            }}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.TYPE')}
-            secondary={t(`LABEL.${ItemInfo?.callUsType}`)}
+            secondary={ItemInfo?.type}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}
           />
@@ -71,18 +71,14 @@ const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.REASON_TITLE')}
-            secondary={
-              i18n.language === 'ar'
-                ? ItemInfo?.reasonCallUs.name_ar
-                : ItemInfo?.reasonCallUs?.name_en
-            }
+            secondary={ItemInfo?.reasonTitle}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.common' }}
             primary={t('LABEL.DESCRIPTION')}
-            secondary={ItemInfo?.description}
+            secondary={ItemInfo?.desc}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}
           />
