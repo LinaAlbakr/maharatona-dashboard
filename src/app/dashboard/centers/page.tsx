@@ -19,6 +19,8 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const city_id = typeof searchParams?.city === 'string' ? searchParams?.city : '';
   const neighborhood_id = typeof searchParams?.neighborhood === 'string' ? searchParams?.neighborhood : '';
 
+  console.log('Centers page params:', { page, limit, center_name, city_id, neighborhood_id });
+
   const centers = await fetchCenters({
     limit,
     page,
@@ -30,9 +32,11 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const cities = await fetchCities();
   // Find the city name from the cityId
   const selectedCity = cities.find((city) => city.id === city_id);
-  const neighborhoods = city_id && selectedCity ? await fetchCityNeighborhoods({ cityName: selectedCity.name }) : [];
+  const neighborhoods = city_id ? await fetchCityNeighborhoods({ cityId: city_id }) : [];
 
-  const filteredProducts: ICenter[] = centers?.data?.map((center: any) => ({
+  console.log('Centers data:', { centersCount: centers?.data?.length, citiesCount: cities.length, neighborhoodsCount: neighborhoods.length });
+
+  const normalizedCenters: ICenter[] = centers?.data?.map((center: any) => ({
     ...center,
     id: center.id || center._id,
     phone: center.phone || '',
@@ -62,12 +66,37 @@ const Page = async ({ searchParams }: Readonly<props>) => {
         },
   }));
 
+  // Resolve selected city/neighborhood names from IDs for client-side filtering fallback
+  const selectedCityName = city_id ? selectedCity?.name ?? '' : '';
+  const selectedNeighborhoodName = neighborhood_id
+    ? (neighborhoods.find((n) => n.id === neighborhood_id)?.name ?? '')
+    : '';
+
+  // Apply client-side filters to ensure UI behaves even if backend ignores params
+  const filteredProducts = (normalizedCenters || []).filter((center) => {
+    const matchesName = center_name
+      ? String(center.name || '')
+          .toLowerCase()
+          .includes(String(center_name).toLowerCase())
+      : true;
+
+    const matchesCity = selectedCityName
+      ? String(center.neighborhood?.city?.name || '') === selectedCityName
+      : true;
+
+    const matchesNeighborhood = selectedNeighborhoodName
+      ? String(center.neighborhood?.name || '') === selectedNeighborhoodName
+      : true;
+
+    return matchesName && matchesCity && matchesNeighborhood;
+  });
+
   return (
     <CentersView
       centers={filteredProducts}
       cities={cities}
       neighborhoods={neighborhoods}
-      count={centers?.pagination?.totalItems}
+      count={filteredProducts.length}
     />
   );
 };

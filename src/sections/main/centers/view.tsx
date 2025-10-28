@@ -68,8 +68,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
 
   const formDefaultValues = {
     name: '',
-    city: { id: city },
-    neighborhood: { id: neighborhood },
+    cityId: { id: city },
+    neighborhoodId: { id: neighborhood },
   };
 
   const methods = useForm({
@@ -88,7 +88,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         params.delete(name);
       }
       if (name === 'city') {
-        setValue('neighborhood', { id: '' });
+        setValue('neighborhoodId', { id: '' });
         localStorage.setItem('neighborhood', '');
         params?.delete('neighborhood');
       }
@@ -213,8 +213,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                     placeholder={t('LABEL.NEIGHBORHOOD')}
                     name="neighborhoodId"
                     isDisabled={!neighborhoods || neighborhoods.length === 0}
-                    onCustomChange={(selectedCityId: any) =>
-                      createQueryString('neighborhood', selectedCityId?.id ?? '')
+                    onCustomChange={(selectedNeighborhood: ITems | null) =>
+                      createQueryString('neighborhood', selectedNeighborhood?.id ?? '')
                     }
                   />
                 </Box>

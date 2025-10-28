@@ -38,18 +38,33 @@ export const  fetchCenters = async ({
   const lang = getCookie('Language', { cookies });
 
   try {
+    const params: any = {
+      page,
+      limit,
+    };
+    
+    // Only add filter parameters if they have values
+    if (filters) {
+      params.by_name = filters;
+    }
+    if (city_id) {
+      params.by_city_id = city_id;
+    }
+    if (neighborhood_id) {
+      params.by_neighborhood_id = neighborhood_id;
+    }
+    
+    console.log('fetchCenters params:', params);
+    
     const res = await axiosInstance.get(endpoints.centers.fetch, {
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
-      params: {
-        page,
-        limit,
-        by_name: filters,
-        by_city_id: city_id,
-        by_neighborhood_id: neighborhood_id,
-      },
+      params,
     });
+    
+    console.log('fetchCenters response:', res?.data);
     return res?.data;
   } catch (error) {
+    console.error('fetchCenters error:', error);
     throw new Error(getErrorMessage(error));
   }
 };
@@ -79,13 +94,12 @@ export const fetchCities = async (): Promise<ITems[]> => {
     throw new Error('Failed to fetch cities');
   }
 };
-export const fetchCityNeighborhoods = async ({ cityName }: { cityName: string }): Promise<ITems[]> => {
+export const fetchCityNeighborhoods = async ({ cityId }: { cityId: string }): Promise<ITems[]> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.centers.neighborhoods, {
-      params: { city: cityName },
+    const res = await axiosInstance.get(`/admin/get-neighbourhood-by-city/${cityId}`, {
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     
