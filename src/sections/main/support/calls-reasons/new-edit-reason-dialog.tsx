@@ -19,7 +19,7 @@ import { invalidatePath } from 'src/actions/cache-invalidation';
 
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
-import { editReason, newReason } from 'src/actions/support';
+import axiosInstance, { endpoints } from 'src/utils/axios';
 
 interface Props {
   open: boolean;
@@ -53,10 +53,10 @@ export function NewEditReasonDialog({ open, onClose, reason }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (reason) {
-        await editReason(data, reason.id);
+        await axiosInstance.put(endpoints.support.calls_reasons.edit(reason.id), data);
         enqueueSnackbar(t('MESSAGE.REASON_UPDATED_SUCCESSFULLY'));
       } else {
-        await newReason(data);
+        await axiosInstance.post(endpoints.support.calls_reasons.new, data);
         enqueueSnackbar(t('MESSAGE.REASON_CREATED_SUCCESSFULLY'));
       }
       invalidatePath(paths.dashboard.supportGroup.calls_reasons);

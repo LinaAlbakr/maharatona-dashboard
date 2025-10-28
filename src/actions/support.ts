@@ -86,7 +86,7 @@ export const editReason = async (reqBody: any, reasonId: string): Promise<any> =
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    await axiosInstance.patch(endpoints.support.calls_reasons.edit(reasonId), reqBody, {
+    await axiosInstance.put(endpoints.support.calls_reasons.edit(reasonId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
