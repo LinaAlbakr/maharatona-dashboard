@@ -47,10 +47,17 @@ export const fetchCategories = async ({
 export const editFieldStatus = async (field: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const fieldId = field.id || field._id;
+    const fieldId = field?.id || field?._id;
+    
+    if (!fieldId) {
+      return {
+        error: 'Field ID is required',
+      };
+    }
+    
     const res = await axiosInstance.patch(
       endpoints.categories.edit(fieldId),
-      { is_active: !field.is_active },
+      {},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -58,7 +65,7 @@ export const editFieldStatus = async (field: any): Promise<any> => {
       }
     );
     revalidatePath(`/dashboard/categories/`);
-    return res.data;
+    return res.data || { statusCode: 200 };
   } catch (error) {
     return {
       error: getErrorMessage(error),
