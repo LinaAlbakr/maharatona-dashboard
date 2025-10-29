@@ -119,11 +119,16 @@ export const fetchNeighborhoods = async ({
 export const editNeighborhoodStatus = async (neighborhood: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    await axiosInstance.put(
-      endpoints.citiesAndNeighborhoods.changeNeighborhoodStatus(
-        neighborhood.id,
-        !neighborhood.is_active
-      ),
+    const neighborhoodId = neighborhood?.id || neighborhood?._id;
+    
+    if (!neighborhoodId) {
+      return {
+        error: 'Neighborhood ID is required',
+      };
+    }
+    
+    const res = await axiosInstance.patch(
+      endpoints.citiesAndNeighborhoods.changeNeighborhoodStatus(neighborhoodId),
       {},
       {
         headers: {
@@ -132,6 +137,7 @@ export const editNeighborhoodStatus = async (neighborhood: any): Promise<any> =>
       }
     );
     revalidatePath(paths.dashboard.citiesAndNeighborhoods);
+    return res.data || { statusCode: 200 };
   } catch (error) {
     return {
       error: getErrorMessage(error),
