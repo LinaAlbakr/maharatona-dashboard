@@ -69,6 +69,16 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
     [pathname, router, searchParams, setValue]
   );
 
+  // Client-side filtering by search query
+  const searchValue = (searchParams.get('search') || '').toString().trim().toLowerCase();
+  const filteredReasons = searchValue
+    ? (reasons || []).filter((item: any) => {
+        const ar = (item?.name_ar || '').toString().toLowerCase();
+        const en = (item?.name_en || '').toString().toLowerCase();
+        return ar.includes(searchValue) || en.includes(searchValue);
+      })
+    : reasons;
+
   const handleConfirmDelete = async () => {
     if (selectedId) {
       const res = await deleteReason(selectedId);
@@ -154,8 +164,8 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           </Grid>
         </Box>
         <SharedTable
-          count={count}
-          data={reasons}
+          count={filteredReasons.length}
+          data={filteredReasons}
           tableHead={TABLE_HEAD}
           actions={[
             {
