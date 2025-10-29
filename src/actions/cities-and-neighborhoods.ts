@@ -53,8 +53,16 @@ export const fetchCities = async ({
 export const editCityStatus = async (city: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const res = await axiosInstance.put(
-      endpoints.citiesAndNeighborhoods.changeCityStatus(city.id, !city.is_active),
+    const cityId = city?.id || city?._id;
+    
+    if (!cityId) {
+      return {
+        error: 'City ID is required',
+      };
+    }
+    
+    const res = await axiosInstance.patch(
+      endpoints.citiesAndNeighborhoods.changeCityStatus(cityId),
       {},
       {
         headers: {
@@ -63,7 +71,7 @@ export const editCityStatus = async (city: any): Promise<any> => {
       }
     );
     revalidatePath(paths.dashboard.citiesAndNeighborhoods);
-    return res.data;
+    return res.data || { statusCode: 200 };
   } catch (error) {
     return {
       error: getErrorMessage(error),

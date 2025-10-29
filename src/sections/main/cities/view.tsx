@@ -81,20 +81,24 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
 
   const handleConfirmActivate = async () => {
     const res = await editCityStatus(selectedCity);
-    if (res.statusCode === 200) {
-      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
-      confirmActivate.onFalse();
-    } else {
+    if (res?.error) {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'), {
+        variant: 'success',
+      });
+      confirmActivate.onFalse();
     }
   };
   const handleConfirmDeactivate = async () => {
     const res = await editCityStatus(selectedCity);
-    if (res.statusCode === 200) {
-      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
-      confirmDeactivate.onFalse();
-    } else {
+    if (res?.error) {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'), {
+        variant: 'success',
+      });
+      confirmDeactivate.onFalse();
     }
   };
 

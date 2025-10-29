@@ -160,8 +160,7 @@ export const endpoints = {
   },
   citiesAndNeighborhoods: {
     fetchCities: '/admin/get-all-cities',
-    changeCityStatus: (cityId: string, cityStatus: boolean) =>
-      `/admin-panel/update-activation-city/${cityId}/${cityStatus}`,
+    changeCityStatus: (cityId: string) => `/admin/toggle-city-status/${cityId}`,
     fetchNeighborhoods: (cityId: string) => `/admin/get-neighbourhood-by-city/${cityId}`,
     changeNeighborhoodStatus: (neighborhoodId: string) =>
       `/admin/deactivate-neighbourhood/${neighborhoodId}`,
