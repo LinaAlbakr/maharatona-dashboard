@@ -69,6 +69,18 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
     [pathname, router, searchParams, setValue]
   );
 
+  // Compute client-side filtered items based on search and type query params
+  const searchValue = (searchParams.get('search') || '').toString().trim().toLowerCase();
+  const typeValue = (searchParams.get('type') || '').toString().trim();
+  const filteredItems = (items || []).filter((item: any) => {
+    const matchesSearch = searchValue
+      ? ((item?.name || '').toString().toLowerCase().includes(searchValue) ||
+         (item?.email || '').toString().toLowerCase().includes(searchValue))
+      : true;
+    const matchesType = typeValue ? String(item?.type) === typeValue : true;
+    return matchesSearch && matchesType;
+  });
+
   return (
     <>
       <Container
@@ -157,8 +169,8 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
           </Grid>
         </Box>
         <SharedTable
-          count={count}
-          data={items}
+          count={filteredItems.length}
+          data={filteredItems}
           tableHead={TABLE_HEAD}
           actions={[
             {
