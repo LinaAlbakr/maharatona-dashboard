@@ -120,6 +120,15 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
     }
     confirmDelete.onFalse();
   };
+  const searchValue = (searchParams.get('search') || '').toString().trim().toLowerCase();
+  const filteredCategories = searchValue
+    ? categories.filter((item: any) => {
+        const ar = (item?.name_ar || '').toString().toLowerCase();
+        const en = (item?.name_en || '').toString().toLowerCase();
+        return ar.includes(searchValue) || en.includes(searchValue);
+      })
+    : categories;
+
   return (
     <>
       <Container
@@ -195,8 +204,8 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           </Grid>
         </Box>
         <SharedTable
-          count={count}
-          data={categories}
+          count={filteredCategories.length}
+          data={filteredCategories}
           tableHead={TABLE_HEAD}
           actions={[
             {
