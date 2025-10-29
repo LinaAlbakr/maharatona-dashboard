@@ -114,6 +114,16 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
     confirmDelete.onFalse();
   };
 
+  // Client-side filtering by search query
+  const searchValue = (searchParams.get('search') || '').toString().trim().toLowerCase();
+  const filteredNeighborhoods = searchValue
+    ? (neighborhoods || []).filter((item: any) => {
+        const ar = (item?.name_ar || '').toString().toLowerCase();
+        const en = (item?.name_en || '').toString().toLowerCase();
+        return ar.includes(searchValue) || en.includes(searchValue);
+      })
+    : neighborhoods;
+
   return (
     <>
       <Container
@@ -187,8 +197,8 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
           </Button>
         </Box>
         <SharedTable
-          count={count}
-          data={neighborhoods}
+          count={filteredNeighborhoods.length}
+          data={filteredNeighborhoods}
           tableHead={TABLE_HEAD}
           actions={[
             {
