@@ -72,6 +72,16 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
     [pathname, router, searchParams]
   );
 
+  // Client-side filtering by search query
+  const searchValue = (searchParams.get('search') || '').toString().trim().toLowerCase();
+  const filteredQuestions = searchValue
+    ? (questions || []).filter((item: any) => {
+        const ar = (item?.question_ar || '').toString().toLowerCase();
+        const en = (item?.question_en || '').toString().toLowerCase();
+        return ar.includes(searchValue) || en.includes(searchValue);
+      })
+    : questions;
+
   const handleConfirmDelete = async () => {
     if (selectedId) {
       const res = await deleteQuestion(selectedId);
@@ -157,8 +167,8 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
           </Grid>
         </Box>
         <SharedTable
-          count={count}
-          data={questions}
+          count={filteredQuestions.length}
+          data={filteredQuestions}
           tableHead={TABLE_HEAD}
           actions={[
             {

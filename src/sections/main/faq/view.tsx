@@ -89,6 +89,19 @@ console.log("categories",categories);
     [pathname, router, searchParams]
   );
 
+  // Client-side filtering by search query for both tabs
+  const searchValue = (searchParams.get('search') || '').toString().trim().toLowerCase();
+  const filterBySearch = (list: any[]) =>
+    searchValue
+      ? list.filter((item: any) => {
+          const ar = (item?.name_ar || item?.question_ar || '').toString().toLowerCase();
+          const en = (item?.name_en || item?.question_en || '').toString().toLowerCase();
+          return ar.includes(searchValue) || en.includes(searchValue);
+        })
+      : list;
+  const filteredCategories = filterBySearch(categories);
+  const filteredCategoriesCenter = filterBySearch(categoriesCenter);
+
   const handleConfirmDelete = async () => {
     if (selectedId) {
       const res = await deleteFaqCategory(selectedId);
@@ -224,8 +237,8 @@ console.log("categories",categories);
         <TabPanel value={value} index={0}>
           <SharedTableFaq
             meta={meta}
-            count={categories.length}
-            data={categories}
+            count={filteredCategories.length}
+            data={filteredCategories}
             tableHead={TABLE_HEAD}
             actions={[
               {
@@ -267,8 +280,8 @@ console.log("categories",categories);
         <TabPanel value={value} index={1}>
           <SharedTableFaq
             meta={metaCenter}
-            count={categoriesCenter.length}
-            data={categoriesCenter}
+            count={filteredCategoriesCenter.length}
+            data={filteredCategoriesCenter}
             tableHead={TABLE_HEAD}
             actions={[
               {
