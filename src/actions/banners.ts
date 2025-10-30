@@ -53,7 +53,20 @@ export const fetchSingleBannder = async (id: string): Promise<any> => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return res.data;
+    const p = res?.data?.data ?? {};
+    // Map API package response to IBanner-like shape used by details view
+    const mapped = {
+      id: p?._id,
+      name: p?.name_en ?? p?.name_ar ?? '',
+      description: p?.desc_en ?? p?.desc_ar ?? '',
+      image_cover: p?.imgae_cover ?? p?.image_cover ?? '',
+      created_at: p?.createdAt ?? '',
+      duration: Number(p?.duration ?? 0),
+      price: Number(p?.price ?? 0),
+      center_num: Array.isArray(p?.banners) ? p.banners.length : 0,
+      advertisementType: p?.type ?? '',
+    };
+    return { data: mapped };
   } catch (error) {
     return {
       error: getErrorMessage(error),

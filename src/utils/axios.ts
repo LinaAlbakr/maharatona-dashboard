@@ -171,7 +171,7 @@ export const endpoints = {
   },
   banners: {
     fetch: '/admin/get-all-packages',
-    bannerDetails: (id: string) => `/admin-panel/single-advertisement/${id}`,
+    bannerDetails: (id: string) => `/admin/package/${id}`,
     bannerCenters: (id: string, page: number, limit: number) =>
       `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`,
     newBanner: `/admin/create-package`,
