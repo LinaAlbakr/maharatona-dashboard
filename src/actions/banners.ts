@@ -85,7 +85,35 @@ export const newBanner = async (reqBody: FormData): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    await axiosInstance.post(endpoints.banners.newBanner, reqBody, {
+    // Remap form keys to API-required field names
+    const payload = new FormData();
+    const imageCover = reqBody.get('image_cover');
+    if (imageCover instanceof File) {
+      payload.append('file', imageCover);
+    }
+    const mappings: Record<string, string> = {
+      name_en: 'name_en',
+      name_ar: 'name_ar',
+      duration: 'duration',
+      order: 'order',
+      price: 'price',
+      advertisement_type: 'type',
+      description_ar: 'desc_ar',
+      description_en: 'desc_en',
+      advertisement_status: 'advertisement_status',
+    };
+    Object.entries(mappings).forEach(([from, to]) => {
+      const value = reqBody.get(from);
+      if (value !== null && value !== undefined && value !== '') {
+        payload.append(to, value as any);
+      }
+    });
+    // Default status to Active if not provided
+    if (!payload.get('advertisement_status')) {
+      payload.append('advertisement_status', 'Active');
+    }
+
+    await axiosInstance.post(endpoints.banners.newBanner, payload, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,
@@ -104,7 +132,31 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    await axiosInstance.put(endpoints.banners.editBanner(bannerId), reqBody, {
+    // Remap form keys to API-required field names
+    const payload = new FormData();
+    const imageCover = reqBody.get('image_cover');
+    if (imageCover instanceof File) {
+      payload.append('file', imageCover);
+    }
+    const mappings: Record<string, string> = {
+      name_en: 'name_en',
+      name_ar: 'name_ar',
+      duration: 'duration',
+      order: 'order',
+      price: 'price',
+      advertisement_type: 'type',
+      description_ar: 'desc_ar',
+      description_en: 'desc_en',
+      advertisement_status: 'advertisement_status',
+    };
+    Object.entries(mappings).forEach(([from, to]) => {
+      const value = reqBody.get(from);
+      if (value !== null && value !== undefined && value !== '') {
+        payload.append(to, value as any);
+      }
+    });
+
+    await axiosInstance.put(endpoints.banners.editBanner(bannerId), payload, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Accept-Language': lang,

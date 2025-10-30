@@ -174,8 +174,8 @@ export const endpoints = {
     bannerDetails: (id: string) => `/admin-panel/single-advertisement/${id}`,
     bannerCenters: (id: string, page: number, limit: number) =>
       `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`,
-    newBanner: `/admin-panel/center-buy-advertisement`,
-    editBanner: (bannerId: string) => `/admin-panel/update-advertisement/${bannerId}`,
+    newBanner: `/admin/create-package`,
+    editBanner: (bannerId: string) => `/admin/update-package/${bannerId}`,
     changeCenterMediaStatus: (centerId: string, centerStatus: boolean) =>
       `/admin-panel/update-activation-advertisement-center/${centerId}/${centerStatus}`,
     fields: '/field/all-fields',
