@@ -32,8 +32,8 @@ export const fetchBanners = async ({
       params: {
         page,
         limit,
-        by_name: filters,
-        advertisementType: type,
+        search: filters,
+        type,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });

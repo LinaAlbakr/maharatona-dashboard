@@ -25,7 +25,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 
-import { Field, Banner } from 'src/types/banners';
+import { Banner } from 'src/types/banners';
 
 import FileManagerNewFolderDialog from './add-banner';
 import { NewEditBannerDialog } from './new-edit-banner-dialog';
@@ -33,7 +33,7 @@ import { NewEditBannerDialog } from './new-edit-banner-dialog';
 type props = {
   banners: Banner[];
   count: number;
-  fields: Field[];
+  fields: any[];
 };
 
 const types = [

@@ -170,7 +170,7 @@ export const endpoints = {
     deleteNeighborhood: (id: string) => `admin/delete-neighbourhood/${id}`,
   },
   banners: {
-    fetch: '/admin-panel/all-advertisements',
+    fetch: '/admin/get-all-packages',
     bannerDetails: (id: string) => `/admin-panel/single-advertisement/${id}`,
     bannerCenters: (id: string, page: number, limit: number) =>
       `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`,

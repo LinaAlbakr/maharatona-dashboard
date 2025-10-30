@@ -19,10 +19,9 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const advertisementType = typeof searchParams?.type === 'string' ? searchParams?.type : null;
   // const fields = await fetchfields();
   const fields = [
-    { id: '1', name: 'Mathematics', name_en: 'Mathematics', avatar: '/assets/icons/fields/math.svg', color: '#4F46E5' },
-    { id: '2', name: 'Science', name_en: 'Science', avatar: '/assets/icons/fields/science.svg', color: '#10B981' },
-    { id: '3', name: 'Languages', name_en: 'Languages', avatar: '/assets/icons/fields/language.svg', color: '#F59E0B' },
-    { id: '4', name: 'Arts', name_en: 'Arts', avatar: '/assets/icons/fields/arts.svg', color: '#EC4899' },
+    { name_en: 'Main page', name_ar: 'الصفحة الرئيسية', value: 'MAIN' },
+    { name_en: 'Fields', name_ar: 'المجالات', value: 'FIELD' },
+    { name_en: 'Both', name_ar: 'كلاهما', value: 'BOTH' },
   ];
   const centers = await fetchBanners({
     limit,
@@ -31,10 +30,26 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     type: advertisementType,
   });
 
-  const filteredProducts: Banner[] = centers?.data;
+  const docs = centers?.data?.docs ?? [];
+  const filteredProducts: Banner[] = docs.map((p: any) => ({
+    id: p?._id,
+    name_ar: p?.name_ar ?? '',
+    name_en: p?.name_en ?? '',
+    description_ar: p?.desc_ar ?? '',
+    description_en: p?.desc_en ?? '',
+    description: p?.desc_en ?? '',
+    image_cover: p?.imgae_cover ?? p?.image_cover ?? null,
+    created_at: p?.createdAt ?? '',
+    duration: Number(p?.duration ?? 0),
+    price: Number(p?.price ?? 0),
+    center_num: Array.isArray(p?.banners) ? p.banners.length : 0,
+    advertisementType: p?.type ?? '',
+    advertisement_status: p?.advertisement_status ?? '',
+    order: Number(p?.order ?? 0),
+  }));
 
   return (
-    <BannersView banners={filteredProducts} count={centers?.meta?.itemCount} fields={fields} />
+    <BannersView banners={filteredProducts} count={centers?.data?.totalDocs ?? 0} fields={fields} />
   );
 };
 
