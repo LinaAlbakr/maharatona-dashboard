@@ -66,7 +66,26 @@ export const fetchSingleBannder = async (id: string): Promise<any> => {
       center_num: Array.isArray(p?.banners) ? p.banners.length : 0,
       advertisementType: p?.type ?? '',
     };
-    return { data: mapped };
+    // Map inner banners array to IBannerCenter-like items expected by the view
+    const centers = Array.isArray(p?.banners)
+      ? p.banners.map((b: any) => ({
+          id: b?._id,
+          is_active: Boolean(b?.is_active),
+          path: b?.image ?? '',
+          mediaType: b?.media_type ?? '',
+          advertisementCenterType: b?.createdby_type ?? '',
+          expires_at: b?.expires_at ?? '',
+          created_at: p?.createdAt ?? '',
+          center: {
+            id: '',
+            name: '',
+            website: '',
+            phone: '',
+          },
+          course: null,
+        }))
+      : [];
+    return { data: mapped, centers };
   } catch (error) {
     return {
       error: getErrorMessage(error),
@@ -111,8 +130,8 @@ export const newBanner = async (reqBody: FormData): Promise<any> => {
       order: 'order',
       price: 'price',
       advertisement_type: 'type',
-      description_ar: 'desc_ar',
-      description_en: 'desc_en',
+      desc_ar: 'desc_ar',
+      desc_en: 'desc_en',
       advertisement_status: 'advertisement_status',
     };
     Object.entries(mappings).forEach(([from, to]) => {

@@ -108,6 +108,7 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
           enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
         }
       } else {
+        console.log("formData",formData);
         const res = await newBanner(formData);
 
         if (res?.error) {

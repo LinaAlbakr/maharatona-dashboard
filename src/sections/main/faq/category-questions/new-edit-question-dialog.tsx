@@ -64,8 +64,7 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
     };
     try {
       if (item) {
-        console.log("reqBody",reqBody);
-        console.log("item",item);
+       
         const res = await editQuestion(reqBody, item._id || item.id || '');
         if (res?.error) {
           enqueueSnackbar(`${res?.error}`, { variant: 'error' });

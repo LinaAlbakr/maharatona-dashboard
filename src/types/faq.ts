@@ -6,6 +6,7 @@ export type FaqCategory = {
 };
 export type CategoryQuestion = {
   id: string;
+  _id?:string;
   question_ar: string;
   question_en: string;
   answer_ar: string;

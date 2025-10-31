@@ -43,6 +43,7 @@ const types = [
 ];
 
 const BannersView = ({ banners, count, fields }: Readonly<props>) => {
+  console.log("banners",banners);
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const searchParams = useSearchParams();

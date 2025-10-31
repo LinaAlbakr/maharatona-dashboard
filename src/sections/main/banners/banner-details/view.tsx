@@ -28,6 +28,7 @@ type props = {
 };
 
 const SingleBannerView = ({ centers, count, banner }: Readonly<props>) => {
+  console.log("banner",banner);
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const confirmActivate = useBoolean();

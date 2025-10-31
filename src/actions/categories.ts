@@ -56,6 +56,7 @@ export const editFieldStatus = async (field: any): Promise<any> => {
     }
     
     const res = await axiosInstance.patch(
+      
       endpoints.categories.edit(fieldId),
       {},
       {
