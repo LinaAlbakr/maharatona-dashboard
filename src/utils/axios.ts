@@ -138,9 +138,9 @@ export const endpoints = {
     deleteCategory: (categoryId: string) => `/admin/delete-field/${categoryId}`,
   },
   coupons: {
-    fetch: '/admin-panel/all-discount-code',
-    deleteCoupon: (couponId: string) => `/admin-panel/delete-discount-code/${couponId}`,
-    new: `/admin-panel/create-discount-code`,
+    fetch: '/admin/get-all-coupons',
+    deleteCoupon: (couponId: string) => `/admin/delete-coupon/${couponId}`,
+    new: `/admin/create-coupon`,
   },
   staticPage: {
     fetch: (type: string) => `/admin/get-static-page-by-type/${type}`,

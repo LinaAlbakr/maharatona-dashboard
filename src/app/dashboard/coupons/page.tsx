@@ -22,10 +22,22 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     filters: coupon_name,
     type
   });
+console.log("coupons",coupons);
+  const docs = coupons?.data?.docs ?? [];
+  console.log("docs",docs);
+  const filteredProducts: any[] = docs.map((c: any) => ({
+    id: c?._id,
+    code: c?.code ?? '',
+    start_date: c?.start_date ?? '',
+    end_date: c?.end_date ?? '',
+    discount: Number(c?.discount ?? 0),
+    discountType: c?.discount_type ?? '',
+    discountCreateType: c?.discount_create_type ?? '',
+    times_Used: Number(c?.times_used ?? 0),
+    is_active: Boolean(c?.is_active),
+  }));
 
-  const filteredProducts: ICenter[] = coupons?.data;
-
-  return <CouponsView coupons={filteredProducts} count={coupons?.meta?.itemCount} />;
+  return <CouponsView coupons={filteredProducts} count={coupons?.data?.totalDocs ?? 0} />;
 };
 
 export default Page;

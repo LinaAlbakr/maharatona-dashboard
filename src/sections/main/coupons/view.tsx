@@ -31,6 +31,7 @@ export const types = [
 ];
 
 const CouponsView = ({ count, coupons }: Readonly<props>) => {
+  console.log("coupons",coupons);
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -197,14 +198,24 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
             },
           ]}
           customRender={{
-            start_date: (item: any) =>
-              i18n.language === 'ar' ? arabicDate(item?.start_date) : englishDate(item?.start_date),
-            end_date: (item: any) =>
-              i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date),
-            discount: (item: any) => Math.floor(item?.discount),
-            discountType: (item: any) => t('LABEL.' + item?.discountType.toUpperCase()),
-            discountCreateType: (item: any) => t('LABEL.' + item?.discountCreateType.toUpperCase()),
-            times_Used: (item: any) => item?.times_Used + ' ' + t('LABEL.TIME'),
+            start_date: (item: any) => {
+              if (!item?.start_date) return '-';
+              return i18n.language === 'ar'
+                ? arabicDate(item.start_date)
+                : englishDate(item.start_date);
+            },
+            end_date: (item: any) => {
+              if (!item?.end_date) return '-';
+              return i18n.language === 'ar'
+                ? arabicDate(item.end_date)
+                : englishDate(item.end_date);
+            },
+            discount: (item: any) => Math.floor(item?.discount ?? 0),
+            discountType: (item: any) =>
+              item?.discountType ? t('LABEL.' + item?.discountType.toUpperCase()) : '-',
+            discountCreateType: (item: any) =>
+              item?.discountCreateType ? t('LABEL.' + item?.discountCreateType.toUpperCase()) : '-',
+            times_Used: (item: any) => `${item?.times_Used ?? 0} ${t('LABEL.TIME')}`,
           }}
         />
       </Container>

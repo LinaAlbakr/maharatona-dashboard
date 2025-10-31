@@ -28,8 +28,8 @@ export const fetchCoupons = async ({
       params: {
         page,
         limit,
-        by_name: filters,
-        discountCreateType: type,
+        search: filters,
+        discount_create_type: type,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });

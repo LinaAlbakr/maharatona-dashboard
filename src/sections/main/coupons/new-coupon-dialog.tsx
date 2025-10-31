@@ -86,13 +86,23 @@ export function NewCouponDialog({ open, onClose }: Props) {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    const reqBody = {
-      ...data,
-      startDate: format(data.startDate, 'yyyy-MM-dd'),
-      endDate: format(data.endDate, 'yyyy-MM-dd'),
-    };
+    const start = new Date(data.startDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(data.endDate);
+    end.setHours(23, 59, 59, 999);
 
-    const res = await newCoupon(reqBody);
+    const payload = {
+      code: data.code,
+      discount_type:
+        String(data.discountType || '').toLowerCase() === 'percentage' ? 'Percentage' : 'Value',
+      discount: Number(data.discount ?? 0),
+      usage_limit: Number(data.timesUsed ?? 0),
+      start_date: start.toISOString(),
+      end_date: end.toISOString(),
+    };
+    console.log("payload",payload);
+
+    const res = await newCoupon(payload);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
