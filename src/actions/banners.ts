@@ -279,7 +279,7 @@ export const editBannerStatus = async (banner: Banner): Promise<any> => {
   };
   try {
     const accessToken = cookies().get('access_token')?.value;
-    const res = await axiosInstance.put(endpoints.banners.editBanner(banner.id), reqBody, {
+    const res = await axiosInstance.patch(endpoints.banners.togglePackage(banner.id), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

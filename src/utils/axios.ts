@@ -176,6 +176,7 @@ export const endpoints = {
       `/admin-panel/all-advertisements-center/${id}?page=${page}&limit=${limit}`,
     newBanner: `/admin/create-package`,
     editBanner: (bannerId: string) => `/admin/update-package/${bannerId}`,
+    togglePackage: (id: string) => `/admin/toggle-package/${id}`,
     changeCenterMediaStatus: (centerId: string, centerStatus: boolean) =>
       `/admin-panel/update-activation-advertisement-center/${centerId}/${centerStatus}`,
     fields: '/field/all-fields',

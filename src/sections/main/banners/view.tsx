@@ -94,8 +94,8 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const handleConfirmActivate = async () => {
     if (selectedBanner) {
       const res = await editBannerStatus(selectedBanner);
-      if (res.statusCode === 200) {
-        enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
+      if (res?.message) {
+        enqueueSnackbar(res.message);
         confirmActivate.onFalse();
       } else {
         enqueueSnackbar(`${res.error}`, { variant: 'error' });
@@ -105,8 +105,8 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const handleConfirmDeactivate = async () => {
     if (selectedBanner) {
       const res = await editBannerStatus(selectedBanner);
-      if (res.statusCode === 200) {
-        enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
+      if (res?.message) {
+        enqueueSnackbar(res.message);
         confirmDeactivate.onFalse();
       } else {
         enqueueSnackbar(`${res.error}`, { variant: 'error' });
