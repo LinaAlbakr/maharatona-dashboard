@@ -108,10 +108,10 @@ export const endpoints = {
     cities: '/city-neighborhood/all-cities',
     fetchfields: '/admin-panel/all-fields',
     info: (clientId: string) => `/admin/get-client-details/${clientId}`,
-    changeStatus: (clientId: string) => `/admin-panel/client/${clientId}/change-status`,
+    changeStatus: (clientId: string) => `/admin/deactivate-client/${clientId}`,
     courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
     children: (clientId: string) => `/admin-panel/client/${clientId}/children`,
-    delete: (clientId: string) => `/admin-panel/client/${clientId}`,
+    delete: (clientId: string) => `/admin/delete-client/${clientId}`,
   },
   notifications: {
     send: '/notification/send-to-users',
