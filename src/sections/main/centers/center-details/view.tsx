@@ -39,6 +39,7 @@ const CenterDetailsView = ({
   // ORIGINAL: CenterReports,
   // ORIGINAL: CenterReviews,
 }: Props) => {
+  console.log('CenterInfo', CenterInfo);
   const { t } = useTranslate();
   const settings = useSettingsContext();
   const pathname = usePathname();

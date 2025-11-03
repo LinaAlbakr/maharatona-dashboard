@@ -6,6 +6,9 @@ import IconButton from '@mui/material/IconButton';
 
 import { useLocales, useTranslate } from 'src/locales';
 import { invalidateCaching } from 'src/actions/cache-invalidation';
+import axiosInstance, { endpoints } from 'src/utils/axios';
+import Cookie from 'js-cookie';
+import { ACCESS_TOKEN } from 'src/auth/constants';
 
 import Iconify from 'src/components/iconify';
 import { varHover } from 'src/components/animate';
@@ -51,9 +54,28 @@ export default function LanguagePopover() {
 
   const handleChangeLang = useCallback(
     (newLang: string) => {
-      onChangeLang(newLang);
-      invalidateCaching();
-      popover.onClose();
+      // Call API to update language, update token from response, then change local language
+      axiosInstance
+        .put(
+          endpoints.auth.updateLanguage,
+          { language: newLang },
+          {
+            headers: {
+              Authorization: `Bearer ${Cookie.get(ACCESS_TOKEN)}`,
+            },
+          }
+        )
+        .then((res) => {
+          const accessToken = res?.data?.data?.accessToken;
+          if (accessToken) {
+            Cookie.set(ACCESS_TOKEN, accessToken);
+          }
+          onChangeLang(newLang);
+          invalidateCaching();
+        })
+        .finally(() => {
+          popover.onClose();
+        });
     },
     [onChangeLang, popover]
   );

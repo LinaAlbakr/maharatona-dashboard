@@ -75,6 +75,7 @@ export const endpoints = {
     register: '/auth/register',
     forgot: `/auth/send-password-reset-otp`,
     verify: `/auth/verify-otp-and-reset-password`,
+    updateLanguage: '/admin/auth/update-language',
   },
   home: {
     priceProfit: '/admin-panel/get-price-profit',
@@ -90,10 +91,10 @@ export const endpoints = {
     courses: (centerId: string) => `/admin-panel/center/${centerId}/courses`,
     reports: (centerId: string) => `/admin-panel/center/${centerId}/reports`,
     reviews: (centerId: string) => `/admin-panel/center/${centerId}/reviews`,
-    changeStatus: (centerId: string) => `/admin-panel/center/${centerId}/change-status`,
+    changeStatus: (centerId: string) => `/admin/deactivate-center/${centerId}`,
     deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
     clearWallet: (centerId: string) => `/admin-panel/clearing-the-center-wallet/${centerId}`,
-    deleteCenter: (centerId: string) => `/admin-panel/center/${centerId}`,
+    deleteCenter: (centerId: string) => `/admin/delete-center/${centerId}`,
   },
   courses: {
     fetch: '/admin-panel/all-courses',
