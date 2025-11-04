@@ -100,8 +100,8 @@ export const endpoints = {
     fetch: '/admin/get-all-courses',
     percentage: () => `/admin-panel/update-price-profit`,
     info: (courseId: string) => `/admin/get-course-details/${courseId}`,
-    deleteCourse: (courseId: string) => `/admin-panel/delete-course/${courseId}`,
-    editStatus: (courseId: string) => `/admin-panel/update-course/${courseId}`,
+    deleteCourse: (courseId: string) => `/admin/delete-course/${courseId}`,
+    editStatus: (courseId: string) => `/admin/toggle-course-status/${courseId}`,
   },
   clients: {
     fetch: '/admin/get-all-clients',

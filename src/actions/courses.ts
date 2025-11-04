@@ -142,7 +142,7 @@ export const editCourseStatus = async (course: any): Promise<any> => {
     const courseId = course.id || course._id;
     const res = await axiosInstance.patch(
       endpoints.courses.editStatus(courseId),
-      { is_active: !course.is_active },
+      {},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

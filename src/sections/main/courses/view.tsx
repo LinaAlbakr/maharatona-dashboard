@@ -33,6 +33,7 @@ type props = {
 };
 
 const CoursesView = ({ count, courses }: Readonly<props>) => {
+  console.log('courses', courses);
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const searchParams = useSearchParams();
@@ -100,7 +101,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
 
   const handleConfirmActivate = async () => {
     const res = await editCourseStatus(selectedCourse);
-    if (res.statusCode === 200) {
+    if (!res?.error) {
       enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
       confirmActivate.onFalse();
     } else {
@@ -109,7 +110,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   };
   const handleConfirmDeactivate = async () => {
     const res = await editCourseStatus(selectedCourse);
-    if (res.statusCode === 200) {
+    if (!res?.error) {
       enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
       confirmDeactivate.onFalse();
     } else {
@@ -207,14 +208,13 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             },
             {
               sx: { color: 'info.dark' },
-
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
               onClick: (item: any) => {
                 setSelectedCourse(item);
                 confirmActivate.onTrue();
               },
-              hide: (row) => row.is_active === true,
+              hide: (row: any) => row.is_active === true,
             },
             {
               sx: { color: 'error.dark' },
@@ -224,7 +224,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 setSelectedCourse(item);
                 confirmDeactivate.onTrue();
               },
-              hide: (row) => row.is_active === false,
+              hide: (row: any) => row.is_active === false,
             },
           ]}
           customRender={{
