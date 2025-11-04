@@ -192,7 +192,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               onClick: (item) => {
                 setShowSendNotification(true);
                 setSelectedSubscribers(
-                  item?.students.map((student: any) => student.client.user_id)
+                  item?.students?.map((student: any) => student.client?.user_id).filter(Boolean) || []
                 );
               },
             },
@@ -229,29 +229,33 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           ]}
           customRender={{
             name: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>{item?.name}</Box>
+              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
+                {item?.name || (i18n.language === 'ar' ? item?.name_ar : item?.name_en) || '-'}
+              </Box>
             ),
             students: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {`${item?.students.length} `}
+                {`${item?.students?.length || 0} `}
                 {t('LABEL.STUDENT')}
               </Box>
             ),
             seats: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {`${item?.seats} `}
+                {`${item?.seats !== undefined && item?.seats !== null ? item.seats : '-'} `}
                 {t('LABEL.SEAT')}
               </Box>
             ),
             field: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
                 {' '}
-                {i18n.language === 'ar' ? item?.field?.name : item?.field?.name}
+                {i18n.language === 'ar' 
+                  ? (item?.field?.name_ar || item?.field?.name || '-')
+                  : (item?.field?.name_en || item?.field?.name || '-')}
               </Box>
             ),
             average_rate: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {item?.average_rate.slice(0, 3)}
+                {item?.average_rate ? String(item.average_rate).slice(0, 3) : '-'}
               </Box>
             ),
             start_date: (item: any) => (

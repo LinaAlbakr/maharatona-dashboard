@@ -29,7 +29,37 @@ export const fetchCourses = async ({
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    // Transform the new API response structure to match the expected format
+    const responseData = res?.data;
+    if (responseData?.data) {
+      // Normalize course objects to match expected format
+      const normalizedDocs = (responseData.data.docs || []).map((course: any) => {
+        // Determine name based on language
+        const courseName = lang === 'ar' ? course.name_ar : course.name_en;
+        
+        return {
+          ...course,
+          id: course._id || course.id,
+          name: courseName || course.name_ar || course.name_en || course.name,
+          students: course.clients || course.students || [],
+          seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
+        };
+      });
+
+      return {
+        data: normalizedDocs,
+        meta: {
+          itemCount: responseData.data.totalDocs || 0,
+          page: responseData.data.page || page,
+          limit: responseData.data.limit || limit,
+          totalPages: responseData.data.totalPages || 1,
+          hasNextPage: responseData.data.hasNextPage || false,
+          hasPrevPage: responseData.data.hasPrevPage || false,
+        },
+        message: responseData.message,
+      };
+    }
+    return responseData;
   } catch (error) {
     throw new Error(error);
   }
@@ -87,8 +117,9 @@ export const editCourseStatus = async (course: any): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;
     const lang = cookies().get('Language')?.value;
+    const courseId = course.id || course._id;
     const res = await axiosInstance.patch(
-      endpoints.courses.editStatus(course.id),
+      endpoints.courses.editStatus(courseId),
       { is_active: !course.is_active },
       {
         headers: {

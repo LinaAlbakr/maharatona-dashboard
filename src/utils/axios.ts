@@ -97,7 +97,7 @@ export const endpoints = {
     deleteCenter: (centerId: string) => `/admin/delete-center/${centerId}`,
   },
   courses: {
-    fetch: '/admin-panel/all-courses',
+    fetch: '/admin/get-all-courses',
     percentage: () => `/admin-panel/update-price-profit`,
     info: (courseId: string) => `/admin-panel/course/${courseId}`,
     deleteCourse: (courseId: string) => `/admin-panel/delete-course/${courseId}`,
