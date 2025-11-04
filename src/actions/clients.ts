@@ -42,14 +42,40 @@ export const fetchClients = async ({
     // Handle new response structure
     const responseData = res?.data;
     
+    // Check if response has docs array (new paginated structure) or direct data array
+    let clientsData: any[] = [];
+    let itemCount = 0;
+    let currentPage = page;
+    let totalPages = 1;
+    
+    if (responseData?.data?.docs) {
+      // New paginated structure with docs array
+      clientsData = responseData.data.docs || [];
+      itemCount = responseData.data.totalDocs || 0;
+      currentPage = responseData.data.page || page;
+      totalPages = responseData.data.totalPages || 1;
+    } else if (Array.isArray(responseData?.data)) {
+      // Direct array structure
+      clientsData = responseData.data;
+      itemCount = responseData?.pagination?.totalItems || clientsData.length;
+      currentPage = responseData?.pagination?.currentPage || page;
+      totalPages = responseData?.pagination?.totalPages || 1;
+    } else if (Array.isArray(responseData)) {
+      // Response is directly an array
+      clientsData = responseData;
+      itemCount = responseData.length;
+      currentPage = page;
+      totalPages = 1;
+    }
+    
     // Transform the response to match the expected structure
     return {
-      data: responseData?.data || [],
-      pagination: responseData?.pagination || {},
+      data: clientsData,
+      pagination: responseData?.pagination || responseData?.data || {},
       meta: {
-        itemCount: responseData?.pagination?.totalItems || 0,
-        currentPage: responseData?.pagination?.currentPage || page,
-        totalPages: responseData?.pagination?.totalPages || 1,
+        itemCount,
+        currentPage,
+        totalPages,
       },
     };
   } catch (error) {

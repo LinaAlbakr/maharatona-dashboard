@@ -61,8 +61,25 @@ export const  fetchCenters = async ({
       params,
     });
     
-    console.log('fetchCenters response:', res?.data);
-    return res?.data;
+    // Transform the new API response structure to match the expected format
+    const responseData = res?.data;
+    if (responseData?.data) {
+      return {
+        data: responseData.data.docs || [],
+        meta: {
+          itemCount: responseData.data.totalDocs || 0,
+          page: responseData.data.page || page,
+          limit: responseData.data.limit || limit,
+          totalPages: responseData.data.totalPages || 1,
+          hasNextPage: responseData.data.hasNextPage || false,
+          hasPrevPage: responseData.data.hasPrevPage || false,
+        },
+        message: responseData.message,
+      };
+    }
+    
+    console.log('fetchCenters response:', responseData);
+    return responseData;
   } catch (error) {
     console.error('fetchCenters error:', error);
     throw new Error(getErrorMessage(error));

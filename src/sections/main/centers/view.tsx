@@ -25,6 +25,7 @@ import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomA
 import { ICenter } from 'src/types/centers';
 
 import SendNotification from './center-details/components/send-notification';
+import { useTranslation } from 'react-i18next';
 
 type props = {
   centers: ICenter[];
@@ -48,6 +49,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -292,12 +294,20 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             ),
             neighborhood: (item: any) => (
               <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
-                {item?.neighborhood.name}
+                {typeof item?.neighborhood === 'string'
+                  ? item?.neighborhood
+                  : (i18n.language === 'ar'
+                      ? (item?.neighborhood?.name_ar || item?.neighborhood?.name)
+                      : (item?.neighborhood?.name_en || item?.neighborhood?.name)) || '-'}
               </Box>
             ),
             id: (item: any) => (
               <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
-                {item?.neighborhood.city.name}
+                {typeof item?.city === 'string'
+                  ? item?.city
+                  : (i18n.language === 'ar'
+                      ? (item?.city?.name_ar || item?.city?.name)
+                      : (item?.city?.name_en || item?.city?.name)) || '-'}
               </Box>
             ),
             phone: (item: any) => (

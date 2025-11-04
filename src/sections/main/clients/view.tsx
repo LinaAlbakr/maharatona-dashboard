@@ -13,6 +13,7 @@ import { paths } from 'src/routes/paths';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { useTranslate } from 'src/locales';
+import i18n from 'src/locales/i18n';
 import { deleteClient, changeClientStatus } from 'src/actions/clients';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
@@ -36,7 +37,7 @@ type props = {
 const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-
+console.log('clients', clients);
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -276,12 +277,20 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             ),
             neighborhood: (item: any) => (
               <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
-                {typeof item?.neighborhood === 'string' ? item?.neighborhood : item?.neighborhood?.name || '-'}
+                {typeof item?.neighborhood === 'string'
+                  ? item?.neighborhood
+                  : (i18n.language === 'ar'
+                      ? (item?.neighborhood?.name_ar || item?.neighborhood?.name)
+                      : (item?.neighborhood?.name_en || item?.neighborhood?.name)) || '-'}
               </Box>
             ),
             id: (item: any) => (
               <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
-                {typeof item?.city === 'string' ? item?.city : item?.neighborhood?.city?.name || '-'}
+                {typeof item?.city === 'string'
+                  ? item?.city
+                  : (i18n.language === 'ar'
+                      ? (item?.city?.name_ar || item?.city?.name)
+                      : (item?.city?.name_en || item?.city?.name)) || '-'}
               </Box>
             ),
             phone: (item: any) => (

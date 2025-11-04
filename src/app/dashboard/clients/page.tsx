@@ -40,7 +40,8 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   }));
 
   // Transform clients data to map _id to id for UI compatibility
-  const filteredProducts: ICenter[] = (clients?.data || []).map((client: any) => ({
+  const clientsData = Array.isArray(clients?.data) ? clients.data : [];
+  const filteredProducts: ICenter[] = clientsData.map((client: any) => ({
     ...client,
     id: client._id || client.id,
   }));

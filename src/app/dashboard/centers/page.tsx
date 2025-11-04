@@ -36,7 +36,9 @@ const Page = async ({ searchParams }: Readonly<props>) => {
 
   console.log('Centers data:', { centersCount: centers?.data?.length, citiesCount: cities.length, neighborhoodsCount: neighborhoods.length });
 
-  const normalizedCenters: ICenter[] = centers?.data?.map((center: any) => ({
+  // Ensure centers.data is an array before mapping
+  const centersData = Array.isArray(centers?.data) ? centers.data : [];
+  const normalizedCenters: ICenter[] = centersData.map((center: any) => ({
     ...center,
     id: center.id || center._id,
     phone: center.phone || '',
@@ -96,7 +98,7 @@ const Page = async ({ searchParams }: Readonly<props>) => {
       centers={filteredProducts}
       cities={cities}
       neighborhoods={neighborhoods}
-      count={filteredProducts.length}
+      count={centers?.meta?.itemCount || filteredProducts.length}
     />
   );
 };
