@@ -34,7 +34,7 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const selectedCity = cities.find((city) => city.id === city_id);
   const neighborhoods = city_id ? await fetchCityNeighborhoods({ cityId: city_id }) : [];
 
-  console.log('Centers data:', { centersCount: centers?.data?.length, citiesCount: cities.length, neighborhoodsCount: neighborhoods.length });
+  // console.log('Centers data:', { centersCount: centers?.data?.length, citiesCount: cities.length, neighborhoodsCount: neighborhoods.length });
 
   // Ensure centers.data is an array before mapping
   const centersData = Array.isArray(centers?.data) ? centers.data : [];

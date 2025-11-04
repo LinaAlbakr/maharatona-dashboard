@@ -82,6 +82,9 @@ export const endpoints = {
     topCourses: '/admin-panel/top-courses',
     statistics: '/admin-panel/education-summary',
     notifications: '/admin-panel/all-notification',
+    totalClients: '/admin/get-total-clients',
+    totalCenters: '/admin/get-total-centers',
+    enrolledClientsCount: '/admin/get-enrolled-clients-count',
   },
   centers: {
     fetch: '/admin/get-all-centers',

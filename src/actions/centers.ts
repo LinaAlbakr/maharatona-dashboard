@@ -54,7 +54,7 @@ export const  fetchCenters = async ({
       params.by_neighborhood_id = neighborhood_id;
     }
     
-    console.log('fetchCenters params:', params);
+    // console.log('fetchCenters params:', params);
     
     const res = await axiosInstance.get(endpoints.centers.fetch, {
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },

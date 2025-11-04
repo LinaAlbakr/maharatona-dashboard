@@ -7,6 +7,8 @@ import { getCookie } from 'cookies-next';
 
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
+// Import endpoints.courses to use fetchCourses endpoint
+
 export const fetchPriceProfit = async (): Promise<any> => {
   const accessToken = getCookie('access_token', { cookies });
   const lang = getCookie('Language', { cookies });
@@ -35,17 +37,53 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
   const lang = getCookie('Language', { cookies });
 
   try {
-    const res = await axiosInstance.get(endpoints.home.topCourses, {
+    // Use fetchCourses endpoint instead of topCourses
+    const res = await axiosInstance.get(endpoints.courses.fetch, {
       params: {
         page,
         limit,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    
+    // Transform the new API response structure to match the expected format
+    const responseData = res?.data;
+    if (responseData?.data) {
+      // Normalize course objects to match expected format
+      const normalizedDocs = (responseData.data.docs || []).map((course: any) => {
+        // Determine name based on language
+        const courseName = lang === 'ar' ? course.name_ar : course.name_en;
+        
+        return {
+          ...course,
+          id: course._id || course.id,
+          name: courseName || course.name_ar || course.name_en || course.name,
+          logo_url: Array.isArray(course.course_images) && course.course_images.length > 0 
+            ? course.course_images[0] 
+            : '',
+          number_of_users: Array.isArray(course.clients) ? course.clients.length : 0,
+          students: course.clients || course.students || [],
+          seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
+        };
+      });
+
+      return {
+        data: normalizedDocs,
+        meta: {
+          itemCount: responseData.data.totalDocs || 0,
+          page: responseData.data.page || page,
+          limit: responseData.data.limit || limit,
+          totalPages: responseData.data.totalPages || 1,
+          hasNextPage: responseData.data.hasNextPage || false,
+          hasPrevPage: responseData.data.hasPrevPage || false,
+        },
+        message: responseData.message,
+      };
+    }
+    return responseData;
   } catch (error) {
     console.error(error);
-    return error;
+    return { data: [], meta: { itemCount: 0 } };
   }
 };
 
@@ -91,7 +129,6 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
 export const fetchStatistics = async (): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
 
-  // ✅ Safe fallback structure matching your UI expectations
   const fallback = {
     clients: 0,
     clientsAndCourses: 0,
@@ -104,26 +141,30 @@ export const fetchStatistics = async (): Promise<any> => {
   }
 
   try {
-    const res = await axiosInstance.get(endpoints.home.statistics, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const [clientsRes, centersRes, enrolledClientsRes] = await Promise.all([
+      axiosInstance.get(endpoints.home.totalClients, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+      axiosInstance.get(endpoints.home.totalCenters, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+      axiosInstance.get(endpoints.home.enrolledClientsCount, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+    ]);
 
-    // Optional: validate shape
-    const data = res?.data;
-    if (!data || typeof data !== 'object') {
-      console.warn('Invalid statistics response format');
-      return fallback;
-    }
+    const clientsTotal = clientsRes?.data?.data?.total ?? 0;
+    const centersTotal = centersRes?.data?.data?.total ?? 0;
+    const enrolledClientsTotal = enrolledClientsRes?.data?.data?.total ?? 0;
 
-    // Ensure expected fields exist
     return {
-      clients: data.clients ?? 0,
-      clientsAndCourses: data.clientsAndCourses ?? 0,
-      centers: data.centers ?? 0,
+      clients: clientsTotal,
+      clientsAndCourses: enrolledClientsTotal,
+      centers: centersTotal,
     };
   } catch (error: any) {
-    console.error('Failed to fetch statistics:', error);
-    return fallback; // ✅ Never throw — return safe dummy
+    console.error('Failed to fetch totals:', error);
+    return fallback;
   }
 };
 export const fetchNotifications = async ({
