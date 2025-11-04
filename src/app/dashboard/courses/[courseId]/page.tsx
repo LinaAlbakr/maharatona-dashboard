@@ -8,7 +8,6 @@ type IProps = {
 };
 const Page = async ({ params }: IProps) => {
   const CourseInfo = await fetchCourseInfo(params.courseId);
-
   return <CourseDetailsView CourseInfo={CourseInfo} />;
 };
 

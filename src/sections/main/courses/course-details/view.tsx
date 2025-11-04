@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import { Box, Card, Divider, Container, Typography } from '@mui/material';
 
-import { convertTime24to12 } from 'src/utils/format-time';
+import { convertTime24to12, fDate } from 'src/utils/format-time';
 
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
@@ -17,6 +17,7 @@ interface Props {
 const CourseDetailsView = ({ CourseInfo }: Props) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
+  const course = CourseInfo?.data ?? CourseInfo;
 
   return (
     <Container
@@ -43,7 +44,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
           {t('LABEL.EDUCATIONAL_COURSES')}
         </Typography>
         <Image
-          src={CourseInfo?.course_images[0]?.url || '/assets/images/centers/gray.jpeg'}
+          src={course?.course_images?.[0]?.url || '/assets/images/centers/gray.jpeg'}
           width={150}
           height={150}
           alt="image"
@@ -74,7 +75,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.COURSE_NAME')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {i18n.language === 'ar' ? CourseInfo?.name_ar || '-' : CourseInfo?.name_en || '-'}
+                {i18n.language === 'ar' ? course?.name_ar || '-' : course?.name_en || '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -83,8 +84,8 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
               </Typography>
               <Typography variant="body2" color="info.dark">
                 {i18n.language === 'ar'
-                  ? CourseInfo?.description_ar || '-'
-                  : CourseInfo?.description_en}
+                  ? course?.description_ar || '-'
+                  : course?.description_en}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -92,7 +93,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.START_IN')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.start_date || '-'}
+                {course?.start_date ? fDate(course.start_date, 'yyyy-MM-dd') : '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -100,7 +101,11 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.FROM_HOURE')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {convertTime24to12(CourseInfo?.start_time) || '-'}
+                {(() => {
+                  const v = course?.start_time as string | undefined;
+                  if (!v) return '-';
+                  return /am|pm/i.test(v) ? v : convertTime24to12(v);
+                })()}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -108,7 +113,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.PRICE')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {Math.floor(CourseInfo?.price)}{' '}
+                {Math.floor(course?.price)}{' '}
                 <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
               </Typography>
             </Box>
@@ -117,7 +122,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.AGE_FROM')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.age_from || '-'}
+                {course?.age_from || '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -125,7 +130,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.NUMBER_OF_SEATS')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.number_of_users || 0}
+                {course?.number_of_users || 0}
               </Typography>
             </Box>
           </Box>
@@ -136,8 +141,8 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
               </Typography>
               <Typography variant="body2" color="info.dark">
                 {i18n.language === 'ar'
-                  ? CourseInfo?.field.name_ar || '-'
-                  : CourseInfo?.field.name_en || '-'}
+                  ? course?.field?.name_ar || '-'
+                  : course?.field?.name_en || '-'}
               </Typography>
             </Box>
             <Box
@@ -147,7 +152,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.DESCRIPTION_AR')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.description_en || '-'}
+                {course?.description_en || '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -155,7 +160,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.END_IN')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.end_date || '-'}
+                {course?.end_date ? fDate(course.end_date, 'yyyy-MM-dd') : '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -163,7 +168,11 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.TO_HOURE')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {convertTime24to12(CourseInfo?.end_time) || '-'}
+                {(() => {
+                  const v = course?.end_time as string | undefined;
+                  if (!v) return '-';
+                  return /am|pm/i.test(v) ? v : convertTime24to12(v);
+                })()}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -171,7 +180,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.TOTAL_RATE')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.average_rate.slice(0, 3) || '-'}
+                {course?.average_rate ? String(course.average_rate).slice(0, 3) : '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -179,7 +188,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.AGE_TO')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.age_to || '-'}
+                {course?.age_to || '-'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -187,7 +196,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.NUMBER_OF_REMAINING_SEATS')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {CourseInfo?.seats || 0}
+                {course?.seats || 0}
               </Typography>
             </Box>
           </Box>
@@ -215,7 +224,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
             <Image
-              src={CourseInfo?.course_images[1]?.url || '/assets/images/centers/gray.jpeg'}
+              src={course?.course_images?.[1]?.url || '/assets/images/centers/gray.jpeg'}
               width={250}
               height={250}
               alt="image"
@@ -227,7 +236,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
 
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
             <Image
-              src={CourseInfo?.course_images[2]?.url || '/assets/images/centers/gray.jpeg'}
+              src={course?.course_images?.[2]?.url || '/assets/images/centers/gray.jpeg'}
               width={250}
               height={250}
               alt="image"
@@ -246,7 +255,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
               }}
             >
               <Image
-                src={CourseInfo?.course_images[3]?.url || '/assets/images/centers/gray.jpeg'}
+                src={course?.course_images?.[3]?.url || '/assets/images/centers/gray.jpeg'}
                 width={120}
                 height={120}
                 alt="image"
@@ -255,7 +264,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 }}
               />
               <Image
-                src={CourseInfo?.course_images[4]?.url || '/assets/images/centers/gray.jpeg'}
+                src={course?.course_images?.[4]?.url || '/assets/images/centers/gray.jpeg'}
                 width={120}
                 height={120}
                 alt="image"
@@ -264,7 +273,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 }}
               />
               <Image
-                src={CourseInfo?.course_images[5]?.url || '/assets/images/centers/gray.jpeg'}
+                src={course?.course_images?.[5]?.url || '/assets/images/centers/gray.jpeg'}
                 width={120}
                 height={120}
                 alt="image"
@@ -273,7 +282,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 }}
               />
               <Image
-                src={CourseInfo?.course_images[6]?.url || '/assets/images/centers/gray.jpeg'}
+                src={course?.course_images?.[6]?.url || '/assets/images/centers/gray.jpeg'}
                 width={120}
                 height={120}
                 alt="image"

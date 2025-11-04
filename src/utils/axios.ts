@@ -99,7 +99,7 @@ export const endpoints = {
   courses: {
     fetch: '/admin/get-all-courses',
     percentage: () => `/admin-panel/update-price-profit`,
-    info: (courseId: string) => `/admin-panel/course/${courseId}`,
+    info: (courseId: string) => `/admin/get-course-details/${courseId}`,
     deleteCourse: (courseId: string) => `/admin-panel/delete-course/${courseId}`,
     editStatus: (courseId: string) => `/admin-panel/update-course/${courseId}`,
   },
