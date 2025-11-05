@@ -120,7 +120,7 @@ export const endpoints = {
     send: '/notification/send-to-users',
   },
   profile: {
-    changePhone: `/auth/update-phone-or-email`,
+    changePhone: `/admin/auth/change-phone-number`,
   },
   support: {
     calls_reasons: {

@@ -64,12 +64,8 @@ export default function ChangePhoneView() {
       const code = countries?.find((item)=>item.label === data?.country)
       const phone =  code?.phone.concat(data?.phone) as string;
       const dataForm = {
-        "password": data?.password,
-        "currentPhone": user?.user?.phone,
         "newPhone": `+${phone}`,
-        "currentEmail": "",
-        "newEmail": "",
-        "authType": "PHONE"
+        "password": data?.password
       };
       const res = await editPhoneNumber(dataForm);
       if (res?.error) {
