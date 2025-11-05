@@ -38,13 +38,14 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
   const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string | null>();
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
 
   useEffect(() => {
     router.push(`${pathname}`);
-  }, []);
+  }, [pathname, router]);
   const type = searchParams?.get('type');
   const TABLE_HEAD = [
     { id: 'code', label: 'LABEL.COUPON' },
@@ -61,8 +62,6 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
     name: '',
     type: { id: type },
   };
-
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -157,9 +156,10 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
                     label={t('LABEL.TYPE')}
                     placeholder={t('LABEL.TYPE')}
                     name="type"
-                    onCustomChange={(selectedType: any) =>
-                      createQueryString('type', selectedType?.value ?? '')
-                    }
+                    onCustomChange={(selectedType: any) => {
+                      const typeValue = selectedType?.value || selectedType?.id || '';
+                      createQueryString('type', typeValue);
+                    }}
                   />
                 </Box>
               </FormProvider>

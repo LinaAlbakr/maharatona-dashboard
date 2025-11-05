@@ -1,5 +1,6 @@
 import { fetchCourses } from 'src/actions/courses';
 import CoursesView from 'src/sections/main/courses/view';
+import { cookies } from 'next/headers';
 
 export const metadata = {
   title: 'Courses',
@@ -20,9 +21,24 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     filters: course_name,
   });
 
-  const filteredProducts: any[] = courses?.data;
+  const coursesData = Array.isArray(courses?.data) ? courses.data : [];
+  const lang = cookies().get('Language')?.value || 'en';
+  
+  // Apply client-side filtering as fallback if backend doesn't filter
+  const filteredProducts = coursesData.filter((course: any) => {
+    if (!course_name) return true;
+    
+    const searchTerm = course_name.toLowerCase();
+    const courseName = course?.name || 
+      (lang === 'ar' ? course?.name_ar : course?.name_en) || 
+      course?.name_ar || 
+      course?.name_en || 
+      '';
+    
+    return courseName.toLowerCase().includes(searchTerm);
+  });
 
-  return <CoursesView courses={filteredProducts} count={courses?.meta?.itemCount} />;
+  return <CoursesView courses={filteredProducts} count={filteredProducts.length} />;
 };
 
 export default Page;
