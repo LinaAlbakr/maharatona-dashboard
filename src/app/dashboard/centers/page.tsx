@@ -19,7 +19,7 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   const city_id = typeof searchParams?.city === 'string' ? searchParams?.city : '';
   const neighborhood_id = typeof searchParams?.neighborhood === 'string' ? searchParams?.neighborhood : '';
 
-  console.log('Centers page params:', { page, limit, center_name, city_id, neighborhood_id });
+  // console.log('Centers page params:', { page, limit, center_name, city_id, neighborhood_id });
 
   const centers = await fetchCenters({
     limit,

@@ -37,7 +37,7 @@ type props = {
 const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-console.log('clients', clients);
+// console.log('clients', clients);
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();

@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -18,7 +18,7 @@ import { Grid } from '@mui/material';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { ICenter } from 'src/types/centers';
-import { sendMessage } from 'src/actions/notifications';
+import { sendMessageToClient } from 'src/actions/notifications';
 
 type Props = {
   open: boolean;
@@ -35,6 +35,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
     message_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
     title_ar: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
     title_en: Yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+    sendTo: Yup.string().optional(),
   });
 
   const defaultValues = useMemo(
@@ -43,6 +44,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
       message_en: '',
       title_ar: '',
       title_en: '',
+      sendTo: (selectedCenter?.name || (selectedCenter as any)?.username || '') as string,
     }),
     [selectedCenter]
   );
@@ -55,24 +57,34 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
   const {
     reset,
     watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (selectedCenter) {
+      setValue('sendTo', selectedCenter?.name || (selectedCenter as any)?.username || '');
+    }
+  }, [selectedCenter, setValue]);
+
   const values = watch();
   const onSubmit = handleSubmit(async (data) => {
     const newMessage = {
-      ...data,
-      users_id: [selectedCenter?.user_id],
+      title_ar: data.title_ar,
+      title_en: data.title_en,
+      message_ar: data.message_ar,
+      message_en: data.message_en,
+      user_id: selectedCenter?.id || selectedCenter?.user_id,
     };
 
-    const res = await sendMessage(newMessage);
-    if (res === 201) {
-      enqueueSnackbar(t('MESSAGE.SEND_SUCCESSFULLY'));
+    const res = await sendMessageToClient(newMessage);
+    if (res?.error) {
+      enqueueSnackbar(`${res.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      enqueueSnackbar(t('MESSAGE.SEND_SUCCESSFULLY'), { variant: 'success' });
+      onClose();
     }
-    onClose();
   });
 
   return (
@@ -90,10 +102,9 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <RHFTextField
-              name=""
+              name="sendTo"
               label={t('LABEL.SEND_TO')}
               type="text"
-              defaultValue={selectedCenter?.name}
               disabled
             />
           </Box>

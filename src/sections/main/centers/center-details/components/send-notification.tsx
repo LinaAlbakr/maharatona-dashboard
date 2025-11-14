@@ -20,8 +20,7 @@ import { Grid } from '@mui/material';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { ICenter } from 'src/types/centers';
-import { sendMessage } from 'src/actions/notifications';
-import { toFormData } from 'axios';
+import { sendMessageToCenter } from 'src/actions/notifications';
 
 type Props = {
   open: boolean;
@@ -65,17 +64,20 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
   const values = watch();
   const onSubmit = handleSubmit(async (data) => {
     const newMessage = {
-      ...data,
-      users_id: [selectedCenter?.user_id],
+      title_ar: data.title_ar,
+      title_en: data.title_en,
+      message_ar: data.message_ar,
+      message_en: data.message_en,
+      user_id: selectedCenter?.id || selectedCenter?.user_id,
     };
 
-    const res = await sendMessage(newMessage);
-    if (res === 201) {
-      enqueueSnackbar(t('MESSAGE.SEND_SUCCESSFULLY'));
+    const res = await sendMessageToCenter(newMessage);
+    if (res?.error) {
+      enqueueSnackbar(`${res.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      enqueueSnackbar(t('MESSAGE.SEND_SUCCESSFULLY'), { variant: 'success' });
+      onClose();
     }
-    onClose();
   });
 
   return (

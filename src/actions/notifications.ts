@@ -32,3 +32,33 @@ export async function sendMessage(reqBody: any): Promise<any> {
     throw new Error(error);
   }
 }
+
+export async function sendMessageToCenter(reqBody: any): Promise<any> {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(`${endpoints.notifications.sendToCenter}`, reqBody, {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+}
+
+export async function sendMessageToClient(reqBody: any): Promise<any> {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(`${endpoints.notifications.sendToClient}`, reqBody, {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+}

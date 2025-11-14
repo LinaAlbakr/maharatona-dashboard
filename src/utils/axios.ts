@@ -118,6 +118,8 @@ export const endpoints = {
   },
   notifications: {
     send: '/notification/send-to-users',
+    sendToCenter: '/admin/send-notification-center',
+    sendToClient: '/admin/send-notification-client',
   },
   profile: {
     changePhone: `/admin/auth/change-phone-number`,
