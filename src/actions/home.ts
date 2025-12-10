@@ -37,8 +37,7 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
   const lang = getCookie('Language', { cookies });
 
   try {
-    // Use fetchCourses endpoint instead of topCourses
-    const res = await axiosInstance.get(endpoints.courses.fetch, {
+    const res = await axiosInstance.get(endpoints.home.topCourses, {
       params: {
         page,
         limit,
@@ -46,7 +45,7 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     
-    // Transform the new API response structure to match the expected format
+    // Transform the API response structure to match the expected format
     const responseData = res?.data;
     if (responseData?.data) {
       // Normalize course objects to match expected format
@@ -63,7 +62,8 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
             : '',
           number_of_users: Array.isArray(course.clients) ? course.clients.length : 0,
           students: course.clients || course.students || [],
-          seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
+          // Map field_info to field for component compatibility
+          field: course.field_info || course.field,
         };
       });
 

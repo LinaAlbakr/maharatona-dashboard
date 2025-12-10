@@ -79,7 +79,7 @@ export const endpoints = {
   },
   home: {
     priceProfit: '/admin-panel/get-price-profit',
-    topCourses: '/admin-panel/top-courses',
+    topCourses: '/admin/get-top-courses',
     statistics: '/admin-panel/education-summary',
     notifications: '/admin/get-all-notifications',
     totalClients: '/admin/get-total-clients',
