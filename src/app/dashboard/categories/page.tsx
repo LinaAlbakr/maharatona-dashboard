@@ -11,19 +11,17 @@ type props = {
 };
 
 const Page = async ({ searchParams }: Readonly<props>) => {
-  const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 5;
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 20;
   const categories_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
 
   const categories = await fetchCategories({
     limit,
-    page,
     filters: categories_name,
   });
 
-  const filteredProducts: ICenter[] = categories?.docs;
+  const filteredProducts: ICenter[] = Array.isArray(categories?.data) ? categories.data : [];
 
-  return <CategoriesView categories={filteredProducts} count={categories?.totalDocs} />;
+  return <CategoriesView categories={filteredProducts} count={filteredProducts.length} />;
 };
 
 export default Page;

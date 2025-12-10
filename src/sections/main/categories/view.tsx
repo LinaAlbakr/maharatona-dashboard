@@ -15,6 +15,9 @@ import {
   TextField,
   Typography,
   InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
 } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -56,6 +59,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
   useEffect(() => {
     router.push(`${pathname}`);
   }, [pathname, router]);
+  const currentLimit = Number(searchParams?.get('limit')) || 20;
 
   const TABLE_HEAD = [
     { id: 'avatar', label: 'LABEL.IMAGE' },
@@ -211,6 +215,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
           count={filteredCategories.length}
           data={filteredCategories}
           tableHead={TABLE_HEAD}
+          disablePagination
           actions={[
             {
               sx: { color: 'info.dark' },
@@ -281,6 +286,48 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
             avatar: (item: any) => <Avatar alt={item?.name} src={item?.avatar} />,
           }}
         />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            py: 2,
+            px: 2,
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            backgroundColor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Rows per page:
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 80 }}>
+              <Select
+                value={currentLimit}
+                onChange={(e) => {
+                  const newLimit = e.target.value as number;
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('limit', String(newLimit));
+                  params.delete('page'); // Remove page parameter since we're not using pagination
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    py: 1,
+                  },
+                }}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
       </Container>
       <ConfirmDialog
         open={confirmActivate.value}

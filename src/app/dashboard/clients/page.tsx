@@ -28,11 +28,11 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   });
 
   const cities = await fetchCities();
-  const fieldsResponse = await fetchCategories({ page: 1, limit: 100, filters: '' });
+  const fieldsResponse = await fetchCategories({ limit: 100, filters: '' });
   const lang = cookies().get('Language')?.value;
   
   // Transform fields to ITems format
-  const fields = (fieldsResponse?.docs || []).map((field: any) => ({
+  const fields = (Array.isArray(fieldsResponse?.data) ? fieldsResponse.data : []).map((field: any) => ({
     id: field._id,
     name: lang === 'ar' ? field.name_ar : field.name_en,
   }));

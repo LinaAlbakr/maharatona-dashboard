@@ -8,12 +8,11 @@ import { revalidatePath } from 'next/cache';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   filters?: string;
 }
 export const fetchCategories = async ({
-  page = 1,
   limit = 50,
   filters = '',
 }: IParams): Promise<any> => {
@@ -23,20 +22,17 @@ export const fetchCategories = async ({
   try {
     const res = await axiosInstance.get(endpoints.categories.fetch, {
       params: {
-        page,
         limit,
         by_name: filters,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     
-    // Handle the new response structure where docs and pagination are at top level
+    // Handle new response structure: data is now an array directly
+    const categoriesData = Array.isArray(res?.data) ? res.data : [];
+    
     return {
-      docs: res?.data?.docs || [],
-      totalDocs: res?.data?.totalDocs || 0,
-      page: res?.data?.page || page,
-      limit: res?.data?.limit || limit,
-      totalPages: res?.data?.totalPages || 1,
+      data: categoriesData,
     };
   } catch (error) {
     console.error('Failed to fetch categories:', error);
