@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -27,6 +27,7 @@ import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import { useBoolean } from 'src/hooks/use-boolean';
+import axiosInstance, { endpoints } from 'src/utils/axios';
 
 type Payout = {
   id: string;
@@ -38,6 +39,11 @@ type Payout = {
 
 type Props = {
   searchQuery?: string;
+};
+
+type CenterOption = {
+  id: string;
+  name: string;
 };
 
 const SAMPLE_PAYOUTS: Payout[] = [
@@ -92,6 +98,7 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
   const [referenceNumber, setReferenceNumber] = useState('');
   const [transferDate, setTransferDate] = useState('');
   const [note, setNote] = useState('');
+  const [centers, setCenters] = useState<CenterOption[]>([]);
 
   const payoutDialog = useBoolean();
 
@@ -102,10 +109,33 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
     { id: 'transferDate', label: 'LABEL.TRANSFER_DATE' },
   ];
 
-  const centers = useMemo(
-    () => Array.from(new Set(SAMPLE_PAYOUTS.map((item) => item.center))),
-    []
-  );
+  useEffect(() => {
+    let active = true;
+    const loadCenters = async () => {
+      try {
+        const res = await axiosInstance.get(endpoints.centers.centerNames);
+        const list = res?.data?.data || res?.data || [];
+        const mapped: CenterOption[] = Array.isArray(list)
+          ? list.map((c: any) => ({
+              id: c?._id ?? c?.id ?? '',
+              name: c?.name ?? c?._id ?? '',
+            }))
+          : [];
+        if (active) {
+          setCenters(mapped);
+        }
+      } catch (error) {
+        console.error('Failed to load centers', error);
+        if (active) {
+          setCenters([]);
+        }
+      }
+    };
+    loadCenters();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const formatAmount = useCallback(
     (value: number) =>
@@ -271,8 +301,8 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
                   IconComponent={(props) => <Iconify icon="eva:arrow-ios-downward-fill" {...props} />}
                 >
                   {centers.map((item) => (
-                    <MenuItem key={item} value={item}>
-                      {item}
+                    <MenuItem key={item.id} value={item.name}>
+                      {item.name}
                     </MenuItem>
                   ))}
                 </Select>
