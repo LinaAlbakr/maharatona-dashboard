@@ -20,6 +20,7 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 import { useTranslate } from 'src/locales';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
@@ -46,59 +47,24 @@ type CenterOption = {
   name: string;
 };
 
-const SAMPLE_PAYOUTS: Payout[] = [
-  {
-    id: '1',
-    referenceNumber: '#12345678',
-    center: 'Center Name',
-    amount: 4000,
-    transferDate: '19-12-2025',
-  },
-  {
-    id: '2',
-    referenceNumber: '#22345678',
-    center: 'Center Name',
-    amount: 2750,
-    transferDate: '11-11-2025',
-  },
-  {
-    id: '3',
-    referenceNumber: '#32345678',
-    center: 'Center Name',
-    amount: 5400,
-    transferDate: '02-10-2025',
-  },
-  {
-    id: '4',
-    referenceNumber: '#42345678',
-    center: 'Center Name',
-    amount: 4000,
-    transferDate: '19-12-2025',
-  },
-  {
-    id: '5',
-    referenceNumber: '#52345678',
-    center: 'Center Name',
-    amount: 4000,
-    transferDate: '19-12-2025',
-  },
-];
-
 const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
   const settings = useSettingsContext();
   const { t, i18n } = useTranslate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState(searchQuery);
   const [center, setCenter] = useState('');
   const [amount, setAmount] = useState('');
   const [referenceNumber, setReferenceNumber] = useState('');
   const [transferDate, setTransferDate] = useState('');
   const [note, setNote] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [centers, setCenters] = useState<CenterOption[]>([]);
+  const [payouts, setPayouts] = useState<Payout[]>([]);
+  const currentLimit = Number(searchParams?.get('limit')) || 20;
 
   const payoutDialog = useBoolean();
 
@@ -137,6 +103,41 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
     };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    const loadPayouts = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `${endpoints.payouts.fetch}?limit=${currentLimit}`
+        );
+        const list = res?.data?.data || res?.data || [];
+        const mapped: Payout[] = Array.isArray(list)
+          ? list.map((p: any) => ({
+              id: p?._id ?? p?.id ?? '',
+              referenceNumber: p?.referenceNumber ?? '',
+              center: p?.center?.name ?? p?.center ?? '',
+              amount: Number(p?.amount) || 0,
+              transferDate: p?.transferDate
+                ? new Date(p.transferDate).toISOString()
+                : '',
+            }))
+          : [];
+        if (active) {
+          setPayouts(mapped);
+        }
+      } catch (error) {
+        console.error('Failed to load payouts', error);
+        if (active) {
+          setPayouts([]);
+        }
+      }
+    };
+    loadPayouts();
+    return () => {
+      active = false;
+    };
+  }, [currentLimit]);
+
   const formatAmount = useCallback(
     (value: number) =>
       new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
@@ -147,27 +148,73 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
     [i18n.language]
   );
 
-  const filteredPayouts = useMemo(() => {
-    if (!search) return SAMPLE_PAYOUTS;
-    return SAMPLE_PAYOUTS.filter((item) =>
-      item.center.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [search]);
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      if (value) {
-        params.set(name, value);
-      } else {
-        params.delete(name);
-      }
-
-      router.push(`${pathname}?${params.toString()}`);
+  const formatDate = useCallback(
+    (value: string) => {
+      if (!value) return '-';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '-';
+      return new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
+        month: 'long',
+        day: '2-digit',
+        year: '2-digit',
+      }).format(date);
     },
-    [pathname, router, searchParams]
+    [i18n.language]
   );
+
+  const filteredPayouts = useMemo(() => payouts, [payouts]);
+
+  const handleSubmit = async () => {
+    if (!center) {
+      enqueueSnackbar(t('LABEL.SELECT_CENTER'), { variant: 'warning' });
+      return;
+    }
+    if (!amount) {
+      enqueueSnackbar(t('LABEL.ENTER_AMOUNT'), { variant: 'warning' });
+      return;
+    }
+    if (!transferDate) {
+      enqueueSnackbar(t('LABEL.TRANSFER_DATE'), { variant: 'warning' });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const payload: any = {
+        center,
+        amount: Number(amount),
+        transferDate: new Date(transferDate).toISOString(),
+        referenceNumber,
+      };
+      if (note) {
+        payload.additionalNote = note;
+      }
+      await axiosInstance.post(endpoints.payouts.create, payload);
+      enqueueSnackbar(t('MESSAGE.CREATED_SUCCESSFULLY'), { variant: 'success' });
+      payoutDialog.onFalse();
+      setCenter('');
+      setAmount('');
+      setReferenceNumber('');
+      setTransferDate('');
+      setNote('');
+      // refresh list
+      const refreshed = await axiosInstance.get(`${endpoints.payouts.fetch}?limit=${currentLimit}`);
+      const list = refreshed?.data?.data || refreshed?.data || [];
+      const mapped: Payout[] = Array.isArray(list)
+        ? list.map((p: any) => ({
+            id: p?._id ?? p?.id ?? '',
+            referenceNumber: p?.referenceNumber ?? '',
+            center: p?.center?.name ?? p?.center ?? '',
+            amount: Number(p?.amount) || 0,
+            transferDate: p?.transferDate ? new Date(p.transferDate).toISOString() : '',
+          }))
+        : [];
+      setPayouts(mapped);
+    } catch (error: any) {
+      enqueueSnackbar(error?.message || 'Failed to create payout', { variant: 'error' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Container
@@ -214,49 +261,26 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
             }}
           >
             <Box
-              rowGap={1}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(3, 1fr)',
-              }}
+              display="flex"
+              justifyContent="flex-end"
+              alignItems="center"
             >
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Iconify icon="mingcute:search-line" />
-                    </InputAdornment>
-                  ),
+              <Button
+                variant="contained"
+                onClick={payoutDialog.onTrue}
+                sx={{
+                  bgcolor: 'white',
+                  color: '#CC38A6',
+                  px: 3,
+                  boxShadow: '0 10px 24px rgba(0,0,0,0.12)',
+                  '&:hover': {
+                    bgcolor: '#f7e8f3',
+                    color: '#b62f92',
+                  },
                 }}
-                placeholder={t('LABEL.SEARCH_BY_CENTER')}
-                type="search"
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  createQueryString('search', e.target.value);
-                }}
-              />
-              <Box />
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                <Button
-                  variant="contained"
-                  onClick={payoutDialog.onTrue}
-                  sx={{
-                    bgcolor: 'white',
-                    color: '#CC38A6',
-                    px: 3,
-                    boxShadow: '0 10px 24px rgba(0,0,0,0.12)',
-                    '&:hover': {
-                      bgcolor: '#f7e8f3',
-                      color: '#b62f92',
-                    },
-                  }}
-                >
-                  {t('BUTTON.ADD_PAYOUT')}
-                </Button>
-              </Box>
+              >
+                {t('BUTTON.ADD_PAYOUT')}
+              </Button>
             </Box>
           </Card>
         </Grid>
@@ -269,6 +293,7 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
         disablePagination
         customRender={{
           amount: (row) => formatAmount(row.amount),
+          transferDate: (row) => formatDate(row.transferDate),
         }}
       />
       <Dialog
@@ -289,19 +314,21 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
                   value={center}
                   displayEmpty
                   onChange={(e) => setCenter(e.target.value)}
-                  renderValue={(val) =>
-                    val ? (
-                      val
-                    ) : (
-                      <Typography variant="body2" color="text.disabled">
-                        {t('LABEL.SELECT_CENTER')}
-                      </Typography>
-                    )
-                  }
+                  renderValue={(val) => {
+                    if (!val) {
+                      return (
+                        <Typography variant="body2" color="text.disabled">
+                          {t('LABEL.SELECT_CENTER')}
+                        </Typography>
+                      );
+                    }
+                    const selected = centers.find((c) => c.id === val);
+                    return selected?.name || selected?.id || val;
+                  }}
                   IconComponent={(props) => <Iconify icon="eva:arrow-ios-downward-fill" {...props} />}
                 >
                   {centers.map((item) => (
-                    <MenuItem key={item.id} value={item.name}>
+                    <MenuItem key={item.id} value={item.id}>
                       {item.name}
                     </MenuItem>
                   ))}
@@ -358,21 +385,15 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
           <Button
             fullWidth
             variant="contained"
-            onClick={() => {
-              payoutDialog.onFalse();
-              setCenter('');
-              setAmount('');
-              setReferenceNumber('');
-              setTransferDate('');
-              setNote('');
-            }}
+            onClick={handleSubmit}
+            disabled={submitting}
             sx={{
               bgcolor: '#2BB5C6',
               '&:hover': { bgcolor: '#2398a7' },
               borderRadius: 1,
             }}
           >
-            {t('BUTTON.MARK_AS_PAID')}
+            {submitting ? t('BUTTON.PUBLISH') : t('BUTTON.MARK_AS_PAID')}
           </Button>
         </DialogActions>
       </Dialog>

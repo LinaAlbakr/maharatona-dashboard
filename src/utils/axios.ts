@@ -192,4 +192,8 @@ export const endpoints = {
       `/admin-panel/delete-advertisement-center/${bannerId}`,
     deleteBanner: (bannerId: string) => `/admin/delete-package/${bannerId}`,
   },
+  payouts: {
+    create: '/admin/create-payout',
+    fetch: '/admin/get-all-payouts',
+  },
 };
