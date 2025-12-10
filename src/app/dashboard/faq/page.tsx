@@ -11,34 +11,31 @@ type props = {
 };
 
 const Page = async ({ searchParams }: Readonly<props>) => {
-  const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 100;
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 20;
   const category_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
  
 
   const categories = await fetchFaqCategories({
     limit,
-    page,
     filters: category_name,
   });
 
 
    const categoriesCenter = await fetchFaqCategoriesCenter({
     limit,
-    page,
     filters: category_name,
   });
 
-  const filteredProducts: FaqCategory[] = (categories?.data || []).map((c: any) => ({
+  const filteredProducts: FaqCategory[] = (Array.isArray(categories?.data) ? categories.data : []).map((c: any) => ({
     id: c?._id,
     ...c,
   }));
-  const filteredProductsCenter: FaqCategory[] = (categoriesCenter?.data || []).map((c: any) => ({
+  const filteredProductsCenter: FaqCategory[] = (Array.isArray(categoriesCenter?.data) ? categoriesCenter.data : []).map((c: any) => ({
     id: c?._id,
     ...c,
   }));
 
-  return <FaqView categories={filteredProducts} categoriesCenter={filteredProductsCenter} metaCenter={categoriesCenter?.meta} meta={categories?.meta} count={categories?.meta?.itemCount} />;
+  return <FaqView categories={filteredProducts} categoriesCenter={filteredProductsCenter} count={filteredProducts.length} />;
 };
 
 export default Page;

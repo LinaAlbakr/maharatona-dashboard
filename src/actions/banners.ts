@@ -13,13 +13,12 @@ import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 import { Banner } from 'src/types/banners';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, kept for backward compatibility
   limit: number;
   filters?: string;
   type?: string | null;
 }
 export const fetchBanners = async ({
-  page = 1,
   limit = 50,
   filters = '',
   type = null,
@@ -30,7 +29,6 @@ export const fetchBanners = async ({
   try {
     const res = await axiosInstance.get(endpoints.banners.fetch, {
       params: {
-        page,
         limit,
         search: filters,
         type,
@@ -38,7 +36,14 @@ export const fetchBanners = async ({
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
 
-    return res?.data;
+    // Handle new response structure: data is now an array directly
+    const packagesData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    const normalized = packagesData.map((p: any) => ({
+      ...p,
+      id: p._id || p.id,
+    }));
+
+    return { data: normalized, message: res?.data?.message };
   } catch (error) {
     throw new Error(error);
   }

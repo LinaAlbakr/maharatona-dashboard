@@ -16,7 +16,6 @@ interface IParams {
   categoryId?: string;
 }
 export const fetchFaqCategories = async ({
-  page = 1,
   limit = 50,
   filters = '',
   categoryId,
@@ -27,40 +26,31 @@ export const fetchFaqCategories = async ({
   try {
     const res = await axiosInstance.get(endpoints.faq.fetchFaqCategoriesStudent, {
       params: {
-        page,
         limit,
         by_name: filters,
         faq_category_id: categoryId,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    // Normalize to old shape { data, meta }
-    const payload = res?.data?.data || {};
+    // Handle new response structure: data is now an array directly
+    const categoriesData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    const normalized = categoriesData.map((c: any) => ({
+      ...c,
+      id: c._id || c.id,
+    }));
     return {
-      data: payload?.docs || [],
-      meta: {
-        itemCount: payload?.totalDocs || 0,
-        page: payload?.page || page,
-        limit: payload?.limit || limit,
-        totalPages: payload?.totalPages || 1,
-      },
+      data: normalized,
+      message: res?.data?.message,
     };
   } catch (error) {
     return {
       data: [],
-      meta: {
-        itemCount: 0,
-        page,
-        limit,
-        totalPages: 0,
-      },
       error: getErrorMessage(error),
     };
   }
 };
 
 export const fetchFaqCategoriesCenter = async ({
-  page = 1,
   limit = 50,
   filters = '',
   categoryId,
@@ -71,32 +61,24 @@ export const fetchFaqCategoriesCenter = async ({
   try {
     const res = await axiosInstance.get(endpoints.faq.fetchFaqCategoriesCenter, {
       params: {
-        page,
         limit,
         by_name: filters,
         faq_category_id: categoryId,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    const payload = res?.data?.data || {};
+    const categoriesData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    const normalized = categoriesData.map((c: any) => ({
+      ...c,
+      id: c._id || c.id,
+    }));
     return {
-      data: payload?.docs || [],
-      meta: {
-        itemCount: payload?.totalDocs || 0,
-        page: payload?.page || page,
-        limit: payload?.limit || limit,
-        totalPages: payload?.totalPages || 1,
-      },
+      data: normalized,
+      message: res?.data?.message,
     };
   } catch (error) {
     return {
       data: [],
-      meta: {
-        itemCount: 0,
-        page,
-        limit,
-        totalPages: 0,
-      },
       error: getErrorMessage(error),
     };
   }

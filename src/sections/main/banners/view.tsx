@@ -7,7 +7,18 @@ import { useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+} from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -48,6 +59,8 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const currentPathname = usePathname();
+  const currentLimit = Number(searchParams?.get('limit')) || 20;
   const [isFormDialogOpen, setIsFormDialogOpen] = useState(false);
   const [selectedBanner, setSelectedBanner] = useState<Banner | undefined>();
   const [selectedId, setSelectedId] = useState<string>('');
@@ -71,8 +84,6 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
     name: '',
     type: '',
   };
-
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -87,9 +98,9 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
         params.delete(name);
       }
 
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${currentPathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams]
+    [currentPathname, router, searchParams]
   );
   const handleConfirmActivate = async () => {
     if (selectedBanner) {
@@ -217,6 +228,7 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
           count={count}
           data={banners}
           tableHead={TABLE_HEAD}
+          disablePagination
           actions={[
             {
               sx: { color: 'info.dark' },
@@ -302,6 +314,48 @@ const BannersView = ({ banners, count, fields }: Readonly<props>) => {
             ),
           }}
         />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            py: 2,
+            px: 2,
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            backgroundColor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Rows per page:
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 80 }}>
+              <Select
+                value={currentLimit}
+                onChange={(e) => {
+                  const newLimit = e.target.value as number;
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('limit', String(newLimit));
+                  params.delete('page');
+                  router.push(`${currentPathname}?${params.toString()}`);
+                }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    py: 1,
+                  },
+                }}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
       </Container>
       {isFormDialogOpen && (
         <NewEditBannerDialog

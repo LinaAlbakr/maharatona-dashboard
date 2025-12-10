@@ -6,7 +6,20 @@ import { useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import {Tab, Tabs, Box, Card, Grid, Button, TextField,  Typography,    InputAdornment} from '@mui/material';
+import {
+  Tab,
+  Tabs,
+  Box,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+} from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -36,8 +49,6 @@ type props = {
   categories: FaqCategory[];
   categoriesCenter: FaqCategory[];
   count: number;
-  meta: any;
-  metaCenter: any;
 };
 
 interface TabPanelProps {
@@ -46,13 +57,15 @@ interface TabPanelProps {
   value: number;
 }
 
-const FaqView = ({ count, categories, meta, categoriesCenter, metaCenter }: Readonly<props>) => {
+const FaqView = ({ count, categories, categoriesCenter }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 console.log("categories",categories);
   const { t } = useTranslate();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const currentLimit = Number(searchParams?.get('limit')) || 20;
   const confirmBlock = useBoolean();
 
   const [selectedId, setSelectedId] = useState<string | null>();
@@ -70,7 +83,6 @@ console.log("categories",categories);
     name: '',
   };
 
-  const pathname = usePathname();
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
@@ -236,10 +248,10 @@ console.log("categories",categories);
 
         <TabPanel value={value} index={0}>
           <SharedTableFaq
-            meta={meta}
             count={filteredCategories.length}
             data={filteredCategories}
             tableHead={TABLE_HEAD}
+            disablePagination
             actions={[
               {
                 sx: { color: 'info.dark' },
@@ -279,10 +291,10 @@ console.log("categories",categories);
         </TabPanel>
         <TabPanel value={value} index={1}>
           <SharedTableFaq
-            meta={metaCenter}
             count={filteredCategoriesCenter.length}
             data={filteredCategoriesCenter}
             tableHead={TABLE_HEAD}
+            disablePagination
             actions={[
               {
                 sx: { color: 'info.dark' },
@@ -320,6 +332,48 @@ console.log("categories",categories);
             }}
           />
         </TabPanel>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            py: 2,
+            px: 2,
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            backgroundColor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Rows per page:
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 80 }}>
+              <Select
+                value={currentLimit}
+                onChange={(e) => {
+                  const newLimit = e.target.value as number;
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('limit', String(newLimit));
+                  params.delete('page');
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    py: 1,
+                  },
+                }}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
       </Container>
       <ConfirmDialog
         open={confirmBlock.value}
