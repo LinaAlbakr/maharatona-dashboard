@@ -8,12 +8,11 @@ import { cookies } from 'next/headers';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   filters?: string;
 }
 export const fetchCourses = async ({
-  page = 1,
   limit = 50,
   filters = '',
 }: IParams): Promise<any> => {
@@ -23,43 +22,33 @@ export const fetchCourses = async ({
   try {
     const res = await axiosInstance.get(endpoints.courses.fetch, {
       params: {
-        page,
         limit,
         by_name: filters,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    // Transform the new API response structure to match the expected format
+    // Handle new response structure: data is now an array directly
     const responseData = res?.data;
-    if (responseData?.data) {
-      // Normalize course objects to match expected format
-      const normalizedDocs = (responseData.data.docs || []).map((course: any) => {
-        // Determine name based on language
-        const courseName = lang === 'ar' ? course.name_ar : course.name_en;
-        
-        return {
-          ...course,
-          id: course._id || course.id,
-          name: courseName || course.name_ar || course.name_en || course.name,
-          students: course.clients || course.students || [],
-          seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
-        };
-      });
-
+    const coursesData = Array.isArray(responseData?.data) ? responseData.data : [];
+    
+    // Normalize course objects to match expected format
+    const normalizedDocs = coursesData.map((course: any) => {
+      // Determine name based on language
+      const courseName = lang === 'ar' ? course.name_ar : course.name_en;
+      
       return {
-        data: normalizedDocs,
-        meta: {
-          itemCount: responseData.data.totalDocs || 0,
-          page: responseData.data.page || page,
-          limit: responseData.data.limit || limit,
-          totalPages: responseData.data.totalPages || 1,
-          hasNextPage: responseData.data.hasNextPage || false,
-          hasPrevPage: responseData.data.hasPrevPage || false,
-        },
-        message: responseData.message,
+        ...course,
+        id: course._id || course.id,
+        name: courseName || course.name_ar || course.name_en || course.name,
+        students: course.clients || course.students || [],
+        seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
       };
-    }
-    return responseData;
+    });
+
+    return {
+      data: normalizedDocs,
+      message: responseData?.message,
+    };
   } catch (error) {
     throw new Error(error);
   }
