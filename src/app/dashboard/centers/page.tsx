@@ -13,17 +13,15 @@ type props = {
 };
 
 const Page = async ({ searchParams }: Readonly<props>) => {
-  const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 5;
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 20;
   const center_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
   const city_id = typeof searchParams?.city === 'string' ? searchParams?.city : '';
   const neighborhood_id = typeof searchParams?.neighborhood === 'string' ? searchParams?.neighborhood : '';
 
-  // console.log('Centers page params:', { page, limit, center_name, city_id, neighborhood_id });
+  // console.log('Centers page params:', { limit, center_name, city_id, neighborhood_id });
 
   const centers = await fetchCenters({
     limit,
-    page,
     filters: center_name,
     city_id,
     neighborhood_id,
@@ -98,7 +96,7 @@ const Page = async ({ searchParams }: Readonly<props>) => {
       centers={filteredProducts}
       cities={cities}
       neighborhoods={neighborhoods}
-      count={centers?.meta?.itemCount || filteredProducts.length}
+      count={filteredProducts.length}
     />
   );
 };

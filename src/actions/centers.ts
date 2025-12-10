@@ -12,7 +12,7 @@ import { getCookie } from 'cookies-next';
 import { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   filters?: string;
   city_id?: string;
@@ -28,7 +28,6 @@ interface IParams {
 //   name_en?: string;
 // }
 export const  fetchCenters = async ({
-  page = 1,
   limit = 50,
   filters = '',
   city_id = '',
@@ -39,7 +38,6 @@ export const  fetchCenters = async ({
 
   try {
     const params: any = {
-      page,
       limit,
     };
     
@@ -61,25 +59,20 @@ export const  fetchCenters = async ({
       params,
     });
     
-    // Transform the new API response structure to match the expected format
+    // Handle new response structure: data is now an array directly
     const responseData = res?.data;
-    if (responseData?.data) {
-      return {
-        data: responseData.data.docs || [],
-        meta: {
-          itemCount: responseData.data.totalDocs || 0,
-          page: responseData.data.page || page,
-          limit: responseData.data.limit || limit,
-          totalPages: responseData.data.totalPages || 1,
-          hasNextPage: responseData.data.hasNextPage || false,
-          hasPrevPage: responseData.data.hasPrevPage || false,
-        },
-        message: responseData.message,
-      };
-    }
+    const centersData = Array.isArray(responseData?.data) ? responseData.data : [];
     
-    console.log('fetchCenters response:', responseData);
-    return responseData;
+    // Normalize data: map _id → id
+    const normalizedCenters = centersData.map((center: any) => ({
+      ...center,
+      id: center._id || center.id,
+    }));
+    
+    return {
+      data: normalizedCenters,
+      message: responseData?.message,
+    };
   } catch (error) {
     console.error('fetchCenters error:', error);
     throw new Error(getErrorMessage(error));
@@ -98,8 +91,11 @@ export const fetchCities = async (): Promise<ITems[]> => {
       },
     });
 
+    // Handle new response structure: data is now an array directly
+    const citiesData = Array.isArray(res.data?.data) ? res.data.data : [];
+
     // Normalize data: map _id → id, and choose name based on language
-    const cities = res.data.data.docs.map((city: any) => ({
+    const cities = citiesData.map((city: any) => ({
       id: city._id,
       name: lang === 'ar' ? city.name_ar : city.name_en,
       // or if you want to keep both: name_ar, name_en — adjust ITems accordingly

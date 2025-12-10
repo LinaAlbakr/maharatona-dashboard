@@ -92,9 +92,11 @@ export const fetchCities = async (): Promise<any> => {
     const res = await axiosInstance.get(endpoints.centers.cities, {
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data.data;
+    // Handle new response structure: data is now an array directly
+    return Array.isArray(res?.data?.data) ? res.data.data : [];
   } catch (error) {
-    throw new Error(error);
+    console.error('Failed to fetch cities:', error);
+    throw new Error(getErrorMessage(error));
   }
 };
 export const fetchfields = async (): Promise<any> => {
