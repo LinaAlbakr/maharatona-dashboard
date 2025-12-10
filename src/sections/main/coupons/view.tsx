@@ -3,7 +3,7 @@
 import Container from '@mui/material/Container';
 import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings';
-import { Box, Button, Card, Grid, InputAdornment, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, InputAdornment, TextField, Typography, Select, MenuItem, FormControl } from '@mui/material';
 import FormProvider from 'src/components/hook-form';
 import { useCallback, useEffect, useState } from 'react';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
@@ -47,6 +47,8 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
     router.push(`${pathname}`);
   }, [pathname, router]);
   const type = searchParams?.get('type');
+  const currentLimit = Number(searchParams?.get('limit')) || 20;
+
   const TABLE_HEAD = [
     { id: 'code', label: 'LABEL.COUPON' },
     { id: 'start_date', label: 'LABEL.START_DATE' },
@@ -186,6 +188,7 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
           count={count}
           data={coupons}
           tableHead={TABLE_HEAD}
+          disablePagination
           actions={[
             {
               sx: { color: 'error.dark' },
@@ -218,6 +221,48 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
             times_Used: (item: any) => `${item?.times_Used ?? 0} ${t('LABEL.TIME')}`,
           }}
         />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            py: 2,
+            px: 2,
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            backgroundColor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Rows per page:
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 80 }}>
+              <Select
+                value={currentLimit}
+                onChange={(e) => {
+                  const newLimit = e.target.value as number;
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('limit', String(newLimit));
+                  params.delete('page'); // Remove page parameter since we're not using pagination
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    py: 1,
+                  },
+                }}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
       </Container>
       <ConfirmDialog
         open={confirmDelete.value}

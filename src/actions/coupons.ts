@@ -10,13 +10,12 @@ import { paths } from 'src/routes/paths';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   filters?: string;
   type?: string | null;
 }
 export const fetchCoupons = async ({
-  page = 1,
   limit = 50,
   filters = '',
   type = null,
@@ -26,14 +25,20 @@ export const fetchCoupons = async ({
   try {
     const res = await axiosInstance.get(endpoints.coupons.fetch, {
       params: {
-        page,
         limit,
         search: filters,
         discount_create_type: type,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data;
+    
+    // Handle new response structure: data is now an array directly
+    const couponsData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    
+    return {
+      data: couponsData,
+      message: res?.data?.message,
+    };
   } catch (error) {
     throw new Error(error);
   }
