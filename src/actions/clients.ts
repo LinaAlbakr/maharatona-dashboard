@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   city_id?: string;
   by_client_field_ids?: string;
@@ -19,7 +19,6 @@ interface IParams {
   sort?: 'order_by' | 'new';
 }
 export const fetchClients = async ({
-  page = 1,
   limit = 50,
   city_id = '',
   by_client_field_ids = '',
@@ -30,7 +29,6 @@ export const fetchClients = async ({
   try {
     const res = await axiosInstance.get(endpoints.clients.fetch, {
       params: {
-        page,
         limit,
         by_city_id: city_id,
         by_client_field_ids: by_client_field_ids || null,
@@ -42,41 +40,12 @@ export const fetchClients = async ({
     // Handle new response structure
     const responseData = res?.data;
     
-    // Check if response has docs array (new paginated structure) or direct data array
-    let clientsData: any[] = [];
-    let itemCount = 0;
-    let currentPage = page;
-    let totalPages = 1;
-    
-    if (responseData?.data?.docs) {
-      // New paginated structure with docs array
-      clientsData = responseData.data.docs || [];
-      itemCount = responseData.data.totalDocs || 0;
-      currentPage = responseData.data.page || page;
-      totalPages = responseData.data.totalPages || 1;
-    } else if (Array.isArray(responseData?.data)) {
-      // Direct array structure
-      clientsData = responseData.data;
-      itemCount = responseData?.pagination?.totalItems || clientsData.length;
-      currentPage = responseData?.pagination?.currentPage || page;
-      totalPages = responseData?.pagination?.totalPages || 1;
-    } else if (Array.isArray(responseData)) {
-      // Response is directly an array
-      clientsData = responseData;
-      itemCount = responseData.length;
-      currentPage = page;
-      totalPages = 1;
-    }
+    // Handle new response structure: data is now an array directly
+    const clientsData = Array.isArray(responseData?.data) ? responseData.data : [];
     
     // Transform the response to match the expected structure
     return {
       data: clientsData,
-      pagination: responseData?.pagination || responseData?.data || {},
-      meta: {
-        itemCount,
-        currentPage,
-        totalPages,
-      },
     };
   } catch (error) {
     console.error('Failed to fetch clients:', error);
