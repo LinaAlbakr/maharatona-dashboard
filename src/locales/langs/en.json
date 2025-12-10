@@ -219,7 +219,14 @@
     "ACTIVE": "Active",
     "DAY": "Day",
     "STATUS": "Status",
-    "ORDER": "Order"
+    "ORDER": "Order",
+    "PAYOUTS": "Payouts",
+    "REFERENCE_NUMBER": "Reference Number",
+    "TRANSFER_DATE": "Transfer Date",
+    "SEARCH_BY_CENTER": "Search by center",
+    "SELECT_CENTER": "Select Center",
+    "ENTER_AMOUNT": "Enter Amount",
+    "ADDITIONAL_NOTE": "Additional Note"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -247,7 +254,9 @@
     "ADD_BANNER": "Add banner",
     "ADD_CITY": "Add City",
     "ADD_NEIGHBORHOOD": "Add Neighborhood",
-    "ADD_PACKAGES": "Add packages"
+    "ADD_PACKAGES": "Add packages",
+    "ADD_PAYOUT": "Add payout",
+    "MARK_AS_PAID": "Mark As Paid"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -268,7 +277,8 @@
     "HOME_SCREEN": "Home Screen",
     "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods",
     "BANNERS": "Banners",
-    "PACKAGES_BANNERS": "Packages Banners"
+    "PACKAGES_BANNERS": "Packages Banners",
+    "PAYOUTS": "Payouts"
   },
   "TABLE": {
     "DENSE": "Dense",

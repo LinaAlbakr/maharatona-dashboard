@@ -228,7 +228,14 @@
     "ACTIVE": "نشط",
     "DAY": "يوم",
     "STATUS": "الحالة",
-    "ORDER": "الترتيب"
+    "ORDER": "الترتيب",
+    "PAYOUTS": "المدفوعات",
+    "REFERENCE_NUMBER": "رقم المرجع",
+    "TRANSFER_DATE": "تاريخ التحويل",
+    "SEARCH_BY_CENTER": "ابحث حسب المركز",
+    "SELECT_CENTER": "اختر المركز",
+    "ENTER_AMOUNT": "ادخل المبلغ",
+    "ADDITIONAL_NOTE": "ملاحظة إضافية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -256,7 +263,9 @@
     "ADD_BANNER": "اضافه بانر",
     "ADD_CITY": "اضافة مدينة",
     "ADD_NEIGHBORHOOD": "اضافة حي",
-    "ADD_PACKAGES": "اضافه باقة"
+    "ADD_PACKAGES": "اضافه باقة",
+    "ADD_PAYOUT": "اضافة دفعة",
+    "MARK_AS_PAID": "تأكيد الدفع"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -277,7 +286,8 @@
     "CONTRACT_PAGE": "صفحة العقد",
     "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء",
     "BANNERS": "البنرات الاعلانية",
-    "PACKAGES_BANNERS": "باقات البانرات الإعلانية"
+    "PACKAGES_BANNERS": "باقات البانرات الإعلانية",
+    "PAYOUTS": "المدفوعات"
   },
   "TABLE": {
     "DENSE": "تكديس",

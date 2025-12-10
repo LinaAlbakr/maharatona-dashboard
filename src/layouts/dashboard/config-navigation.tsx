@@ -75,6 +75,7 @@ export function useNavData() {
           { title: t('SIDEBAR.MAIN'), path: paths.dashboard.root, icon: ICONS.home },
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
+          { title: t('SIDEBAR.PAYOUTS'), path: paths.dashboard.payouts, icon: ICONS.paymentMethods },
           {
             title: t('SIDEBAR.FIELDS_AND_SPECIALTIES'),
             path: paths.dashboard.categories,
