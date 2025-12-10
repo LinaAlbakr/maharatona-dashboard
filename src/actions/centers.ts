@@ -116,9 +116,10 @@ export const fetchCityNeighborhoods = async ({ cityId }: { cityId: string }): Pr
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     
-    // Normalize data to ITems format
-    const neighborhoods = res.data.data.docs.map((neighborhood: any) => ({
-      id: neighborhood._id,
+    // Normalize data to ITems format (data is now an array directly)
+    const neighborhoodsData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    const neighborhoods = neighborhoodsData.map((neighborhood: any) => ({
+      id: neighborhood._id || neighborhood.id,
       name: lang === 'ar' ? neighborhood.name_ar : neighborhood.name_en,
     }));
 

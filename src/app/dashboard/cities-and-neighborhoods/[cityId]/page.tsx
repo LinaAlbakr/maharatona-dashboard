@@ -13,14 +13,17 @@ type IProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 const Page = async ({ params, searchParams }: IProps) => {
-  const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 6;
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 20;
   const filters = typeof searchParams?.search === 'string' ? searchParams?.search : '';
 
-  const neighborhoods = await fetchNeighborhoods({ page, limit, filters, cityId: params.cityId });
+  const neighborhoods = await fetchNeighborhoods({ limit, filters, cityId: params.cityId });
 
   return (
-    <NeighborhoodsView neighborhoods={neighborhoods?.data} count={neighborhoods?.meta?.itemCount} cityId={params.cityId} />
+    <NeighborhoodsView
+      neighborhoods={Array.isArray(neighborhoods?.data) ? neighborhoods.data : []}
+      count={Array.isArray(neighborhoods?.data) ? neighborhoods.data.length : 0}
+      cityId={params.cityId}
+    />
   );
 };
 

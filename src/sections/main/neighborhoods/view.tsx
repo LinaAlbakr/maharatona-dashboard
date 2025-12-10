@@ -6,7 +6,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import { Box, Card, Grid, Button, TextField, Typography, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+} from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -48,6 +59,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
   useEffect(() => {
     router.push(`${pathname}`);
   }, [pathname, router]);
+  const currentLimit = Number(searchParams?.get('limit')) || 20;
 
   const TABLE_HEAD = [
     { id: 'name_ar', label: 'LABEL.NAME_AR' },
@@ -200,6 +212,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
           count={filteredNeighborhoods.length}
           data={filteredNeighborhoods}
           tableHead={TABLE_HEAD}
+          disablePagination
           actions={[
             {
               sx: { color: 'error.dark' },
@@ -241,6 +254,48 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
             ),
           }}
         />
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            py: 2,
+            px: 2,
+            borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+            backgroundColor: (theme) => theme.palette.background.paper,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Rows per page:
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 80 }}>
+              <Select
+                value={currentLimit}
+                onChange={(e) => {
+                  const newLimit = e.target.value as number;
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('limit', String(newLimit));
+                  params.delete('page');
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+                sx={{
+                  '& .MuiSelect-select': {
+                    py: 1,
+                  },
+                }}
+              >
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={40}>40</MenuItem>
+                <MenuItem value={50}>50</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
       </Container>
       <ConfirmDialog
         open={confirmActivate.value}

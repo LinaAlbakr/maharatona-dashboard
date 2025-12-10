@@ -10,7 +10,7 @@ import { paths } from 'src/routes/paths';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   filters?: string;
   categoryId?: string;
@@ -157,7 +157,6 @@ export const editFaqCategory = async (reqBody: any, categoryId: string): Promise
 };
 
 export const fetchCategoryQuestions = async ({
-  page = 1,
   limit = 50,
   categoryId,
   filters = '',
@@ -167,32 +166,23 @@ export const fetchCategoryQuestions = async ({
   try {
     const res = await axiosInstance.get(endpoints.faq.fetchQuestions, {
       params: {
-        page,
         limit,
         by_name: filters,
         faq_category_id: categoryId,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    const payload = res?.data?.data || {};
+    
+    // Handle new response structure: data is now an array directly
+    const questionsData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    
     return {
-      data: payload?.docs || [],
-      meta: {
-        itemCount: payload?.totalDocs || 0,
-        page: payload?.page || page,
-        limit: payload?.limit || limit,
-        totalPages: payload?.totalPages || 1,
-      },
+      data: questionsData,
+      message: res?.data?.message,
     };
   } catch (error) {
     return {
       data: [],
-      meta: {
-        itemCount: 0,
-        page,
-        limit,
-        totalPages: 0,
-      },
       error: getErrorMessage(error),
     };
   }

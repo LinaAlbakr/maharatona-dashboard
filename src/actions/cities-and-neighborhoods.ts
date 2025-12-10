@@ -10,13 +10,12 @@ import { paths } from 'src/routes/paths';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, kept for backward compatibility
   limit: number;
   filters?: string;
   cityId?: string;
 }
 export const fetchCities = async ({
-  page = 1,
   limit = 50,
   filters = '',
 }: IParams): Promise<any> => {
@@ -26,23 +25,23 @@ export const fetchCities = async ({
   try {
     const res = await axiosInstance.get(endpoints.citiesAndNeighborhoods.fetchCities, {
       params: {
-        page,
         limit,
         by_name: filters,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     
-    // Handle new response structure with data wrapper
-    const responseData = res?.data;
+    // Handle new response structure: data is now an array directly
+    const citiesData = Array.isArray(res?.data?.data) ? res.data.data : [];
+
+    const normalized = citiesData.map((city: any) => ({
+      ...city,
+      id: city._id || city.id,
+    }));
     
-    // Transform the response to match the expected structure
     return {
-      docs: responseData?.data?.docs || [],
-      totalDocs: responseData?.data?.totalDocs || 0,
-      page: responseData?.data?.page || page,
-      limit: responseData?.data?.limit || limit,
-      totalPages: responseData?.data?.totalPages || 1,
+      data: normalized,
+      message: res?.data?.message,
     };
   } catch (error) {
     console.error('Failed to fetch cities:', error);
@@ -80,7 +79,6 @@ export const editCityStatus = async (city: any): Promise<any> => {
 };
 
 export const fetchNeighborhoods = async ({
-  page = 1,
   limit = 50,
   filters = '',
   cityId = '',
@@ -93,32 +91,24 @@ export const fetchNeighborhoods = async ({
       endpoints.citiesAndNeighborhoods.fetchNeighborhoods(cityId),
       {
         params: {
-          page,
           limit,
           by_name: filters,
         },
         headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
       }
     );
-    const payload = res?.data?.data || {};
+    const neighborhoodsData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    const normalized = neighborhoodsData.map((n: any) => ({
+      ...n,
+      id: n._id || n.id,
+    }));
     return {
-      data: payload?.docs || [],
-      meta: {
-        itemCount: payload?.totalDocs || 0,
-        page: payload?.page || page,
-        limit: payload?.limit || limit,
-        totalPages: payload?.totalPages || 1,
-      },
+      data: normalized,
+      message: res?.data?.message,
     };
   } catch (error) {
     return {
       data: [],
-      meta: {
-        itemCount: 0,
-        page,
-        limit,
-        totalPages: 0,
-      },
       error: getErrorMessage(error),
     };
   }

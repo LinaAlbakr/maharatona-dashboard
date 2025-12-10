@@ -9,22 +9,20 @@ type IProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 const Page = async ({ params, searchParams }: IProps) => {
-  const page = typeof searchParams?.page === 'string' ? Number(searchParams?.page) : 1;
-  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 6;
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 20;
   const filters = typeof searchParams?.search === 'string' ? searchParams?.search : '';
 
   const categoryQuestions = await fetchCategoryQuestions({
-    page,
     limit,
     filters,
     categoryId: params.categoryId,
   });
-  const filteredProducts: CategoryQuestion[] = categoryQuestions?.data;
-console.log("categoryQuestions",categoryQuestions);
+  const filteredProducts: CategoryQuestion[] = Array.isArray(categoryQuestions?.data) ? categoryQuestions.data : [];
+  
   return (
     <CategoryQuestionsView
       questions={filteredProducts}
-      count={categoryQuestions?.meta?.itemCount}
+      count={filteredProducts.length}
       categoryId={params.categoryId}
     />
   );
