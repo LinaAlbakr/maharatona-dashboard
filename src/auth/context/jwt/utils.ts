@@ -42,9 +42,9 @@ export const tokenExpired = (exp: number) => {
 
   const currentTime = Date.now() / 1000;
 
-  // Test token expires after 10s
-  // const timeLeft = currentTime + 10000 - currentTime; // ~10s
-  const timeLeft = exp - currentTime;
+  // `exp` is in seconds (per JWT spec) but setTimeout expects milliseconds.
+  // Without converting, we were scheduling the logout ~1000x sooner than intended.
+  const timeLeftMs = Math.max(0, (exp - currentTime) * 1000);
 
   clearTimeout(expiredTimer);
 
@@ -56,7 +56,7 @@ export const tokenExpired = (exp: number) => {
     Cookie.remove('user');
 
     window.location.href = paths.auth.jwt.login;
-  }, timeLeft);
+  }, timeLeftMs);
 };
 
 // ----------------------------------------------------------------------

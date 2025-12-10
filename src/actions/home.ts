@@ -180,11 +180,14 @@ export const fetchNotifications = async ({
   const fallback = {
     data: [],
     meta: {
-      total: 0,
+      itemCount: 0,
       page: notifications_page,
       limit: notifications_limit,
       totalPages: 0,
+      hasNextPage: false,
+      hasPrevPage: false,
     },
+    message: '',
     success: true,
   };
 
@@ -207,13 +210,42 @@ export const fetchNotifications = async ({
       },
     });
 
-    // Optional: validate response shape
-    if (!res?.data || typeof res.data !== 'object') {
+    const response = res?.data;
+    const payload = response?.data;
+
+    if (!payload || !Array.isArray(payload.docs)) {
       console.warn('Invalid notifications response format');
       return fallback;
     }
 
-    return res.data;
+    const mappedDocs = payload.docs.map((doc: any) => ({
+      id: doc._id || doc.id,
+      notification_type: doc.notification_type,
+      is_read: doc.is_read,
+      title:
+        lang === 'ar'
+          ? doc.title_ar || doc.title_en || ''
+          : doc.title_en || doc.title_ar || '',
+      message:
+        lang === 'ar'
+          ? doc.message_ar || doc.message_en || ''
+          : doc.message_en || doc.message_ar || '',
+      created_at: doc.createdAt || doc.created_at,
+    }));
+
+    return {
+      data: mappedDocs,
+      meta: {
+        itemCount: payload.totalDocs ?? mappedDocs.length,
+        page: payload.page ?? notifications_page,
+        limit: payload.limit ?? notifications_limit,
+        totalPages: payload.totalPages ?? 0,
+        hasNextPage: payload.hasNextPage ?? false,
+        hasPrevPage: payload.hasPrevPage ?? false,
+      },
+      message: response?.message ?? '',
+      success: true,
+    };
   } catch (error: any) {
     // ✅ Log real error for debugging
     console.error('Failed to fetch notifications:', error);

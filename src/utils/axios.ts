@@ -81,7 +81,7 @@ export const endpoints = {
     priceProfit: '/admin-panel/get-price-profit',
     topCourses: '/admin-panel/top-courses',
     statistics: '/admin-panel/education-summary',
-    notifications: '/admin-panel/all-notification',
+    notifications: '/admin/get-all-notifications',
     totalClients: '/admin/get-total-clients',
     totalCenters: '/admin/get-total-centers',
     enrolledClientsCount: '/admin/get-enrolled-clients-count',
