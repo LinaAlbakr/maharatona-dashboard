@@ -10,13 +10,12 @@ import { paths } from 'src/routes/paths';
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
-  page: number;
+  page?: number; // Optional, not used anymore but kept for backward compatibility
   limit: number;
   filters?: string;
   type?: null | string;
 }
 export const fetchCallsReasons = async ({
-  page = 1,
   limit = 50,
   filters = '',
 }: IParams): Promise<any> => {
@@ -26,19 +25,17 @@ export const fetchCallsReasons = async ({
   try {
     const res = await axiosInstance.get(endpoints.support.calls_reasons.fetch, {
       params: {
-        page,
         limit,
         by_name: filters,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    // Normalize to a consistent shape
+    
+    // Handle new response structure: data is now an array directly
+    const reasonsData = Array.isArray(res?.data?.data) ? res.data.data : [];
+    
     return {
-      docs: res?.data?.docs || [],
-      totalDocs: res?.data?.totalDocs || 0,
-      page: res?.data?.page || page,
-      limit: res?.data?.limit || limit,
-      totalPages: res?.data?.totalPages || 1,
+      data: reasonsData,
     };
   } catch (error) {
     throw new Error(error);
@@ -98,7 +95,6 @@ export const editReason = async (reqBody: any, reasonId: string): Promise<any> =
 };
 
 export const fetchTechnicalSupportItems = async ({
-  page = 1,
   limit = 50,
   filters = '',
   type = null,
@@ -109,20 +105,18 @@ export const fetchTechnicalSupportItems = async ({
   try {
     const res = await axiosInstance.get(endpoints.support.technical_support.fetch, {
       params: {
-        page,
         limit,
         by_name: filters,
         callUsType: type,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    console.log("res",res);
+    
+    // Handle new response structure: data is now an array directly
+    const supportData = Array.isArray(res?.data) ? res.data : [];
+    
     return {
-      docs: res?.data?.docs || [],
-      totalDocs: res?.data?.totalDocs || 0,
-      page: res?.data?.page || page,
-      limit: res?.data?.limit || limit,
-      totalPages: res?.data?.totalPages || 1,
+      data: supportData,
     };
   } catch (error) {
     throw new Error(getErrorMessage(error));
