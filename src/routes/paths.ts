@@ -27,7 +27,8 @@ export const paths = {
     centers: `${ROOTS.DASHBOARD}/centers`,
     clients: `${ROOTS.DASHBOARD}/clients`,
     payouts: `${ROOTS.DASHBOARD}/payouts`,
-    courses: `${ROOTS.DASHBOARD}/courses`,
+    invoices: `${ROOTS.DASHBOARD}/invoices`,
+      courses: `${ROOTS.DASHBOARD}/courses`,
     supportGroup: {
       root: `${ROOTS.DASHBOARD}/support`,
       calls_reasons: `${ROOTS.DASHBOARD}/support/calls-reasons`,

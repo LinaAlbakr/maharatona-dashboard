@@ -196,4 +196,7 @@ export const endpoints = {
     create: '/admin/create-payout',
     fetch: '/admin/get-all-payouts',
   },
+  invoices: {
+    fetch: '/client/get-invoices',
+  },
 };

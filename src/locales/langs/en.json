@@ -222,12 +222,17 @@
     "STATUS": "Status",
     "ORDER": "Order",
     "PAYOUTS": "Payouts",
+    "INVOICES": "Invoices",
     "REFERENCE_NUMBER": "Reference Number",
     "TRANSFER_DATE": "Transfer Date",
     "SEARCH_BY_CENTER": "Search by center",
     "SELECT_CENTER": "Select Center",
     "ENTER_AMOUNT": "Enter Amount",
-    "ADDITIONAL_NOTE": "Additional Note"
+    "ADDITIONAL_NOTE": "Additional Note",
+    "MERCHENT_ID": "Merchant ID",
+    "TOTAL_AMOUNT": "Total Amount",
+    "NO_OF_COURSES": "No of Courses",
+    "ACTION": "Action"
   },
   "BUTTON": {
     "LOGIN": "Login",
@@ -257,7 +262,8 @@
     "ADD_NEIGHBORHOOD": "Add Neighborhood",
     "ADD_PACKAGES": "Add packages",
     "ADD_PAYOUT": "Add payout",
-    "MARK_AS_PAID": "Mark As Paid"
+    "MARK_AS_PAID": "Mark As Paid",
+    "DOWNLOAD_INVOICE": "Download invoice"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -279,7 +285,8 @@
     "CITIES_AND_NEIGHBORHOODS": "Cities and Neighborhoods",
     "BANNERS": "Banners",
     "PACKAGES_BANNERS": "Packages Banners",
-    "PAYOUTS": "Payouts"
+    "PAYOUTS": "Payouts",
+    "INVOICES": "Invoices"
   },
   "TABLE": {
     "DENSE": "Dense",
@@ -362,6 +369,10 @@
     "CONFIRM_DELETE_BANNER": "Are you sure you want to delete this banner?",
     "CONFIRM_DELET_CLIENT": "Are you sure you want to delete this client?",
     "CONFIRM_DELETE_CENTER": "Are you sure you want to delete this center?"
+  },
+  "ERROR": {
+    "FAILED_TO_DOWNLOAD_INVOICE": "Failed to download invoice",
+    "FAILED_TO_LOAD": "Failed to load data"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

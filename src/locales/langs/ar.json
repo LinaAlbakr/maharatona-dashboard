@@ -231,12 +231,17 @@
     "STATUS": "الحالة",
     "ORDER": "الترتيب",
     "PAYOUTS": "المدفوعات",
+    "INVOICES": "الفواتير",
     "REFERENCE_NUMBER": "رقم المرجع",
     "TRANSFER_DATE": "تاريخ التحويل",
     "SEARCH_BY_CENTER": "ابحث حسب المركز",
     "SELECT_CENTER": "اختر المركز",
     "ENTER_AMOUNT": "ادخل المبلغ",
-    "ADDITIONAL_NOTE": "ملاحظة إضافية"
+    "ADDITIONAL_NOTE": "ملاحظة إضافية",
+    "MERCHENT_ID": "معرف التاجر",
+    "TOTAL_AMOUNT": "المبلغ الكلي",
+    "NO_OF_COURSES": "عدد الدورات",
+    "ACTION": "العملية"
   },
   "BUTTON": {
     "LOGIN": "تسجيل الدخول",
@@ -266,7 +271,8 @@
     "ADD_NEIGHBORHOOD": "اضافة حي",
     "ADD_PACKAGES": "اضافه باقة",
     "ADD_PAYOUT": "اضافة دفعة",
-    "MARK_AS_PAID": "تأكيد الدفع"
+    "MARK_AS_PAID": "تأكيد الدفع",
+    "DOWNLOAD_INVOICE": "تحميل الفاتورة"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -288,7 +294,8 @@
     "CITIES_AND_NEIGHBORHOODS": "المدن والأحياء",
     "BANNERS": "البنرات الاعلانية",
     "PACKAGES_BANNERS": "باقات البانرات الإعلانية",
-    "PAYOUTS": "المدفوعات"
+    "PAYOUTS": "المدفوعات",
+    "INVOICES": "الفواتير"
   },
   "TABLE": {
     "DENSE": "تكديس",

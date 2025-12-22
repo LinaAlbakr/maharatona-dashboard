@@ -36,35 +36,45 @@ const Page = async ({ searchParams }: Readonly<props>) => {
 
   // Ensure centers.data is an array before mapping
   const centersData = Array.isArray(centers?.data) ? centers.data : [];
-  const normalizedCenters: ICenter[] = centersData.map((center: any) => ({
-    ...center,
-    id: center.id || center._id,
-    phone: center.phone || '',
-    user_id: center.user_id || center.userId || '',
-    userStatus: center.userStatus || center.status || 'ActiveClient',
-    walletBalance: center.walletBalance || center.wallet_balance || 0,
-    number_of_courses: center.number_of_courses || center.numberOfCourses || 0,
-    number_of_registrants: center.number_of_registrants || center.numberOfRegistrants || 0,
-    neighborhood: center.neighborhood
-      ? typeof center.neighborhood === 'string'
-        ? {
-            id: '',
-            name: center.neighborhood,
-            city: {
-              id: '',
-              name: typeof center.city === 'string' ? center.city : center.city?.name || '',
-            },
-          }
-        : center.neighborhood
-      : {
+  const normalizedCenters: ICenter[] = centersData.map((center: any) => {
+    let neighborhood;
+
+    if (center.neighborhood) {
+      if (typeof center.neighborhood === 'string') {
+        neighborhood = {
           id: '',
-          name: '',
+          name: center.neighborhood,
           city: {
             id: '',
-            name: '',
+            name: typeof center.city === 'string' ? center.city : center.city?.name || '',
           },
+        };
+      } else {
+        neighborhood = center.neighborhood;
+      }
+    } else {
+      neighborhood = {
+        id: '',
+        name: '',
+        city: {
+          id: '',
+          name: '',
         },
-  }));
+      };
+    }
+
+    return {
+      ...center,
+      id: center.id || center._id,
+      phone: center.phone || '',
+      user_id: center.user_id || center.userId || '',
+      userStatus: center.userStatus || center.status || 'ActiveClient',
+      walletBalance: center.walletBalance || center.wallet_balance || 0,
+      number_of_courses: center.number_of_courses || center.numberOfCourses || 0,
+      number_of_registrants: center.number_of_registrants || center.numberOfRegistrants || 0,
+      neighborhood,
+    };
+  });
 
   // Resolve selected city/neighborhood names from IDs for client-side filtering fallback
   const selectedCityName = city_id ? selectedCity?.name ?? '' : '';

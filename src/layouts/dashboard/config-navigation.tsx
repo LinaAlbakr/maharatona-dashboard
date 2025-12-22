@@ -36,6 +36,7 @@ const ICONS = {
   driversWallet: icon('ph:wallet-duotone'),
   warehouses: icon('iconoir:delivery-truck'),
   paymentMethods: icon('tdesign:money'),
+  invoices: icon('hugeicons:invoice-04'),
   currencies: icon('ic_currencies'),
   return: icon('carbon:deployment-policy'),
   notifications: icon('ic:outline-notifications-active'),
@@ -76,6 +77,7 @@ export function useNavData() {
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
           { title: t('SIDEBAR.PAYOUTS'), path: paths.dashboard.payouts, icon: ICONS.paymentMethods },
+          { title: t('SIDEBAR.INVOICES'), path: paths.dashboard.invoices, icon: ICONS.invoices },
           {
             title: t('SIDEBAR.FIELDS_AND_SPECIALTIES'),
             path: paths.dashboard.categories,
