@@ -1,0 +1,51 @@
+import { fetchfields, fetchBanners, fetchfieldsName } from 'src/actions/banners';
+
+import BannersView from 'src/sections/main/banners/view';
+
+import { Banner } from 'src/types/banners';
+
+export const metadata = {
+  title: 'Banners',
+};
+
+type props = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+const Page = async ({ searchParams }: Readonly<props>) => {
+  const limit = typeof searchParams?.limit === 'string' ? Number(searchParams?.limit) : 20;
+  const advertisement_name = typeof searchParams?.search === 'string' ? searchParams?.search : '';
+  const advertisementType = typeof searchParams?.type === 'string' ? searchParams?.type : null;
+  // const fields = await fetchfields();
+  const fieldsName = await fetchfieldsName();
+ 
+  const centers = await fetchBanners({
+    limit,
+    filters: advertisement_name,
+    type: advertisementType,
+  });
+
+  const docs = Array.isArray(centers?.data) ? centers.data : [];
+  const filteredProducts: Banner[] = docs.map((p: any) => ({
+    id: p?._id,
+    name_ar: p?.name_ar ?? '',
+    name_en: p?.name_en ?? '',
+    desc_ar: p?.desc_ar ?? '',
+    desc_en: p?.desc_en ?? '',
+    description: p?.desc_en ?? '',
+    image_cover: p?.imgae_cover ?? p?.image_cover ?? null,
+    created_at: p?.createdAt ?? '',
+    duration: Number(p?.duration ?? 0),
+    price: Number(p?.price ?? 0),
+    center_num: Array.isArray(p?.banners) ? p.banners.length : 0,
+    advertisementType: p?.type ?? '',
+    advertisement_status: p?.advertisement_status ?? '',
+    order: Number(p?.order ?? 0),
+  }));
+
+  return (
+    <BannersView banners={filteredProducts} count={centers?.data?.totalDocs ?? 0} fieldsName={fieldsName} />
+  );
+};
+
+export default Page;

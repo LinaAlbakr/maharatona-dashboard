@@ -1,0 +1,138 @@
+'use client';
+
+import { LoadingButton, TabPanel } from '@mui/lab';
+import { Box, Card, CardActions, CardContent, Typography } from '@mui/material';
+import { toFormData } from 'axios';
+import { useSnackbar } from 'notistack';
+import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { editStaticPage, createStaticPage } from 'src/actions/static-pages';
+import FormProvider from 'src/components/hook-form';
+import RHFEditor from 'src/components/hook-form/rhf-editor';
+import { useTranslate } from 'src/locales';
+import { StaticPage } from 'src/types/static-pages';
+
+interface IProps {
+  aboutClient: StaticPage;
+}
+
+const AboutClientView = ({ aboutClient }: IProps) => {
+  const { t } = useTranslate();
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const defaultValues = {
+    content_ar: aboutClient.content_ar.replace("'", '"') || '',
+    content_en: aboutClient.content_en.replace("'", '"') || '',
+  };
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const { handleSubmit, reset, formState: { isSubmitting } } = methods;
+
+  useEffect(() => {
+    reset({
+      content_ar: aboutClient.content_ar.replace("'", '"') || '',
+      content_en: aboutClient.content_en.replace("'", '"') || '',
+    });
+  }, [aboutClient, reset]);
+  const onSubmit = handleSubmit(async (data) => {
+    const reqBody = {
+      ...data,
+      content_ar: data.content_ar,
+      content_en: data.content_en,
+      static_page_type: 'ABOUT_US_CLIENT',
+    };
+
+    const pageId = (aboutClient as any)?.id ?? (aboutClient as any)?._id ?? (aboutClient as any)?.data?._id;
+    if (!pageId) {
+      // Create new static page if it doesn't exist
+      const res = await createStaticPage(reqBody);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
+          variant: 'success',
+        });
+      }
+      return;
+    }
+    const res = await editStaticPage(pageId, reqBody);
+    if (res?.error) {
+      enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+    } else {
+      enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
+        variant: 'success',
+      });
+      reset({ content_ar: reqBody.content_ar, content_en: reqBody.content_en });
+      router.refresh();
+    }
+  });
+
+  return (
+    <TabPanel
+      value="client"
+      sx={{
+        p: 'unset',
+      }}
+    >
+      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <Card
+          sx={{
+            p: 4,
+            borderRadius: 0,
+          }}
+        >
+          <CardContent sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+            <Box>
+              <Typography variant="h4" color="info.dark" marginBlock={1}>
+                {t('LABEL.ARABIC_CONTENT')}
+              </Typography>
+              <RHFEditor
+                name="content_ar"
+                sx={{
+                  '& .ql-editor': {
+                    minHeight: '200px',
+                  },
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography variant="h4" color="info.dark" marginBlock={1}>
+                {t('LABEL.ENGLISH_CONTENT')}
+              </Typography>
+              <RHFEditor
+                name="content_en"
+                sx={{
+                  '& .ql-editor': {
+                    minHeight: '200px',
+                  },
+                }}
+              />
+            </Box>
+          </CardContent>
+          <CardActions
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <LoadingButton
+              type="submit"
+              loading={isSubmitting}
+              sx={{
+                color: 'primary.contrastText',
+                backgroundColor: 'secondary.main',
+              }}
+            >
+              {t('BUTTON.PUBLISH')}
+            </LoadingButton>
+          </CardActions>
+        </Card>
+      </FormProvider>
+    </TabPanel>
+  );
+};
+
+export default AboutClientView;
