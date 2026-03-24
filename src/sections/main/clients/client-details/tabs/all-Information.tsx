@@ -11,13 +11,6 @@ const AllInformation = ({ ClientInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
 
-  const clientFieldsRaw = ClientInfo?.field ?? ClientInfo?.fields;
-  const clientFields = Array.isArray(clientFieldsRaw)
-    ? clientFieldsRaw
-    : clientFieldsRaw && typeof clientFieldsRaw === 'object'
-      ? Object.values(clientFieldsRaw)
-      : [];
-
   return (
     <Container
       maxWidth={settings.themeStretch ? false : 'xl'}
@@ -69,14 +62,11 @@ const AllInformation = ({ ClientInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.INTERESTS')}
-            secondary={
-              clientFields.length
-                ? clientFields
-                    .map((field: any) => (i18n.language === 'ar' ? field?.name_ar : field?.name_en))
-                    .filter(Boolean)
-                    .join(', ')
-                : '-'
-            }
+            secondary={ClientInfo?.field
+              ?.map((field: any) => {
+                return i18n.language === 'ar' ? field.name_ar : field.name_en;
+              })
+              .join(', ') || '-'}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
