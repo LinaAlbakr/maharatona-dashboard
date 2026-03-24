@@ -1,3 +1,4 @@
+//
 export const cities = [
   {
     city: 'New York',
