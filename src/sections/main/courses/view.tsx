@@ -7,7 +7,22 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import { Box, Card, Grid, Button, TextField, Typography, InputAdornment, Select, MenuItem, FormControl } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  Stack,
+  Switch,
+  Chip,
+  CircularProgress,
+} from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -17,7 +32,7 @@ import { arabicDate, englishDate } from 'src/utils/format-time';
 
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
-import { deleteCousre, editCourseStatus } from 'src/actions/courses';
+import { deleteCousre, editCourseStatus, updateCourseEnrollmentStatus } from 'src/actions/courses';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
 import Iconify from 'src/components/iconify';
@@ -45,6 +60,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const confirmDelete = useBoolean();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
+  const [enrollmentSavingId, setEnrollmentSavingId] = useState<string | null>(null);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -60,6 +76,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     { id: 'start_date', label: 'LABEL.START_DATE' },
     { id: 'end_date', label: 'LABEL.END_DATE' },
     { id: 'average_rate', label: 'LABEL.TOTAL_RATE' },
+    { id: 'enrollment_status', label: 'LABEL.ENROLLMENT' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -272,6 +289,51 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 {i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date)}{' '}
               </Box>
             ),
+            enrollment_status: (item: any) => {
+              const isFixed = item?.course_type === 'fixed';
+              if (!isFixed) {
+                return (
+                  <Typography variant="body2" color="text.disabled" sx={{ py: 0.5 }}>
+                    —
+                  </Typography>
+                );
+              }
+              const isOpen = item?.enrollmentStatus !== 'closed';
+              const busy = enrollmentSavingId === item.id;
+              return (
+                <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" sx={{ py: 0.5 }}>
+                  <Switch
+                    size="small"
+                    checked={isOpen}
+                    disabled={busy}
+                    color="success"
+                    onChange={async () => {
+                      const next = isOpen ? 'closed' : 'open';
+                      setEnrollmentSavingId(item.id);
+                      const res = await updateCourseEnrollmentStatus(item.id, next);
+                      setEnrollmentSavingId(null);
+                      if (res?.error) {
+                        enqueueSnackbar(res.error, { variant: 'error' });
+                        return;
+                      }
+                      enqueueSnackbar(t('MESSAGE.ENROLLMENT_STATUS_UPDATED'), { variant: 'success' });
+                      router.refresh();
+                    }}
+                  />
+                  <Chip
+                    label={isOpen ? t('LABEL.ENROLLMENT_OPEN') : t('LABEL.ENROLLMENT_CLOSED')}
+                    size="small"
+                    color={isOpen ? 'success' : 'warning'}
+                    variant={isOpen ? 'filled' : 'outlined'}
+                    sx={{
+                      fontWeight: 600,
+                      ...(!item?.is_active ? { opacity: 0.85 } : {}),
+                    }}
+                  />
+                  {busy ? <CircularProgress size={18} thickness={5} /> : null}
+                </Stack>
+              );
+            },
 
             price: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>

@@ -106,6 +106,7 @@ export const endpoints = {
     info: (courseId: string) => `/admin/get-course-details/${courseId}`,
     deleteCourse: (courseId: string) => `/admin/delete-course/${courseId}`,
     editStatus: (courseId: string) => `/admin/toggle-course-status/${courseId}`,
+    enrollmentStatus: (courseId: string) => `/admin/course-enrollment-status/${courseId}`,
   },
   clients: {
     fetch: '/admin/get-all-clients',

@@ -42,6 +42,7 @@ export const fetchCourses = async ({
         name: courseName || course.name_ar || course.name_en || course.name,
         students: course.clients || course.students || [],
         seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
+        enrollmentStatus: course.enrollmentStatus === 'closed' ? 'closed' : 'open',
       };
     });
 
@@ -145,5 +146,29 @@ export const editCourseStatus = async (course: any): Promise<any> => {
     return {
       error: getErrorMessage(error),
     };
+  }
+};
+
+export const updateCourseEnrollmentStatus = async (
+  courseId: string,
+  enrollmentStatus: 'open' | 'closed'
+): Promise<{ data?: unknown; message?: string; error?: string }> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+    const res = await axiosInstance.patch(
+      endpoints.courses.enrollmentStatus(courseId),
+      { enrollmentStatus },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Accept-Language': lang,
+        },
+      }
+    );
+    revalidatePath('/dashboard/courses/');
+    return res.data;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
   }
 };
