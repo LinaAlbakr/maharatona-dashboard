@@ -42,6 +42,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import SendNotification from './components/send-notification';
 import FlexibleEnrollmentDialog from './components/flexible-enrollment-dialog';
+import { enrollmentTurquoiseSwitchSx } from './components/flexible-model-config';
 
 type props = {
   count: number;
@@ -324,7 +325,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                     size="small"
                     checked={isOpen}
                     disabled={busy}
-                    color="success"
+                    sx={enrollmentTurquoiseSwitchSx}
                     onChange={async () => {
                       const next = isOpen ? 'closed' : 'open';
                       setEnrollmentSavingId(item.id);

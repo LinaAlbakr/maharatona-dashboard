@@ -1,3 +1,17 @@
+/** Turquoise “open” state for enrollment toggles (courses table + flexible modal). */
+export const enrollmentTurquoiseSwitchSx = {
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: '#ffffff',
+    '&:hover': {
+      backgroundColor: 'rgba(46, 196, 182, 0.18)',
+    },
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: '#2EC4B6',
+    opacity: 1,
+  },
+} as const;
+
 export type FlexibleBookingModelKey =
   | 'trial'
   | 'minutes'

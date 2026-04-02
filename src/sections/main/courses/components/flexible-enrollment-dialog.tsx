@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslate } from 'src/locales';
 import { fetchCourseInfo, mergeCourseFlexibleEnrollment } from 'src/actions/courses';
 import type { FlexibleBookingModelKey } from './flexible-model-config';
-import { FLEX_MODEL_ROWS } from './flexible-model-config';
+import { FLEX_MODEL_ROWS, enrollmentTurquoiseSwitchSx } from './flexible-model-config';
 
 type Props = {
   open: boolean;
@@ -126,7 +126,7 @@ export default function FlexibleEnrollmentDialog({
                         size="small"
                         checked={isOpen}
                         disabled={busy}
-                        color="success"
+                        sx={enrollmentTurquoiseSwitchSx}
                         onChange={(_, c) => handleToggle(row.key, c)}
                       />
                     </Stack>
