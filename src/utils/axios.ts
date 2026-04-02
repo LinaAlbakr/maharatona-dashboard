@@ -77,6 +77,9 @@ export const endpoints = {
     verify: `/auth/verify-otp-and-reset-password`,
     updateLanguage: '/admin/auth/update-language',
   },
+  maintenance: {
+    set: '/admin/maintenance',
+  },
   home: {
     priceProfit: '/admin-panel/get-price-profit',
     topCourses: '/admin/get-top-courses',

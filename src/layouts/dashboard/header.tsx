@@ -16,6 +16,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { NAV, HEADER } from '../config-layout';
 import AccountPopover from '../common/account-popover';
 import LanguagePopover from '../common/language-popover';
+import MaintenanceModeSwitch from '../common/maintenance-mode-switch';
 
 // ----------------------------------------------------------------------
 
@@ -58,6 +59,8 @@ export default function Header({ onOpenNav }: Props) {
         spacing={{ xs: 0.5, sm: 1 }}
       >
         <LanguagePopover />
+
+        <MaintenanceModeSwitch />
 
         {/* <NotificationsPopover /> */}
 
