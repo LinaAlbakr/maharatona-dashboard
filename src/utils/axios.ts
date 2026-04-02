@@ -31,9 +31,46 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+function normalizeAxiosError(error: unknown): Error {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    const data = error.response?.data as unknown;
+
+    if (data && typeof data === 'object' && data !== null && 'message' in data) {
+      const m = (data as { message?: unknown }).message;
+      if (m !== undefined && m !== null) {
+        const text = typeof m === 'string' ? m : JSON.stringify(m);
+        return new Error(text);
+      }
+    }
+    if (typeof data === 'string' && data.trim()) {
+      return new Error(data);
+    }
+    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+      return new Error(
+        `Cannot reach API (${HOST_API}). Use the backend URL (not the Next dev server), e.g. http://localhost:5000/api — ${error.code}`
+      );
+    }
+    if (status) {
+      return new Error(
+        error.message
+          ? `${error.message} (HTTP ${status})`
+          : `Request failed with HTTP ${status}`
+      );
+    }
+    if (error.message) {
+      return new Error(error.message);
+    }
+  }
+  if (error instanceof Error) {
+    return error;
+  }
+  return new Error(typeof error === 'string' ? error : 'Something went wrong');
+}
+
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+  (error) => Promise.reject(normalizeAxiosError(error))
 );
 
 export default axiosInstance;
@@ -54,18 +91,16 @@ export const fetcher = async ({ url, config }: { url: string; config?: AxiosRequ
   return response.data;
 };
 export const getErrorMessage = (error: unknown): string => {
-  let message: string;
   if (error instanceof Error) {
-    // eslint-disable-next-line prefer-destructuring
-    message = error.message;
-  } else if (error && typeof error === 'object' && 'message' in error) {
-    message = String(error.message);
-  } else if (typeof error === 'string') {
-    message = error;
-  } else {
-    message = 'Something went wrong';
+    return error.message;
   }
-  return message;
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String((error as { message: unknown }).message);
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  return 'Something went wrong';
 };
 
 export const endpoints = {

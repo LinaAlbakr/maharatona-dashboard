@@ -41,6 +41,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import SendNotification from './components/send-notification';
+import FlexibleEnrollmentDialog from './components/flexible-enrollment-dialog';
 
 type props = {
   count: number;
@@ -61,6 +62,10 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
   const [enrollmentSavingId, setEnrollmentSavingId] = useState<string | null>(null);
+  const [flexibleEnrollmentModal, setFlexibleEnrollmentModal] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -292,10 +297,23 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             enrollment_status: (item: any) => {
               const isFixed = item?.course_type === 'fixed';
               if (!isFixed) {
+                const displayName =
+                  item?.name || (i18n.language === 'ar' ? item?.name_ar : item?.name_en) || '';
                 return (
-                  <Typography variant="body2" color="text.disabled" sx={{ py: 0.5 }}>
-                    —
-                  </Typography>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="primary"
+                    onClick={() =>
+                      setFlexibleEnrollmentModal({
+                        id: String(item.id ?? item._id),
+                        name: displayName,
+                      })
+                    }
+                    sx={{ textTransform: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}
+                  >
+                    {t('BUTTON.MANAGE_ENROLLMENT')}
+                  </Button>
                 );
               }
               const isOpen = item?.enrollmentStatus !== 'closed';
@@ -405,6 +423,14 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           selectedSubscribers={selectedSubscribers}
         />
       )}
+      {flexibleEnrollmentModal ? (
+        <FlexibleEnrollmentDialog
+          open
+          courseId={flexibleEnrollmentModal.id}
+          courseTitle={flexibleEnrollmentModal.name}
+          onClose={() => setFlexibleEnrollmentModal(null)}
+        />
+      ) : null}
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}

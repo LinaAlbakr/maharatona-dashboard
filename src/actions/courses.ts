@@ -23,19 +23,32 @@ export const fetchCourses = async ({
     const res = await axiosInstance.get(endpoints.courses.fetch, {
       params: {
         limit,
-        by_name: filters,
+        search: filters,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
     // Handle new response structure: data is now an array directly
     const responseData = res?.data;
-    const coursesData = Array.isArray(responseData?.data) ? responseData.data : [];
-    
+    const rawList = Array.isArray(responseData?.data) ? responseData.data : [];
+
+    // Plain JSON so ObjectIds / subdocs from the API are RSC→client serializable
+    const coursesData = JSON.parse(JSON.stringify(rawList)) as any[];
+
     // Normalize course objects to match expected format
     const normalizedDocs = coursesData.map((course: any) => {
       // Determine name based on language
       const courseName = lang === 'ar' ? course.name_ar : course.name_en;
-      
+
+      const flexRaw = course.flexibleEnrollmentByModel;
+      const flexibleEnrollmentByModel =
+        flexRaw && typeof flexRaw === 'object' && !Array.isArray(flexRaw)
+          ? Object.fromEntries(
+              Object.entries(flexRaw).filter(
+                ([, v]) => v === 'open' || v === 'closed'
+              )
+            )
+          : {};
+
       return {
         ...course,
         id: course._id || course.id,
@@ -43,6 +56,7 @@ export const fetchCourses = async ({
         students: course.clients || course.students || [],
         seats: course.seats_left !== undefined && course.seats_left !== null ? course.seats_left : course.seats,
         enrollmentStatus: course.enrollmentStatus === 'closed' ? 'closed' : 'open',
+        flexibleEnrollmentByModel,
       };
     });
 
@@ -51,7 +65,7 @@ export const fetchCourses = async ({
       message: responseData?.message,
     };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
@@ -159,6 +173,30 @@ export const updateCourseEnrollmentStatus = async (
     const res = await axiosInstance.patch(
       endpoints.courses.enrollmentStatus(courseId),
       { enrollmentStatus },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Accept-Language': lang,
+        },
+      }
+    );
+    revalidatePath('/dashboard/courses/');
+    return res.data;
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
+};
+
+export const mergeCourseFlexibleEnrollment = async (
+  courseId: string,
+  flexibleEnrollmentByModel: Record<string, 'open' | 'closed'>
+): Promise<{ data?: unknown; message?: string; error?: string }> => {
+  try {
+    const accessToken = cookies().get('access_token')?.value;
+    const lang = cookies().get('Language')?.value;
+    const res = await axiosInstance.patch(
+      endpoints.courses.enrollmentStatus(courseId),
+      { flexibleEnrollmentByModel },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

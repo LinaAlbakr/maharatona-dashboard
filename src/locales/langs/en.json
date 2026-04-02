@@ -34,7 +34,8 @@
     "DELETE_NEIGHBORHOOD": "Delete Neighborhood",
     "DELETE_BANNER": "Delete Banner",
     "DELETE_CLIENT": "Delete Client",
-    "DELETE_CENTER": "Delete Center"
+    "DELETE_CENTER": "Delete Center",
+    "FLEXIBLE_ENROLLMENT": "Enrollment by booking model"
   },
   "LABEL": {
     "FLEXIBLE_COURSE":"Flexible Course",
@@ -92,6 +93,12 @@
     "ENROLLMENT": "Enrollment",
     "ENROLLMENT_OPEN": "Open",
     "ENROLLMENT_CLOSED": "Closed",
+    "BOOKING_MODEL_TRIAL": "Trial",
+    "BOOKING_MODEL_MINUTES": "Minutes",
+    "BOOKING_MODEL_HOURLY": "Hourly",
+    "BOOKING_MODEL_DAILY": "Daily",
+    "BOOKING_MODEL_WEEKLY": "Weekly",
+    "BOOKING_MODEL_MONTHLY": "Monthly",
     "ALL_INFORMATION": "All Information",
     "CENTER_COURSES": "Center Courses",
     "REPORTS": "Reports",
@@ -271,7 +278,8 @@
     "ADD_PACKAGES": "Add packages",
     "ADD_PAYOUT": "Add payout",
     "MARK_AS_PAID": "Mark As Paid",
-    "DOWNLOAD_INVOICE": "Download invoice"
+    "DOWNLOAD_INVOICE": "Download invoice",
+    "MANAGE_ENROLLMENT": "Manage enrollment"
   },
   "SIDEBAR": {
     "MAIN": "Main",
@@ -343,6 +351,7 @@
     "REASON_UPDATED_SUCCESSFULLY": "Reason updated successfully",
     "DELETED_SUCCESSFULLY": "Deleted successfully",
     "ENROLLMENT_STATUS_UPDATED": "Enrollment status updated",
+    "NO_FLEXIBLE_MODELS": "This course has no flexible booking models configured.",
     "CONFIRM_ACTIVATE_FIELD": "Are you sure you want to activate this field?",
     "CONFIRM_DEACTIVATE_FIELD": "Are you sure you want to deactivate this field?",
     "DEACTIVATED_SUCCESSFULLY": "Field deactivated successfully",

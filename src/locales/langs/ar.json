@@ -38,7 +38,8 @@
     "DELETE_NEIGHBORHOOD": "حذف الحى",
     "DELETE_BANNER": "حذف البانر",
     "DELETE_CLIENT": "حذف العميل",
-    "DELETE_CENTER": "حذف المركز"
+    "DELETE_CENTER": "حذف المركز",
+    "FLEXIBLE_ENROLLMENT": "التسجيل حسب نموذج الحجز"
   },
   "LABEL": {
     "FLEXIBLE_COURSE": "دورة مرنة",
@@ -94,6 +95,12 @@
     "ENROLLMENT": "التسجيل",
     "ENROLLMENT_OPEN": "مفتوح",
     "ENROLLMENT_CLOSED": "مغلق",
+    "BOOKING_MODEL_TRIAL": "تجريبي",
+    "BOOKING_MODEL_MINUTES": "بالدقائق",
+    "BOOKING_MODEL_HOURLY": "بالساعة",
+    "BOOKING_MODEL_DAILY": "يومي",
+    "BOOKING_MODEL_WEEKLY": "أسبوعي",
+    "BOOKING_MODEL_MONTHLY": "شهري",
     "ALL_INFORMATION": "كل المعلومات",
     "CENTER_COURSES": "دورات المركز",
     "REPORTS": "التقارير",
@@ -280,7 +287,8 @@
     "ADD_PACKAGES": "اضافه باقة",
     "ADD_PAYOUT": "اضافة دفعة",
     "MARK_AS_PAID": "تأكيد الدفع",
-    "DOWNLOAD_INVOICE": "تحميل الفاتورة"
+    "DOWNLOAD_INVOICE": "تحميل الفاتورة",
+    "MANAGE_ENROLLMENT": "إدارة التسجيل"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",
@@ -354,6 +362,7 @@
     "REASON_UPDATED_SUCCESSFULLY": "تم تعديل السبب بنجاح",
     "DELETED_SUCCESSFULLY": "تم الحذف بنجاح",
     "ENROLLMENT_STATUS_UPDATED": "تم تحديث حالة التسجيل",
+    "NO_FLEXIBLE_MODELS": "لا توجد نماذج حجز مرنة مُعدّة لهذه الدورة.",
     "CONFIRM_ACTIVATE_FIELD": "هل تريد تفعيل هذا المجال؟",
     "CONFIRM_DEACTIVATE_FIELD": "هل تريد تعطيل هذا المجال؟",
     "DEACTIVATED_SUCCESSFULLY": "تم التعطيل  بنجاح",
