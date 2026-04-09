@@ -26,6 +26,8 @@ import { fetchCourseInfo, mergeCourseFlexibleEnrollment } from 'src/actions/cour
 import type { FlexibleBookingModelKey } from './flexible-model-config';
 import { FLEX_MODEL_ROWS, enrollmentTurquoiseSwitchSx } from './flexible-model-config';
 
+type FlexModelRow = (typeof FLEX_MODEL_ROWS)[number];
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -33,9 +35,33 @@ type Props = {
   courseTitle: string;
 };
 
-function isSlotModelFull(course: Record<string, unknown> | null, slotField: string): boolean {
-  const slots = course?.[slotField];
+/**
+ * Seat-full for flexible models that use SeatPool (daily/weekly/monthly): embedded
+ * `seat_capacity` stays as configured max; use pool `remaining_seats` when the API sends pools.
+ */
+function isSlotModelFull(course: Record<string, unknown> | null, row: FlexModelRow): boolean {
+  const slots = course?.[row.slotField];
   if (!Array.isArray(slots) || slots.length === 0) return false;
+
+  if (row.key === 'daily') {
+    const pools = course?.daily_seat_pools;
+    if (Array.isArray(pools) && pools.length > 0) {
+      return pools.every((p: { remaining_seats?: number }) => Number(p?.remaining_seats ?? 0) <= 0);
+    }
+  }
+  if (row.key === 'weekly') {
+    const pools = course?.weekly_seat_pools;
+    if (Array.isArray(pools) && pools.length > 0) {
+      return pools.every((p: { remaining_seats?: number }) => Number(p?.remaining_seats ?? 0) <= 0);
+    }
+  }
+  if (row.key === 'monthly') {
+    const pools = course?.monthly_seat_pools;
+    if (Array.isArray(pools) && pools.length > 0) {
+      return pools.every((p: { remaining_seats?: number }) => Number(p?.remaining_seats ?? 0) <= 0);
+    }
+  }
+
   return slots.every((s: any) => Number(s?.seat_capacity ?? 0) <= 0);
 }
 
@@ -201,7 +227,7 @@ export default function FlexibleEnrollmentDialog({
               </TableHead>
               <TableBody>
                 {activeRows.map((row) => {
-                  const isFull = isSlotModelFull(course, row.slotField);
+                  const isFull = isSlotModelFull(course, row);
                   const isOpen = rawFlex[row.key] !== 'closed';
                   const busy = savingKey === row.key;
                   const switchOn = isFull ? false : isOpen;
