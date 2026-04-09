@@ -39,10 +39,12 @@
     "DELETE_BANNER": "حذف البانر",
     "DELETE_CLIENT": "حذف العميل",
     "DELETE_CENTER": "حذف المركز",
-    "FLEXIBLE_ENROLLMENT": "التسجيل حسب نموذج الحجز"
+    "FLEXIBLE_ENROLLMENT": "التسجيل حسب نموذج الحجز",
+    "MANAGE": "إدارة",
+    "MANAGE_ENROLLMENT": "إدارة التسجيل"
   },
   "LABEL": {
-    "FLEXIBLE_COURSE": "دورة مرنة",
+    "FLEXIBLE_COURSE": "مرنة",
     "USER_NAME": "اسم المستخدم",
     "PASSWORD": "كلمة المرور",
     "CHANGE_PHONE_NUMBER": "تغير رقم الجوال!",
@@ -95,6 +97,11 @@
     "ENROLLMENT": "التسجيل",
     "ENROLLMENT_OPEN": "مفتوح",
     "ENROLLMENT_CLOSED": "مغلق",
+    "ENROLLMENT_FULL": "مكتمل",
+    "PROGRAM": "البرنامج",
+    "FLEX_ENROLL_COL_MODEL": "النموذج",
+    "FLEX_ENROLL_COL_STATUS": "الحالة",
+    "FLEX_ENROLL_COL_ACTION": "الإجراء",
     "BOOKING_MODEL_TRIAL": "تجريبي",
     "BOOKING_MODEL_MINUTES": "بالدقائق",
     "BOOKING_MODEL_HOURLY": "بالساعة",
@@ -266,7 +273,7 @@
     "BLOCK": "حظر",
     "VERIFY": "تحقق",
     "UNBLOCK": "الغاء الحظر",
-    "CANCEL": "الغاء",
+    "CANCEL": "إلغاء",
     "SEND": "ارسال",
     "DELETE": "حذف",
     "EDIT": "تعديل",
@@ -288,7 +295,9 @@
     "ADD_PAYOUT": "اضافة دفعة",
     "MARK_AS_PAID": "تأكيد الدفع",
     "DOWNLOAD_INVOICE": "تحميل الفاتورة",
-    "MANAGE_ENROLLMENT": "إدارة التسجيل"
+    "MANAGE_ENROLLMENT": "إدارة",
+    "MANAGE": "إدارة",
+    "CONFIRM": "تأكيد"
   },
   "SIDEBAR": {
     "MAIN": "الرئيسية",

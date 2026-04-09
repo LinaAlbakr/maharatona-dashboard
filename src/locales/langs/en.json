@@ -35,10 +35,12 @@
     "DELETE_BANNER": "Delete Banner",
     "DELETE_CLIENT": "Delete Client",
     "DELETE_CENTER": "Delete Center",
-    "FLEXIBLE_ENROLLMENT": "Enrollment by booking model"
+    "FLEXIBLE_ENROLLMENT": "Enrollment by booking model",
+    "MANAGE": "Manage",
+    "MANAGE_ENROLLMENT": "Manage Enrollment"
   },
   "LABEL": {
-    "FLEXIBLE_COURSE":"Flexible Course",
+    "FLEXIBLE_COURSE": "Flexible",
     "USER_NAME": "User Name",
     "PASSWORD": "Password",
     "CHANGE_PHONE_NUMBER": "Change phone number!",
@@ -93,6 +95,11 @@
     "ENROLLMENT": "Enrollment",
     "ENROLLMENT_OPEN": "Open",
     "ENROLLMENT_CLOSED": "Closed",
+    "ENROLLMENT_FULL": "Full",
+    "PROGRAM": "Program",
+    "FLEX_ENROLL_COL_MODEL": "Model",
+    "FLEX_ENROLL_COL_STATUS": "Status",
+    "FLEX_ENROLL_COL_ACTION": "Action",
     "BOOKING_MODEL_TRIAL": "Trial",
     "BOOKING_MODEL_MINUTES": "Minutes",
     "BOOKING_MODEL_HOURLY": "Hourly",
@@ -279,7 +286,9 @@
     "ADD_PAYOUT": "Add payout",
     "MARK_AS_PAID": "Mark As Paid",
     "DOWNLOAD_INVOICE": "Download invoice",
-    "MANAGE_ENROLLMENT": "Manage enrollment"
+    "MANAGE_ENROLLMENT": "Manage",
+    "MANAGE": "Manage",
+    "CONFIRM": "Confirm"
   },
   "SIDEBAR": {
     "MAIN": "Main",

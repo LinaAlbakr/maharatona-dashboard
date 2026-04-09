@@ -20,8 +20,11 @@ import {
   FormControl,
   Stack,
   Switch,
-  Chip,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
@@ -63,6 +66,10 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
   const [enrollmentSavingId, setEnrollmentSavingId] = useState<string | null>(null);
+  const [enrollmentConfirm, setEnrollmentConfirm] = useState<{
+    item: any;
+    next: 'open' | 'closed';
+  } | null>(null);
   const [flexibleEnrollmentModal, setFlexibleEnrollmentModal] = useState<{
     id: string;
     name: string;
@@ -139,6 +146,21 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
     }
+  };
+
+  const handleConfirmEnrollmentChange = async () => {
+    if (!enrollmentConfirm) return;
+    const { item, next } = enrollmentConfirm;
+    setEnrollmentConfirm(null);
+    setEnrollmentSavingId(item.id);
+    const res = await updateCourseEnrollmentStatus(item.id, next);
+    setEnrollmentSavingId(null);
+    if (res?.error) {
+      enqueueSnackbar(res.error, { variant: 'error' });
+      return;
+    }
+    enqueueSnackbar(t('MESSAGE.ENROLLMENT_STATUS_UPDATED'), { variant: 'success' });
+    router.refresh();
   };
 
   return (
@@ -313,50 +335,62 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                     }
                     sx={{ textTransform: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}
                   >
-                    {t('BUTTON.MANAGE_ENROLLMENT')}
+                    {t('BUTTON.MANAGE')}
                   </Button>
                 );
               }
+              const remainingSeats = item?.seats;
+              const isFull = typeof remainingSeats === 'number' && remainingSeats === 0;
               const isOpen = item?.enrollmentStatus !== 'closed';
               const busy = enrollmentSavingId === item.id;
+              const switchChecked = isFull ? false : isOpen;
+              const statusText = isFull
+                ? t('LABEL.ENROLLMENT_FULL')
+                : isOpen
+                  ? t('LABEL.ENROLLMENT_OPEN')
+                  : t('LABEL.ENROLLMENT_CLOSED');
+              const statusColor = isFull
+                ? '#7B1FA2'
+                : isOpen
+                  ? 'success.main'
+                  : 'warning.main';
+
               return (
                 <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" sx={{ py: 0.5 }}>
                   <Switch
                     size="small"
-                    checked={isOpen}
-                    disabled={busy}
+                    checked={switchChecked}
+                    disabled={busy || isFull}
                     sx={enrollmentTurquoiseSwitchSx}
-                    onChange={async () => {
+                    onChange={() => {
+                      if (isFull) return;
                       const next = isOpen ? 'closed' : 'open';
-                      setEnrollmentSavingId(item.id);
-                      const res = await updateCourseEnrollmentStatus(item.id, next);
-                      setEnrollmentSavingId(null);
-                      if (res?.error) {
-                        enqueueSnackbar(res.error, { variant: 'error' });
-                        return;
-                      }
-                      enqueueSnackbar(t('MESSAGE.ENROLLMENT_STATUS_UPDATED'), { variant: 'success' });
-                      router.refresh();
+                      setEnrollmentConfirm({ item, next });
                     }}
                   />
-                  <Chip
-                    label={isOpen ? t('LABEL.ENROLLMENT_OPEN') : t('LABEL.ENROLLMENT_CLOSED')}
-                    size="small"
-                    color={isOpen ? 'success' : 'warning'}
-                    variant={isOpen ? 'filled' : 'outlined'}
+                  <Typography
+                    component="span"
+                    variant="body2"
                     sx={{
                       fontWeight: 600,
+                      color: statusColor,
                       ...(!item?.is_active ? { opacity: 0.85 } : {}),
                     }}
-                  />
+                  >
+                    {statusText}
+                  </Typography>
                   {busy ? <CircularProgress size={18} thickness={5} /> : null}
                 </Stack>
               );
             },
 
             price: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {`${Math.round(item?.price)} `}{' '}
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.75}
+                sx={{ color: item?.is_active ? 'inherit' : 'red' }}
+              >
                 {item?.is_active ? (
                   <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
                 ) : (
@@ -367,7 +401,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                     width={20}
                   />
                 )}
-              </Box>
+                <span>{Math.round(item?.price ?? 0)}</span>
+              </Stack>
             ),
           }}
         />
@@ -432,6 +467,102 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           onClose={() => setFlexibleEnrollmentModal(null)}
         />
       ) : null}
+      <Dialog
+        open={!!enrollmentConfirm}
+        onClose={() => setEnrollmentConfirm(null)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            overflow: 'hidden',
+            '& .MuiDialogContent-root': { overflow: 'hidden' },
+            '& input[type=number]': {
+              MozAppearance: 'textfield',
+              appearance: 'textfield',
+              '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+                WebkitAppearance: 'none',
+                display: 'none',
+                margin: 0,
+              },
+            },
+          },
+        }}
+        BackdropProps={{
+          sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
+        }}
+      >
+        <DialogTitle sx={{ color: 'grey.800', fontWeight: 600, pb: 1 }}>
+          {t('TITLE.MANAGE')}
+        </DialogTitle>
+        <DialogContent sx={{ overflow: 'hidden' }}>
+          <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
+            {enrollmentConfirm &&
+              (i18n.language === 'ar' ? (
+                enrollmentConfirm.next === 'open' ? (
+                  <>
+                    هل أنت متأكد من{' '}
+                    <Box component="span" sx={{ fontWeight: 700 }}>
+                      فتح التسجيل
+                    </Box>
+                    ؟
+                  </>
+                ) : (
+                  <>
+                    هل أنت متأكد من{' '}
+                    <Box component="span" sx={{ fontWeight: 700 }}>
+                      إغلاق التسجيل
+                    </Box>
+                    ؟
+                  </>
+                )
+              ) : enrollmentConfirm.next === 'open' ? (
+                <>
+                  Are you sure you want to{' '}
+                  <Box component="span" sx={{ fontWeight: 700 }}>
+                    open enrollment
+                  </Box>
+                  ?
+                </>
+              ) : (
+                <>
+                  Are you sure you want to{' '}
+                  <Box component="span" sx={{ fontWeight: 700 }}>
+                    close enrollment
+                  </Box>
+                  ?
+                </>
+              ))}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1, flexWrap: 'wrap' }}>
+          <Button
+            variant="contained"
+            disabled={!!enrollmentSavingId}
+            onClick={() => setEnrollmentConfirm(null)}
+            sx={{
+              bgcolor: 'grey.300',
+              color: 'grey.800',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: 'grey.400', boxShadow: 'none' },
+            }}
+          >
+            {t('BUTTON.CANCEL')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!!enrollmentSavingId}
+            onClick={handleConfirmEnrollmentChange}
+            sx={{
+              bgcolor: '#2EC4B6',
+              color: '#fff',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#26b0a3', boxShadow: 'none' },
+            }}
+          >
+            {t('BUTTON.CONFIRM')}
+          </Button>
+        </DialogActions>
+      </Dialog>
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}

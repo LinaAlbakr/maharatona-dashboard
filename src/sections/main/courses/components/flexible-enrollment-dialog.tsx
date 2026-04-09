@@ -2,20 +2,25 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import Chip from '@mui/material/Chip';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { enqueueSnackbar } from 'notistack';
 import { useRouter } from 'next/navigation';
 
+import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
 import { fetchCourseInfo, mergeCourseFlexibleEnrollment } from 'src/actions/courses';
 import type { FlexibleBookingModelKey } from './flexible-model-config';
@@ -28,6 +33,12 @@ type Props = {
   courseTitle: string;
 };
 
+function isSlotModelFull(course: Record<string, unknown> | null, slotField: string): boolean {
+  const slots = course?.[slotField];
+  if (!Array.isArray(slots) || slots.length === 0) return false;
+  return slots.every((s: any) => Number(s?.seat_capacity ?? 0) <= 0);
+}
+
 export default function FlexibleEnrollmentDialog({
   open,
   onClose,
@@ -39,6 +50,10 @@ export default function FlexibleEnrollmentDialog({
   const [loading, setLoading] = useState(false);
   const [savingKey, setSavingKey] = useState<FlexibleBookingModelKey | null>(null);
   const [course, setCourse] = useState<any>(null);
+  const [pendingConfirm, setPendingConfirm] = useState<{
+    modelKey: FlexibleBookingModelKey;
+    next: 'open' | 'closed';
+  } | null>(null);
 
   const load = useCallback(async () => {
     if (!courseId || !open) return;
@@ -68,8 +83,10 @@ export default function FlexibleEnrollmentDialog({
 
   const rawFlex = (course?.flexibleEnrollmentByModel || {}) as Record<string, string | undefined>;
 
-  const handleToggle = async (modelKey: FlexibleBookingModelKey, checked: boolean) => {
-    const next = checked ? 'open' : 'closed';
+  const applyEnrollmentChange = async (
+    modelKey: FlexibleBookingModelKey,
+    next: 'open' | 'closed'
+  ) => {
     setSavingKey(modelKey);
     const res = await mergeCourseFlexibleEnrollment(courseId, { [modelKey]: next });
     setSavingKey(null);
@@ -92,64 +109,263 @@ export default function FlexibleEnrollmentDialog({
     router.refresh();
   };
 
+  const handleConfirmPending = async () => {
+    if (!pendingConfirm) return;
+    const { modelKey, next } = pendingConfirm;
+    setPendingConfirm(null);
+    await applyEnrollmentChange(modelKey, next);
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{t('TITLE.FLEXIBLE_ENROLLMENT')}</DialogTitle>
-      <DialogContent dividers>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {courseTitle}
-        </Typography>
-        {loading ? (
-          <Stack alignItems="center" py={4}>
-            <CircularProgress />
-          </Stack>
-        ) : activeRows.length === 0 ? (
-          <Typography color="text.secondary">{t('MESSAGE.NO_FLEXIBLE_MODELS')}</Typography>
-        ) : (
-          <List disablePadding>
-            {activeRows.map((row) => {
-              const isOpen = rawFlex[row.key] !== 'closed';
-              const busy = savingKey === row.key;
-              return (
-                <ListItem
-                  key={row.key}
-                  sx={{
-                    px: 0,
-                    py: 1.5,
-                    borderBottom: 1,
-                    borderColor: 'divider',
-                  }}
-                  secondaryAction={
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      {busy ? <CircularProgress size={20} thickness={5} /> : null}
-                      <Switch
-                        size="small"
-                        checked={isOpen}
-                        disabled={busy}
-                        sx={enrollmentTurquoiseSwitchSx}
-                        onChange={(_, c) => handleToggle(row.key, c)}
-                      />
-                    </Stack>
-                  }
-                >
-                  <ListItemText
-                    primary={t(row.labelKey)}
-                    secondary={
-                      <Chip
-                        label={isOpen ? t('LABEL.ENROLLMENT_OPEN') : t('LABEL.ENROLLMENT_CLOSED')}
-                        size="small"
-                        color={isOpen ? 'success' : 'warning'}
-                        variant={isOpen ? 'filled' : 'outlined'}
-                        sx={{ mt: 0.5, fontWeight: 600 }}
-                      />
-                    }
-                  />
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            overflow: 'visible',
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: 'grey.800', fontWeight: 600, px: 3, pb: 1 }}>
+          {t('TITLE.MANAGE_ENROLLMENT')}
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            overflowX: 'visible',
+            overflowY: 'auto',
+            px: 3,
+            pt: 0,
+            pb: 3,
+          }}
+        >
+          <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+            <Box component="span" sx={{ color: 'text.secondary' }}>
+              {t('LABEL.PROGRAM')}:{' '}
+            </Box>
+            <Box component="span" sx={{ color: 'primary.main', fontWeight: 600 }}>
+              {courseTitle}
+            </Box>
+          </Typography>
+
+          {loading ? (
+            <Stack alignItems="center" py={4}>
+              <CircularProgress />
+            </Stack>
+          ) : activeRows.length === 0 ? (
+            <Typography color="text.secondary">{t('MESSAGE.NO_FLEXIBLE_MODELS')}</Typography>
+          ) : (
+            <Table
+              size="small"
+              sx={{ borderCollapse: 'separate', overflow: 'visible', '& .MuiTableCell-root': { overflow: 'visible' } }}
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      textAlign: 'left',
+                      fontWeight: 700,
+                      color: 'primary.main',
+                      borderBottom: '1px dashed',
+                      borderColor: 'divider',
+                    }}
+                  >
+                    {t('LABEL.FLEX_ENROLL_COL_MODEL')}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: 'left',
+                      fontWeight: 700,
+                      color: 'primary.main',
+                      borderBottom: '1px dashed',
+                      borderColor: 'divider',
+                    }}
+                  >
+                    {t('LABEL.FLEX_ENROLL_COL_STATUS')}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      textAlign: 'center',
+                      fontWeight: 700,
+                      color: 'primary.main',
+                      borderBottom: '1px dashed',
+                      borderColor: 'divider',
+                      width: 120,
+                    }}
+                  >
+                    {t('LABEL.FLEX_ENROLL_COL_ACTION')}
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {activeRows.map((row) => {
+                  const isFull = isSlotModelFull(course, row.slotField);
+                  const isOpen = rawFlex[row.key] !== 'closed';
+                  const busy = savingKey === row.key;
+                  const switchOn = isFull ? false : isOpen;
+                  const status = isFull
+                    ? { label: t('LABEL.ENROLLMENT_FULL'), color: '#7B1FA2' as const }
+                    : isOpen
+                      ? { label: t('LABEL.ENROLLMENT_OPEN'), color: 'success.main' as const }
+                      : { label: t('LABEL.ENROLLMENT_CLOSED'), color: 'warning.main' as const };
+
+                  return (
+                    <TableRow key={row.key}>
+                      <TableCell
+                        sx={{
+                          textAlign: 'left',
+                          verticalAlign: 'middle',
+                          borderBottom: '1px dashed',
+                          borderColor: 'divider',
+                          color: 'primary.main',
+                          fontWeight: 600,
+                        }}
+                      >
+                        {t(row.labelKey)}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          textAlign: 'left',
+                          verticalAlign: 'middle',
+                          borderBottom: '1px dashed',
+                          borderColor: 'divider',
+                        }}
+                      >
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          sx={{ fontWeight: 600, color: status.color }}
+                        >
+                          {status.label}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          textAlign: 'center',
+                          verticalAlign: 'middle',
+                          borderBottom: '1px dashed',
+                          borderColor: 'divider',
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="center"
+                          spacing={0.5}
+                          sx={{ overflow: 'visible' }}
+                        >
+                          {busy ? <CircularProgress size={20} thickness={5} /> : null}
+                          <Switch
+                            size="small"
+                            checked={switchOn}
+                            disabled={busy || isFull}
+                            sx={enrollmentTurquoiseSwitchSx}
+                            onChange={(_, checked) => {
+                              if (isFull || busy) return;
+                              const next = checked ? 'open' : 'closed';
+                              setPendingConfirm({ modelKey: row.key, next });
+                            }}
+                          />
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!pendingConfirm}
+        onClose={() => setPendingConfirm(null)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            overflow: 'hidden',
+            '& .MuiDialogContent-root': { overflow: 'hidden' },
+          },
+        }}
+        BackdropProps={{
+          sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
+        }}
+      >
+        <DialogTitle sx={{ color: 'grey.800', fontWeight: 600, pb: 1 }}>
+          {t('TITLE.MANAGE_ENROLLMENT')}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
+            {pendingConfirm &&
+              (i18n.language === 'ar' ? (
+                pendingConfirm.next === 'open' ? (
+                  <>
+                    هل أنت متأكد من{' '}
+                    <Box component="span" sx={{ fontWeight: 700 }}>
+                      فتح التسجيل
+                    </Box>
+                    ؟
+                  </>
+                ) : (
+                  <>
+                    هل أنت متأكد من{' '}
+                    <Box component="span" sx={{ fontWeight: 700 }}>
+                      إغلاق التسجيل
+                    </Box>
+                    ؟
+                  </>
+                )
+              ) : pendingConfirm.next === 'open' ? (
+                <>
+                  Are you sure you want to{' '}
+                  <Box component="span" sx={{ fontWeight: 700 }}>
+                    open enrollment
+                  </Box>
+                  ?
+                </>
+              ) : (
+                <>
+                  Are you sure you want to{' '}
+                  <Box component="span" sx={{ fontWeight: 700 }}>
+                    close enrollment
+                  </Box>
+                  ?
+                </>
+              ))}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1, flexWrap: 'wrap' }}>
+          <Button
+            variant="contained"
+            disabled={!!savingKey}
+            onClick={() => setPendingConfirm(null)}
+            sx={{
+              bgcolor: 'grey.300',
+              color: 'grey.800',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: 'grey.400', boxShadow: 'none' },
+            }}
+          >
+            {t('BUTTON.CANCEL')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!!savingKey}
+            onClick={handleConfirmPending}
+            sx={{
+              bgcolor: '#2EC4B6',
+              color: '#fff',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#26b0a3', boxShadow: 'none' },
+            }}
+          >
+            {t('BUTTON.CONFIRM')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

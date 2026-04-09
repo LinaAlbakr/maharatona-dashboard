@@ -1,5 +1,13 @@
 /** Turquoise “open” state for enrollment toggles (courses table + flexible modal). */
 export const enrollmentTurquoiseSwitchSx = {
+  /** Avoid clipping the thumb when parent uses overflow: hidden (e.g. dialogs, tables). */
+  overflow: 'visible',
+  '& .MuiSwitch-switchBase': {
+    overflow: 'visible',
+  },
+  '& .MuiSwitch-track': {
+    overflow: 'visible',
+  },
   '& .MuiSwitch-switchBase.Mui-checked': {
     color: '#ffffff',
     '&:hover': {
