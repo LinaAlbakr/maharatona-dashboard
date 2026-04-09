@@ -38,6 +38,7 @@ import {
   enrollmentConfirmDialogMessageSx,
   enrollmentConfirmDialogPaperSx,
   enrollmentConfirmDialogTitleSx,
+  manageEnrollmentMainDialogTitleSx,
 } from './enrollment-confirm-dialog-styles';
 
 type FlexModelRow = (typeof FLEX_MODEL_ROWS)[number];
@@ -201,16 +202,7 @@ export default function FlexibleEnrollmentDialog({
           },
         }}
       >
-        <DialogTitle
-          sx={{
-            color: '#2B53A1',
-            fontWeight: 700,
-            fontSize: 24,
-            lineHeight: 1.3,
-            px: 3,
-            pb: 1,
-          }}
-        >
+        <DialogTitle variant="inherit" sx={manageEnrollmentMainDialogTitleSx}>
           {t('TITLE.MANAGE_ENROLLMENT')}
         </DialogTitle>
         <DialogContent
@@ -376,7 +368,7 @@ export default function FlexibleEnrollmentDialog({
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={enrollmentConfirmDialogTitleSx}>
+        <DialogTitle variant="inherit" sx={enrollmentConfirmDialogTitleSx}>
           {t('TITLE.MANAGE_ENROLLMENT')}
           <IconButton
             aria-label={i18n.language === 'ar' ? 'إغلاق' : 'Close'}

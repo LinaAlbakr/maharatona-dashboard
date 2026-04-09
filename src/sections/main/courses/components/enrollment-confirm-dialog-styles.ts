@@ -1,5 +1,23 @@
 /** Shared layout + styles for fixed-course and flexible “Manage Enrollment” confirm modals. */
 
+/**
+ * “Manage Enrollment” title — explicit 24px so MUI DialogTitle’s default `h6` does not win.
+ * Use with `<DialogTitle variant="inherit" sx={...}>`.
+ */
+export const manageEnrollmentHeadingSx = {
+  fontSize: '24px',
+  fontWeight: 700,
+  lineHeight: 1.3,
+} as const;
+
+/** Main flexible table modal (program + models) — same 24px title. */
+export const manageEnrollmentMainDialogTitleSx = {
+  ...manageEnrollmentHeadingSx,
+  color: '#2B53A1',
+  px: 3,
+  pb: 1,
+} as const;
+
 export const enrollmentConfirmDialogPaperSx = {
   width: 'min(549px, calc(100% - 32px))',
   height: 180,
@@ -17,10 +35,8 @@ export const enrollmentConfirmDialogPaperSx = {
 } as const;
 
 export const enrollmentConfirmDialogTitleSx = {
+  ...manageEnrollmentHeadingSx,
   color: '#484645',
-  fontWeight: 700,
-  fontSize: 24,
-  lineHeight: 1.3,
   pb: 1,
   pl: 2.5,
   pr: 5,

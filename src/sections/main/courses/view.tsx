@@ -492,7 +492,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={enrollmentConfirmDialogTitleSx}>
+        <DialogTitle variant="inherit" sx={enrollmentConfirmDialogTitleSx}>
           {t('TITLE.MANAGE_ENROLLMENT')}
           <IconButton
             aria-label={i18n.language === 'ar' ? 'إغلاق' : 'Close'}
