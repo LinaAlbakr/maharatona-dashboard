@@ -21,6 +21,7 @@ import {
   Stack,
   Switch,
   CircularProgress,
+  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -45,6 +46,18 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import SendNotification from './components/send-notification';
 import FlexibleEnrollmentDialog from './components/flexible-enrollment-dialog';
+import {
+  enrollmentConfirmButtonCancelSx,
+  enrollmentConfirmButtonConfirmSx,
+  enrollmentConfirmDialogActionsSx,
+  enrollmentConfirmDialogBoldPhraseSx,
+  enrollmentConfirmCloseIconifySx,
+  enrollmentConfirmDialogCloseIconButtonSx,
+  enrollmentConfirmDialogContentSx,
+  enrollmentConfirmDialogMessageSx,
+  enrollmentConfirmDialogPaperSx,
+  enrollmentConfirmDialogTitleSx,
+} from './components/enrollment-confirm-dialog-styles';
 import { enrollmentTurquoiseSwitchSx } from './components/flexible-model-config';
 
 type props = {
@@ -470,38 +483,39 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
       <Dialog
         open={!!enrollmentConfirm}
         onClose={() => setEnrollmentConfirm(null)}
-        maxWidth="xs"
-        fullWidth
+        maxWidth={false}
+        fullWidth={false}
         PaperProps={{
-          sx: {
-            overflow: 'hidden',
-            '& .MuiDialogContent-root': { overflow: 'hidden' },
-            '& input[type=number]': {
-              MozAppearance: 'textfield',
-              appearance: 'textfield',
-              '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
-                WebkitAppearance: 'none',
-                display: 'none',
-                margin: 0,
-              },
-            },
-          },
+          sx: enrollmentConfirmDialogPaperSx,
         }}
         BackdropProps={{
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, pb: 1 }}>
+        <DialogTitle sx={enrollmentConfirmDialogTitleSx}>
           {t('TITLE.MANAGE_ENROLLMENT')}
+          <IconButton
+            aria-label={i18n.language === 'ar' ? 'إغلاق' : 'Close'}
+            onClick={() => setEnrollmentConfirm(null)}
+            disabled={!!enrollmentSavingId}
+            size="small"
+            sx={enrollmentConfirmDialogCloseIconButtonSx}
+          >
+            <Iconify
+              icon="mingcute:close-line"
+              width={enrollmentConfirmCloseIconifySx.width}
+              sx={enrollmentConfirmCloseIconifySx}
+            />
+          </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ overflow: 'hidden' }}>
-          <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
+        <DialogContent sx={enrollmentConfirmDialogContentSx}>
+          <Typography variant="body2" sx={enrollmentConfirmDialogMessageSx}>
             {enrollmentConfirm &&
               (i18n.language === 'ar' ? (
                 enrollmentConfirm.next === 'open' ? (
                   <>
                     هل أنت متأكد من{' '}
-                    <Box component="span" sx={{ fontWeight: 700 }}>
+                    <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                       فتح التسجيل
                     </Box>
                     ؟
@@ -509,7 +523,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 ) : (
                   <>
                     هل أنت متأكد من{' '}
-                    <Box component="span" sx={{ fontWeight: 700 }}>
+                    <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                       إغلاق التسجيل
                     </Box>
                     ؟
@@ -518,7 +532,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               ) : enrollmentConfirm.next === 'open' ? (
                 <>
                   Are you sure you want to{' '}
-                  <Box component="span" sx={{ fontWeight: 700 }}>
+                  <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                     open enrollment
                   </Box>
                   ?
@@ -526,7 +540,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               ) : (
                 <>
                   Are you sure you want to{' '}
-                  <Box component="span" sx={{ fontWeight: 700 }}>
+                  <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                     close enrollment
                   </Box>
                   ?
@@ -534,32 +548,22 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               ))}
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2, gap: 1, flexWrap: 'wrap' }}>
-          <Button
-            variant="contained"
-            disabled={!!enrollmentSavingId}
-            onClick={() => setEnrollmentConfirm(null)}
-            sx={{
-              bgcolor: 'grey.300',
-              color: 'grey.800',
-              boxShadow: 'none',
-              '&:hover': { bgcolor: 'grey.400', boxShadow: 'none' },
-            }}
-          >
-            {t('BUTTON.CANCEL')}
-          </Button>
+        <DialogActions sx={enrollmentConfirmDialogActionsSx}>
           <Button
             variant="contained"
             disabled={!!enrollmentSavingId}
             onClick={handleConfirmEnrollmentChange}
-            sx={{
-              bgcolor: '#2EC4B6',
-              color: '#fff',
-              boxShadow: 'none',
-              '&:hover': { bgcolor: '#26b0a3', boxShadow: 'none' },
-            }}
+            sx={enrollmentConfirmButtonConfirmSx}
           >
             {t('BUTTON.CONFIRM')}
+          </Button>
+          <Button
+            variant="outlined"
+            disabled={!!enrollmentSavingId}
+            onClick={() => setEnrollmentConfirm(null)}
+            sx={enrollmentConfirmButtonCancelSx}
+          >
+            {t('BUTTON.CANCEL')}
           </Button>
         </DialogActions>
       </Dialog>

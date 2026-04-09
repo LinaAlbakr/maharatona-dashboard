@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -23,10 +24,55 @@ import { useRouter } from 'next/navigation';
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
 import { fetchCourseInfo, mergeCourseFlexibleEnrollment } from 'src/actions/courses';
+import Iconify from 'src/components/iconify';
 import type { FlexibleBookingModelKey } from './flexible-model-config';
-import { FLEX_MODEL_ROWS, enrollmentTurquoiseSwitchSx } from './flexible-model-config';
+import { FLEX_MODEL_ROWS } from './flexible-model-config';
+import {
+  enrollmentConfirmButtonCancelSx,
+  enrollmentConfirmButtonConfirmSx,
+  enrollmentConfirmDialogActionsSx,
+  enrollmentConfirmDialogBoldPhraseSx,
+  enrollmentConfirmCloseIconifySx,
+  enrollmentConfirmDialogCloseIconButtonSx,
+  enrollmentConfirmDialogContentSx,
+  enrollmentConfirmDialogMessageSx,
+  enrollmentConfirmDialogPaperSx,
+  enrollmentConfirmDialogTitleSx,
+} from './enrollment-confirm-dialog-styles';
 
 type FlexModelRow = (typeof FLEX_MODEL_ROWS)[number];
+
+/** Manage Enrollment modal — brand switch (#3CB8BB) and exact dimensions. */
+const MANAGE_ENROLLMENT_SWITCH_SX = {
+  overflow: 'visible',
+  width: 51.47,
+  height: 25.29,
+  padding: 0,
+  '& .MuiSwitch-switchBase': {
+    overflow: 'visible',
+    padding: '3px',
+  },
+  '& .MuiSwitch-track': {
+    overflow: 'visible',
+    opacity: 1,
+  },
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: '#ffffff',
+    '&:hover': {
+      backgroundColor: 'rgba(60, 184, 187, 0.18)',
+    },
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: '#3CB8BB',
+    opacity: 1,
+  },
+} as const;
+
+const STATUS_COLOR = {
+  open: '#00D250',
+  full: '#A300EF',
+  closed: '#FFAB01',
+} as const;
 
 type Props = {
   open: boolean;
@@ -155,7 +201,16 @@ export default function FlexibleEnrollmentDialog({
           },
         }}
       >
-        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, px: 3, pb: 1 }}>
+        <DialogTitle
+          sx={{
+            color: '#2B53A1',
+            fontWeight: 700,
+            fontSize: 24,
+            lineHeight: 1.3,
+            px: 3,
+            pb: 1,
+          }}
+        >
           {t('TITLE.MANAGE_ENROLLMENT')}
         </DialogTitle>
         <DialogContent
@@ -167,11 +222,11 @@ export default function FlexibleEnrollmentDialog({
             pb: 3,
           }}
         >
-          <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-            <Box component="span" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            <Box component="span" sx={{ color: '#919EAB', fontSize: 20, lineHeight: 1.4 }}>
               {t('LABEL.PROGRAM')}:{' '}
             </Box>
-            <Box component="span" sx={{ color: '#2EC4B6', fontWeight: 600 }}>
+            <Box component="span" sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: 22, lineHeight: 1.4 }}>
               {courseTitle}
             </Box>
           </Typography>
@@ -188,12 +243,13 @@ export default function FlexibleEnrollmentDialog({
               sx={{ borderCollapse: 'separate', overflow: 'visible', '& .MuiTableCell-root': { overflow: 'visible' } }}
             >
               <TableHead>
-                <TableRow>
+                <TableRow sx={{ bgcolor: 'grey.50' }}>
                   <TableCell
                     sx={{
                       textAlign: 'left',
-                      fontWeight: 400,
-                      color: '#2EC4B6',
+                      fontWeight: 600,
+                      fontSize: 14,
+                      color: '#3CB8BB',
                       borderBottom: '1px dashed',
                       borderColor: 'divider',
                     }}
@@ -203,8 +259,9 @@ export default function FlexibleEnrollmentDialog({
                   <TableCell
                     sx={{
                       textAlign: 'left',
-                      fontWeight: 400,
-                      color: '#2EC4B6',
+                      fontWeight: 600,
+                      fontSize: 14,
+                      color: '#3CB8BB',
                       borderBottom: '1px dashed',
                       borderColor: 'divider',
                     }}
@@ -214,8 +271,9 @@ export default function FlexibleEnrollmentDialog({
                   <TableCell
                     sx={{
                       textAlign: 'center',
-                      fontWeight: 400,
-                      color: '#2EC4B6',
+                      fontWeight: 600,
+                      fontSize: 14,
+                      color: '#3CB8BB',
                       borderBottom: '1px dashed',
                       borderColor: 'divider',
                       width: 120,
@@ -232,10 +290,10 @@ export default function FlexibleEnrollmentDialog({
                   const busy = savingKey === row.key;
                   const switchOn = isFull ? false : isOpen;
                   const status = isFull
-                    ? { label: t('LABEL.ENROLLMENT_FULL'), color: '#7B1FA2' as const }
+                    ? { label: t('LABEL.ENROLLMENT_FULL'), color: STATUS_COLOR.full }
                     : isOpen
-                      ? { label: t('LABEL.ENROLLMENT_OPEN'), color: 'success.main' as const }
-                      : { label: t('LABEL.ENROLLMENT_CLOSED'), color: 'warning.main' as const };
+                      ? { label: t('LABEL.ENROLLMENT_OPEN'), color: STATUS_COLOR.open }
+                      : { label: t('LABEL.ENROLLMENT_CLOSED'), color: STATUS_COLOR.closed };
 
                   return (
                     <TableRow key={row.key}>
@@ -245,8 +303,9 @@ export default function FlexibleEnrollmentDialog({
                           verticalAlign: 'middle',
                           borderBottom: '1px dashed',
                           borderColor: 'divider',
-                          color: 'info.main',
+                          color: '#2B53A1',
                           fontWeight: 600,
+                          fontSize: 14,
                         }}
                       >
                         {t(row.labelKey)}
@@ -262,7 +321,7 @@ export default function FlexibleEnrollmentDialog({
                         <Typography
                           component="span"
                           variant="body2"
-                          sx={{ fontWeight: 600, color: status.color }}
+                          sx={{ fontWeight: 600, color: status.color, fontSize: 16 }}
                         >
                           {status.label}
                         </Typography>
@@ -287,7 +346,7 @@ export default function FlexibleEnrollmentDialog({
                             size="small"
                             checked={switchOn}
                             disabled={busy || isFull}
-                            sx={enrollmentTurquoiseSwitchSx}
+                            sx={MANAGE_ENROLLMENT_SWITCH_SX}
                             onChange={(_, checked) => {
                               if (isFull || busy) return;
                               const next = checked ? 'open' : 'closed';
@@ -311,28 +370,36 @@ export default function FlexibleEnrollmentDialog({
         maxWidth={false}
         fullWidth={false}
         PaperProps={{
-          sx: {
-            maxWidth: 340,
-            width: 'calc(100% - 32px)',
-            overflow: 'hidden',
-            '& .MuiDialogContent-root': { overflow: 'hidden' },
-          },
+          sx: enrollmentConfirmDialogPaperSx,
         }}
         BackdropProps={{
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, pb: 1, px: 2.5, pt: 2 }}>
+        <DialogTitle sx={enrollmentConfirmDialogTitleSx}>
           {t('TITLE.MANAGE_ENROLLMENT')}
+          <IconButton
+            aria-label={i18n.language === 'ar' ? 'إغلاق' : 'Close'}
+            onClick={() => setPendingConfirm(null)}
+            disabled={!!savingKey}
+            size="small"
+            sx={enrollmentConfirmDialogCloseIconButtonSx}
+          >
+            <Iconify
+              icon="mingcute:close-line"
+              width={enrollmentConfirmCloseIconifySx.width}
+              sx={enrollmentConfirmCloseIconifySx}
+            />
+          </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ px: 2.5, pt: 0, pb: 1 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
+        <DialogContent sx={enrollmentConfirmDialogContentSx}>
+          <Typography variant="body2" sx={enrollmentConfirmDialogMessageSx}>
             {pendingConfirm &&
               (i18n.language === 'ar' ? (
                 pendingConfirm.next === 'open' ? (
                   <>
                     هل أنت متأكد من{' '}
-                    <Box component="span" sx={{ fontWeight: 700 }}>
+                    <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                       فتح التسجيل
                     </Box>
                     ؟
@@ -340,7 +407,7 @@ export default function FlexibleEnrollmentDialog({
                 ) : (
                   <>
                     هل أنت متأكد من{' '}
-                    <Box component="span" sx={{ fontWeight: 700 }}>
+                    <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                       إغلاق التسجيل
                     </Box>
                     ؟
@@ -349,7 +416,7 @@ export default function FlexibleEnrollmentDialog({
               ) : pendingConfirm.next === 'open' ? (
                 <>
                   Are you sure you want to{' '}
-                  <Box component="span" sx={{ fontWeight: 700 }}>
+                  <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                     open enrollment
                   </Box>
                   ?
@@ -357,7 +424,7 @@ export default function FlexibleEnrollmentDialog({
               ) : (
                 <>
                   Are you sure you want to{' '}
-                  <Box component="span" sx={{ fontWeight: 700 }}>
+                  <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
                     close enrollment
                   </Box>
                   ?
@@ -365,64 +432,20 @@ export default function FlexibleEnrollmentDialog({
               ))}
           </Typography>
         </DialogContent>
-        <DialogActions
-          sx={{
-            px: 2.5,
-            pb: 2,
-            pt: 0.5,
-            gap: 1,
-            flexWrap: 'wrap',
-            justifyContent: 'flex-end',
-          }}
-        >
+        <DialogActions sx={enrollmentConfirmDialogActionsSx}>
           <Button
             variant="contained"
-            size="small"
             disabled={!!savingKey}
             onClick={handleConfirmPending}
-            sx={{
-              py: 0.5,
-              px: 1.5,
-              minWidth: 0,
-              minHeight: 30,
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              lineHeight: 1.2,
-              borderRadius: 1.5,
-              textTransform: 'none',
-              bgcolor: '#2EC4B6',
-              color: '#fff',
-              boxShadow: 'none',
-              '&:hover': { bgcolor: '#26b0a3', boxShadow: 'none' },
-            }}
+            sx={enrollmentConfirmButtonConfirmSx}
           >
             {t('BUTTON.CONFIRM')}
           </Button>
           <Button
             variant="outlined"
-            size="small"
             disabled={!!savingKey}
             onClick={() => setPendingConfirm(null)}
-            sx={{
-              py: 0.5,
-              px: 1.5,
-              minWidth: 0,
-              minHeight: 30,
-              fontSize: '0.8125rem',
-              fontWeight: 600,
-              lineHeight: 1.2,
-              borderRadius: 1.5,
-              textTransform: 'none',
-              borderColor: 'grey.400',
-              color: 'grey.800',
-              bgcolor: 'background.paper',
-              boxShadow: 'none',
-              '&:hover': {
-                borderColor: 'grey.500',
-                bgcolor: 'grey.100',
-                boxShadow: 'none',
-              },
-            }}
+            sx={enrollmentConfirmButtonCancelSx}
           >
             {t('BUTTON.CANCEL')}
           </Button>
