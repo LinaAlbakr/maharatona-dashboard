@@ -218,7 +218,7 @@ export default function FlexibleEnrollmentDialog({
             <Box component="span" sx={{ color: '#919EAB', fontSize: 20, lineHeight: 1.4 }}>
               {t('LABEL.PROGRAM')}:{' '}
             </Box>
-            <Box component="span" sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: 22, lineHeight: 1.4 }}>
+            <Box component="span" sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: 20, lineHeight: 1.4 }}>
               {courseTitle}
             </Box>
           </Typography>
