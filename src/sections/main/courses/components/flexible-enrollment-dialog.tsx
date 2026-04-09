@@ -129,7 +129,7 @@ export default function FlexibleEnrollmentDialog({
           },
         }}
       >
-        <DialogTitle sx={{ color: 'grey.800', fontWeight: 600, px: 3, pb: 1 }}>
+        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, px: 3, pb: 1 }}>
           {t('TITLE.MANAGE_ENROLLMENT')}
         </DialogTitle>
         <DialogContent
@@ -145,7 +145,7 @@ export default function FlexibleEnrollmentDialog({
             <Box component="span" sx={{ color: 'text.secondary' }}>
               {t('LABEL.PROGRAM')}:{' '}
             </Box>
-            <Box component="span" sx={{ color: 'primary.main', fontWeight: 600 }}>
+            <Box component="span" sx={{ color: '#2EC4B6', fontWeight: 600 }}>
               {courseTitle}
             </Box>
           </Typography>
@@ -166,8 +166,8 @@ export default function FlexibleEnrollmentDialog({
                   <TableCell
                     sx={{
                       textAlign: 'left',
-                      fontWeight: 700,
-                      color: 'primary.main',
+                      fontWeight: 400,
+                      color: '#2EC4B6',
                       borderBottom: '1px dashed',
                       borderColor: 'divider',
                     }}
@@ -177,8 +177,8 @@ export default function FlexibleEnrollmentDialog({
                   <TableCell
                     sx={{
                       textAlign: 'left',
-                      fontWeight: 700,
-                      color: 'primary.main',
+                      fontWeight: 400,
+                      color: '#2EC4B6',
                       borderBottom: '1px dashed',
                       borderColor: 'divider',
                     }}
@@ -188,8 +188,8 @@ export default function FlexibleEnrollmentDialog({
                   <TableCell
                     sx={{
                       textAlign: 'center',
-                      fontWeight: 700,
-                      color: 'primary.main',
+                      fontWeight: 400,
+                      color: '#2EC4B6',
                       borderBottom: '1px dashed',
                       borderColor: 'divider',
                       width: 120,
@@ -219,7 +219,7 @@ export default function FlexibleEnrollmentDialog({
                           verticalAlign: 'middle',
                           borderBottom: '1px dashed',
                           borderColor: 'divider',
-                          color: 'primary.main',
+                          color: 'info.main',
                           fontWeight: 600,
                         }}
                       >
@@ -294,7 +294,7 @@ export default function FlexibleEnrollmentDialog({
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={{ color: 'grey.800', fontWeight: 600, pb: 1 }}>
+        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, pb: 1 }}>
           {t('TITLE.MANAGE_ENROLLMENT')}
         </DialogTitle>
         <DialogContent>
@@ -337,25 +337,19 @@ export default function FlexibleEnrollmentDialog({
               ))}
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2, gap: 1, flexWrap: 'wrap' }}>
-          <Button
-            variant="contained"
-            disabled={!!savingKey}
-            onClick={() => setPendingConfirm(null)}
-            sx={{
-              bgcolor: 'grey.300',
-              color: 'grey.800',
-              boxShadow: 'none',
-              '&:hover': { bgcolor: 'grey.400', boxShadow: 'none' },
-            }}
-          >
-            {t('BUTTON.CANCEL')}
-          </Button>
+        <DialogActions sx={{ px: 3, pb: 2, pt: 1, gap: 2, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           <Button
             variant="contained"
             disabled={!!savingKey}
             onClick={handleConfirmPending}
             sx={{
+              py: 1.5,
+              px: 3.5,
+              minWidth: 152,
+              minHeight: 48,
+              fontSize: '1rem',
+              fontWeight: 600,
+              borderRadius: 2,
               bgcolor: '#2EC4B6',
               color: '#fff',
               boxShadow: 'none',
@@ -363,6 +357,31 @@ export default function FlexibleEnrollmentDialog({
             }}
           >
             {t('BUTTON.CONFIRM')}
+          </Button>
+          <Button
+            variant="outlined"
+            disabled={!!savingKey}
+            onClick={() => setPendingConfirm(null)}
+            sx={{
+              py: 1.5,
+              px: 3.5,
+              minWidth: 152,
+              minHeight: 48,
+              fontSize: '1rem',
+              fontWeight: 600,
+              borderRadius: 2,
+              borderColor: 'grey.400',
+              color: 'grey.800',
+              bgcolor: 'background.paper',
+              boxShadow: 'none',
+              '&:hover': {
+                borderColor: 'grey.500',
+                bgcolor: 'grey.100',
+                boxShadow: 'none',
+              },
+            }}
+          >
+            {t('BUTTON.CANCEL')}
           </Button>
         </DialogActions>
       </Dialog>

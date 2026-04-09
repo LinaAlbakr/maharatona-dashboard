@@ -491,8 +491,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={{ color: 'grey.800', fontWeight: 600, pb: 1 }}>
-          {t('TITLE.MANAGE')}
+        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, pb: 1 }}>
+          {t('TITLE.MANAGE_ENROLLMENT')}
         </DialogTitle>
         <DialogContent sx={{ overflow: 'hidden' }}>
           <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
