@@ -308,10 +308,12 @@ export default function FlexibleEnrollmentDialog({
       <Dialog
         open={!!pendingConfirm}
         onClose={() => setPendingConfirm(null)}
-        maxWidth="xs"
-        fullWidth
+        maxWidth={false}
+        fullWidth={false}
         PaperProps={{
           sx: {
+            maxWidth: 340,
+            width: 'calc(100% - 32px)',
             overflow: 'hidden',
             '& .MuiDialogContent-root': { overflow: 'hidden' },
           },
@@ -320,10 +322,10 @@ export default function FlexibleEnrollmentDialog({
           sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
         }}
       >
-        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, pb: 1 }}>
+        <DialogTitle sx={{ color: 'info.main', fontWeight: 700, pb: 1, px: 2.5, pt: 2 }}>
           {t('TITLE.MANAGE_ENROLLMENT')}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ px: 2.5, pt: 0, pb: 1 }}>
           <Typography variant="body2" color="text.secondary" sx={{ pt: 0.5 }}>
             {pendingConfirm &&
               (i18n.language === 'ar' ? (
@@ -363,19 +365,31 @@ export default function FlexibleEnrollmentDialog({
               ))}
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2, pt: 1, gap: 2, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+        <DialogActions
+          sx={{
+            px: 2.5,
+            pb: 2,
+            pt: 0.5,
+            gap: 1,
+            flexWrap: 'wrap',
+            justifyContent: 'flex-end',
+          }}
+        >
           <Button
             variant="contained"
+            size="small"
             disabled={!!savingKey}
             onClick={handleConfirmPending}
             sx={{
-              py: 1.5,
-              px: 3.5,
-              minWidth: 152,
-              minHeight: 48,
-              fontSize: '1rem',
+              py: 0.5,
+              px: 1.5,
+              minWidth: 0,
+              minHeight: 30,
+              fontSize: '0.8125rem',
               fontWeight: 600,
-              borderRadius: 2,
+              lineHeight: 1.2,
+              borderRadius: 1.5,
+              textTransform: 'none',
               bgcolor: '#2EC4B6',
               color: '#fff',
               boxShadow: 'none',
@@ -386,16 +400,19 @@ export default function FlexibleEnrollmentDialog({
           </Button>
           <Button
             variant="outlined"
+            size="small"
             disabled={!!savingKey}
             onClick={() => setPendingConfirm(null)}
             sx={{
-              py: 1.5,
-              px: 3.5,
-              minWidth: 152,
-              minHeight: 48,
-              fontSize: '1rem',
+              py: 0.5,
+              px: 1.5,
+              minWidth: 0,
+              minHeight: 30,
+              fontSize: '0.8125rem',
               fontWeight: 600,
-              borderRadius: 2,
+              lineHeight: 1.2,
+              borderRadius: 1.5,
+              textTransform: 'none',
               borderColor: 'grey.400',
               color: 'grey.800',
               bgcolor: 'background.paper',
