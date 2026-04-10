@@ -3,6 +3,8 @@ export type ICenter = {
   number_of_registrants: number;
   id: string;
   user_id: string;
+  /** When false, center is deactivated (blocked); toggled by admin Block/Unblock. */
+  is_active?: boolean;
   name: string;
   phone: string;
   neighborhood: {

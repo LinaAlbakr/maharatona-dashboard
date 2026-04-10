@@ -115,7 +115,7 @@ export async function changeClientStatus(clientId: string, reqBody: any): Promis
     revalidatePath('/dashboard/clients/');
     return res?.status;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 }
 

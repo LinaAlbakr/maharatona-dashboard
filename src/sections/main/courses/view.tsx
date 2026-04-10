@@ -257,15 +257,6 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'mingcute:delete-fill',
-              onClick: (item) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
@@ -284,6 +275,16 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 confirmDeactivate.onTrue();
               },
               hide: (row: any) => row.is_active === false,
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+              dividerBefore: true,
             },
           ]}
           customRender={{

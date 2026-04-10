@@ -16,6 +16,8 @@ import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
 import { deleteClient, changeClientStatus } from 'src/actions/clients';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { getErrorMessage } from 'src/utils/axios';
+import { isClientBlocked } from 'src/utils/client-status';
 
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
@@ -97,25 +99,38 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   );
 
   const handleConfirmBlock = async () => {
-    if (selectedId) {
+    if (!selectedId) {
+      confirmBlock.onFalse();
+      return;
+    }
+    try {
       const res = await changeClientStatus(selectedId, { userStatus: 'BlockedClient' });
       if (res === 200) {
         enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
+        router.refresh();
       } else {
-        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+        enqueueSnackbar(String(res ?? ''), { variant: 'error' });
       }
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
     }
-
     confirmBlock.onFalse();
   };
   const handleConfirmUnblock = async () => {
-    if (selectedId) {
+    if (!selectedId) {
+      confirmUnblock.onFalse();
+      return;
+    }
+    try {
       const res = await changeClientStatus(selectedId, { userStatus: 'ActiveClient' });
       if (res === 200) {
         enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
+        router.refresh();
       } else {
-        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+        enqueueSnackbar(String(res ?? ''), { variant: 'error' });
       }
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
     }
     confirmUnblock.onFalse();
   };
@@ -227,23 +242,13 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'material-symbols:delete-outline-rounded',
-              onClick: (item: any) => {
-                setSelectedId(item._id || item.id);
-                confirmDelete.onTrue();
+              sx: { color: 'info.dark' },
+              label: t('LABEL.SEND_NOTIFICATION'),
+              icon: 'mingcute:notification-fill',
+              onClick: (item) => {
+                setShowSendNotification(true);
+                setSelectedCenter(item);
               },
-            },
-            {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.BLOCK'),
-              icon: 'ic:outline-block',
-              onClick: (item: any) => {
-                setSelectedId(item._id || item.id);
-                confirmBlock.onTrue();
-              },
-              hide: (center) => center.userStatus === 'BlockedClient' || center.user_status === 'BlockedClient',
             },
             {
               sx: { color: 'info.dark' },
@@ -253,31 +258,42 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
                 setSelectedId(item._id || item.id);
                 confirmUnblock.onTrue();
               },
-              hide: (center) => center.userStatus === 'ActiveClient' || center.user_status === 'ActiveClient',
+              hide: (row) => !isClientBlocked(row),
             },
             {
-              sx: { color: 'info.dark' },
-              label: t('LABEL.SEND_NOTIFICATION'),
-              icon: 'mingcute:notification-fill',
-              onClick: (item) => {
-                setShowSendNotification(true);
-                setSelectedCenter(item);
+              sx: { color: 'error.dark' },
+              label: t('LABEL.BLOCK'),
+              icon: 'ic:outline-block',
+              onClick: (item: any) => {
+                setSelectedId(item._id || item.id);
+                confirmBlock.onTrue();
               },
+              hide: (row) => isClientBlocked(row),
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'material-symbols:delete-outline-rounded',
+              onClick: (item: any) => {
+                setSelectedId(item._id || item.id);
+                confirmDelete.onTrue();
+              },
+              dividerBefore: true,
             },
           ]}
           customRender={{
             email: (item: any) => (
-              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isClientBlocked(item) ? 'error.main' : 'inherit' }}>
                 {item?.email}
               </Box>
             ),
             name: (item: any) => (
-              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isClientBlocked(item) ? 'error.main' : 'inherit' }}>
                 {item?.name || item?.username || '-'}
               </Box>
             ),
             neighborhood: (item: any) => (
-              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isClientBlocked(item) ? 'error.main' : 'inherit' }}>
                 {typeof item?.neighborhood === 'string'
                   ? item?.neighborhood
                   : (i18n.language === 'ar'
@@ -286,7 +302,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               </Box>
             ),
             id: (item: any) => (
-              <Box sx={{ color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isClientBlocked(item) ? 'error.main' : 'inherit' }}>
                 {typeof item?.city === 'string'
                   ? item?.city
                   : (i18n.language === 'ar'
@@ -296,20 +312,16 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             ),
             phone: (item: any) => (
               <Box
-                style={{
-                  color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit',
+                sx={{
                   direction: 'ltr',
+                  color: isClientBlocked(item) ? 'error.main' : 'inherit',
                 }}
               >
                 {item?.phone}
               </Box>
             ),
             children: (item: any) => (
-              <Box
-                style={{
-                  color: (item?.userStatus === 'BlockedClient' || item?.user_status === 'BlockedClient') ? 'red' : 'inherit',
-                }}
-              >
+              <Box sx={{ color: isClientBlocked(item) ? 'error.main' : 'inherit' }}>
                 {item?.children || item?.total_children || 0} {t('TABLE.CHILDREN')}
               </Box>
             ),
