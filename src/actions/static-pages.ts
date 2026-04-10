@@ -68,11 +68,16 @@ export const editStaticPage = async (
   pageId: string,
   data: FormData | Record<string, any>
 ): Promise<any> => {
+  const id = String(pageId ?? '').trim();
+  if (!id) {
+    return createStaticPage(data);
+  }
+
   const accessToken = cookies().get('access_token')?.value;
   try {
     const isFormData = typeof (data as any).forEach === 'function' && typeof (data as any).get === 'function';
 
-    const res = await axiosInstance.put(endpoints.staticPage.edit(pageId), data, {
+    const res = await axiosInstance.put(endpoints.staticPage.edit(id), data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         ...(isFormData ? { 'Content-Type': 'multipart/form-data' } : { 'Content-Type': 'application/json' }),

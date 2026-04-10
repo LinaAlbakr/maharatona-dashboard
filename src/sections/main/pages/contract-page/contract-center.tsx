@@ -54,7 +54,19 @@ const ContractCenterView = ({ ContractCenter }: IProps) => {
     toFormData(reqBody, formData);
 
     const pageId = (ContractCenter as any)?.id ?? (ContractCenter as any)?._id ?? (ContractCenter as any)?.data?._id;
-    const res = pageId ? await editStaticPage(pageId, reqBody) : await editStaticPage('', reqBody);
+    if (!pageId) {
+      const res = await createStaticPage(reqBody);
+      if (res?.error) {
+        enqueueSnackbar(`${res?.error}`, { variant: 'error' });
+      } else {
+        enqueueSnackbar(t('MESSAGE.CONTENT_PUBLISHED_SUCCESSFULLY'), {
+          variant: 'success',
+        });
+        router.refresh();
+      }
+      return;
+    }
+    const res = await editStaticPage(pageId, reqBody);
 
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });

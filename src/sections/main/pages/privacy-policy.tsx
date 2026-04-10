@@ -2,7 +2,6 @@
 
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, CardActions, CardContent, Container, Typography } from '@mui/material';
-import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
@@ -51,9 +50,6 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
       content_en: data.content_en,
       static_page_type: 'PRIVACY_POLICY',
     };
-    const formData = new FormData();
-    toFormData(reqBody, formData);
-    
     const pageId = (privacyPolicy as any)?.id ?? (privacyPolicy as any)?._id ?? (privacyPolicy as any)?.data?._id;
     if (!pageId) {
       // Create new static page if it doesn't exist
@@ -67,7 +63,7 @@ const PrivacyPolicyView = ({ privacyPolicy }: IProps) => {
       }
       return;
     }
-    const res = pageId ? await editStaticPage(pageId, reqBody) : await editStaticPage('', reqBody);
+    const res = await editStaticPage(pageId, reqBody);
 
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });

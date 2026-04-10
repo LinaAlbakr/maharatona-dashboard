@@ -53,19 +53,34 @@ export const fetcher = async ({ url, config }: { url: string; config?: AxiosRequ
 
   return response.data;
 };
+/** Normalize API error bodies (axios interceptor rejects with `response.data`). */
 export const getErrorMessage = (error: unknown): string => {
-  let message: string;
   if (error instanceof Error) {
-    // eslint-disable-next-line prefer-destructuring
-    message = error.message;
-  } else if (error && typeof error === 'object' && 'message' in error) {
-    message = String(error.message);
-  } else if (typeof error === 'string') {
-    message = error;
-  } else {
-    message = 'Something went wrong';
+    return error.message;
   }
-  return message;
+  if (typeof error === 'string') {
+    return error;
+  }
+  if (error && typeof error === 'object') {
+    const obj = error as Record<string, unknown>;
+    if (typeof obj.message === 'string' && obj.message.trim()) {
+      return obj.message;
+    }
+    // e.g. admin auth middleware: `{ error: "User not authorized..." }`
+    if (typeof obj.error === 'string' && obj.error.trim()) {
+      return obj.error;
+    }
+    if (obj.error && typeof obj.error === 'object' && obj.error !== null && 'message' in obj.error) {
+      return String((obj.error as { message: unknown }).message);
+    }
+    if (obj.data && typeof obj.data === 'object' && obj.data !== null) {
+      const nested = obj.data as Record<string, unknown>;
+      if (typeof nested.message === 'string' && nested.message.trim()) {
+        return nested.message;
+      }
+    }
+  }
+  return 'Something went wrong';
 };
 
 export const endpoints = {
