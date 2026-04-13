@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   Box,
   Card,
@@ -68,6 +69,9 @@ type props = {
 const CoursesView = ({ count, courses }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
+  const isIpadViewport = useMediaQuery(
+    '(min-width: 768px) and (max-width: 1366px) and (pointer: coarse)'
+  );
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -368,31 +372,41 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 : isOpen
                   ? 'success.main'
                   : 'warning.main';
+              const keepStatusInlineForIpad = isFixed && isIpadViewport;
 
               return (
                 <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" sx={{ py: 0.5 }}>
-                  <Switch
-                    size="small"
-                    checked={switchChecked}
-                    disabled={busy || isFull}
-                    sx={enrollmentTurquoiseSwitchSx}
-                    onChange={() => {
-                      if (isFull) return;
-                      const next = isOpen ? 'closed' : 'open';
-                      setEnrollmentConfirm({ item, next });
-                    }}
-                  />
-                  <Typography
-                    component="span"
-                    variant="body2"
+                  <Box
                     sx={{
-                      fontWeight: 600,
-                      color: statusColor,
-                      ...(!item?.is_active ? { opacity: 0.85 } : {}),
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      columnGap: 1,
+                      whiteSpace: keepStatusInlineForIpad ? 'nowrap' : 'normal',
                     }}
                   >
-                    {statusText}
-                  </Typography>
+                    <Switch
+                      size="small"
+                      checked={switchChecked}
+                      disabled={busy || isFull}
+                      sx={enrollmentTurquoiseSwitchSx}
+                      onChange={() => {
+                        if (isFull) return;
+                        const next = isOpen ? 'closed' : 'open';
+                        setEnrollmentConfirm({ item, next });
+                      }}
+                    />
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      sx={{
+                        fontWeight: 600,
+                        color: statusColor,
+                        ...(!item?.is_active ? { opacity: 0.85 } : {}),
+                      }}
+                    >
+                      {statusText}
+                    </Typography>
+                  </Box>
                   {busy ? <CircularProgress size={18} thickness={5} /> : null}
                 </Stack>
               );
