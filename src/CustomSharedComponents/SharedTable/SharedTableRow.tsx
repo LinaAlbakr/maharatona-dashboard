@@ -1,4 +1,9 @@
+import { Fragment } from 'react';
+
+import { alpha } from '@mui/material/styles';
+
 import Iconify from 'src/components/iconify';
+import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -48,17 +53,29 @@ export default function SharedTableRow<T extends { id: string }>({
         {actions
           ?.filter((action) => (action.hide ? !action.hide(row) : true))
           .map((action, index) => (
-            <MenuItem
-              key={index}
-              onClick={() => {
-                action.onClick(row);
-                popover.onClose();
-              }}
-              sx={action.sx}
-            >
-              <Iconify icon={action?.icon || 'solar:pen-bold'} />
-              {action.label}
-            </MenuItem>
+            <Fragment key={index}>
+              {action.dividerBefore && (
+                <Divider
+                  sx={(theme) => ({
+                    my: 0.5,
+                    borderColor: alpha(
+                      theme.palette.text.primary,
+                      theme.palette.mode === 'dark' ? 0.22 : 0.14
+                    ),
+                  })}
+                />
+              )}
+              <MenuItem
+                onClick={() => {
+                  action.onClick(row);
+                  popover.onClose();
+                }}
+                sx={action.sx}
+              >
+                <Iconify icon={action?.icon || 'solar:pen-bold'} />
+                {action.label}
+              </MenuItem>
+            </Fragment>
           ))}
       </CustomPopover>
     </>

@@ -65,6 +65,7 @@ const Page = async ({ searchParams }: Readonly<props>) => {
       id: center.id || center._id,
       phone: center.phone || '',
       user_id: center.user_id || center.userId || '',
+      is_active: center.is_active !== false,
       userStatus: center.userStatus || center.status || 'ActiveClient',
       walletBalance: center.wallet_balance || center.wallet_balance || 0,
       number_of_courses: center.total_courses || center.total_courses || 0,

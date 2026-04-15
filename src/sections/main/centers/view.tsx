@@ -34,6 +34,9 @@ type props = {
   neighborhoods?: ITems[];
 };
 
+/** Inactive / “blocked” centers have `is_active === false` (matches admin deactivate toggle). */
+const isCenterInactive = (row: Pick<ICenter, 'is_active'>) => row.is_active === false;
+
 const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -240,12 +243,12 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'material-symbols:delete-outline-rounded',
-              onClick: (item: any) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
+              sx: { color: 'info.dark' },
+              label: t('LABEL.SEND_NOTIFICATION'),
+              icon: 'mingcute:notification-fill',
+              onClick: (item) => {
+                setShowSendNotification(true);
+                setSelectedCenter(item);
               },
             },
             {
@@ -256,7 +259,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                 setSelectedId(item.id);
                 confirmBlock.onTrue();
               },
-              hide: (center) => center.userStatus === 'BlockedClient',
+              hide: (center) => isCenterInactive(center),
             },
             {
               sx: { color: 'info.dark' },
@@ -266,7 +269,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
                 setSelectedId(item.id);
                 confirmUnblock.onTrue();
               },
-              hide: (center) => center.userStatus === 'ActiveClient',
+              hide: (center) => !isCenterInactive(center),
             },
             // {
             //   sx: { color: 'info.dark' },
@@ -279,23 +282,24 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             //   hide: (center) => center.walletBalance <= 0,
             // },
             {
-              sx: { color: 'info.dark' },
-              label: t('LABEL.SEND_NOTIFICATION'),
-              icon: 'mingcute:notification-fill',
-              onClick: (item) => {
-                setShowSendNotification(true);
-                setSelectedCenter(item);
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'material-symbols:delete-outline-rounded',
+              onClick: (item: any) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
+              dividerBefore: true,
             },
           ]}
           customRender={{
             name: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
                 {item?.name}
               </Box>
             ),
             neighborhood: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
                 {typeof item?.neighborhood === 'string'
                   ? item?.neighborhood
                   : (i18n.language === 'ar'
@@ -304,7 +308,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               </Box>
             ),
             id: (item: any) => (
-              <Box sx={{ color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
                 {typeof item?.city === 'string'
                   ? item?.city
                   : (i18n.language === 'ar'
@@ -314,38 +318,26 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             ),
             phone: (item: any) => (
               <Box
-                style={{
+                sx={{
                   direction: 'ltr',
-                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
+                  color: isCenterInactive(item) ? 'error.main' : 'inherit',
                 }}
               >
                 {item?.phone}
               </Box>
             ),
             number_of_registrants: (item: any) => (
-              <Box
-                style={{
-                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
-                }}
-              >
+              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
                 {item?.number_of_registrants}
               </Box>
             ),
             number_of_courses: (item: any) => (
-              <Box
-                style={{
-                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
-                }}
-              >
+              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
                 {item?.number_of_courses}
               </Box>
             ),
             walletBalance: (item: any) => (
-              <Box
-                style={{
-                  color: item?.userStatus === 'BlockedClient' ? 'red' : 'inherit',
-                }}
-              >
+              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
                 {Math.ceil(item?.walletBalance)}
               </Box>
             ),

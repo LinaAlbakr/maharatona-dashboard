@@ -30,10 +30,47 @@ axiosInstance.interceptors.request.use(
      */ config,
   (error) => Promise.reject(error)
 );
+//
+function normalizeAxiosError(error: unknown): Error {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    const data = error.response?.data as unknown;
+
+    if (data && typeof data === 'object' && data !== null && 'message' in data) {
+      const m = (data as { message?: unknown }).message;
+      if (m !== undefined && m !== null) {
+        const text = typeof m === 'string' ? m : JSON.stringify(m);
+        return new Error(text);
+      }
+    }
+    if (typeof data === 'string' && data.trim()) {
+      return new Error(data);
+    }
+    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+      return new Error(
+        `Cannot reach API (${HOST_API}). Use the backend URL (not the Next dev server), e.g. http://localhost:5000/api — ${error.code}`
+      );
+    }
+    if (status) {
+      return new Error(
+        error.message
+          ? `${error.message} (HTTP ${status})`
+          : `Request failed with HTTP ${status}`
+      );
+    }
+    if (error.message) {
+      return new Error(error.message);
+    }
+  }
+  if (error instanceof Error) {
+    return error;
+  }
+  return new Error(typeof error === 'string' ? error : 'Something went wrong');
+}
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+  (error) => Promise.reject(normalizeAxiosError(error))
 );
 
 export default axiosInstance;
@@ -58,13 +95,13 @@ export const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
     return error.message;
   }
-  if (typeof error === 'string') {
-    return error;
-  }
   if (error && typeof error === 'object') {
     const obj = error as Record<string, unknown>;
     if (typeof obj.message === 'string' && obj.message.trim()) {
       return obj.message;
+    }
+    if ('message' in obj && obj.message != null) {
+      return String(obj.message);
     }
     // e.g. admin auth middleware: `{ error: "User not authorized..." }`
     if (typeof obj.error === 'string' && obj.error.trim()) {
@@ -79,6 +116,9 @@ export const getErrorMessage = (error: unknown): string => {
         return nested.message;
       }
     }
+  }
+  if (typeof error === 'string') {
+    return error;
   }
   return 'Something went wrong';
 };
@@ -124,6 +164,7 @@ export const endpoints = {
     info: (courseId: string) => `/admin/get-course-details/${courseId}`,
     deleteCourse: (courseId: string) => `/admin/delete-course/${courseId}`,
     editStatus: (courseId: string) => `/admin/toggle-course-status/${courseId}`,
+    enrollmentStatus: (courseId: string) => `/admin/course-enrollment-status/${courseId}`,
   },
   clients: {
     fetch: '/admin/get-all-clients',

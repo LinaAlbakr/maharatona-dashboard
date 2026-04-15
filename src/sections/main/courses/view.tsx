@@ -7,7 +7,27 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
-import { Box, Card, Grid, Button, TextField, Typography, InputAdornment, Select, MenuItem, FormControl } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import {
+  Box,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Select,
+  MenuItem,
+  FormControl,
+  Stack,
+  Switch,
+  CircularProgress,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 
@@ -17,7 +37,7 @@ import { arabicDate, englishDate } from 'src/utils/format-time';
 
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
-import { deleteCousre, editCourseStatus } from 'src/actions/courses';
+import { deleteCousre, editCourseStatus, updateCourseEnrollmentStatus } from 'src/actions/courses';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
 import Iconify from 'src/components/iconify';
@@ -26,6 +46,20 @@ import { useSettingsContext } from 'src/components/settings';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import SendNotification from './components/send-notification';
+import FlexibleEnrollmentDialog from './components/flexible-enrollment-dialog';
+import {
+  enrollmentConfirmButtonCancelSx,
+  enrollmentConfirmButtonConfirmSx,
+  enrollmentConfirmDialogActionsSx,
+  enrollmentConfirmDialogBoldPhraseSx,
+  enrollmentConfirmCloseIconifySx,
+  enrollmentConfirmDialogCloseIconButtonSx,
+  enrollmentConfirmDialogContentSx,
+  enrollmentConfirmDialogMessageSx,
+  enrollmentConfirmDialogPaperSx,
+  enrollmentConfirmDialogTitleSx,
+} from './components/enrollment-confirm-dialog-styles';
+import { enrollmentTurquoiseSwitchSx } from './components/flexible-model-config';
 
 type props = {
   count: number;
@@ -35,6 +69,9 @@ type props = {
 const CoursesView = ({ count, courses }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
+  const isIpadViewport = useMediaQuery(
+    '(min-width: 768px) and (max-width: 1366px) and (pointer: coarse)'
+  );
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -45,6 +82,15 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const confirmDelete = useBoolean();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
+  const [enrollmentSavingId, setEnrollmentSavingId] = useState<string | null>(null);
+  const [enrollmentConfirm, setEnrollmentConfirm] = useState<{
+    item: any;
+    next: 'open' | 'closed';
+  } | null>(null);
+  const [flexibleEnrollmentModal, setFlexibleEnrollmentModal] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -60,6 +106,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     { id: 'start_date', label: 'LABEL.START_DATE' },
     { id: 'end_date', label: 'LABEL.END_DATE' },
     { id: 'average_rate', label: 'LABEL.TOTAL_RATE' },
+    { id: 'enrollment_status', label: 'LABEL.ENROLLMENT' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -116,6 +163,21 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
     }
+  };
+
+  const handleConfirmEnrollmentChange = async () => {
+    if (!enrollmentConfirm) return;
+    const { item, next } = enrollmentConfirm;
+    setEnrollmentConfirm(null);
+    setEnrollmentSavingId(item.id);
+    const res = await updateCourseEnrollmentStatus(item.id, next);
+    setEnrollmentSavingId(null);
+    if (res?.error) {
+      enqueueSnackbar(res.error, { variant: 'error' });
+      return;
+    }
+    enqueueSnackbar(t('MESSAGE.ENROLLMENT_STATUS_UPDATED'), { variant: 'success' });
+    router.refresh();
   };
 
   return (
@@ -199,15 +261,6 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'mingcute:delete-fill',
-              onClick: (item) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
@@ -226,6 +279,16 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 confirmDeactivate.onTrue();
               },
               hide: (row: any) => row.is_active === false,
+            },
+            {
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+              dividerBefore: true,
             },
           ]}
           customRender={{
@@ -272,10 +335,90 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 {i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date)}{' '}
               </Box>
             ),
+            enrollment_status: (item: any) => {
+              const isFixed = item?.course_type === 'fixed';
+              if (!isFixed) {
+                const displayName =
+                  item?.name || (i18n.language === 'ar' ? item?.name_ar : item?.name_en) || '';
+                return (
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="primary"
+                    onClick={() =>
+                      setFlexibleEnrollmentModal({
+                        id: String(item.id ?? item._id),
+                        name: displayName,
+                      })
+                    }
+                    sx={{ textTransform: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}
+                  >
+                    {t('BUTTON.MANAGE')}
+                  </Button>
+                );
+              }
+              const remainingSeats = item?.seats;
+              const isFull = typeof remainingSeats === 'number' && remainingSeats === 0;
+              const isOpen = item?.enrollmentStatus !== 'closed';
+              const busy = enrollmentSavingId === item.id;
+              const switchChecked = isFull ? false : isOpen;
+              const statusText = isFull
+                ? t('LABEL.ENROLLMENT_FULL')
+                : isOpen
+                  ? t('LABEL.ENROLLMENT_OPEN')
+                  : t('LABEL.ENROLLMENT_CLOSED');
+              const statusColor = isFull
+                ? '#7B1FA2'
+                : isOpen
+                  ? 'success.main'
+                  : 'warning.main';
+              const keepStatusInlineForIpad = isFixed && isIpadViewport;
+
+              return (
+                <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" sx={{ py: 0.5 }}>
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      columnGap: 1,
+                      whiteSpace: keepStatusInlineForIpad ? 'nowrap' : 'normal',
+                    }}
+                  >
+                    <Switch
+                      size="small"
+                      checked={switchChecked}
+                      disabled={busy || isFull}
+                      sx={enrollmentTurquoiseSwitchSx}
+                      onChange={() => {
+                        if (isFull) return;
+                        const next = isOpen ? 'closed' : 'open';
+                        setEnrollmentConfirm({ item, next });
+                      }}
+                    />
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      sx={{
+                        fontWeight: 600,
+                        color: statusColor,
+                        ...(!item?.is_active ? { opacity: 0.85 } : {}),
+                      }}
+                    >
+                      {statusText}
+                    </Typography>
+                  </Box>
+                  {busy ? <CircularProgress size={18} thickness={5} /> : null}
+                </Stack>
+              );
+            },
 
             price: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {`${Math.round(item?.price)} `}{' '}
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.75}
+                sx={{ color: item?.is_active ? 'inherit' : 'red' }}
+              >
                 {item?.is_active ? (
                   <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
                 ) : (
@@ -286,7 +429,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                     width={20}
                   />
                 )}
-              </Box>
+                <span>{Math.round(item?.price ?? 0)}</span>
+              </Stack>
             ),
           }}
         />
@@ -343,6 +487,101 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           selectedSubscribers={selectedSubscribers}
         />
       )}
+      {flexibleEnrollmentModal ? (
+        <FlexibleEnrollmentDialog
+          open
+          courseId={flexibleEnrollmentModal.id}
+          courseTitle={flexibleEnrollmentModal.name}
+          onClose={() => setFlexibleEnrollmentModal(null)}
+        />
+      ) : null}
+      <Dialog
+        open={!!enrollmentConfirm}
+        onClose={() => setEnrollmentConfirm(null)}
+        maxWidth={false}
+        fullWidth={false}
+        PaperProps={{
+          sx: enrollmentConfirmDialogPaperSx,
+        }}
+        BackdropProps={{
+          sx: { backgroundColor: 'rgba(15, 23, 42, 0.65)' },
+        }}
+      >
+        <DialogTitle variant="inherit" sx={enrollmentConfirmDialogTitleSx}>
+          {t('TITLE.MANAGE_ENROLLMENT')}
+          <IconButton
+            aria-label={i18n.language === 'ar' ? 'إغلاق' : 'Close'}
+            onClick={() => setEnrollmentConfirm(null)}
+            disabled={!!enrollmentSavingId}
+            size="small"
+            sx={enrollmentConfirmDialogCloseIconButtonSx}
+          >
+            <Iconify
+              icon="mingcute:close-line"
+              width={enrollmentConfirmCloseIconifySx.width}
+              sx={enrollmentConfirmCloseIconifySx}
+            />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={enrollmentConfirmDialogContentSx}>
+          <Typography variant="body2" sx={enrollmentConfirmDialogMessageSx}>
+            {enrollmentConfirm &&
+              (i18n.language === 'ar' ? (
+                enrollmentConfirm.next === 'open' ? (
+                  <>
+                    هل أنت متأكد من{' '}
+                    <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
+                      فتح التسجيل
+                    </Box>
+                    ؟
+                  </>
+                ) : (
+                  <>
+                    هل أنت متأكد من{' '}
+                    <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
+                      إغلاق التسجيل
+                    </Box>
+                    ؟
+                  </>
+                )
+              ) : enrollmentConfirm.next === 'open' ? (
+                <>
+                  Are you sure you want to{' '}
+                  <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
+                    open enrollment
+                  </Box>
+                  ?
+                </>
+              ) : (
+                <>
+                  Are you sure you want to{' '}
+                  <Box component="span" sx={enrollmentConfirmDialogBoldPhraseSx}>
+                    close enrollment
+                  </Box>
+                  ?
+                </>
+              ))}
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={enrollmentConfirmDialogActionsSx}>
+          <Button
+            variant="contained"
+            disabled={!!enrollmentSavingId}
+            onClick={handleConfirmEnrollmentChange}
+            sx={enrollmentConfirmButtonConfirmSx}
+          >
+            {t('BUTTON.CONFIRM')}
+          </Button>
+          <Button
+            variant="outlined"
+            disabled={!!enrollmentSavingId}
+            onClick={() => setEnrollmentConfirm(null)}
+            sx={enrollmentConfirmButtonCancelSx}
+          >
+            {t('BUTTON.CANCEL')}
+          </Button>
+        </DialogActions>
+      </Dialog>
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}

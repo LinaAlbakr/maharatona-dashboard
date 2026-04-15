@@ -68,7 +68,7 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
       title_en: "Maharatona",
       message_ar: data.message_ar,
       message_en: data.message_en,
-      user_id: selectedCenter?.id || selectedCenter?.user_id,
+      user_id: selectedCenter?.id || (selectedCenter as any)?._id || selectedCenter?.user_id,
     };
 
     const res = await sendMessageToCenter(newMessage);

@@ -1,4 +1,4 @@
-import { fetchCategoryQuestions } from 'src/actions/faq';
+import { fetchCategoryQuestions, fetchFaqCategories, fetchFaqCategoriesCenter } from 'src/actions/faq';
 import CategoryQuestionsView from 'src/sections/main/faq/category-questions/view';
 import { CategoryQuestion } from 'src/types/faq';
 
@@ -17,6 +17,20 @@ const Page = async ({ params, searchParams }: IProps) => {
     filters,
     categoryId: params.categoryId,
   });
+
+  const studentCategoryRes = await fetchFaqCategories({
+    limit: 1,
+    categoryId: params.categoryId,
+  });
+  const centerCategoryRes = await fetchFaqCategoriesCenter({
+    limit: 1,
+    categoryId: params.categoryId,
+  });
+
+  const selectedCategory =
+    (Array.isArray(studentCategoryRes?.data) ? studentCategoryRes.data[0] : undefined) ||
+    (Array.isArray(centerCategoryRes?.data) ? centerCategoryRes.data[0] : undefined);
+
   const filteredProducts: CategoryQuestion[] = Array.isArray(categoryQuestions?.data) ? categoryQuestions.data : [];
   
   return (
@@ -24,6 +38,8 @@ const Page = async ({ params, searchParams }: IProps) => {
       questions={filteredProducts}
       count={filteredProducts.length}
       categoryId={params.categoryId}
+      categoryNameAr={selectedCategory?.name_ar || ''}
+      categoryNameEn={selectedCategory?.name_en || ''}
     />
   );
 };

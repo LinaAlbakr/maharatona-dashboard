@@ -20,6 +20,8 @@ export type Action<T> = {
   sx?: SxStyle;
   onClick: (row: T) => void;
   hide?: (row: T) => Boolean;
+  /** When true, a horizontal rule is rendered above this item (e.g. before destructive actions). */
+  dividerBefore?: boolean;
 };
 export interface SharedTableProps<T> {
   tableHead: headCellType[];
