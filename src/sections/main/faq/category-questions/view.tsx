@@ -28,9 +28,17 @@ type props = {
   count: number;
   questions: CategoryQuestion[];
   categoryId: string;
+  categoryNameAr?: string;
+  categoryNameEn?: string;
 };
 
-const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>) => {
+const CategoryQuestionsView = ({
+  count,
+  questions,
+  categoryId,
+  categoryNameAr,
+  categoryNameEn,
+}: Readonly<props>) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const searchParams = useSearchParams();
@@ -83,6 +91,11 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
       })
     : questions;
 
+  const categoryHeaderTitle =
+    i18n.language === 'ar'
+      ? categoryNameAr || categoryNameEn || t('LABEL.FAQ')
+      : categoryNameEn || categoryNameAr || t('LABEL.FAQ');
+
   const handleConfirmDelete = async () => {
     if (selectedId) {
       const res = await deleteQuestion(selectedId);
@@ -118,7 +131,7 @@ const CategoryQuestionsView = ({ count, questions, categoryId }: Readonly<props>
           }}
         >
           <Typography variant="h3" color="white">
-            {t('LABEL.FAQ')}
+            {categoryHeaderTitle}
           </Typography>
           <Grid
             sx={{
