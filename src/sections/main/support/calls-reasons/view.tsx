@@ -40,8 +40,8 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
   const currentLimit = Number(searchParams?.get('limit')) || 20;
 
   const TABLE_HEAD = [
-    { id: 'name_ar', label: 'LABEL.CENTER_NAME' },
-    { id: 'name_en', label: 'LABEL.CITY' },
+    { id: 'name_ar', label: 'LABEL.ARABIC' },
+    { id: 'name_en', label: 'LABEL.ENGLISH' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
