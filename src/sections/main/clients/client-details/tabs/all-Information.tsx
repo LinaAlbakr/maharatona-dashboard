@@ -10,6 +10,21 @@ type Props = {
 const AllInformation = ({ ClientInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
+  const interestsText = Array.isArray(ClientInfo?.field)
+    ? ClientInfo.field
+        .map((field: any) => {
+          if (typeof field === 'string') return field;
+          return i18n.language === 'ar' ? field?.name_ar : field?.name_en;
+        })
+        .filter(Boolean)
+        .join(', ')
+    : typeof ClientInfo?.field === 'string'
+      ? ClientInfo.field
+      : typeof ClientInfo?.field === 'object' && ClientInfo?.field !== null
+        ? i18n.language === 'ar'
+          ? ClientInfo.field?.name_ar
+          : ClientInfo.field?.name_en
+        : '';
 
   return (
     <Container
@@ -62,11 +77,7 @@ const AllInformation = ({ ClientInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.INTERESTS')}
-            secondary={ClientInfo?.field
-              ?.map((field: any) => {
-                return i18n.language === 'ar' ? field.name_ar : field.name_en;
-              })
-              .join(', ') || '-'}
+            secondary={interestsText || '-'}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
