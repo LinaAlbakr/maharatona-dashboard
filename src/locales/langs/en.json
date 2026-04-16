@@ -35,6 +35,7 @@
     "DELETE_BANNER": "Delete Banner",
     "DELETE_CLIENT": "Delete Client",
     "DELETE_CENTER": "Delete Center",
+    "DELETE_PAYOUT": "Delete Payout",
     "FLEXIBLE_ENROLLMENT": "Enrollment by booking model",
     "MANAGE": "Manage",
     "MANAGE_ENROLLMENT": "Manage Enrollment"
@@ -402,7 +403,8 @@
     "CONFIRM_DELETE_NEIGHBORHOOD": "Are you sure you want to delete this neighborhood?",
     "CONFIRM_DELETE_BANNER": "Are you sure you want to delete this banner?",
     "CONFIRM_DELET_CLIENT": "Are you sure you want to delete this client?",
-    "CONFIRM_DELETE_CENTER": "Are you sure you want to delete this center?"
+    "CONFIRM_DELETE_CENTER": "Are you sure you want to delete this center?",
+    "CONFIRM_DELETE_PAYOUT": "Are you sure you want to delete this payout?"
   },
   "ERROR": {
     "FAILED_TO_DOWNLOAD_INVOICE": "Failed to download invoice",

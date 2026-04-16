@@ -259,6 +259,7 @@ export const endpoints = {
   payouts: {
     create: '/admin/create-payout',
     fetch: '/admin/get-all-payouts',
+    delete: (payoutId: string) => `/admin/delete-payout/${payoutId}`,
   },
   invoices: {
     fetch: '/client/get-invoices',

@@ -26,6 +26,7 @@ import { useSnackbar } from 'notistack';
 
 import { useTranslate } from 'src/locales';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { ConfirmDialog } from 'src/components/custom-dialog';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
@@ -76,6 +77,9 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
   const CalendarIcon = (props: any) => <Iconify icon="solar:calendar-bold" {...props} />;
 
   const payoutDialog = useBoolean();
+  const confirmDelete = useBoolean();
+  const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const TABLE_HEAD = [
     { id: 'referenceNumber', label: 'LABEL.REFERENCE_NUMBER' },
@@ -83,7 +87,21 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
     { id: 'amount', label: 'LABEL.AMOUNT' },
     { id: 'transferDate', label: 'LABEL.TRANSFER_DATE' },
     { id: 'additionalNote', label: 'LABEL.ADDITIONAL_NOTE' },
+    { id: '', label: 'LABEL.SETTINGS' },
   ];
+
+  const mapPayouts = useCallback(
+    (list: any[]): Payout[] =>
+      list.map((p: any) => ({
+        id: p?._id ?? p?.id ?? '',
+        referenceNumber: p?.referenceNumber ?? '',
+        center: p?.center?.name ?? p?.center ?? '',
+        additionalNote: p?.additionalNote ?? '',
+        amount: Number(p?.amount) || 0,
+        transferDate: p?.transferDate ? new Date(p.transferDate).toISOString() : '',
+      })),
+    []
+  );
 
   useEffect(() => {
     let active = true;
@@ -113,46 +131,26 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
     };
   }, []);
 
+  const loadPayouts = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get(`${endpoints.payouts.fetch}?limit=${currentLimit}`);
+      const list = res?.data?.data || res?.data || [];
+      setPayouts(Array.isArray(list) ? mapPayouts(list) : []);
+    } catch (error) {
+      console.error('Failed to load payouts', error);
+      setPayouts([]);
+    }
+  }, [currentLimit, mapPayouts]);
+
   useEffect(() => {
-    let active = true;
-    const loadPayouts = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `${endpoints.payouts.fetch}?limit=${currentLimit}`
-        );
-        const list = res?.data?.data || res?.data || [];
-        const mapped: Payout[] = Array.isArray(list)
-          ? list.map((p: any) => ({
-            id: p?._id ?? p?.id ?? '',
-            referenceNumber: p?.referenceNumber ?? '',
-            center: p?.center?.name ?? p?.center ?? '',
-            additionalNote: p?.additionalNote ?? '',
-            amount: Number(p?.amount) || 0,
-            transferDate: p?.transferDate
-              ? new Date(p.transferDate).toISOString()
-              : '',
-          }))
-          : [];
-        if (active) {
-          setPayouts(mapped);
-        }
-      } catch (error) {
-        console.error('Failed to load payouts', error);
-        if (active) {
-          setPayouts([]);
-        }
-      }
-    };
     loadPayouts();
-    return () => {
-      active = false;
-    };
-  }, [currentLimit]);
+  }, [loadPayouts]);
 
   const formatAmount = useCallback(
     (value: number) =>
       new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
-        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 20,
       }).format(value),
     [i18n.language]
   );
@@ -231,24 +229,27 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
       setAmountError('');
       setTransferDateError('');
       setReferenceError('');
-      // refresh list
-      const refreshed = await axiosInstance.get(`${endpoints.payouts.fetch}?limit=${currentLimit}`);
-      const list = refreshed?.data?.data || refreshed?.data || [];
-      const mapped: Payout[] = Array.isArray(list)
-        ? list.map((p: any) => ({
-          id: p?._id ?? p?.id ?? '',
-          referenceNumber: p?.referenceNumber ?? '',
-          center: p?.center?.name ?? p?.center ?? '',
-          amount: Number(p?.amount) || 0,
-          transferDate: p?.transferDate ? new Date(p.transferDate).toISOString() : '',
-          additionalNote: p?.additionalNote ?? '',
-        }))
-        : [];
-      setPayouts(mapped);
+      await loadPayouts();
     } catch (error: any) {
       enqueueSnackbar(error?.message || 'Failed to create payout', { variant: 'error' });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDeletePayout = async () => {
+    if (!selectedPayoutId) return;
+    setIsDeleting(true);
+    try {
+      await axiosInstance.delete(endpoints.payouts.delete(selectedPayoutId));
+      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESSFULLY'), { variant: 'success' });
+      confirmDelete.onFalse();
+      setSelectedPayoutId(null);
+      await loadPayouts();
+    } catch (error: any) {
+      enqueueSnackbar(error?.message || 'Failed to delete payout', { variant: 'error' });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -352,6 +353,17 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
         data={filteredPayouts}
         tableHead={TABLE_HEAD}
         disablePagination
+        actions={[
+          {
+            sx: { color: 'error.dark' },
+            label: t('LABEL.DELETE'),
+            icon: 'eva:trash-2-outline',
+            onClick: (row) => {
+              setSelectedPayoutId(row.id);
+              confirmDelete.onTrue();
+            },
+          },
+        ]}
         customRender={{
           amount: (row) => (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -554,6 +566,22 @@ const PayoutsView = ({ searchQuery = '' }: Readonly<Props>) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title={t('TITLE.DELETE_PAYOUT')}
+        content={t('MESSAGE.CONFIRM_DELETE_PAYOUT')}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeletePayout}
+            disabled={isDeleting}
+          >
+            {t('BUTTON.DELETE')}
+          </Button>
+        }
+      />
     </Container>
   );
 };

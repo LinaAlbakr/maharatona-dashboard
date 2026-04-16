@@ -39,6 +39,7 @@
     "DELETE_BANNER": "حذف البانر",
     "DELETE_CLIENT": "حذف العميل",
     "DELETE_CENTER": "حذف المركز",
+    "DELETE_PAYOUT": "حذف الدفعة",
     "FLEXIBLE_ENROLLMENT": "التسجيل حسب نموذج الحجز",
     "MANAGE": "إدارة",
     "MANAGE_ENROLLMENT": "إدارة التسجيل"
@@ -412,7 +413,8 @@
     "CONFIRM_DELETE_NEIGHBORHOOD": "هل تريد حذف هذه الحي؟",
     "CONFIRM_DELETE_BANNER": "هل تريد حذف هذه البانر؟",
     "CONFIRM_DELETE_CLIENT": "هل تريد حذف هذا العميل؟",
-    "CONFIRM_DELETE_CENTER": "هل تريد حذف هذا المركز؟"
+    "CONFIRM_DELETE_CENTER": "هل تريد حذف هذا المركز؟",
+    "CONFIRM_DELETE_PAYOUT": "هل تريد حذف هذه الدفعة؟"
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
