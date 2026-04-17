@@ -338,7 +338,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             ),
             walletBalance: (item: any) => (
               <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
-                {Math.ceil(item?.walletBalance)}
+                {item?.walletBalance ?? 0}
               </Box>
             ),
           }}
