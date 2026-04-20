@@ -67,6 +67,8 @@
     "NUMBER_OF_REGISTRANTS": "عدد المسجلين",
     "SETTINGS": "الإعدادات",
     "MAINTENANCE_MODE": "الصيانة",
+    "PARENT_MAINTENANCE_MODE": "صيانة تطبيق ولي الأمر",
+    "CENTER_MAINTENANCE_MODE": "صيانة تطبيق المركز",
     "MAINTENANCE_MODE_HINT": "عند التفعيل، يمكن للتطبيقات العامة عرض شاشة صيانة",
     "SEARCH_CENTER": "ابحث عن مركز",
     "EDUCATIONAL_CENTERS": "المراكز التعليمية",

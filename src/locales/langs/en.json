@@ -63,6 +63,8 @@
     "NUMBER_OF_REGISTRANTS": "Number of registrants",
     "SETTINGS": "Settings",
     "MAINTENANCE_MODE": "Maintenance",
+    "PARENT_MAINTENANCE_MODE": "Parent Maintenance",
+    "CENTER_MAINTENANCE_MODE": "Center Maintenance",
     "MAINTENANCE_MODE_HINT": "When on, public apps can show a maintenance screen",
     "SEARCH_BY_CLIENT": "Client Search",
     "SEARCH_CENTER": "Center Search",
