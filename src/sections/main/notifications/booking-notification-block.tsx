@@ -44,14 +44,14 @@ const BN = {
   flexMultiChipFg: '#6D28D9',
   flexChildPillBg: '#EDE9FE',
   flexChildPillFg: '#5B21B6',
-  sessionBoxBg: '#E9ECEE',
+  sessionBoxBg: '#F5FBFC',
   sessionBoxBorder: alpha('#0288d1', 0.22),
   chevronTealBg: alpha('#0B7B83', 0.18),
   iconTileBg: '#D7EFEC',
-  childCardShellBg: '#E9ECEE',
-  childCardShellBorder: '#E2E8F0',
+  childCardShellBg: '#F6F6F6',
+  childCardShellBorder: '#E9ECEE',
   infoGridBg: '#F6F6F6',
-  gridStroke: '#E2E8F0',
+  gridStroke: '#E9ECEE',
   sessionDateText: '#2B509C',
   sessionWeekdayText: '#2B509C',
   bookedSessionsTitle: '#006C9C',
@@ -686,19 +686,19 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     height: 26,
                     borderRadius: '999px',
                     fontWeight: 600,
-                    '& .MuiChip-label': { px: 1.25 },
-                    bgcolor: (theme) => alpha(theme.palette.info.main, 0.16),
-                    color: 'info.main',
+                    '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
+                    bgcolor: '#E7F1FF',
+                    color: '#2065B2',
                   }}
                 />
               </Stack>
               <Typography sx={{ color: '#006C9C', lineHeight: 1.6, fontSize: '14px' }}>
                 {courseHref ? (
-                  <Link href={courseHref} style={{ fontWeight: 700, color: '#1976d2', textDecoration: 'none' }}>
+                  <Link href={courseHref} style={{ fontWeight: 700, color: '#006C9C', textDecoration: 'none' }}>
                     {courseName}
                   </Link>
                 ) : (
-                  <Box component="span" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                  <Box component="span" sx={{ fontWeight: 700, color: '#006C9C' }}>
                     {courseName}
                   </Box>
                 )}
@@ -769,7 +769,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
   const createdTime = fTime(data?.created_at);
 
   return (
-    <Paper sx={paperSx}>
+    <Paper sx={{ ...paperSx, position: 'relative' }}>
       <Stack direction="row" spacing={1.25} alignItems="flex-start" justifyContent="space-between">
         <Stack direction="row" spacing={1.25} alignItems="flex-start" sx={{ minWidth: 0, flex: 1 }}>
           <BellBadge size={40} />
@@ -785,16 +785,11 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   height: 26,
                   borderRadius: '999px',
                   fontWeight: 600,
-                  '& .MuiChip-label': { px: 1.25 },
+                  '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
                   visibility: awaitingModelBootstrap ? 'hidden' : 'visible',
                   ...(isFixedTypeLabel(headerChipText, isAr)
-                    ? {
-                        bgcolor: (theme) => alpha(theme.palette.info.main, 0.16),
-                        color: 'info.main',
-                      }
-                    : isFlexMultiVisual
-                      ? { bgcolor: BN.flexMultiChipBg, color: BN.flexMultiChipFg }
-                      : { bgcolor: alpha(BN.tealBody, 0.12), color: BN.tealStrong }),
+                    ? { bgcolor: '#E7F1FF', color: '#2065B2' }
+                    : { bgcolor: '#F5E6FE', color: '#BE63F9' }),
                 }}
               />
             </Stack>
@@ -1072,9 +1067,9 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                         borderRadius: '999px',
                                         fontWeight: 600,
                                         alignSelf: 'flex-start',
-                                        '& .MuiChip-label': { px: 1.25 },
-                                        bgcolor: fixedType ? (theme) => alpha(theme.palette.info.main, 0.14) : BN.flexMultiChipBg,
-                                        color: fixedType ? 'info.dark' : BN.flexMultiChipFg,
+                                        '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
+                                        bgcolor: fixedType ? '#E7F1FF' : '#F5E6FE',
+                                        color: fixedType ? '#2065B2' : '#BE63F9',
                                       }}
                                     />
                                   </MetricCell>
@@ -1146,9 +1141,9 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                             sx={{
                                               p: 1.5,
                                               borderRadius: 2,
-                                              bgcolor: '#E9ECEE',
+                                              bgcolor: BN.sessionBoxBg,
                                               border: '1px solid',
-                                              borderColor: '#DCE3E8',
+                                              borderColor: '#E9ECEE',
                                               height: '100%',
                                             }}
                                           >
@@ -1210,18 +1205,32 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
         </Stack>
 
         {awaitingModelBootstrap ? (
-          <Typography sx={{ whiteSpace: 'nowrap', pl: 1, lineHeight: 1.6, fontSize: '14px', color: '#006C9C' }}>
+          <Typography
+            sx={{
+              whiteSpace: 'nowrap',
+              lineHeight: 1.6,
+              fontSize: '14px',
+              color: '#006C9C',
+              position: 'absolute',
+              top: 8,
+              right: 18,
+            }}
+          >
             {formattedDate}
           </Typography>
         ) : (
-          <Stack direction="row" alignItems="center" spacing={1} sx={{ flexShrink: 0, alignSelf: 'flex-start' }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            sx={{ position: 'absolute', top: 8, right: 18, flexShrink: 0 }}
+          >
             <Typography
               sx={{
                 fontWeight: 600,
                 fontSize: '14px',
                 color: '#006C9C',
                 whiteSpace: 'nowrap',
-                pl: 0.5,
               }}
             >
               {createdTime || formattedDate}

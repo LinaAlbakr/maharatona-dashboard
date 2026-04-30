@@ -11,7 +11,6 @@ import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import Iconify from 'src/components/iconify';
 import NotificationCard from './notification-card';
 import { groupAdminNewBookingNotifications } from './group-admin-booking-notifications';
 import { NOTIFICATION_TYPES } from './constants';
@@ -161,10 +160,14 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
               <Fragment key={rowKey}>
                 {showDayHeader ? (
                   <Stack direction="row" alignItems="center" spacing={1} sx={{ pt: index ? 1 : 0, pb: 0.25 }}>
-                    <Iconify icon="solar:calendar-bold" width={18} style={{ color: '#14B8A6', flexShrink: 0 }} />
+                    <Box
+                      component="img"
+                      src="/assets/icons/notification/DateCalendar.png"
+                      alt="date"
+                      sx={{ width: 20, height: 13, objectFit: 'contain', display: 'block', flexShrink: 0 }}
+                    />
                     <Typography
-                      variant="subtitle2"
-                      sx={{ color: '#0F766E', fontWeight: 600, whiteSpace: 'nowrap', lineHeight: 1.2 }}
+                      sx={{ color: '#006C9C', fontWeight: 600, fontSize: '14px', whiteSpace: 'nowrap', lineHeight: 1.2 }}
                     >
                       {formatDayHeading(item?.created_at)}
                     </Typography>
