@@ -4,12 +4,23 @@ import { Box, Divider, Typography } from '@mui/material';
 import Image from 'next/image';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
+import BookingNotificationBlock from 'src/sections/main/notifications/booking-notification-block';
 
 type props = {
   data?: any;
 };
 
 const NotificationItem = ({ data }: props) => {
+  if (data?.notification_type === 'ADMIN_NEW_BOOKING') {
+    return (
+      <>
+        <Box sx={{ px: 2, py: 1 }}>
+          <BookingNotificationBlock data={data} variant="list" />
+        </Box>
+        <Divider sx={{ mx: 4, bgcolor: 'info.dark', borderBottomWidth: 1 }} />
+      </>
+    );
+  }
 
   return (
     <>

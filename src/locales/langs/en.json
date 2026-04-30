@@ -203,6 +203,7 @@
     "HOME": "Home",
     "NOTIFICATIONS": "Notifications",
     "NO_NOTIFICATIONS": "No Notifications",
+    "BOOKING_EXPAND_READY_ONLY": "Bookings with expandable details only",
     "ABOUT_APP": "About App",
     "STEUDENT": "Student",
     "ENGLISH_CONTENT": "English Content",
@@ -319,7 +320,8 @@
     "BANNERS": "Banners",
     "PACKAGES_BANNERS": "Packages Banners",
     "PAYOUTS": "Payouts",
-    "INVOICES": "Invoices"
+    "INVOICES": "Invoices",
+    "NOTIFICATIONS": "Notifications"
   },
   "TABLE": {
     "DENSE": "Dense",

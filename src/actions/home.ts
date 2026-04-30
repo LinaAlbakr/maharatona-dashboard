@@ -231,6 +231,51 @@ export const fetchNotifications = async ({
           ? doc.message_ar || doc.message_en || ''
           : doc.message_en || doc.message_ar || '',
       created_at: doc.createdAt || doc.created_at,
+      // keep original payload data so UI can build richer templates
+      raw: doc,
+      booking_type:
+        doc.booking_model || doc.booking_type || doc.course_type || doc.session_type || doc.type,
+      actual_type:
+        doc.booking_model ||
+        doc.booking_type ||
+        doc.course_type ||
+        doc.session_type ||
+        doc.type ||
+        doc.notification_sub_type ||
+        doc.notification_type,
+      course_name:
+        (lang === 'ar' ? doc.course_name_ar || doc.course_name_en : doc.course_name_en || doc.course_name_ar) ||
+        doc.course_name ||
+        doc.course_title ||
+        doc.booking?.course_name ||
+        doc.booking?.course?.name_en ||
+        doc.booking?.course?.name_ar ||
+        doc.session?.course_name ||
+        doc.course?.name_en ||
+        doc.course?.name_ar ||
+        doc.course?.title,
+      center_name:
+        (lang === 'ar' ? doc.center_name_ar || doc.center_name_en : doc.center_name_en || doc.center_name_ar) ||
+        doc.center_name ||
+        doc.center?.name ||
+        doc.center?.name_en ||
+        doc.center?.name_ar ||
+        doc.booking?.center_name ||
+        doc.booking?.center?.name,
+      parent_name:
+        (lang === 'ar' ? doc.parent_name_ar || doc.parent_name_en : doc.parent_name_en || doc.parent_name_ar) ||
+        doc.parent_name ||
+        doc.client_name ||
+        doc.user_name ||
+        doc.parent?.name,
+      children:
+        doc.children ||
+        doc.childrens ||
+        doc.children_info ||
+        doc.booking_children ||
+        doc.client_children ||
+        doc.kids ||
+        [],
     }));
 
     return {

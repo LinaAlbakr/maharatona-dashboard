@@ -210,6 +210,7 @@
     "HOME": "الرئيسية",
     "NOTIFICATIONS": "الاشعارات",
     "NO_NOTIFICATIONS": "لا يوجد اشعارات",
+    "BOOKING_EXPAND_READY_ONLY": "حجوزات لها تفاصيل قابلة للتوسيع فقط",
     "ABOUT_APP": "عن التطبيق",
     "STEUDENT": "طالب",
     "ENGLISH_CONTENT": "المحتوى باللغة الانجليزية",
@@ -327,7 +328,8 @@
     "BANNERS": "البنرات الاعلانية",
     "PACKAGES_BANNERS": "باقات البانرات الإعلانية",
     "PAYOUTS": "المدفوعات",
-    "INVOICES": "الفواتير"
+    "INVOICES": "الفواتير",
+    "NOTIFICATIONS": "الإشعارات"
   },
   "TABLE": {
     "DENSE": "تكديس",

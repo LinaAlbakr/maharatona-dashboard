@@ -21,13 +21,16 @@ const axiosInstance: AxiosInstance = axios.create({
      */ 'Access-Control-Allow-Origin': '*',
     Accept: 'application/json',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    Authorization: `Bearer ${getCookie(ACCESS_TOKEN)}`,
   },
 });
 axiosInstance.interceptors.request.use(
-  (config) =>
-    /*     config.headers['Accept-Language'] = lang;
-     */ config,
+  (config) => {
+    const token = getCookie(ACCESS_TOKEN);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
 //
@@ -140,6 +143,8 @@ export const endpoints = {
     topCourses: '/admin/get-top-courses',
     statistics: '/admin-panel/education-summary',
     notifications: '/admin/get-all-notifications',
+    bookingNotificationExpand: (notificationId: string) =>
+      `admin/notification/${notificationId}/booking-expand`,
     totalClients: '/admin/get-total-clients',
     totalCenters: '/admin/get-total-centers',
     enrolledClientsCount: '/admin/get-enrolled-clients-count',

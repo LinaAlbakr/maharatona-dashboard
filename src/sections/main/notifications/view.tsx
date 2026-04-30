@@ -1,0 +1,188 @@
+'use client';
+
+import { Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import { format, isValid } from 'date-fns';
+import { Fragment, useCallback, useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
+import FormProvider from 'src/components/hook-form';
+import { useSettingsContext } from 'src/components/settings';
+import { useTranslate } from 'src/locales';
+import i18n from 'src/locales/i18n';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import NotificationCard from './notification-card';
+import { groupAdminNewBookingNotifications } from './group-admin-booking-notifications';
+import { NOTIFICATION_TYPES } from './constants';
+
+type Props = {
+  notifications: any;
+};
+
+const getPagesCount = (count: number) => (count / 6 > 1 ? Math.ceil(count / 6) : 1);
+
+const getDayGroupKey = (createdAt: string | Date | undefined) => {
+  const d = createdAt ? new Date(createdAt) : null;
+  if (!d || !isValid(d)) return '';
+  return format(d, 'yyyy-MM-dd');
+};
+
+const formatDayHeading = (createdAt: string | Date | undefined) => {
+  const d = createdAt ? new Date(createdAt) : null;
+  if (!d || !isValid(d)) return '';
+  if (i18n.language === 'ar') {
+    return d.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  return format(d, 'MMMM d, yyyy');
+};
+
+export default function NotificationsView({ notifications }: Readonly<Props>) {
+  const settings = useSettingsContext();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { t } = useTranslate();
+
+  const displayNotifications = useMemo(
+    () => groupAdminNewBookingNotifications(notifications?.data ?? []),
+    [notifications?.data]
+  );
+
+  const formDefaultValues = {
+    type: '',
+    date: '',
+  };
+
+  const methods = useForm({
+    defaultValues: formDefaultValues,
+  });
+
+  const { control } = methods;
+
+  const createQueryString = useCallback(
+    (name: string, value: number | Date | null | string) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (value) {
+        if (name === 'select_date') {
+          params.set(name, format(value as Date, 'yyyy-MM-dd'));
+        } else {
+          params.set(name, String(value));
+        }
+      } else {
+        params.delete(name);
+      }
+
+      router.push(`${pathname}?${params.toString()}`);
+    },
+    [pathname, router, searchParams]
+  );
+
+  return (
+    <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ px: { xs: 1, md: 2 } }}>
+      <Box
+        sx={{
+          backgroundImage:
+            'linear-gradient(rgba(0, 47, 73, 0.72), rgba(0, 47, 73, 0.72)), url(/assets/images/notifications-bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          borderRadius: 3,
+          p: { xs: 2, md: 5 },
+          minHeight: { xs: 220, md: 280 },
+          mb: 3,
+        }}
+      >
+        <Typography variant="h2" color="white" textAlign="center" sx={{ mb: 3, fontSize: { xs: 30, md: 44 } }}>
+          {t('LABEL.NOTIFICATIONS')}
+        </Typography>
+
+        <Card sx={{ p: { xs: 1.5, md: 2 }, maxWidth: 900, mx: 'auto', borderRadius: 2.5 }}>
+          <FormProvider methods={methods}>
+            <Box
+              rowGap={1.5}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: '1fr',
+                md: 'repeat(2, minmax(0, 1fr))',
+              }}
+            >
+              <CutomAutocompleteView
+                items={NOTIFICATION_TYPES as any[]}
+                label={t('LABEL.TYPE')}
+                placeholder={t('LABEL.TYPE')}
+                name="type"
+                onCustomChange={(selectedType: any) =>
+                  createQueryString('notification_type', selectedType?.value ?? '')
+                }
+              />
+              <Controller
+                name="date"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <DatePicker
+                    label={t('LABEL.DATE')}
+                    format="dd-MM-yyyy"
+                    value={field.value ? new Date(field.value) : null}
+                    onChange={(newValue) => {
+                      field.onChange(newValue);
+                      createQueryString('select_date', newValue);
+                    }}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        error: !!error,
+                        helperText: error?.message,
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Box>
+          </FormProvider>
+        </Card>
+      </Box>
+
+      {notifications?.data?.length === 0 ? (
+        <Typography sx={{ textAlign: 'center', mt: 4 }} color="secondary">
+          {t('LABEL.NO_NOTIFICATIONS')}
+        </Typography>
+      ) : (
+        <Stack sx={{ py: 1.5, gap: 1.5, mb: 1 }}>
+          {displayNotifications.map((item: any, index: number) => {
+            const list = displayNotifications;
+            const prev = index > 0 ? list[index - 1] : null;
+            const showDayHeader = getDayGroupKey(prev?.created_at) !== getDayGroupKey(item?.created_at);
+            const rowKey =
+              Array.isArray(item?._groupedBookingIds) && item._groupedBookingIds.length
+                ? `grp:${item._groupedBookingIds.join('-')}`
+                : String(item?.id ?? index);
+            return (
+              <Fragment key={rowKey}>
+                {showDayHeader ? (
+                  <Typography
+                    variant="overline"
+                    sx={{ display: 'block', color: 'text.secondary', letterSpacing: 0.5, pt: index ? 1 : 0 }}
+                  >
+                    {formatDayHeading(item?.created_at)}
+                  </Typography>
+                ) : null}
+                <NotificationCard data={item} />
+              </Fragment>
+            );
+          })}
+        </Stack>
+      )}
+
+      {notifications?.data?.length > 0 && (
+        <Pagination
+          sx={{ display: 'flex', justifyContent: 'center', py: 2 }}
+          count={getPagesCount(notifications?.meta?.itemCount || 0)}
+          page={Number(searchParams.get('notifications_page')) || 1}
+          color="secondary"
+          onChange={(_, value) => createQueryString('notifications_page', value)}
+        />
+      )}
+    </Container>
+  );
+}

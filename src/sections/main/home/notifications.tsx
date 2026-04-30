@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useSettingsContext } from 'src/components/settings';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -12,30 +12,12 @@ import { useTranslate } from 'src/locales';
 import { Controller, useForm } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
+import { NOTIFICATION_TYPES } from '../notifications/constants';
+import { groupAdminNewBookingNotifications } from '../notifications/group-admin-booking-notifications';
 type Props = {
   notifications: any;
 };
 
-const notification_types = [
-  { name_en: 'New Courses', name_ar: 'الدورات الجديدة', value: 'ADMIN_CENTER_NEW_COURSE' },
-  {
-    name_en: 'Packages purchased',
-    name_ar: 'الباقات المشتراة',
-    value: 'ADMIN_CENTER_PACKAGE_PURCHASED',
-  },
-  { name_en: 'Registered centers', name_ar: 'المراكز المسجلة', value: 'ADMIN_CENTER_REGISTER' },
-  { name_en: 'Registered clients', name_ar: 'العملاء المسجلين', value: 'ADMIN_CLIENT_REGISTER' },
-  {
-    name_en: 'Purchase course as a gift',
-    name_ar: 'الدورات المرسلة ك هدية',
-    value: 'ADMIN_CLIENT_SEND_GIFT',
-  },
-  {
-    name_en: 'Courses purchased',
-    name_ar: 'الدورات المشتراة',
-    value: 'ADMIN_CLIENT_COURSE_PURCHASED',
-  },
-];
 const NotificationView = ({ notifications }: Props) => {
   const settings = useSettingsContext();
   const searchParams = useSearchParams();
@@ -54,9 +36,14 @@ const NotificationView = ({ notifications }: Props) => {
 
   const { control } = methods;
 
-  const count = (count: number) => {
-    if (count / 6 > 1) {
-      return Math.ceil(count / 6);
+  const displayNotifications = useMemo(
+    () => groupAdminNewBookingNotifications(notifications?.data ?? []),
+    [notifications?.data]
+  );
+
+  const count = (countArg: number) => {
+    if (countArg / 6 > 1) {
+      return Math.ceil(countArg / 6);
     } else return 1;
   };
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -96,7 +83,7 @@ const NotificationView = ({ notifications }: Props) => {
           sx={{ width: '50%', mx: 'auto' }}
         >
           <CutomAutocompleteView
-            items={notification_types as any[]}
+            items={NOTIFICATION_TYPES as any[]}
             label={t('LABEL.TYPE')}
             placeholder={t('LABEL.TYPE')}
             name="type"
@@ -142,9 +129,13 @@ const NotificationView = ({ notifications }: Props) => {
             gap: 2,
           }}
         >
-          {notifications.data.map((data: any) => (
-            <NotificationItem key={data.id} data={data} />
-          ))}
+          {displayNotifications.map((data: any) => {
+            const rowKey =
+              Array.isArray(data?._groupedBookingIds) && data._groupedBookingIds.length
+                ? `grp:${data._groupedBookingIds.join('-')}`
+                : String(data?.id ?? '');
+            return <NotificationItem key={rowKey} data={data} />;
+          })}
         </Stack>
       )}
       {notifications.data.length > 0 && (
