@@ -82,7 +82,7 @@ export function groupAdminNewBookingNotifications(items: any[]): GroupedNotifica
   if (!Array.isArray(items) || items.length === 0) return items;
 
   const clusters = new Map<string, any[]>();
-  const slotOrder: { kind: 'cluster'; key: string } | { kind: 'single'; item: any }[] = [];
+  const slotOrder: ({ kind: 'cluster'; key: string } | { kind: 'single'; item: any })[] = [];
 
   for (const item of items) {
     const key = adminNewBookingGroupKey(item);

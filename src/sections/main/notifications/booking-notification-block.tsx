@@ -404,9 +404,9 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
   const notificationId = data?.id != null ? String(data.id) : '';
 
-  const expandIds = useMemo(() => {
+  const expandIds = useMemo<string[]>(() => {
     const grouped = Array.isArray(data?._groupedBookingIds) ? data._groupedBookingIds : [];
-    const ids =
+    const ids: string[] =
       grouped.length > 0
         ? grouped.map((id: unknown) => String(id))
         : notificationId
@@ -924,7 +924,10 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                       {(detail.booking_items ?? []).map((item: any, idx: number) => {
                         const typeLabel = isAr ? item.flexible_label_ar : item.flexible_label_en;
                         const fixedType = isFixedTypeLabel(typeLabel, isAr);
-                        const groups = chunkArray(item.booked_sessions ?? [], 3);
+                        const groups = chunkArray<{ date_en?: string; date_ar?: string; time?: string }>(
+                          Array.isArray(item.booked_sessions) ? item.booked_sessions : [],
+                          3
+                        );
                         return (
                           <Box
                             key={idx}

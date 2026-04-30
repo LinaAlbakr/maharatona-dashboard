@@ -82,8 +82,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
     <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ px: { xs: 1, md: 2 } }}>
       <Box
         sx={{
-          backgroundImage:
-            'linear-gradient(rgba(0, 47, 73, 0.72), rgba(0, 47, 73, 0.72)), url(/assets/images/notifications-bg.png)',
+          backgroundImage: 'linear-gradient(rgba(0, 47, 73, 0.92), rgba(0, 47, 73, 0.82))',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           borderRadius: 3,
