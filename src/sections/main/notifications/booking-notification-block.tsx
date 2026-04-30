@@ -221,24 +221,60 @@ function formatFixedChildrenLine(
     .join(isAr ? '، ' : ', ');
 }
 
-function chunkArray<T>(arr: T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-  return out;
+type BookedSession = { date_en?: string; date_ar?: string; time?: string };
+
+function parseSessionDate(s: BookedSession): Date | null {
+  const en = String(s?.date_en ?? '').trim();
+  const ar = String(s?.date_ar ?? '').trim();
+  const fallback = en || ar;
+  if (!fallback) return null;
+  const normalized = fallback.includes(',') ? fallback.replace(/^[^,]+,\s*/, '') : fallback;
+  const d = new Date(normalized);
+  if (!Number.isNaN(d.getTime())) return d;
+  const d2 = new Date(fallback);
+  if (!Number.isNaN(d2.getTime())) return d2;
+  return null;
 }
 
-/** Design: split groups into two lines — weekdays / dates · time */
+/** Group sessions by calendar week (Sunday -> Saturday). */
+function groupBookedSessionsByWeek(sessions: BookedSession[]): BookedSession[][] {
+  if (!sessions.length) return [];
+  const buckets = new Map<string, BookedSession[]>();
+  const orderedKeys: string[] = [];
+
+  sessions.forEach((s, idx) => {
+    const d = parseSessionDate(s);
+    if (!d) {
+      const key = `unknown-${idx}`;
+      buckets.set(key, [s]);
+      orderedKeys.push(key);
+      return;
+    }
+    const weekStart = new Date(d);
+    weekStart.setHours(0, 0, 0, 0);
+    weekStart.setDate(d.getDate() - d.getDay());
+    const key = `${weekStart.getFullYear()}-${weekStart.getMonth() + 1}-${weekStart.getDate()}`;
+    if (!buckets.has(key)) {
+      buckets.set(key, []);
+      orderedKeys.push(key);
+    }
+    buckets.get(key)!.push(s);
+  });
+
+  return orderedKeys.map((k) => buckets.get(k) ?? []).filter((g) => g.length > 0);
+}
+
+/** Design: split groups into two lines — weekdays / dates (without time) */
 function formatBookedSessionGroup(
-  group: { date_en?: string; date_ar?: string; time?: string }[],
+  group: BookedSession[],
   isAr: boolean
 ): { primary: string; secondary: string } {
   if (!group.length) return { primary: '', secondary: '' };
-  const timeSuffix = group[0]?.time ? ` · ${group[0].time}` : '';
   if (isAr) {
     const parts = group.map((s) => s.date_ar).filter(Boolean) as string[];
     return {
       primary: parts.length ? parts.join('، ') : '',
-      secondary: timeSuffix.replace(/^\s*·\s*/, ''),
+      secondary: '',
     };
   }
   const parsed = group.map((s) => {
@@ -254,7 +290,7 @@ function formatBookedSessionGroup(
   const dateLine = dayNum.length ? `${dayNum.join(', ')} ${mon} ${yr}`.trim() : '';
   return {
     primary: wds,
-    secondary: `${dateLine}${timeSuffix}`.trim(),
+    secondary: dateLine,
   };
 }
 
@@ -265,6 +301,38 @@ function headerBookingChip(model: string, childCount: number, isAr: boolean): st
   if (childCount > 1) return isAr ? 'مرن - متعدد' : 'Flexible - Multiple';
   const sub = isAr ? MODEL_PILL_AR[bm] ?? bm : MODEL_PILL[bm] ?? bm;
   return isAr ? `مرن - ${sub}` : `Flexible - ${sub}`;
+}
+
+function modelFromChildBookingItem(item: any): string {
+  const direct = pickKnownBookingModel(
+    item?.booking_model,
+    item?.booking_type,
+    item?.model,
+    item?.type,
+    item?.raw?.booking_model
+  );
+  if (direct) return direct;
+
+  const fallback = String(item?.flexible_label_en ?? item?.flexible_label_ar ?? '')
+    .toLowerCase()
+    .trim();
+  if (!fallback) return '';
+  for (const key of KNOWN_BOOKING_MODELS) {
+    if (fallback.includes(key)) return key;
+  }
+  if (fallback.includes('دقائق')) return 'minutes';
+  if (fallback.includes('بالساعة')) return 'hourly';
+  if (fallback.includes('يومي')) return 'daily';
+  if (fallback.includes('أسبوعي')) return 'weekly';
+  if (fallback.includes('شهري')) return 'monthly';
+  if (fallback.includes('تجريبي')) return 'trial';
+  if (fallback.includes('ثابت')) return 'fixed';
+  return '';
+}
+
+function childBookingTypeChipLabel(item: any, isAr: boolean): string {
+  const model = modelFromChildBookingItem(item);
+  return headerBookingChip(model, 1, isAr);
 }
 
 function isFixedTypeLabel(label: string, isAr: boolean): boolean {
@@ -607,19 +675,6 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     color: 'info.main',
                   }}
                 />
-                {groupedBookingCount > 0 ? (
-                  <Chip
-                    size="small"
-                    variant="outlined"
-                    label={isAr ? `${groupedBookingCount} مدمجة` : `${groupedBookingCount} merged`}
-                    title={
-                      isAr
-                        ? 'تم عرض إشعارات متطابقة كإشعار واحد'
-                        : 'Multiple identical alerts shown as one'
-                    }
-                    sx={{ height: 26, borderRadius: '999px', fontWeight: 600, '& .MuiChip-label': { px: 1.25 } }}
-                  />
-                ) : null}
               </Stack>
               <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
                 {courseHref ? (
@@ -726,19 +781,6 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                       : { bgcolor: alpha(BN.tealBody, 0.12), color: BN.tealStrong }),
                 }}
               />
-              {groupedBookingCount > 0 && !awaitingModelBootstrap ? (
-                <Chip
-                  size="small"
-                  variant="outlined"
-                  label={isAr ? `${groupedBookingCount} مدمجة` : `${groupedBookingCount} merged`}
-                  title={
-                    isAr
-                      ? 'تم عرض إشعارات متطابقة كإشعار واحد'
-                      : 'Multiple identical alerts shown as one'
-                  }
-                  sx={{ height: 26, borderRadius: '999px', fontWeight: 600, '& .MuiChip-label': { px: 1.25 } }}
-                />
-              ) : null}
             </Stack>
 
             {showDesignedSummary ? (
@@ -922,11 +964,13 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
                     <Stack spacing={2}>
                       {(detail.booking_items ?? []).map((item: any, idx: number) => {
-                        const typeLabel = isAr ? item.flexible_label_ar : item.flexible_label_en;
-                        const fixedType = isFixedTypeLabel(typeLabel, isAr);
-                        const groups = chunkArray<{ date_en?: string; date_ar?: string; time?: string }>(
-                          Array.isArray(item.booked_sessions) ? item.booked_sessions : [],
-                          3
+                        const typeLabel = childBookingTypeChipLabel(item, isAr);
+                        const childModel = modelFromChildBookingItem(item);
+                        const fixedType = childModel === 'fixed';
+                        const hideDuration = childModel === 'daily' || childModel === 'weekly' || childModel === 'monthly';
+                        const metricMd = hideDuration ? 4 : 3;
+                        const groups = groupBookedSessionsByWeek(
+                          Array.isArray(item.booked_sessions) ? item.booked_sessions : []
                         );
                         return (
                           <Box
@@ -976,7 +1020,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                 <Grid
                                   item
                                   xs={12}
-                                  md={3}
+                                  md={metricMd}
                                   sx={{
                                     px: 1.75,
                                     py: 1.25,
@@ -1000,27 +1044,29 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                     />
                                   </MetricCell>
                                 </Grid>
+                                {!hideDuration ? (
+                                  <Grid
+                                    item
+                                    xs={12}
+                                    md={metricMd}
+                                    sx={{
+                                      px: 1.75,
+                                      py: 1.25,
+                                      borderRight: { md: `1px solid ${BN.gridStroke}` },
+                                      borderBottom: { xs: `1px solid ${BN.gridStroke}`, md: 'none' },
+                                    }}
+                                  >
+                                    <MetricCell icon="solar:clock-circle-bold" label={durationLabel}>
+                                      <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
+                                        {item.duration ?? '—'}
+                                      </Typography>
+                                    </MetricCell>
+                                  </Grid>
+                                ) : null}
                                 <Grid
                                   item
                                   xs={12}
-                                  md={3}
-                                  sx={{
-                                    px: 1.75,
-                                    py: 1.25,
-                                    borderRight: { md: `1px solid ${BN.gridStroke}` },
-                                    borderBottom: { xs: `1px solid ${BN.gridStroke}`, md: 'none' },
-                                  }}
-                                >
-                                  <MetricCell icon="solar:clock-circle-bold" label={durationLabel}>
-                                    <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
-                                      {item.duration ?? '—'}
-                                    </Typography>
-                                  </MetricCell>
-                                </Grid>
-                                <Grid
-                                  item
-                                  xs={12}
-                                  md={3}
+                                  md={metricMd}
                                   sx={{
                                     px: 1.75,
                                     py: 1.25,
@@ -1034,7 +1080,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                     </Typography>
                                   </MetricCell>
                                 </Grid>
-                                <Grid item xs={12} md={3} sx={{ px: 1.75, py: 1.25 }}>
+                                <Grid item xs={12} md={metricMd} sx={{ px: 1.75, py: 1.25 }}>
                                   <MetricCell icon="solar:calendar-bold" label={sessionsLabel}>
                                     <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
                                       {item.sessions_count != null ? item.sessions_count : '—'}
