@@ -44,17 +44,17 @@ const BN = {
   flexMultiChipFg: '#6D28D9',
   flexChildPillBg: '#EDE9FE',
   flexChildPillFg: '#5B21B6',
-  sessionBoxBg: '#E8F4FC',
+  sessionBoxBg: '#E9ECEE',
   sessionBoxBorder: alpha('#0288d1', 0.22),
   chevronTealBg: alpha('#0B7B83', 0.18),
   iconTileBg: '#D7EFEC',
-  childCardShellBg: '#F1F5F9',
+  childCardShellBg: '#E9ECEE',
   childCardShellBorder: '#E2E8F0',
   infoGridBg: '#F6F6F6',
   gridStroke: '#E2E8F0',
-  sessionDateText: '#0F2A4F',
-  sessionWeekdayText: '#0B7B83',
-  bookedSessionsTitle: '#0EA5B7',
+  sessionDateText: '#2B509C',
+  sessionWeekdayText: '#2B509C',
+  bookedSessionsTitle: '#006C9C',
 };
 
 const pickFirst = (...values: any[]) => values.find((v) => v !== undefined && v !== null && v !== '');
@@ -362,6 +362,21 @@ function shouldStartBookingModelBootstrap(d: any): boolean {
   );
 }
 
+function metricIconAsset(icon: string): string {
+  switch (icon) {
+    case 'solar:tag-bold':
+      return '/assets/icons/notification/BookingType.png';
+    case 'solar:clock-circle-bold':
+      return '/assets/icons/notification/Duration.png';
+    case 'solar:clock-circle-bold-time':
+      return '/assets/icons/notification/Time.png';
+    case 'solar:calendar-bold':
+      return '/assets/icons/notification/Sessions.png';
+    default:
+      return '';
+  }
+}
+
 function MetricCell({
   icon,
   label,
@@ -385,13 +400,19 @@ function MetricCell({
           flexShrink: 0,
         }}
       >
-        <Iconify icon={icon} width={20} style={{ color: BN.tealBody }} />
+        {metricIconAsset(icon) ? (
+          <Box
+            component="img"
+            src={metricIconAsset(icon)}
+            alt={label}
+            sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
+          />
+        ) : (
+          <Iconify icon={icon} width={20} style={{ color: BN.tealBody }} />
+        )}
       </Box>
       <Stack spacing={0.35} sx={{ minWidth: 0, pt: 0.125 }}>
-        <Typography
-          variant="caption"
-          sx={{ color: BN.labelMuted, fontWeight: 500, fontSize: '0.8125rem' }}
-        >
+        <Typography sx={{ color: '#A29F9D', fontWeight: 500, fontSize: '16px', lineHeight: 1.25 }}>
           {label}
         </Typography>
         {children}
@@ -969,7 +990,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                       sx={{
                         color: BN.bookedSessionsTitle,
                         fontWeight: 700,
-                        fontSize: '0.9375rem',
+                        fontSize: '16px',
                         mt: 0.5,
                       }}
                     >
@@ -999,7 +1020,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
                               <Avatar
                                 sx={{
-                                  bgcolor: BN.tealBody,
+                                  bgcolor: '#3CB8BB',
                                   color: '#fff',
                                   width: 40,
                                   height: 40,
@@ -1011,9 +1032,9 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                               </Avatar>
                               <Typography
                                 sx={{
-                                  color: BN.bookedSessionsTitle,
+                                  color: '#006C9C',
                                   fontWeight: 600,
-                                  fontSize: '0.9375rem',
+                                  fontSize: '16px',
                                 }}
                               >
                                 {item.child_name}
@@ -1025,7 +1046,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                               sx={{
                                 borderRadius: 2,
                                 p: 2,
-                                bgcolor: 'background.paper',
+                                bgcolor: '#FFFFFF',
                                 border: `1px solid ${BN.gridStroke}`,
                                 boxShadow: (theme) => `0 1px 4px ${alpha(theme.palette.common.black, 0.05)}`,
                               }}
@@ -1070,7 +1091,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                       borderBottom: { xs: `1px solid ${BN.gridStroke}`, md: 'none' },
                                     }}
                                   >
-                                    <MetricCell icon="solar:clock-circle-bold" label={durationLabel}>
+                                  <MetricCell icon="solar:clock-circle-bold" label={durationLabel}>
                                       <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
                                         {item.duration ?? '—'}
                                       </Typography>
@@ -1088,7 +1109,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                     borderBottom: { xs: `1px solid ${BN.gridStroke}`, md: 'none' },
                                   }}
                                 >
-                                  <MetricCell icon="solar:clock-circle-bold" label={timeLabel}>
+                                  <MetricCell icon="solar:clock-circle-bold-time" label={timeLabel}>
                                     <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
                                       {item.time ?? '—'}
                                     </Typography>
@@ -1110,7 +1131,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                     sx={{
                                       color: BN.bookedSessionsTitle,
                                       fontWeight: 600,
-                                      fontSize: '0.9375rem',
+                                      fontSize: '16px',
                                       mb: 1.25,
                                     }}
                                   >
@@ -1125,17 +1146,18 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                             sx={{
                                               p: 1.5,
                                               borderRadius: 2,
-                                              bgcolor: BN.sessionBoxBg,
+                                              bgcolor: '#E9ECEE',
                                               border: '1px solid',
-                                              borderColor: BN.sessionBoxBorder,
+                                              borderColor: '#DCE3E8',
                                               height: '100%',
                                             }}
                                           >
                                             <Stack direction="row" spacing={1.25} alignItems="flex-start">
-                                              <Iconify
-                                                icon="solar:calendar-bold"
-                                                width={20}
-                                                style={{ color: BN.tealBody, flexShrink: 0, marginTop: 2 }}
+                                              <Box
+                                                component="img"
+                                                src="/assets/icons/notification/CalendarShowingInBookedSessionCard.png"
+                                                alt="calendar"
+                                                sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block', mt: '2px' }}
                                               />
                                               <Stack spacing={0.25} sx={{ minWidth: 0 }}>
                                                 {parts.primary ? (
@@ -1143,7 +1165,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                                     sx={{
                                                       color: BN.sessionWeekdayText,
                                                       fontWeight: 600,
-                                                      fontSize: '0.875rem',
+                                                      fontSize: '14px',
                                                       lineHeight: 1.4,
                                                     }}
                                                   >
@@ -1155,7 +1177,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                                     sx={{
                                                       color: BN.sessionDateText,
                                                       fontWeight: 600,
-                                                      fontSize: '0.875rem',
+                                                      fontSize: '14px',
                                                       lineHeight: 1.4,
                                                     }}
                                                   >
