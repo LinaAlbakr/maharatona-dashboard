@@ -420,7 +420,7 @@ function InfoGridIconTile({ children, size = 36 }: { children: ReactNode; size?:
 }
 
 function BellBadge({ size }: { size: number }) {
-  const iconPx = Math.round(size * 0.5);
+  const iconPx = Math.round(size * 0.62);
   return (
     <Box
       sx={{
@@ -435,20 +435,15 @@ function BellBadge({ size }: { size: number }) {
         flexShrink: 0,
       }}
     >
-      <Typography component="span" sx={{ fontSize: iconPx, lineHeight: 1 }}>
-        🔔
-      </Typography>
       <Box
+        component="img"
+        src="/assets/icons/notification/notificationIcon.png"
+        alt="notification"
         sx={{
-          position: 'absolute',
-          top: 5,
-          insetInlineEnd: 5,
-          width: 7,
-          height: 7,
-          borderRadius: '50%',
-          bgcolor: '#F43F5E',
-          border: '2px solid',
-          borderColor: BN.purpleBellBg,
+          width: iconPx,
+          height: iconPx,
+          objectFit: 'contain',
+          display: 'block',
         }}
       />
     </Box>
@@ -660,7 +655,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
             <BellBadge size={44} />
             <Stack spacing={0.75} sx={{ minWidth: 0 }}>
               <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
-                <Typography variant="subtitle2" sx={{ color: BN.greenTitle, fontWeight: 700, fontSize: '1rem' }}>
+                <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
                   {titleForLang}
                 </Typography>
                 <Chip
@@ -676,7 +671,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   }}
                 />
               </Stack>
-              <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+              <Typography sx={{ color: BN.tealBody, lineHeight: 1.6, fontSize: '14px' }}>
                 {courseHref ? (
                   <Link href={courseHref} style={{ fontWeight: 700, color: '#1976d2', textDecoration: 'none' }}>
                     {courseName}
@@ -759,7 +754,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
           <BellBadge size={variant === 'list' ? 40 : 44} />
           <Stack spacing={0.75} sx={{ flex: 1, minWidth: 0 }}>
             <Stack direction="row" alignItems="center" flexWrap="wrap" gap={1} sx={{ minWidth: 0 }}>
-              <Typography variant="subtitle2" sx={{ color: BN.greenTitle, fontWeight: 700, fontSize: '1rem' }}>
+                <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
                 {titleForLang}
               </Typography>
               <Chip
@@ -785,8 +780,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
             {showDesignedSummary ? (
               <Typography
-                variant="body2"
-                sx={{ color: BN.tealBody, fontWeight: 600, lineHeight: 1.65, pr: { xs: 0, sm: 0.5 } }}
+                sx={{ color: BN.tealBody, fontWeight: 600, lineHeight: 1.65, pr: { xs: 0, sm: 0.5 }, fontSize: '14px' }}
               >
                 {isAr ? (
                   <>
@@ -834,7 +828,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                 )}
               </Typography>
             ) : (
-              <Typography variant="body2" sx={{ color: BN.tealBody, fontWeight: 600, lineHeight: 1.65, pr: 1 }}>
+              <Typography sx={{ color: BN.tealBody, fontWeight: 600, lineHeight: 1.65, pr: 1, fontSize: '14px' }}>
                 {flexibleDescription}
               </Typography>
             )}

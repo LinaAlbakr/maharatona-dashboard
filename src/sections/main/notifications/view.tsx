@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
+import { alpha, Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format, isValid } from 'date-fns';
 import { Fragment, useCallback, useMemo } from 'react';
@@ -11,6 +11,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Iconify from 'src/components/iconify';
 import NotificationCard from './notification-card';
 import { groupAdminNewBookingNotifications } from './group-admin-booking-notifications';
 import { NOTIFICATION_TYPES } from './constants';
@@ -159,12 +160,24 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
             return (
               <Fragment key={rowKey}>
                 {showDayHeader ? (
-                  <Typography
-                    variant="overline"
-                    sx={{ display: 'block', color: 'text.secondary', letterSpacing: 0.5, pt: index ? 1 : 0 }}
-                  >
-                    {formatDayHeading(item?.created_at)}
-                  </Typography>
+                  <Stack direction="row" alignItems="center" spacing={1} sx={{ pt: index ? 1 : 0, pb: 0.25 }}>
+                    <Iconify icon="solar:calendar-bold" width={18} style={{ color: '#14B8A6', flexShrink: 0 }} />
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ color: '#0F766E', fontWeight: 600, whiteSpace: 'nowrap', lineHeight: 1.2 }}
+                    >
+                      {formatDayHeading(item?.created_at)}
+                    </Typography>
+                    <Box
+                      sx={{
+                        flex: 1,
+                        height: 1.5,
+                        borderRadius: 999,
+                        bgcolor: (theme) => alpha(theme.palette.grey[600], 0.2),
+                        mt: '1px',
+                      }}
+                    />
+                  </Stack>
                 ) : null}
                 <NotificationCard data={item} />
               </Fragment>
