@@ -50,7 +50,7 @@ const BN = {
   iconTileBg: '#D7EFEC',
   childCardShellBg: '#F1F5F9',
   childCardShellBorder: '#E2E8F0',
-  infoGridBg: '#F1F5F9',
+  infoGridBg: '#F6F6F6',
   gridStroke: '#E2E8F0',
   sessionDateText: '#0F2A4F',
   sessionWeekdayText: '#0B7B83',
@@ -420,7 +420,7 @@ function InfoGridIconTile({ children, size = 36 }: { children: ReactNode; size?:
 }
 
 function BellBadge({ size }: { size: number }) {
-  const iconPx = Math.round(size * 0.62);
+  const iconPx = 40;
   return (
     <Box
       sx={{
@@ -652,7 +652,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
       <Paper sx={paperSx}>
         <Stack direction="row" spacing={1.25} alignItems="flex-start" justifyContent="space-between">
           <Stack direction="row" spacing={1.25} alignItems="flex-start" sx={{ minWidth: 0, flex: 1 }}>
-            <BellBadge size={44} />
+            <BellBadge size={40} />
             <Stack spacing={0.75} sx={{ minWidth: 0 }}>
               <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap">
                 <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
@@ -671,7 +671,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   }}
                 />
               </Stack>
-              <Typography sx={{ color: BN.tealBody, lineHeight: 1.6, fontSize: '14px' }}>
+              <Typography sx={{ color: '#006C9C', lineHeight: 1.6, fontSize: '14px' }}>
                 {courseHref ? (
                   <Link href={courseHref} style={{ fontWeight: 700, color: '#1976d2', textDecoration: 'none' }}>
                     {courseName}
@@ -702,8 +702,8 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
           <Typography
             sx={{
               fontWeight: 600,
-              fontSize: '0.9375rem',
-              color: BN.headerTime,
+              fontSize: '14px',
+              color: '#006C9C',
               whiteSpace: 'nowrap',
               pl: 1,
             }}
@@ -751,7 +751,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
     <Paper sx={paperSx}>
       <Stack direction="row" spacing={1.25} alignItems="flex-start" justifyContent="space-between">
         <Stack direction="row" spacing={1.25} alignItems="flex-start" sx={{ minWidth: 0, flex: 1 }}>
-          <BellBadge size={variant === 'list' ? 40 : 44} />
+          <BellBadge size={40} />
           <Stack spacing={0.75} sx={{ flex: 1, minWidth: 0 }}>
             <Stack direction="row" alignItems="center" flexWrap="wrap" gap={1} sx={{ minWidth: 0 }}>
                 <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
@@ -780,7 +780,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
             {showDesignedSummary ? (
               <Typography
-                sx={{ color: BN.tealBody, fontWeight: 600, lineHeight: 1.65, pr: { xs: 0, sm: 0.5 }, fontSize: '14px' }}
+                sx={{ color: '#006C9C', fontWeight: 600, lineHeight: 1.65, pr: { xs: 0, sm: 0.5 }, fontSize: '14px' }}
               >
                 {isAr ? (
                   <>
@@ -828,7 +828,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                 )}
               </Typography>
             ) : (
-              <Typography sx={{ color: BN.tealBody, fontWeight: 600, lineHeight: 1.65, pr: 1, fontSize: '14px' }}>
+              <Typography sx={{ color: '#006C9C', fontWeight: 600, lineHeight: 1.65, pr: 1, fontSize: '14px' }}>
                 {flexibleDescription}
               </Typography>
             )}
@@ -862,13 +862,18 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                         >
                           <Stack direction="row" spacing={2} alignItems="center">
                             <InfoGridIconTile>
-                              <Iconify icon="solar:user-bold" width={20} style={{ color: BN.tealBody }} />
+                              <Box
+                                component="img"
+                                src="/assets/icons/notification/Booked%20by.png"
+                                alt="booked by"
+                                sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
+                              />
                             </InfoGridIconTile>
                             <Stack direction="row" spacing={3} alignItems="center" sx={{ minWidth: 0, flex: 1 }}>
-                              <Typography sx={{ color: BN.labelMuted, fontSize: '0.875rem', minWidth: 90 }}>
+                              <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {parentLabel}
                               </Typography>
-                              <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
+                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
                                 {detail.parent?.name ?? '—'}
                               </Typography>
                             </Stack>
@@ -886,13 +891,18 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                         >
                           <Stack direction="row" spacing={2} alignItems="center">
                             <InfoGridIconTile>
-                              <Iconify icon="solar:phone-bold" width={20} style={{ color: BN.tealBody }} />
+                              <Box
+                                component="img"
+                                src="/assets/icons/notification/Contact.png"
+                                alt="contact"
+                                sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
+                              />
                             </InfoGridIconTile>
                             <Stack direction="row" spacing={3} alignItems="center" sx={{ minWidth: 0, flex: 1 }}>
-                              <Typography sx={{ color: BN.labelMuted, fontSize: '0.875rem', minWidth: 90 }}>
+                              <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {connectLabel}
                               </Typography>
-                              <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
+                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
                                 {detail.parent?.phone ?? '—'}
                               </Typography>
                             </Stack>
@@ -901,13 +911,18 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                         <Grid item xs={12} sm={6} sx={{ px: 2.25, py: 1.75 }}>
                           <Stack direction="row" spacing={2} alignItems="center">
                             <InfoGridIconTile>
-                              <Iconify icon="solar:book-bold" width={20} style={{ color: BN.tealBody }} />
+                              <Box
+                                component="img"
+                                src="/assets/icons/notification/Programs.png"
+                                alt="program"
+                                sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
+                              />
                             </InfoGridIconTile>
                             <Stack direction="row" spacing={3} alignItems="center" sx={{ minWidth: 0, flex: 1 }}>
-                              <Typography sx={{ color: BN.labelMuted, fontSize: '0.875rem', minWidth: 90 }}>
+                              <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {programLabel}
                               </Typography>
-                              <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
+                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
                                 {isAr ? detail.program?.ar ?? detail.program?.en : detail.program?.en ?? detail.program?.ar}
                               </Typography>
                             </Stack>
@@ -916,13 +931,18 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                         <Grid item xs={12} sm={6} sx={{ px: 2.25, py: 1.75 }}>
                           <Stack direction="row" spacing={2} alignItems="center">
                             <InfoGridIconTile>
-                              <Iconify icon="solar:buildings-2-bold" width={20} style={{ color: BN.tealBody }} />
+                              <Box
+                                component="img"
+                                src="/assets/icons/notification/Center.png"
+                                alt="center"
+                                sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
+                              />
                             </InfoGridIconTile>
                             <Stack direction="row" spacing={3} alignItems="center" sx={{ minWidth: 0, flex: 1 }}>
-                              <Typography sx={{ color: BN.labelMuted, fontSize: '0.875rem', minWidth: 90 }}>
+                              <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {centerLabel}
                               </Typography>
-                              <Typography sx={{ color: BN.valueText, fontWeight: 600, fontSize: '0.9375rem' }}>
+                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
                                 {detail.center?.name ?? '—'}
                               </Typography>
                             </Stack>
@@ -1168,7 +1188,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
         </Stack>
 
         {awaitingModelBootstrap ? (
-          <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap', pl: 1, lineHeight: 1.6 }}>
+          <Typography sx={{ whiteSpace: 'nowrap', pl: 1, lineHeight: 1.6, fontSize: '14px', color: '#006C9C' }}>
             {formattedDate}
           </Typography>
         ) : (
@@ -1176,8 +1196,8 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
             <Typography
               sx={{
                 fontWeight: 600,
-                fontSize: '0.9375rem',
-                color: BN.headerTime,
+                fontSize: '14px',
+                color: '#006C9C',
                 whiteSpace: 'nowrap',
                 pl: 0.5,
               }}
@@ -1191,13 +1211,13 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                 borderRadius: '50%',
                 width: 40,
                 height: 40,
-                bgcolor: BN.chevronTealBg,
-                color: BN.tealBody,
+                bgcolor: '#3CB8BB',
+                color: '#FFFFFF',
                 flexShrink: 0,
-                '&:hover': { bgcolor: alpha(BN.tealBody, 0.26) },
+                '&:hover': { bgcolor: '#33A8AB' },
               }}
             >
-              <Iconify icon={expanded ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} width={22} />
+              <Iconify icon={expanded ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} width={22.72} />
             </IconButton>
           </Stack>
         )}
