@@ -938,9 +938,18 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                               <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {programLabel}
                               </Typography>
-                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
-                                {isAr ? detail.program?.ar ?? detail.program?.en : detail.program?.en ?? detail.program?.ar}
-                              </Typography>
+                              {courseHref ? (
+                                <Link
+                                  href={courseHref}
+                                  style={{ color: '#2B509C', fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}
+                                >
+                                  {isAr ? detail.program?.ar ?? detail.program?.en : detail.program?.en ?? detail.program?.ar}
+                                </Link>
+                              ) : (
+                                <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
+                                  {isAr ? detail.program?.ar ?? detail.program?.en : detail.program?.en ?? detail.program?.ar}
+                                </Typography>
+                              )}
                             </Stack>
                           </Stack>
                         </Grid>
