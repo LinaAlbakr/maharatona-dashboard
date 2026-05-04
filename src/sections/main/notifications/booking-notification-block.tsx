@@ -736,6 +736,8 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
                     bgcolor: '#E7F1FF',
                     color: '#2065B2',
+                    pointerEvents: 'none',
+                    '&:hover': { bgcolor: '#E7F1FF' },
                   }}
                 />
               </Stack>
@@ -837,10 +839,11 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   borderRadius: '8px',
                   fontWeight: 600,
                   '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
+                  pointerEvents: 'none',
                   visibility: awaitingModelBootstrap ? 'hidden' : 'visible',
                   ...(isFixedTypeLabel(headerChipText, isAr)
-                    ? { bgcolor: '#E7F1FF', color: '#2065B2' }
-                    : { bgcolor: '#F5E6FE', color: '#BE63F9' }),
+                    ? { bgcolor: '#E7F1FF', color: '#2065B2', '&:hover': { bgcolor: '#E7F1FF' } }
+                    : { bgcolor: '#F5E6FE', color: '#BE63F9', '&:hover': { bgcolor: '#F5E6FE' } }),
                 }}
               />
             </Stack>
@@ -1051,8 +1054,10 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                           alignSelf: 'flex-start',
                           fontWeight: 600,
                           height: 26,
-                          borderRadius: '999px',
+                          borderRadius: '8px',
                           '& .MuiChip-label': { px: 1.25 },
+                          pointerEvents: 'none',
+                          '&:hover': { bgcolor: 'transparent' },
                         }}
                       />
                     ) : null}
@@ -1144,12 +1149,14 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                       label={typeLabel}
                                       sx={{
                                         height: 24,
-                                        borderRadius: '999px',
+                                        borderRadius: '8px',
                                         fontWeight: 600,
                                         alignSelf: 'flex-start',
                                         '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
+                                        pointerEvents: 'none',
                                         bgcolor: fixedType ? '#E7F1FF' : '#F5E6FE',
                                         color: fixedType ? '#2065B2' : '#BE63F9',
+                                        '&:hover': { bgcolor: fixedType ? '#E7F1FF' : '#F5E6FE' },
                                       }}
                                     />
                                   </MetricCell>

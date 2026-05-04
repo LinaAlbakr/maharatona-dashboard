@@ -81,7 +81,17 @@ export default function NotificationCard({ data }: Readonly<Props>) {
             <Typography variant="subtitle1" color="secondary.main" sx={{ fontWeight: 700 }}>
               {data?.title || '-'}
             </Typography>
-            <Chip size="small" color="info" variant="outlined" label={formattedDate} />
+            <Chip
+              size="small"
+              color="info"
+              variant="outlined"
+              label={formattedDate}
+              sx={{
+                borderRadius: '8px',
+                pointerEvents: 'none',
+                '&:hover': { bgcolor: 'transparent' },
+              }}
+            />
           </Stack>
 
           <Typography
