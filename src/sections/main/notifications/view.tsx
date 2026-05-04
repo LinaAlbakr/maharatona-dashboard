@@ -164,7 +164,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
                       component="img"
                       src="/assets/icons/notification/DateCalendar.png"
                       alt="date"
-                      sx={{ width: 20, height: 13, objectFit: 'contain', display: 'block', flexShrink: 0 }}
+                      sx={{ width: 20, height: 20, objectFit: 'contain', display: 'block', flexShrink: 0 }}
                     />
                     <Typography
                       sx={{ color: '#006C9C', fontWeight: 600, fontSize: '14px', whiteSpace: 'nowrap', lineHeight: 1.2 }}

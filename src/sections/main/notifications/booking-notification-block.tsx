@@ -186,6 +186,18 @@ function parseChildrenSegment(rawMessage: string) {
   return extractByPattern(rawMessage, /لـ\s+(.+?)\s+بواسطة/i);
 }
 
+function parseCourseNameFromMessage(rawMessage: string): string {
+  const msg = String(rawMessage || '').trim();
+  if (!msg) return '';
+  const enQuoted = extractByPattern(msg, /^"(.+?)"\s+has been booked/i);
+  if (enQuoted) return enQuoted;
+  const enPlain = extractByPattern(msg, /^(.+?)\s+has been booked/i);
+  if (enPlain) return enPlain;
+  const ar = extractByPattern(msg, /تم\s+حجز\s+"?(.+?)"?(\s|\.|$)/);
+  if (ar) return ar;
+  return '';
+}
+
 /** Strip decorative / unicode quotes from name tokens */
 function cleanChildNameTokens(s: string): string {
   if (!s) return '';
@@ -303,36 +315,53 @@ function headerBookingChip(model: string, childCount: number, isAr: boolean): st
   return isAr ? `مرن - ${sub}` : `Flexible - ${sub}`;
 }
 
-function modelFromChildBookingItem(item: any): string {
+function modelFromFlexibleLabelText(labelEn?: string, labelAr?: string): string {
+  const raw = String(labelEn || labelAr || '')
+    .toLowerCase()
+    .trim();
+  if (!raw) return '';
+
+  // English labels from expand payload: "Flexible - Daily", etc.
+  const afterFlexible = raw.match(/flexible\s*-\s*([a-z]+)/i);
+  if (afterFlexible?.[1]) {
+    const token = afterFlexible[1].toLowerCase();
+    if (KNOWN_BOOKING_MODELS.has(token)) return token;
+  }
+
+  for (const key of KNOWN_BOOKING_MODELS) {
+    if (raw.includes(key)) return key;
+  }
+  if (raw.includes('دقائق')) return 'minutes';
+  if (raw.includes('بالساعة')) return 'hourly';
+  if (raw.includes('يومي')) return 'daily';
+  if (raw.includes('أسبوعي')) return 'weekly';
+  if (raw.includes('شهري')) return 'monthly';
+  if (raw.includes('تجريبي')) return 'trial';
+  if (raw.includes('ثابت')) return 'fixed';
+  return '';
+}
+
+function modelFromChildBookingItem(item: any, detail?: any): string {
   const direct = pickKnownBookingModel(
     item?.booking_model,
     item?.booking_type,
     item?.model,
     item?.type,
-    item?.raw?.booking_model
+    item?.raw?.booking_model,
+    detail?.booking_model
   );
   if (direct) return direct;
 
-  const fallback = String(item?.flexible_label_en ?? item?.flexible_label_ar ?? '')
-    .toLowerCase()
-    .trim();
-  if (!fallback) return '';
-  for (const key of KNOWN_BOOKING_MODELS) {
-    if (fallback.includes(key)) return key;
-  }
-  if (fallback.includes('دقائق')) return 'minutes';
-  if (fallback.includes('بالساعة')) return 'hourly';
-  if (fallback.includes('يومي')) return 'daily';
-  if (fallback.includes('أسبوعي')) return 'weekly';
-  if (fallback.includes('شهري')) return 'monthly';
-  if (fallback.includes('تجريبي')) return 'trial';
-  if (fallback.includes('ثابت')) return 'fixed';
-  return '';
+  return modelFromFlexibleLabelText(item?.flexible_label_en, item?.flexible_label_ar);
 }
 
-function childBookingTypeChipLabel(item: any, isAr: boolean): string {
-  const model = modelFromChildBookingItem(item);
-  return headerBookingChip(model, 1, isAr);
+function childBookingTypeChipLabel(item: any, isAr: boolean, _siblingCount: number, detail?: any): string {
+  const model = modelFromChildBookingItem(item, detail);
+  const bm = String(model || '').trim().toLowerCase();
+  if (bm === 'fixed') return isAr ? 'ثابت' : 'Fixed';
+  if (!bm || bm === 'unknown') return isAr ? 'حجز' : 'Booking';
+  const sub = isAr ? MODEL_PILL_AR[bm] ?? bm : MODEL_PILL[bm] ?? bm;
+  return isAr ? `مرن - ${sub}` : `Flexible - ${sub}`;
 }
 
 function isFixedTypeLabel(label: string, isAr: boolean): boolean {
@@ -517,6 +546,10 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
       data?.course_name,
       isAr ? data?.raw?.course?.name_ar : data?.raw?.course?.name_en,
       isAr ? data?.raw?.course?.name_en : data?.raw?.course?.name_ar,
+      isAr ? data?.raw?.course_id?.name_ar : data?.raw?.course_id?.name_en,
+      isAr ? data?.raw?.course_id?.name_en : data?.raw?.course_id?.name_ar,
+      parseCourseNameFromMessage(messageForLang),
+      parseCourseNameFromMessage(fallbackMsg),
       readQuotedValue(String(data?.title || '')),
       readQuotedValue(messageForLang)
     ) || '—';
@@ -639,13 +672,27 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
           .join(isAr ? '، ' : ', ')
       : '';
   const fixedChildrenLine = fixedChildrenDisplay || fixedChildrenFromDetail;
+  const childrenCountOnlyText = childrenCountPhrase(
+    Math.max(
+      childCountFromMessage,
+      Array.isArray(detail?.booking_items) ? detail.booking_items.length : 0,
+      groupedBookingCount
+    ),
+    isAr
+  );
+  const displayCourseName =
+    pickFirst(
+      courseName,
+      isAr ? detail?.program?.ar : detail?.program?.en,
+      isAr ? detail?.program?.en : detail?.program?.ar
+    ) || '—';
 
   const programLabel = isAr ? 'البرنامج' : 'Program';
   const centerLabel = isAr ? 'المركز' : 'Center';
   const parentLabel = isAr ? 'حجز بواسطة' : 'Booked by';
   const connectLabel = isAr ? 'التواصل' : 'Contact';
   const perChildTitle = isAr ? 'حجوزات لكل طفل' : 'Bookings Per Child';
-  const bookedSessionsLabel = isAr ? 'الجلسات المحجوزة' : 'Booked sessions';
+  const bookedSessionsLabel = isAr ? 'الجلسات المحجوزة' : 'Booked Sessions';
   const durationLabel = isAr ? 'المدة' : 'Duration';
   const timeLabel = isAr ? 'الوقت' : 'Time';
   const sessionsLabel = isAr ? 'الجلسات' : 'Sessions';
@@ -684,7 +731,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   label={isAr ? 'ثابت' : 'Fixed'}
                   sx={{
                     height: 26,
-                    borderRadius: '999px',
+                    borderRadius: '8px',
                     fontWeight: 600,
                     '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
                     bgcolor: '#E7F1FF',
@@ -694,26 +741,28 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
               </Stack>
               <Typography sx={{ color: '#006C9C', lineHeight: 1.6, fontSize: '14px' }}>
                 {courseHref ? (
-                  <Link href={courseHref} style={{ fontWeight: 700, color: '#006C9C', textDecoration: 'none' }}>
-                    {courseName}
+                  <Link href={courseHref} style={{ fontWeight: 900, color: '#006C9C', textDecoration: 'none', fontSize: '15px' }}>
+                    {displayCourseName}
                   </Link>
                 ) : (
-                  <Box component="span" sx={{ fontWeight: 700, color: '#006C9C' }}>
-                    {courseName}
+                  <Box component="strong" sx={{ fontWeight: '900 !important', color: '#006C9C', fontSize: '15px' }}>
+                    {displayCourseName}
                   </Box>
                 )}
-                {fixedChildrenLine ? (
+                {childrenCountOnlyText !== '—' ? (
                   <>
                     <Box component="span"> {isAr ? 'تم حجزها لـ' : 'has been booked for'} </Box>
-                    <Box component="span" sx={{ fontWeight: 700, color: 'secondary.dark' }}>
-                      {fixedChildrenLine}
+                    <Box component="strong" sx={{ fontWeight: '900 !important', color: '#006C9C', fontSize: '15px' }}>
+                      {'\u201C'}
+                      {childrenCountOnlyText}
+                      {'\u201D'}
                     </Box>
                   </>
                 ) : (
                   <Box component="span"> {isAr ? 'تم حجزها' : 'has been booked'} </Box>
                 )}
                 <Box component="span"> {isAr ? 'بواسطة' : 'by'} </Box>
-                <Box component="span" sx={{ fontWeight: 700, color: 'secondary.dark' }}>
+                <Box component="strong" sx={{ fontWeight: '900 !important', color: '#006C9C', fontSize: '15px' }}>
                   {parentNameLine}
                 </Box>
                 .
@@ -752,14 +801,16 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
         : 0;
 
   const nChildrenForSummary = Math.max(childCountForChip, childCountFromMessage, mergedListCount);
+  const summaryChildrenText = childrenCountPhrase(nChildrenForSummary, isAr);
 
   const parentForSummary = parentNameLine;
   const showDesignedSummary =
-    Boolean(courseName) &&
+    Boolean(displayCourseName) &&
+    displayCourseName !== '—' &&
     Boolean(parentForSummary) &&
     parentForSummary !== '—' &&
-    !isPlaceholderParentName(parentForSummary) &&
-    nChildrenForSummary > 0;
+    Boolean(summaryChildrenText) &&
+    summaryChildrenText !== '—';
 
   const isFlexMultiVisual =
     childCountForChip > 1 ||
@@ -783,7 +834,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                 label={headerChipText}
                 sx={{
                   height: 26,
-                  borderRadius: '999px',
+                  borderRadius: '8px',
                   fontWeight: 600,
                   '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
                   visibility: awaitingModelBootstrap ? 'hidden' : 'visible',
@@ -796,24 +847,32 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
             {showDesignedSummary ? (
               <Typography
-                sx={{ color: '#006C9C', fontWeight: 600, lineHeight: 1.65, pr: { xs: 0, sm: 0.5 }, fontSize: '14px' }}
+                sx={{ color: '#006C9C', fontWeight: 400, lineHeight: 1.65, pr: { xs: 0, sm: 0.5 }, fontSize: '14px' }}
               >
                 {isAr ? (
                   <>
                     تم حجز{' '}
-                    <Box component="span" sx={{ color: BN.valueBlue, fontWeight: 700 }}>
-                      {'\u201C'}
-                      {courseName}
-                      {'\u201D'}
-                    </Box>{' '}
+                    {courseHref ? (
+                      <Link href={courseHref} style={{ color: '#006C9C', fontWeight: 900, textDecoration: 'none', fontSize: '15px' }}>
+                        {'\u201C'}
+                        {displayCourseName}
+                        {'\u201D'}
+                      </Link>
+                    ) : (
+                      <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
+                        {'\u201C'}
+                        {displayCourseName}
+                        {'\u201D'}
+                      </Box>
+                    )}{' '}
                     لـ{' '}
-                    <Box component="span" sx={{ color: BN.valueBlue, fontWeight: 700 }}>
+                    <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
                       {'\u201C'}
-                      {childrenCountPhrase(nChildrenForSummary, isAr)}
+                      {summaryChildrenText}
                       {'\u201D'}
                     </Box>{' '}
                     بواسطة{' '}
-                    <Box component="span" sx={{ color: BN.valueBlue, fontWeight: 700 }}>
+                    <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
                       {'\u201C'}
                       {parentForSummary}
                       {'\u201D'}
@@ -822,19 +881,27 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   </>
                 ) : (
                   <>
-                    <Box component="span" sx={{ color: BN.valueBlue, fontWeight: 700 }}>
-                      {'\u201C'}
-                      {courseName}
-                      {'\u201D'}
-                    </Box>{' '}
+                    {courseHref ? (
+                      <Link href={courseHref} style={{ color: '#006C9C', fontWeight: 900, textDecoration: 'none', fontSize: '15px' }}>
+                        {'\u201C'}
+                        {displayCourseName}
+                        {'\u201D'}
+                      </Link>
+                    ) : (
+                      <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
+                        {'\u201C'}
+                        {displayCourseName}
+                        {'\u201D'}
+                      </Box>
+                    )}{' '}
                     has been booked for{' '}
-                    <Box component="span" sx={{ color: BN.valueBlue, fontWeight: 700 }}>
+                    <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
                       {'\u201C'}
-                      {childrenCountPhrase(nChildrenForSummary, isAr)}
+                      {summaryChildrenText}
                       {'\u201D'}
                     </Box>{' '}
                     by{' '}
-                    <Box component="span" sx={{ color: BN.valueBlue, fontWeight: 700 }}>
+                    <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
                       {'\u201C'}
                       {parentForSummary}
                       {'\u201D'}
@@ -1003,10 +1070,14 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
                     <Stack spacing={2}>
                       {(detail.booking_items ?? []).map((item: any, idx: number) => {
-                        const typeLabel = childBookingTypeChipLabel(item, isAr);
-                        const childModel = modelFromChildBookingItem(item);
+                        const siblingCount = Math.max((detail.booking_items ?? []).length || 0, 1);
+                        const typeLabel = childBookingTypeChipLabel(item, isAr, siblingCount, detail);
+                        const childModel = modelFromChildBookingItem(item, detail);
                         const fixedType = childModel === 'fixed';
-                        const hideDuration = childModel === 'daily' || childModel === 'weekly' || childModel === 'monthly';
+                        const hideDurationByModel =
+                          childModel === 'daily' || childModel === 'weekly' || childModel === 'monthly';
+                        const hideDurationByLabel = /daily|weekly|monthly|يومي|أسبوعي|شهري/i.test(typeLabel);
+                        const hideDuration = hideDurationByModel || hideDurationByLabel;
                         const metricMd = hideDuration ? 4 : 3;
                         const groups = groupBookedSessionsByWeek(
                           Array.isArray(item.booked_sessions) ? item.booked_sessions : []
@@ -1161,7 +1232,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                                 component="img"
                                                 src="/assets/icons/notification/CalendarShowingInBookedSessionCard.png"
                                                 alt="calendar"
-                                                sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block', mt: '2px' }}
+                                                sx={{ width: '16.19px', height: '16.87px', objectFit: 'contain', display: 'block', mt: '2px' }}
                                               />
                                               <Stack spacing={0.25} sx={{ minWidth: 0 }}>
                                                 {parts.primary ? (
