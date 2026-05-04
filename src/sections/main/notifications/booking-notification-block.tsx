@@ -394,13 +394,13 @@ function shouldStartBookingModelBootstrap(d: any): boolean {
 function metricIconAsset(icon: string): string {
   switch (icon) {
     case 'solar:tag-bold':
-      return '/assets/icons/notification/BookingType.png';
+      return '/assets/icons/notification/BookingType.svg';
     case 'solar:clock-circle-bold':
-      return '/assets/icons/notification/Duration.png';
+      return '/assets/icons/notification/Duration.svg';
     case 'solar:clock-circle-bold-time':
-      return '/assets/icons/notification/Time.png';
+      return '/assets/icons/notification/Time.svg';
     case 'solar:calendar-bold':
-      return '/assets/icons/notification/Sessions.png';
+      return '/assets/icons/notification/Sessions.svg';
     default:
       return '';
   }
@@ -425,7 +425,7 @@ function MetricCell({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          bgcolor: BN.iconTileBg,
+          bgcolor: 'transparent',
           flexShrink: 0,
         }}
       >
@@ -460,7 +460,7 @@ function InfoGridIconTile({ children, size = 36 }: { children: ReactNode; size?:
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: BN.iconTileBg,
+        bgcolor: 'transparent',
         flexShrink: 0,
       }}
     >
@@ -487,7 +487,7 @@ function BellBadge({ size }: { size: number }) {
     >
       <Box
         component="img"
-        src="/assets/icons/notification/notificationIcon.png"
+        src="/assets/icons/notification/notification.svg"
         alt="notification"
         sx={{
           width: iconPx,
@@ -947,7 +947,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                             <InfoGridIconTile>
                               <Box
                                 component="img"
-                                src="/assets/icons/notification/Booked%20by.png"
+                                src="/assets/icons/notification/Booked%20by.svg"
                                 alt="booked by"
                                 sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
                               />
@@ -976,7 +976,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                             <InfoGridIconTile>
                               <Box
                                 component="img"
-                                src="/assets/icons/notification/Contact.png"
+                                src="/assets/icons/notification/Contact.svg"
                                 alt="contact"
                                 sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
                               />
@@ -996,7 +996,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                             <InfoGridIconTile>
                               <Box
                                 component="img"
-                                src="/assets/icons/notification/Programs.png"
+                                src="/assets/icons/notification/Program.svg"
                                 alt="program"
                                 sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
                               />
@@ -1025,7 +1025,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                             <InfoGridIconTile>
                               <Box
                                 component="img"
-                                src="/assets/icons/notification/Center.png"
+                                src="/assets/icons/notification/Center.svg"
                                 alt="center"
                                 sx={{ width: 30, height: 30, objectFit: 'contain', display: 'block' }}
                               />
@@ -1230,7 +1230,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                                             <Stack direction="row" spacing={1.25} alignItems="flex-start">
                                               <Box
                                                 component="img"
-                                                src="/assets/icons/notification/CalendarShowingInBookedSessionCard.png"
+                                                src="/assets/icons/notification/CalendarShowingInBookedSessionCard.svg"
                                                 alt="calendar"
                                                 sx={{ width: '16.19px', height: '16.87px', objectFit: 'contain', display: 'block', mt: '2px' }}
                                               />

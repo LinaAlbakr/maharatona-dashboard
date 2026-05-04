@@ -162,7 +162,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
                   <Stack direction="row" alignItems="center" spacing={1} sx={{ pt: index ? 1 : 0, pb: 0.25 }}>
                     <Box
                       component="img"
-                      src="/assets/icons/notification/DateCalendar.png"
+                      src="/assets/icons/notification/DateCalendar.svg"
                       alt="date"
                       sx={{ width: 20, height: 20, objectFit: 'contain', display: 'block', flexShrink: 0 }}
                     />
