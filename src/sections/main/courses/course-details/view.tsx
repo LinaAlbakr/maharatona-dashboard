@@ -14,10 +14,27 @@ import { useSettingsContext } from 'src/components/settings';
 interface Props {
   CourseInfo?: any;
 }
+
+const getDiscountedPrice = (course: any): number | null => {
+  const basePrice = Number(course?.price ?? 0);
+  const discountAmount = Number(course?.discount_amount ?? 0);
+  const discountType = String(course?.discount_type ?? '').toLowerCase();
+
+  if (!Number.isFinite(basePrice) || basePrice <= 0) return null;
+  if (!Number.isFinite(discountAmount) || discountAmount <= 0) return null;
+  if (discountType !== 'total' && discountType !== 'specific') return null;
+
+  const discounted = basePrice - (basePrice * discountAmount) / 100;
+  if (!Number.isFinite(discounted)) return null;
+
+  return Math.max(0, Math.round(discounted * 100) / 100);
+};
+
 const CourseDetailsView = ({ CourseInfo }: Props) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
   const course = CourseInfo?.data ?? CourseInfo;
+  const discountedPrice = getDiscountedPrice(course);
 
   return (
     <Container
@@ -115,6 +132,21 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
               <Typography variant="body2" color="info.dark">
                 {Math.floor(course?.price)}{' '}
                 <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <Typography variant="body1" color="primary" fontWeight={700}>
+                {t('LABEL.DISCOUNTED_PRICE')}
+              </Typography>
+              <Typography variant="body2" color="info.dark" sx={{ fontWeight: 700 }}>
+                {discountedPrice != null ? (
+                  <>
+                    {Math.floor(discountedPrice)}{' '}
+                    <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+                  </>
+                ) : (
+                  '-'
+                )}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>

@@ -143,6 +143,7 @@
     "NUMBER_OF_SUBSCRIBERS": "Number of Subscribers",
     "FIELD": "Field",
     "PRICE": "Price",
+    "DISCOUNTED_PRICE": "Discounted Price",
     "START_DATE": "Start Date",
     "END_DATE": "End Date",
     "NUMBER_OF_REMAINING_SEATS": "Number of Remaining Seats",

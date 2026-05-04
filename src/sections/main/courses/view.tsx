@@ -66,6 +66,23 @@ type props = {
   courses: any[];
 };
 
+const getDiscountedPrice = (course: any): number | null => {
+  const basePrice = Number(course?.price ?? 0);
+  const discountAmount = Number(course?.discount_amount ?? 0);
+  const discountType = String(course?.discount_type ?? '').toLowerCase();
+
+  if (!Number.isFinite(basePrice) || basePrice <= 0) return null;
+  if (!Number.isFinite(discountAmount) || discountAmount <= 0) return null;
+
+  // Current backend exposes total/specific with numeric amount; treat as percentage for display.
+  if (discountType !== 'total' && discountType !== 'specific') return null;
+
+  const discounted = basePrice - (basePrice * discountAmount) / 100;
+  if (!Number.isFinite(discounted)) return null;
+
+  return Math.max(0, Math.round(discounted * 100) / 100);
+};
+
 const CoursesView = ({ count, courses }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
@@ -101,6 +118,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     { id: 'name', label: 'LABEL.COURSE_NAME' },
     { id: 'field', label: 'LABEL.FIELD' },
     { id: 'price', label: 'LABEL.PRICE' },
+    { id: 'discounted_price', label: 'LABEL.DISCOUNTED_PRICE' },
     { id: 'students', label: 'LABEL.NUMBER_OF_SUBSCRIBERS' },
     { id: 'seats', label: 'LABEL.NUMBER_OF_REMAINING_SEATS' },
     { id: 'start_date', label: 'LABEL.START_DATE' },
@@ -294,7 +312,11 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           customRender={{
             name: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {item?.name || (i18n.language === 'ar' ? item?.name_ar : item?.name_en) || '-'}
+                {(i18n.language === 'ar'
+                  ? item?.name_ar || item?.name_en
+                  : item?.name_en || item?.name_ar) ||
+                  item?.name ||
+                  '-'}
               </Box>
             ),
             students: (item: any) => (
@@ -432,6 +454,35 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                 <span>{Math.round(item?.price ?? 0)}</span>
               </Stack>
             ),
+            discounted_price: (item: any) => {
+              const discountedPrice = getDiscountedPrice(item);
+              return (
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={0.75}
+                  sx={{ color: item?.is_active ? 'inherit' : 'red' }}
+                >
+                  {discountedPrice != null ? (
+                    <>
+                      {item?.is_active ? (
+                        <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+                      ) : (
+                        <Image
+                          src="/assets/images/red-sar-logo.svg"
+                          alt="sar logo"
+                          height={20}
+                          width={20}
+                        />
+                      )}
+                      <span style={{ fontWeight: 700 }}>{Math.round(discountedPrice)}</span>
+                    </>
+                  ) : (
+                    <span>-</span>
+                  )}
+                </Stack>
+              );
+            },
           }}
         />
         <Box

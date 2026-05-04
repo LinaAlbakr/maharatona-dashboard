@@ -146,6 +146,7 @@
     "NUMBER_OF_SUBSCRIBERS": "عدد المسجلين",
     "FIELD": "المجال",
     "PRICE": "السعر",
+    "DISCOUNTED_PRICE": "السعر بعد الخصم",
     "START_DATE": "تاريخ البداية",
     "END_DATE": "تاريخ النهاية",
     "NUMBER_OF_REMAINING_SEATS": "عدد المقاعد المتبقية",
