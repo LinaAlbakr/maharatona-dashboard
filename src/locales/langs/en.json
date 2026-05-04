@@ -13,6 +13,8 @@
     "DELETE_COUPON": "Delete Coupon",
     "CLEAR_WALLET": "Clear Wallet",
     "DELETE_CATEGORY": "Delete Category",
+    "NEW_CATEGORY": "Add Category",
+    "EDIT_CATEGORY": "Edit Category",
     "DELETE_QUESTION": "Delete Question",
     "DEACTIVATE_CITY": "Deactivate City",
     "ACTIVATE_CITY": "Activate City",

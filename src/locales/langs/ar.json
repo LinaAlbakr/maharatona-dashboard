@@ -17,6 +17,8 @@
     "DELETE_COUPON": "حذف الكوبون",
     "CLEAR_WALLET": "تصفير المحفظة",
     "DELETE_CATEGORY": "حذف القسم",
+    "NEW_CATEGORY": "إضافة قسم",
+    "EDIT_CATEGORY": "تعديل قسم",
     "DELETE_QUESTION": "حذف السؤال",
     "DEACTIVATE_CITY": "تعطيل المدينة",
     "ACTIVATE_CITY": "تفعيل المدينة",

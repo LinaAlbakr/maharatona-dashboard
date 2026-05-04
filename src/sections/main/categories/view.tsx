@@ -205,7 +205,7 @@ const CategoriesView = ({ count, categories }: Readonly<props>) => {
                 },
               }}
             >
-              {t('BUTTON.ADD_FIELD')}
+              {t('BUTTON.ADD_CATEGORY')}
             </Button>
           </Grid>
         </Box>
