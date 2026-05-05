@@ -107,7 +107,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (selectedId) {
       const res = await changeCenterStatus(selectedId, { userStatus: 'BlockedClient' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
+        enqueueSnackbar(t('MESSAGE.BLOCK_PROGRAM_SUCCESSFULLY'));
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }
@@ -119,7 +119,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (selectedId) {
       const res = await changeCenterStatus(selectedId, { userStatus: 'ActiveClient' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
+        enqueueSnackbar(t('MESSAGE.UNBLOCK_PROGRAM_SUCCESSFULLY'));
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }
@@ -389,8 +389,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       <ConfirmDialog
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
-        title={t('TITLE.BLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_BLOCK')}
+        title={t('TITLE.BLOCK_PROGRAM')}
+        content={t('MESSAGE.CONFIRM_BLOCK_PROGRAM')}
         action={
           <Button
             variant="contained"
@@ -406,8 +406,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       <ConfirmDialog
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
-        title={t('TITLE.UNBLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK')}
+        title={t('TITLE.UNBLOCK_PROGRAM')}
+        content={t('MESSAGE.CONFIRM_UNBLOCK_PROGRAM')}
         action={
           <Button
             variant="contained"
@@ -434,8 +434,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
-        title={t('TITLE.DELETE_CENTER')}
-        content={t('MESSAGE.CONFIRM_DELETE_CENTER')}
+        title={t('TITLE.DELETE_PROGRAM')}
+        content={t('MESSAGE.CONFIRM_DELETE_PROGRAM')}
         action={
           <Button
             variant="contained"
