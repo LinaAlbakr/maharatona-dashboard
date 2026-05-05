@@ -130,19 +130,21 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
                 {t('LABEL.PRICE')}
               </Typography>
               <Typography variant="body2" color="info.dark">
-                {Math.floor(course?.price)}{' '}
                 <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+                {' '}
+                {Math.floor(course?.price)}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <Typography variant="body1" color="primary" fontWeight={700}>
                 {t('LABEL.DISCOUNTED_PRICE')}
               </Typography>
-              <Typography variant="body2" color="info.dark" sx={{ fontWeight: 700 }}>
+              <Typography variant="body2" color="info.dark">
                 {discountedPrice != null ? (
                   <>
-                    {Math.floor(discountedPrice)}{' '}
                     <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
+                    {' '}
+                    {Math.floor(discountedPrice)}
                   </>
                 ) : (
                   '-'
