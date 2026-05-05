@@ -104,7 +104,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
       return;
     }
     try {
-      const res = await changeClientStatus(selectedId, { userStatus: 'BlockedClient' });
+      const res = await changeClientStatus(selectedId, { userStatus: 'inactive' });
       if (res === 200) {
         enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
         router.refresh();
@@ -122,7 +122,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
       return;
     }
     try {
-      const res = await changeClientStatus(selectedId, { userStatus: 'ActiveClient' });
+      const res = await changeClientStatus(selectedId, { userStatus: 'active' });
       if (res === 200) {
         enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
         router.refresh();
