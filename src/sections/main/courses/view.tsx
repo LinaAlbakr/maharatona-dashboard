@@ -156,7 +156,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+      enqueueSnackbar(t('MESSAGE.PROGRAM_DELETED_SUCCESSFULLY'), {
         variant: 'success',
       });
     }
@@ -166,7 +166,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const handleConfirmActivate = async () => {
     const res = await editCourseStatus(selectedCourse);
     if (!res?.error) {
-      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
+      enqueueSnackbar(t('MESSAGE.PROGRAM_ACTIVATED_SUCCESSFULLY'));
       confirmActivate.onFalse();
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
@@ -175,7 +175,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const handleConfirmDeactivate = async () => {
     const res = await editCourseStatus(selectedCourse);
     if (!res?.error) {
-      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
+      enqueueSnackbar(t('MESSAGE.PROGRAM_DEACTIVATED_SUCCESSFULLY'));
       confirmDeactivate.onFalse();
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });

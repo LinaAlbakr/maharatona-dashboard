@@ -1,6 +1,6 @@
 'use client';
 
-import { alpha, Avatar, Box, Chip, Paper, Stack, Typography } from '@mui/material';
+import { alpha, Avatar, Box, Paper, Stack, Typography } from '@mui/material';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from './booking-notification-block';
@@ -44,15 +44,24 @@ const readCenterName = (data: any) =>
 /** Course booking (new order) — Figma fixed vs flexible; everything else unchanged. */
 const isAdminNewBooking = (data: any) => data?.notification_type === 'ADMIN_NEW_BOOKING';
 const isAdminNewCenter = (data: any) => data?.notification_type === 'ADMIN_NEW_CENTER';
+const isAdminNewCourse = (data: any) => data?.notification_type === 'ADMIN_NEW_COURSE';
 const isCenterCreatedCourse = (data: any) => {
   const msg = String(data?.message ?? data?.raw?.message_en ?? '').trim();
   return /\bhas created a new course\s*:/i.test(msg);
 };
-const isSimpleLineNotification = (data: any) => isAdminNewCenter(data) || isCenterCreatedCourse(data);
+const isSimpleLineNotification = (data: any) =>
+  isAdminNewCenter(data) || isAdminNewCourse(data) || isCenterCreatedCourse(data);
 
 export default function NotificationCard({ data }: Readonly<Props>) {
   const formattedDate =
     i18n.language === 'ar' ? arabicDate(data?.created_at) : englishDate(data?.created_at);
+  const formattedTime = (() => {
+    const d = data?.created_at ? new Date(data.created_at) : null;
+    if (!d || Number.isNaN(d.getTime())) return formattedDate;
+    return i18n.language === 'ar'
+      ? d.toLocaleTimeString('ar-SA', { hour: 'numeric', minute: '2-digit' })
+      : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  })();
 
   if (isAdminNewBooking(data)) {
     return <BookingNotificationBlock data={data} variant="page" />;
@@ -81,17 +90,9 @@ export default function NotificationCard({ data }: Readonly<Props>) {
             <Typography variant="subtitle1" color="secondary.main" sx={{ fontWeight: 700 }}>
               {data?.title || '-'}
             </Typography>
-            <Chip
-              size="small"
-              color="info"
-              variant="outlined"
-              label={formattedDate}
-              sx={{
-                borderRadius: '8px',
-                pointerEvents: 'none',
-                '&:hover': { bgcolor: 'transparent' },
-              }}
-            />
+            <Typography variant="body2" color="info.dark" sx={{ fontWeight: 500, whiteSpace: 'nowrap' }}>
+              {formattedTime}
+            </Typography>
           </Stack>
 
           <Typography

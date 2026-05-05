@@ -820,6 +820,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
     /multiple|متعدد/i.test(headerChipText);
 
   const createdTime = fTime(data?.created_at);
+  const allowCollapse = variant !== 'list';
 
   return (
     <Paper sx={{ ...paperSx, position: 'relative' }}>
@@ -919,7 +920,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
               </Typography>
             )}
 
-            {!awaitingModelBootstrap ? (
+            {!awaitingModelBootstrap && allowCollapse ? (
               <Collapse in={expanded} timeout="auto" unmountOnExit={false}>
                 {loading ? (
                   <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
@@ -1305,7 +1306,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
           >
             {formattedDate}
           </Typography>
-        ) : (
+        ) : allowCollapse ? (
           <Stack
             direction="row"
             alignItems="center"
@@ -1338,6 +1339,20 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
               <Iconify icon={expanded ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} width={22.72} />
             </IconButton>
           </Stack>
+        ) : (
+          <Typography
+            sx={{
+              fontWeight: 600,
+              fontSize: '14px',
+              color: '#006C9C',
+              whiteSpace: 'nowrap',
+              position: 'absolute',
+              top: 8,
+              right: 18,
+            }}
+          >
+            {createdTime || formattedDate}
+          </Typography>
         )}
       </Stack>
     </Paper>
