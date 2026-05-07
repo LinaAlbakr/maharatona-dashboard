@@ -2,7 +2,6 @@
 
 import {
   alpha,
-  Avatar,
   Box,
   Chip,
   Collapse,
@@ -13,6 +12,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { fetchMergedBookingExpands } from 'src/actions/notifications';
@@ -58,6 +58,16 @@ const BN = {
 };
 
 const pickFirst = (...values: any[]) => values.find((v) => v !== undefined && v !== null && v !== '');
+
+const formatEnglishTimeLtr = (value: any) => {
+  const d = value ? new Date(value) : null;
+  if (!d || Number.isNaN(d.getTime())) return '';
+  const h24 = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const ampm = h24 >= 12 ? 'PM' : 'AM';
+  const h12 = h24 % 12 || 12;
+  return `\u200E${h12}:${minutes} ${ampm}\u200E`;
+};
 
 const readQuotedValue = (text: string) => {
   if (!text) return '';
@@ -772,15 +782,19 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
             </Stack>
           </Stack>
           <Typography
+            dir={variant === 'list' ? undefined : 'ltr'}
             sx={{
               fontWeight: 600,
               fontSize: '14px',
               color: '#006C9C',
               whiteSpace: 'nowrap',
               pl: 1,
+              ...(variant !== 'list' ? { direction: 'ltr', unicodeBidi: 'isolate' } : {}),
             }}
           >
-            {fTime(data?.created_at) || formattedDate}
+            {variant === 'list'
+              ? formattedDate
+              : formatEnglishTimeLtr(data?.created_at)}
           </Typography>
         </Stack>
       </Paper>
@@ -821,6 +835,10 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
 
   const createdTime = fTime(data?.created_at);
   const allowCollapse = variant !== 'list';
+  const rightEdgeDateOrTime =
+    variant === 'list'
+      ? formattedDate
+      : formatEnglishTimeLtr(data?.created_at) || createdTime || '';
 
   return (
     <Paper sx={{ ...paperSx, position: 'relative' }}>
@@ -1099,18 +1117,24 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                             }}
                           >
                             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
-                              <Avatar
+                              <Box
                                 sx={{
-                                  bgcolor: '#3CB8BB',
-                                  color: '#fff',
                                   width: 40,
                                   height: 40,
-                                  fontWeight: 700,
-                                  fontSize: '1rem',
+                                  borderRadius: '50%',
+                                  flexShrink: 0,
+                                  display: 'grid',
+                                  placeItems: 'center',
+                                  bgcolor: '#F2EEFF',
                                 }}
                               >
-                                {item.child_initial}
-                              </Avatar>
+                                <Image
+                                  src="/assets/icons/notification/notificationIcon.png"
+                                  alt="notification"
+                                  width={24}
+                                  height={24}
+                                />
+                              </Box>
                               <Typography
                                 sx={{
                                   color: '#006C9C',
@@ -1304,7 +1328,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
               right: 18,
             }}
           >
-            {formattedDate}
+            {rightEdgeDateOrTime}
           </Typography>
         ) : allowCollapse ? (
           <Stack
@@ -1314,14 +1338,17 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
             sx={{ position: 'absolute', top: 8, right: 18, flexShrink: 0 }}
           >
             <Typography
+              dir="ltr"
               sx={{
                 fontWeight: 600,
                 fontSize: '14px',
                 color: '#006C9C',
                 whiteSpace: 'nowrap',
+                direction: 'ltr',
+                unicodeBidi: 'isolate',
               }}
             >
-              {createdTime || formattedDate}
+              {rightEdgeDateOrTime}
             </Typography>
             <IconButton
               onClick={toggleExpand}
@@ -1341,6 +1368,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
           </Stack>
         ) : (
           <Typography
+            dir={variant === 'list' ? undefined : 'ltr'}
             sx={{
               fontWeight: 600,
               fontSize: '14px',
@@ -1349,9 +1377,10 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
               position: 'absolute',
               top: 8,
               right: 18,
+              ...(variant !== 'list' ? { direction: 'ltr', unicodeBidi: 'isolate' } : {}),
             }}
           >
-            {createdTime || formattedDate}
+            {rightEdgeDateOrTime}
           </Typography>
         )}
       </Stack>

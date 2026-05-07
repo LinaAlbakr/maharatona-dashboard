@@ -1,6 +1,7 @@
 'use client';
 
-import { alpha, Avatar, Box, Paper, Stack, Typography } from '@mui/material';
+import { alpha, Box, Paper, Stack, Typography } from '@mui/material';
+import Image from 'next/image';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from './booking-notification-block';
@@ -41,6 +42,17 @@ const readCenterName = (data: any) =>
   data?.raw?.center?.name ||
   data?.raw?.booking?.center_name;
 
+const pickLocalizedText = (data: any, kind: 'title' | 'message') => {
+  const isAr = i18n.language === 'ar';
+  const fromRaw = isAr
+    ? data?.raw?.[`${kind}_ar`] || data?.raw?.[`${kind}_en`]
+    : data?.raw?.[`${kind}_en`] || data?.raw?.[`${kind}_ar`];
+  const fromTop = isAr
+    ? data?.[`${kind}_ar`] || data?.[`${kind}_en`]
+    : data?.[`${kind}_en`] || data?.[`${kind}_ar`];
+  return fromRaw || fromTop || data?.[kind] || '-';
+};
+
 /** Course booking (new order) — Figma fixed vs flexible; everything else unchanged. */
 const isAdminNewBooking = (data: any) => data?.notification_type === 'ADMIN_NEW_BOOKING';
 const isAdminNewCenter = (data: any) => data?.notification_type === 'ADMIN_NEW_CENTER';
@@ -52,16 +64,21 @@ const isCenterCreatedCourse = (data: any) => {
 const isSimpleLineNotification = (data: any) =>
   isAdminNewCenter(data) || isAdminNewCourse(data) || isCenterCreatedCourse(data);
 
+const formatEnglishTimeLtr = (value: any) => {
+  const d = value ? new Date(value) : null;
+  if (!d || Number.isNaN(d.getTime())) return '';
+  const h24 = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const ampm = h24 >= 12 ? 'PM' : 'AM';
+  const h12 = h24 % 12 || 12;
+  // Wrap with LRM to keep number-first order inside RTL pages.
+  return `\u200E${h12}:${minutes} ${ampm}\u200E`;
+};
+
 export default function NotificationCard({ data }: Readonly<Props>) {
   const formattedDate =
     i18n.language === 'ar' ? arabicDate(data?.created_at) : englishDate(data?.created_at);
-  const formattedTime = (() => {
-    const d = data?.created_at ? new Date(data.created_at) : null;
-    if (!d || Number.isNaN(d.getTime())) return formattedDate;
-    return i18n.language === 'ar'
-      ? d.toLocaleTimeString('ar-SA', { hour: 'numeric', minute: '2-digit' })
-      : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  })();
+  const formattedTime = formatEnglishTimeLtr(data?.created_at);
 
   if (isAdminNewBooking(data)) {
     return <BookingNotificationBlock data={data} variant="page" />;
@@ -70,6 +87,8 @@ export default function NotificationCard({ data }: Readonly<Props>) {
   const actualType = readActualType(data);
   const courseName = readCourseName(data);
   const centerName = readCenterName(data);
+  const localizedTitle = pickLocalizedText(data, 'title');
+  const localizedMessage = pickLocalizedText(data, 'message');
 
   return (
     <Paper
@@ -81,16 +100,36 @@ export default function NotificationCard({ data }: Readonly<Props>) {
       }}
     >
       <Stack direction="row" spacing={1.5} alignItems="flex-start">
-        <Avatar sx={{ bgcolor: 'primary.main', width: 32, height: 32, fontSize: 14 }}>
-          {(data?.title || 'N').charAt(0).toUpperCase()}
-        </Avatar>
+        <Box
+          sx={{
+            width: 36,
+            height: 36,
+            borderRadius: '50%',
+            flexShrink: 0,
+            display: 'grid',
+            placeItems: 'center',
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          }}
+        >
+          <Image
+            src="/assets/icons/notification/notificationIcon.png"
+            alt="notification"
+            width={22}
+            height={22}
+          />
+        </Box>
 
         <Stack spacing={1.25} sx={{ minWidth: 0, flex: 1 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} flexWrap="wrap">
             <Typography variant="subtitle1" color="secondary.main" sx={{ fontWeight: 700 }}>
-              {data?.title || '-'}
+              {localizedTitle}
             </Typography>
-            <Typography variant="body2" color="info.dark" sx={{ fontWeight: 500, whiteSpace: 'nowrap' }}>
+            <Typography
+              variant="body2"
+              color="info.dark"
+              dir="ltr"
+              sx={{ fontWeight: 500, whiteSpace: 'nowrap', direction: 'ltr', unicodeBidi: 'isolate' }}
+            >
               {formattedTime}
             </Typography>
           </Stack>
@@ -100,7 +139,7 @@ export default function NotificationCard({ data }: Readonly<Props>) {
             color="text.secondary"
             sx={isSimpleLineNotification(data) ? { wordBreak: 'break-word', mb: 0 } : { wordBreak: 'break-word' }}
           >
-            {data?.message || '-'}
+            {localizedMessage}
           </Typography>
 
           {!isSimpleLineNotification(data) ? (
