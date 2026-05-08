@@ -1,6 +1,17 @@
 'use client';
 
-import { alpha, Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
+import {
+  alpha,
+  Box,
+  Card,
+  Container,
+  FormControl,
+  MenuItem,
+  Pagination,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format, isValid } from 'date-fns';
 import { Fragment, useCallback, useMemo } from 'react';
@@ -36,6 +47,22 @@ const formatDayHeading = (createdAt: string | Date | undefined) => {
   return format(d, 'MMMM d, yyyy');
 };
 
+const isBookingNotification = (n: any) => {
+  const t = String(
+    n?.notification_type ??
+      n?.raw?.notification_type ??
+      n?.actual_type ??
+      n?.booking_type ??
+      ''
+  )
+    .trim()
+    .toUpperCase();
+  if (t === 'ADMIN_NEW_BOOKING') return true;
+  // defensive fallback for rows where type is missing but booking model exists
+  const bookingModel = String(n?.raw?.booking_model ?? n?.booking_type ?? '').trim();
+  return bookingModel.length > 0;
+};
+
 export default function NotificationsView({ notifications }: Readonly<Props>) {
   const settings = useSettingsContext();
   const searchParams = useSearchParams();
@@ -44,10 +71,13 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
   const { t } = useTranslate();
 
   const displayNotifications = useMemo(
-    () => groupAdminNewBookingNotifications(notifications?.data ?? []),
+    () =>
+      groupAdminNewBookingNotifications(notifications?.data ?? []).filter(
+        (n: any) => isBookingNotification(n)
+      ),
     [notifications?.data]
   );
-
+  console.log("displayNotifications", displayNotifications);
   const formDefaultValues = {
     type: '',
     date: '',
@@ -58,6 +88,8 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
   });
 
   const { control } = methods;
+  const rowsPerPage = Number(searchParams.get('notifications_limit')) || notifications?.meta?.limit || 20;
+  const currentPage = Number(searchParams.get('notifications_page')) || 1;
 
   const createQueryString = useCallback(
     (name: string, value: number | Date | null | string) => {
@@ -77,6 +109,14 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
     },
     [pathname, router, searchParams]
   );
+
+  const handleRowsPerPageChange = (nextLimit: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('notifications_limit', String(nextLimit));
+    // Reset to first page whenever page size changes.
+    params.set('notifications_page', '1');
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ px: { xs: 1, md: 2 } }}>
@@ -190,13 +230,40 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
       )}
 
       {notifications?.data?.length > 0 && (
-        <Pagination
-          sx={{ display: 'flex', justifyContent: 'center', py: 2 }}
-          count={getPagesCount(notifications?.meta?.itemCount || 0)}
-          page={Number(searchParams.get('notifications_page')) || 1}
-          color="secondary"
-          onChange={(_, value) => createQueryString('notifications_page', value)}
-        />
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          alignItems={{ xs: 'stretch', sm: 'center' }}
+          justifyContent="space-between"
+          spacing={2}
+          sx={{ py: 2 }}
+        >
+          <Stack direction="row" alignItems="center" spacing={1.25}>
+            <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+              Rows per page:
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 96 }}>
+              <Select
+                value={String(rowsPerPage)}
+                onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+                sx={{ borderRadius: 2.5 }}
+              >
+                {[6, 10, 20, 50].map((n) => (
+                  <MenuItem key={n} value={String(n)}>
+                    {n}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Stack>
+
+          <Pagination
+            sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-end' } }}
+            count={getPagesCount(notifications?.meta?.itemCount || 0)}
+            page={currentPage}
+            color="secondary"
+            onChange={(_, value) => createQueryString('notifications_page', value)}
+          />
+        </Stack>
       )}
     </Container>
   );

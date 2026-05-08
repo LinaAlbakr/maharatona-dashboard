@@ -17,9 +17,9 @@ export default async function Page({ searchParams }: Readonly<Props>) {
   const notifications_limit =
     typeof searchParams?.notifications_limit === 'string'
       ? Number(searchParams?.notifications_limit)
-      : 6;
-  const notification_type =
-    typeof searchParams?.notification_type === 'string' ? searchParams?.notification_type : null;
+      : 20;
+  // Notifications page is booking-only by product requirement.
+  const notification_type = 'ADMIN_NEW_BOOKING';
   const select_date =
     typeof searchParams?.select_date === 'string' ? searchParams?.select_date : null;
   const notifications = await fetchNotifications({
