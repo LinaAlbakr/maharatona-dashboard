@@ -24,13 +24,18 @@ import i18n from 'src/locales/i18n';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import NotificationCard from './notification-card';
 import { groupAdminNewBookingNotifications } from './group-admin-booking-notifications';
-import { NOTIFICATION_TYPES } from './constants';
+
+const BOOKING_MODEL_FILTERS = [
+  { name_en: 'Fixed', name_ar: 'ثابت', value: 'fixed' },
+  { name_en: 'Flexible', name_ar: 'مرن', value: 'flexible' },
+];
 
 type Props = {
   notifications: any;
 };
 
-const getPagesCount = (count: number) => (count / 6 > 1 ? Math.ceil(count / 6) : 1);
+const getPagesCount = (count: number, limit: number) =>
+  count / Math.max(limit, 1) > 1 ? Math.ceil(count / Math.max(limit, 1)) : 1;
 
 const getDayGroupKey = (createdAt: string | Date | undefined) => {
   const d = createdAt ? new Date(createdAt) : null;
@@ -147,12 +152,12 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
               }}
             >
               <CutomAutocompleteView
-                items={NOTIFICATION_TYPES as any[]}
+                items={BOOKING_MODEL_FILTERS as any[]}
                 label={t('LABEL.TYPE')}
                 placeholder={t('LABEL.TYPE')}
                 name="type"
                 onCustomChange={(selectedType: any) =>
-                  createQueryString('notification_type', selectedType?.value ?? '')
+                  createQueryString('booking_model_type', selectedType?.value ?? '')
                 }
               />
               <Controller
@@ -258,7 +263,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
 
           <Pagination
             sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-end' } }}
-            count={getPagesCount(notifications?.meta?.itemCount || 0)}
+            count={getPagesCount(notifications?.meta?.itemCount || 0, rowsPerPage)}
             page={currentPage}
             color="secondary"
             onChange={(_, value) => createQueryString('notifications_page', value)}
