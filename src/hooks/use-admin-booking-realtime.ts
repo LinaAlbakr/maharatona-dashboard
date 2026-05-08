@@ -28,7 +28,13 @@ export const useAdminBookingRealtimeRefresh = () => {
   useEffect(() => {
     const token = Cookie.get(ACCESS_TOKEN);
     const socketBaseUrl = resolveSocketBaseUrl();
-    if (!token || !socketBaseUrl) return;
+    if (!token || !socketBaseUrl) {
+      console.log('[rt-notify][client] socket init skipped', {
+        hasToken: !!token,
+        socketBaseUrl: socketBaseUrl || null,
+      });
+      return;
+    }
 
     const socket: Socket = io(socketBaseUrl, {
       transports: ['websocket', 'polling'],
@@ -37,24 +43,43 @@ export const useAdminBookingRealtimeRefresh = () => {
       reconnectionAttempts: Infinity,
       timeout: 10000,
     });
+    console.log('[rt-notify][client] socket connecting', { socketBaseUrl });
 
-    const scheduleRefresh = () => {
+    const scheduleRefresh = (payload?: any) => {
+      console.log('[rt-notify][client] booking event received', {
+        event: ADMIN_BOOKING_NOTIFICATION_CREATED,
+        payload: payload ?? null,
+      });
       if (refreshTimerRef.current) return;
       refreshTimerRef.current = setTimeout(() => {
+        console.log('[rt-notify][client] router.refresh triggered');
         router.refresh();
         refreshTimerRef.current = null;
       }, 350);
     };
 
+    socket.on('connect', () => {
+      console.log('[rt-notify][client] socket connected', { socketId: socket.id });
+    });
+    socket.on('connect_error', (error: Error) => {
+      console.log('[rt-notify][client] socket connect_error', { message: error?.message });
+    });
+    socket.on('disconnect', (reason: string) => {
+      console.log('[rt-notify][client] socket disconnected', { reason });
+    });
     socket.on(ADMIN_BOOKING_NOTIFICATION_CREATED, scheduleRefresh);
 
     return () => {
       socket.off(ADMIN_BOOKING_NOTIFICATION_CREATED, scheduleRefresh);
+      socket.off('connect');
+      socket.off('connect_error');
+      socket.off('disconnect');
       socket.disconnect();
       if (refreshTimerRef.current) {
         clearTimeout(refreshTimerRef.current);
         refreshTimerRef.current = null;
       }
+      console.log('[rt-notify][client] socket cleanup complete');
     };
   }, [router]);
 };
