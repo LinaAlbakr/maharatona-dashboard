@@ -25,6 +25,7 @@ import i18n from 'src/locales/i18n';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import NotificationCard from './notification-card';
 import { groupAdminNewBookingNotifications } from './group-admin-booking-notifications';
+import { useAdminBookingRealtimeRefresh } from 'src/hooks/use-admin-booking-realtime';
 
 const BOOKING_MODEL_FILTERS = [
   { name_en: 'Fixed', name_ar: 'ثابت', value: 'fixed' },
@@ -75,6 +76,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslate();
+  useAdminBookingRealtimeRefresh();
 
   const displayNotifications = useMemo(
     () =>
