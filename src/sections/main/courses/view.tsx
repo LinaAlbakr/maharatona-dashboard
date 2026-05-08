@@ -60,6 +60,7 @@ import {
   enrollmentConfirmDialogTitleSx,
 } from './components/enrollment-confirm-dialog-styles';
 import { enrollmentTurquoiseSwitchSx } from './components/flexible-model-config';
+import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
 
 type props = {
   count: number;
@@ -89,6 +90,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const isIpadViewport = useMediaQuery(
     '(min-width: 768px) and (max-width: 1366px) and (pointer: coarse)'
   );
+  useAdminEntityListsRealtimeRefresh();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

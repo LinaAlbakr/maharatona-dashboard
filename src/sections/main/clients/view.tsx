@@ -28,6 +28,7 @@ import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomA
 import { ICenter } from 'src/types/centers';
 
 import SendNotification from './client-details/components/send-notification';
+import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
 
 type props = {
   clients: any[];
@@ -51,6 +52,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
+  useAdminEntityListsRealtimeRefresh();
 
   useEffect(() => {
     router.push(`${pathname}`);

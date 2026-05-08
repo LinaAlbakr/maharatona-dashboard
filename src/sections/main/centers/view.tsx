@@ -26,6 +26,7 @@ import { ICenter } from 'src/types/centers';
 
 import SendNotification from './center-details/components/send-notification';
 import { useTranslation } from 'react-i18next';
+import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
 
 type props = {
   centers: ICenter[];
@@ -54,6 +55,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
   const { i18n } = useTranslation();
+  useAdminEntityListsRealtimeRefresh();
 
   useEffect(() => {
     router.push(`${pathname}`);
