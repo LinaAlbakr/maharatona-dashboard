@@ -24,6 +24,7 @@ export default async function Page({ searchParams }: Readonly<Props>) {
     typeof searchParams?.booking_model_type === 'string'
       ? searchParams?.booking_model_type
       : null;
+  const search = typeof searchParams?.search === 'string' ? searchParams?.search : null;
   const select_date =
     typeof searchParams?.select_date === 'string' ? searchParams?.select_date : null;
   const notifications = await fetchNotifications({
@@ -31,6 +32,7 @@ export default async function Page({ searchParams }: Readonly<Props>) {
     notifications_limit,
     notification_type,
     booking_model_type,
+    search,
     select_date,
   });
 

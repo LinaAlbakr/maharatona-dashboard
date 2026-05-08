@@ -10,11 +10,12 @@ import {
   Pagination,
   Select,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format, isValid } from 'date-fns';
-import { Fragment, useCallback, useMemo } from 'react';
+import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 import FormProvider from 'src/components/hook-form';
@@ -82,10 +83,10 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
       ),
     [notifications?.data]
   );
-  console.log("displayNotifications", displayNotifications);
   const formDefaultValues = {
     type: '',
     date: '',
+    search: searchParams.get('search') || '',
   };
 
   const methods = useForm({
@@ -93,6 +94,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
   });
 
   const { control } = methods;
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rowsPerPage = Number(searchParams.get('notifications_limit')) || notifications?.meta?.limit || 20;
   const currentPage = Number(searchParams.get('notifications_page')) || 1;
 
@@ -108,6 +110,11 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
         }
       } else {
         params.delete(name);
+      }
+
+      // Any filter/search change should restart pagination from first page.
+      if (name === 'search' || name === 'select_date' || name === 'booking_model_type') {
+        params.set('notifications_page', '1');
       }
 
       router.push(`${pathname}?${params.toString()}`);
@@ -148,7 +155,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
               display="grid"
               gridTemplateColumns={{
                 xs: '1fr',
-                md: 'repeat(2, minmax(0, 1fr))',
+                md: 'repeat(3, minmax(0, 1fr))',
               }}
             >
               <CutomAutocompleteView
@@ -160,6 +167,34 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
                   createQueryString('booking_model_type', selectedType?.value ?? '')
                 }
               />
+              <Controller
+                name="search"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('LABEL.SEARCH')}
+                    placeholder="Search by parent, program"
+                    fullWidth
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      field.onChange(value);
+                      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+                      searchDebounceRef.current = setTimeout(() => {
+                        createQueryString('search', String(value || '').trim());
+                      }, 350);
+                    }}
+                    onBlur={() => createQueryString('search', String(field.value || '').trim())}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        createQueryString('search', String(field.value || '').trim());
+                      }
+                    }}
+                  />
+                )}
+              />
+
               <Controller
                 name="date"
                 control={control}

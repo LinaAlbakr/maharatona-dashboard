@@ -774,7 +774,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   <Box component="span"> {isAr ? 'تم حجزها' : 'has been booked'} </Box>
                 )}
                 <Box component="span"> {isAr ? 'بواسطة' : 'by'} </Box>
-                <Box component="strong" sx={{ fontWeight: '900 !important', color: '#006C9C', fontSize: '15px' }}>
+                <Box component="span" sx={{ color: '#006C9C', fontSize: '15px' }}>
                   {parentNameLine}
                 </Box>
                 .
@@ -894,7 +894,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                       {'\u201D'}
                     </Box>{' '}
                     بواسطة{' '}
-                    <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
+                    <Box component="span" sx={{ color: '#006C9C', fontSize: '15px' }}>
                       {'\u201C'}
                       {parentForSummary}
                       {'\u201D'}
@@ -923,7 +923,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                       {'\u201D'}
                     </Box>{' '}
                     by{' '}
-                    <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
+                    <Box component="span" sx={{ color: '#006C9C', fontSize: '15px' }}>
                       {'\u201C'}
                       {parentForSummary}
                       {'\u201D'}
@@ -978,7 +978,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                               <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {parentLabel}
                               </Typography>
-                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
+                              <Typography sx={{ color: '#2B509C', fontWeight: 400, fontSize: '14px' }}>
                                 {detail.parent?.name ?? '—'}
                               </Typography>
                             </Stack>
@@ -1056,7 +1056,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                               <Typography sx={{ color: '#A29F9D', fontSize: '14px', minWidth: 90 }}>
                                 {centerLabel}
                               </Typography>
-                              <Typography sx={{ color: '#2B509C', fontWeight: 600, fontSize: '14px' }}>
+                              <Typography sx={{ color: '#2B509C', fontWeight: 400, fontSize: '14px' }}>
                                 {detail.center?.name ?? '—'}
                               </Typography>
                             </Stack>

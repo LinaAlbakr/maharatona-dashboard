@@ -31,6 +31,7 @@ interface IParams {
   notifications_limit?: number;
   notification_type?: string | null;
   booking_model_type?: 'fixed' | 'flexible' | string | null;
+  search?: string | null;
   select_date?: string | null;
 }
 export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promise<any> => {
@@ -173,6 +174,7 @@ export const fetchNotifications = async ({
   notifications_limit = 50,
   notification_type = null,
   booking_model_type = null,
+  search = null,
   select_date = null,
 }: IParams): Promise<any> => {
   const accessToken = getCookie('access_token', { cookies });
@@ -205,6 +207,7 @@ export const fetchNotifications = async ({
         limit: notifications_limit,
         notification_type,
         booking_model_type,
+        search,
         select_date,
       },
       headers: {
