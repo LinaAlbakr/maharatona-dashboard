@@ -144,7 +144,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+      enqueueSnackbar(t('MESSAGE.CENTER_DELETED_SUCCESSFULLY'), {
         variant: 'success',
       });
     }
@@ -438,8 +438,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
-        title={t('TITLE.DELETE_PROGRAM')}
-        content={t('MESSAGE.CONFIRM_DELETE_PROGRAM')}
+        title={t('TITLE.DELETE_CENTER')}
+        content={t('MESSAGE.CONFIRM_DELETE_CENTER')}
         action={
           <Button
             variant="contained"

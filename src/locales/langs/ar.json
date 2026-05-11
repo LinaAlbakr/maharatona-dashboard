@@ -427,6 +427,7 @@
     "CONFIRM_ACTIVATE_COURSE": "هل تريد تفعيل هذا البرنامج؟",
     "CONFIRM_DEACTIVATE_COURSE": "هل تريد تعطيل هذا البرنامج؟",
     "PROGRAM_DELETED_SUCCESSFULLY": "تم حذف البرنامج بنجاح",
+    "CENTER_DELETED_SUCCESSFULLY": "تم حذف المركز بنجاح",
     "PROGRAM_ACTIVATED_SUCCESSFULLY": "تم تفعيل البرنامج بنجاح",
     "PROGRAM_DEACTIVATED_SUCCESSFULLY": "تم تعطيل البرنامج بنجاح",
     "CONFIRM_DELETE_CITY": "هل تريد حذف هذه المدينة؟",

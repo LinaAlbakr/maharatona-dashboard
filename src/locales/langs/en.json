@@ -421,6 +421,7 @@
     "CONFIRM_ACTIVATE_COURSE": "Are you sure you want to activate this program?",
     "CONFIRM_DEACTIVATE_COURSE": "Are you sure you want to deactivate this program?",
     "PROGRAM_DELETED_SUCCESSFULLY": "Program deleted successfully",
+    "CENTER_DELETED_SUCCESSFULLY": "Center Deleted Successfully",
     "PROGRAM_ACTIVATED_SUCCESSFULLY": "Program activated successfully",
     "PROGRAM_DEACTIVATED_SUCCESSFULLY": "Program deactivated successfully",
     "CONFIRM_DELETE_CITY": "Are you sure you want to delete this city?",
