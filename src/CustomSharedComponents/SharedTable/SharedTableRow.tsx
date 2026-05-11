@@ -30,7 +30,7 @@ export default function SharedTableRow<T extends { id: string }>({
     <>
       <TableRow hover sx={rowStyle}>
         {headIds.map((x, index) => (
-          <TableCell key={index} sx={{ whiteSpace: 'nowrap', color:"info.dark" }}>
+          <TableCell key={index} sx={{ whiteSpace: 'nowrap', color: 'info.dark' }}>
             {customRender && x in customRender ? customRender[x]!(row) : (row as any)[x]}
           </TableCell>
         ))}

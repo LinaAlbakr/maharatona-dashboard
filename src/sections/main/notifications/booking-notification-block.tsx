@@ -589,14 +589,15 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
       return;
     }
 
-    const listKnowsModel = Boolean(
-      pickKnownBookingModel(
-        data?.raw?.booking_model,
-        data?.booking_model,
-        data?.booking_type,
-        data?.actual_type
-      )
+    const listModel = pickKnownBookingModel(
+      data?.raw?.booking_model,
+      data?.booking_model,
+      data?.booking_type,
+      data?.actual_type
     );
+    const listKnowsModel = Boolean(listModel);
+    /** Fixed rows often omit child names in list copy ("1 Child"); prefetch expand on notifications page only. */
+    const needsFixedChildNamePrefetch = variant === 'page' && listModel === 'fixed';
 
     if (prefetchedExpandKeyRef.current !== expandCacheKey) {
       prefetchedExpandKeyRef.current = expandCacheKey;
@@ -606,7 +607,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
       setLoading(false);
     }
 
-    if (listKnowsModel) {
+    if (listKnowsModel && !needsFixedChildNamePrefetch) {
       setBootstrapping(false);
       return;
     }
@@ -626,7 +627,16 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
     return () => {
       cancelled = true;
     };
-  }, [expandCacheKey, expandIds, data?.notification_type, data?.raw?.booking_model, data?.booking_model, data?.booking_type, data?.actual_type]);
+  }, [
+    expandCacheKey,
+    expandIds,
+    data?.notification_type,
+    data?.raw?.booking_model,
+    data?.booking_model,
+    data?.booking_type,
+    data?.actual_type,
+    variant,
+  ]);
 
   const loadDetail = useCallback(async () => {
     if (!expandCacheKey) return;
@@ -690,6 +700,10 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
     ),
     isAr
   );
+  /** Prefer real names from message/expand; keep count phrase only as fallback. */
+  const fixedChildrenSummaryText =
+    (fixedChildrenLine && fixedChildrenLine.trim()) ||
+    (childrenCountOnlyText !== '—' ? childrenCountOnlyText : '');
   const displayCourseName =
     pickFirst(
       courseName,
@@ -761,12 +775,12 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     {displayCourseName}
                   </Box>
                 )}
-                {childrenCountOnlyText !== '—' ? (
+                {fixedChildrenSummaryText ? (
                   <>
                     <Box component="span"> {isAr ? 'تم حجزها لـ' : 'has been booked for'} </Box>
                     <Box component="strong" sx={{ fontWeight: '900 !important', color: '#006C9C', fontSize: '15px' }}>
                       {'\u201C'}
-                      {childrenCountOnlyText}
+                      {fixedChildrenSummaryText}
                       {'\u201D'}
                     </Box>
                   </>

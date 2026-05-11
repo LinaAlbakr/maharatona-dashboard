@@ -37,7 +37,8 @@ type props = {
 
 /** Inactive / “blocked” centers have `is_active === false` (matches admin deactivate toggle). */
 const isCenterInactive = (row: Pick<ICenter, 'is_active'>) => row.is_active === false;
-const BLOCKED_CENTER_COLOR = '#F6B93B';
+/** Text color for blocked center cells only (no row background). */
+const BLOCKED_CENTER_TEXT_COLOR = '#C97A1A';
 
 const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>) => {
   const settings = useSettingsContext();
@@ -297,12 +298,12 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           ]}
           customRender={{
             name: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.name}
               </Box>
             ),
             neighborhood: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {typeof item?.neighborhood === 'string'
                   ? item?.neighborhood
                   : (i18n.language === 'ar'
@@ -311,7 +312,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               </Box>
             ),
             id: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {typeof item?.city === 'string'
                   ? item?.city
                   : (i18n.language === 'ar'
@@ -323,24 +324,24 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               <Box
                 sx={{
                   direction: 'ltr',
-                  color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit',
+                  color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit',
                 }}
               >
                 {item?.phone}
               </Box>
             ),
             number_of_registrants: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.number_of_registrants}
               </Box>
             ),
             number_of_courses: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.number_of_courses}
               </Box>
             ),
             walletBalance: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_COLOR : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.walletBalance ?? 0}
               </Box>
             ),
