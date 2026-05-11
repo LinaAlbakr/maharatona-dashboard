@@ -7,7 +7,6 @@ import {
   Container,
   FormControl,
   MenuItem,
-  Pagination,
   Select,
   Stack,
   TextField,
@@ -35,9 +34,6 @@ const BOOKING_MODEL_FILTERS = [
 type Props = {
   notifications: any;
 };
-
-const getPagesCount = (count: number, limit: number) =>
-  count / Math.max(limit, 1) > 1 ? Math.ceil(count / Math.max(limit, 1)) : 1;
 
 const getDayGroupKey = (createdAt: string | Date | undefined) => {
   const d = createdAt ? new Date(createdAt) : null;
@@ -98,7 +94,6 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
   const { control } = methods;
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rowsPerPage = Number(searchParams.get('notifications_limit')) || notifications?.meta?.limit || 20;
-  const currentPage = Number(searchParams.get('notifications_page')) || 1;
 
   const createQueryString = useCallback(
     (name: string, value: number | Date | null | string) => {
@@ -298,13 +293,6 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
             </FormControl>
           </Stack>
 
-          <Pagination
-            sx={{ display: 'flex', justifyContent: { xs: 'center', sm: 'flex-end' } }}
-            count={getPagesCount(notifications?.meta?.itemCount || 0, rowsPerPage)}
-            page={currentPage}
-            color="secondary"
-            onChange={(_, value) => createQueryString('notifications_page', value)}
-          />
         </Stack>
       )}
     </Container>

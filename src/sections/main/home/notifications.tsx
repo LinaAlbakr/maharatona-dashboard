@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
-import React, { useCallback, useMemo } from 'react';
+import { Box, Card, FormControl, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { useCallback, useMemo } from 'react';
 import { useSettingsContext } from 'src/components/settings';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -43,30 +43,36 @@ const NotificationView = ({ notifications }: Props) => {
     [notifications?.data]
   );
 
-  const count = (countArg: number) => {
-    if (countArg / 6 > 1) {
-      return Math.ceil(countArg / 6);
-    } else return 1;
-  };
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    createQueryString('notifications_page', value);
-  };
+  const rowsPerPage = Number(searchParams.get('notifications_limit')) || notifications?.meta?.limit || 6;
+
   const createQueryString = useCallback(
-    (name: string, value: number | Date | null) => {
+    (name: string, value: number | Date | null | string) => {
       const params = new URLSearchParams(searchParams.toString());
       if (value) {
         if (name === 'select_date') {
-          params.set(name, format(value, 'yyyy-MM-dd'));
+          params.set(name, format(value as Date, 'yyyy-MM-dd'));
         } else {
           params.set(name, String(value));
         }
       } else {
         params.delete(name);
       }
+
+      if (name === 'select_date' || name === 'notification_type') {
+        params.set('notifications_page', '1');
+      }
+
       router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams]
   );
+
+  const handleRowsPerPageChange = (nextLimit: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('notifications_limit', String(nextLimit));
+    params.set('notifications_page', '1');
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <Card sx={{ p: 2, mt: 3 }}>
@@ -141,13 +147,24 @@ const NotificationView = ({ notifications }: Props) => {
         </Stack>
       )}
       {notifications.data.length > 0 && (
-        <Pagination
-          sx={{ display: 'flex', justifyContent: 'center' }}
-          count={count(notifications.meta.itemCount)}
-          page={Number(searchParams.get('notifications_page')) || 1}
-          color="secondary"
-          onChange={handleChange}
-        />
+        <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1.25} sx={{ py: 1 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+            Rows per page:
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: 96 }}>
+            <Select
+              value={String(rowsPerPage)}
+              onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+              sx={{ borderRadius: 2.5 }}
+            >
+              {[6, 10, 20, 50].map((n) => (
+                <MenuItem key={n} value={String(n)}>
+                  {n}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Stack>
       )}
     </Card>
   );
