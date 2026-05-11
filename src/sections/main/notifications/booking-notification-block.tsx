@@ -779,9 +779,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                   <>
                     <Box component="span"> {isAr ? 'تم حجزها لـ' : 'has been booked for'} </Box>
                     <Box component="strong" sx={{ fontWeight: '900 !important', color: '#006C9C', fontSize: '15px' }}>
-                      {'\u201C'}
                       {fixedChildrenSummaryText}
-                      {'\u201D'}
                     </Box>
                   </>
                 ) : (
@@ -903,9 +901,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     )}{' '}
                     لـ{' '}
                     <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
-                      {'\u201C'}
                       {summaryChildrenText}
-                      {'\u201D'}
                     </Box>{' '}
                     بواسطة{' '}
                     <Box component="span" sx={{ color: '#006C9C', fontSize: '15px' }}>
@@ -932,9 +928,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     )}{' '}
                     has been booked for{' '}
                     <Box component="strong" sx={{ color: '#006C9C', fontWeight: '900 !important', fontSize: '15px' }}>
-                      {'\u201C'}
                       {summaryChildrenText}
-                      {'\u201D'}
                     </Box>{' '}
                     by{' '}
                     <Box component="span" sx={{ color: '#006C9C', fontSize: '15px' }}>
