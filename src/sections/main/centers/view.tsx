@@ -111,7 +111,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (selectedId) {
       const res = await changeCenterStatus(selectedId, { userStatus: 'BlockedClient' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.BLOCK_PROGRAM_SUCCESSFULLY'));
+        enqueueSnackbar('Center blocked successfully');
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }
@@ -123,7 +123,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (selectedId) {
       const res = await changeCenterStatus(selectedId, { userStatus: 'ActiveClient' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.UNBLOCK_PROGRAM_SUCCESSFULLY'));
+        enqueueSnackbar('Center unblocked successfully');
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }
@@ -393,8 +393,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       <ConfirmDialog
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
-        title={t('TITLE.BLOCK_PROGRAM')}
-        content={t('MESSAGE.CONFIRM_BLOCK_PROGRAM')}
+        title={t('TITLE.BLOCK_CENTER')}
+        content={t('MESSAGE.CONFIRM_BLOCK')}
         action={
           <Button
             variant="contained"
@@ -410,8 +410,8 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
       <ConfirmDialog
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
-        title={t('TITLE.UNBLOCK_PROGRAM')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK_PROGRAM')}
+        title={t('TITLE.UNBLOCK_CENTER')}
+        content={t('MESSAGE.CONFIRM_UNBLOCK')}
         action={
           <Button
             variant="contained"
