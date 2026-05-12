@@ -85,13 +85,20 @@ const readChildName = (child: any) =>
   child?.name ||
   child?.child_name ||
   child?.full_name ||
+  child?.child_id?.name ||
+  child?.child_id?.full_name ||
   child?.child?.name ||
   child?.name_en ||
   child?.name_ar ||
   '';
 
 const readChildAge = (child: any) =>
-  child?.age || child?.child_age || child?.years || child?.child?.age || '';
+  child?.age ||
+  child?.child_age ||
+  child?.years ||
+  child?.child?.age ||
+  child?.child_id?.age ||
+  '';
 
 const readChildrenList = (data: any) => {
   const source = Array.isArray(data?.children)
@@ -232,13 +239,16 @@ function formatFixedChildrenLine(
 ): string {
   if (structured.length > 0) {
     return structured
-      .map((c) => (c.age === 0 || c.age ? `${c.name} (${c.age} Years)` : c.name))
+      .map((c) =>
+        c.age === 0 || c.age ? `${c.name} (${c.age} ${isAr ? 'سنة' : 'years'})` : c.name
+      )
       .join(isAr ? '، ' : ', ');
   }
   if (!segment) return '';
   return segment
     .split(/,|،/)
-    .map((p) => cleanChildNameTokens(p.replace(/\s*\([^)]*\)\s*$/g, '').trim()))
+    // Keep age text from old notifications, e.g. "Dana (5 years)"
+    .map((p) => cleanChildNameTokens(p.trim()))
     .filter(Boolean)
     .join(isAr ? '، ' : ', ');
 }
@@ -686,9 +696,14 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
   })();
   const fixedChildrenFromDetail =
     Array.isArray(detail?.booking_items) && detail.booking_items.length > 0
-      ? (detail.booking_items as { child_name?: string }[])
-          .map((i) => i.child_name)
-          .filter(Boolean)
+      ? (detail.booking_items as any[])
+          .map((i) => {
+            const name = readChildName(i);
+            const age = readChildAge(i);
+            if (!name) return '';
+            return age === 0 || age ? `${name} (${age} ${isAr ? 'سنة' : 'years'})` : name;
+          })
+          .filter((v) => Boolean(String(v || '').trim()))
           .join(isAr ? '، ' : ', ')
       : '';
   const fixedChildrenLine = fixedChildrenDisplay || fixedChildrenFromDetail;
