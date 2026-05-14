@@ -30,6 +30,8 @@ interface IParams {
   notifications_page?: number;
   notifications_limit?: number;
   notification_type?: string | null;
+  booking_model_type?: 'fixed' | 'flexible' | string | null;
+  search?: string | null;
   select_date?: string | null;
 }
 export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promise<any> => {
@@ -171,6 +173,8 @@ export const fetchNotifications = async ({
   notifications_page = 1,
   notifications_limit = 50,
   notification_type = null,
+  booking_model_type = null,
+  search = null,
   select_date = null,
 }: IParams): Promise<any> => {
   const accessToken = getCookie('access_token', { cookies });
@@ -202,6 +206,8 @@ export const fetchNotifications = async ({
         page: notifications_page,
         limit: notifications_limit,
         notification_type,
+        booking_model_type,
+        search,
         select_date,
       },
       headers: {
@@ -231,6 +237,51 @@ export const fetchNotifications = async ({
           ? doc.message_ar || doc.message_en || ''
           : doc.message_en || doc.message_ar || '',
       created_at: doc.createdAt || doc.created_at,
+      // keep original payload data so UI can build richer templates
+      raw: doc,
+      booking_type:
+        doc.booking_model || doc.booking_type || doc.course_type || doc.session_type || doc.type,
+      actual_type:
+        doc.booking_model ||
+        doc.booking_type ||
+        doc.course_type ||
+        doc.session_type ||
+        doc.type ||
+        doc.notification_sub_type ||
+        doc.notification_type,
+      course_name:
+        (lang === 'ar' ? doc.course_name_ar || doc.course_name_en : doc.course_name_en || doc.course_name_ar) ||
+        doc.course_name ||
+        doc.course_title ||
+        doc.booking?.course_name ||
+        doc.booking?.course?.name_en ||
+        doc.booking?.course?.name_ar ||
+        doc.session?.course_name ||
+        doc.course?.name_en ||
+        doc.course?.name_ar ||
+        doc.course?.title,
+      center_name:
+        (lang === 'ar' ? doc.center_name_ar || doc.center_name_en : doc.center_name_en || doc.center_name_ar) ||
+        doc.center_name ||
+        doc.center?.name ||
+        doc.center?.name_en ||
+        doc.center?.name_ar ||
+        doc.booking?.center_name ||
+        doc.booking?.center?.name,
+      parent_name:
+        (lang === 'ar' ? doc.parent_name_ar || doc.parent_name_en : doc.parent_name_en || doc.parent_name_ar) ||
+        doc.parent_name ||
+        doc.client_name ||
+        doc.user_name ||
+        doc.parent?.name,
+      children:
+        doc.children ||
+        doc.childrens ||
+        doc.children_info ||
+        doc.booking_children ||
+        doc.client_children ||
+        doc.kids ||
+        [],
     }));
 
     return {

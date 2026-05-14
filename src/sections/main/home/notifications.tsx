@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, Card, Container, Pagination, Stack, Typography } from '@mui/material';
-import React, { useCallback } from 'react';
+import { Box, Card, FormControl, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { useCallback, useMemo } from 'react';
 import { useSettingsContext } from 'src/components/settings';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -12,36 +12,20 @@ import { useTranslate } from 'src/locales';
 import { Controller, useForm } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
+import { NOTIFICATION_TYPES } from '../notifications/constants';
+import { groupAdminNewBookingNotifications } from '../notifications/group-admin-booking-notifications';
+import { useAdminBookingRealtimeRefresh } from 'src/hooks/use-admin-booking-realtime';
 type Props = {
   notifications: any;
 };
 
-const notification_types = [
-  { name_en: 'New Courses', name_ar: 'الدورات الجديدة', value: 'ADMIN_CENTER_NEW_COURSE' },
-  {
-    name_en: 'Packages purchased',
-    name_ar: 'الباقات المشتراة',
-    value: 'ADMIN_CENTER_PACKAGE_PURCHASED',
-  },
-  { name_en: 'Registered centers', name_ar: 'المراكز المسجلة', value: 'ADMIN_CENTER_REGISTER' },
-  { name_en: 'Registered clients', name_ar: 'العملاء المسجلين', value: 'ADMIN_CLIENT_REGISTER' },
-  {
-    name_en: 'Purchase course as a gift',
-    name_ar: 'الدورات المرسلة ك هدية',
-    value: 'ADMIN_CLIENT_SEND_GIFT',
-  },
-  {
-    name_en: 'Courses purchased',
-    name_ar: 'الدورات المشتراة',
-    value: 'ADMIN_CLIENT_COURSE_PURCHASED',
-  },
-];
 const NotificationView = ({ notifications }: Props) => {
   const settings = useSettingsContext();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslate();
+  useAdminBookingRealtimeRefresh();
 
   const formDefaultValues = {
     name: '',
@@ -54,30 +38,41 @@ const NotificationView = ({ notifications }: Props) => {
 
   const { control } = methods;
 
-  const count = (count: number) => {
-    if (count / 6 > 1) {
-      return Math.ceil(count / 6);
-    } else return 1;
-  };
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    createQueryString('notifications_page', value);
-  };
+  const displayNotifications = useMemo(
+    () => groupAdminNewBookingNotifications(notifications?.data ?? []),
+    [notifications?.data]
+  );
+
+  const rowsPerPage = Number(searchParams.get('notifications_limit')) || notifications?.meta?.limit || 6;
+
   const createQueryString = useCallback(
-    (name: string, value: number | Date | null) => {
+    (name: string, value: number | Date | null | string) => {
       const params = new URLSearchParams(searchParams.toString());
       if (value) {
         if (name === 'select_date') {
-          params.set(name, format(value, 'yyyy-MM-dd'));
+          params.set(name, format(value as Date, 'yyyy-MM-dd'));
         } else {
           params.set(name, String(value));
         }
       } else {
         params.delete(name);
       }
+
+      if (name === 'select_date' || name === 'notification_type') {
+        params.set('notifications_page', '1');
+      }
+
       router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams]
   );
+
+  const handleRowsPerPageChange = (nextLimit: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('notifications_limit', String(nextLimit));
+    params.set('notifications_page', '1');
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <Card sx={{ p: 2, mt: 3 }}>
@@ -96,7 +91,7 @@ const NotificationView = ({ notifications }: Props) => {
           sx={{ width: '50%', mx: 'auto' }}
         >
           <CutomAutocompleteView
-            items={notification_types as any[]}
+            items={NOTIFICATION_TYPES as any[]}
             label={t('LABEL.TYPE')}
             placeholder={t('LABEL.TYPE')}
             name="type"
@@ -142,19 +137,34 @@ const NotificationView = ({ notifications }: Props) => {
             gap: 2,
           }}
         >
-          {notifications.data.map((data: any) => (
-            <NotificationItem key={data.id} data={data} />
-          ))}
+          {displayNotifications.map((data: any) => {
+            const rowKey =
+              Array.isArray(data?._groupedBookingIds) && data._groupedBookingIds.length
+                ? `grp:${data._groupedBookingIds.join('-')}`
+                : String(data?.id ?? '');
+            return <NotificationItem key={rowKey} data={data} />;
+          })}
         </Stack>
       )}
       {notifications.data.length > 0 && (
-        <Pagination
-          sx={{ display: 'flex', justifyContent: 'center' }}
-          count={count(notifications.meta.itemCount)}
-          page={Number(searchParams.get('notifications_page')) || 1}
-          color="secondary"
-          onChange={handleChange}
-        />
+        <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1.25} sx={{ py: 1 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+            Rows per page:
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: 96 }}>
+            <Select
+              value={String(rowsPerPage)}
+              onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+              sx={{ borderRadius: 2.5 }}
+            >
+              {[6, 10, 20, 50].map((n) => (
+                <MenuItem key={n} value={String(n)}>
+                  {n}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Stack>
       )}
     </Card>
   );

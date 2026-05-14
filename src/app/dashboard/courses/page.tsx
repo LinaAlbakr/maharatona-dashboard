@@ -3,7 +3,7 @@ import CoursesView from 'src/sections/main/courses/view';
 import { cookies } from 'next/headers';
 
 export const metadata = {
-  title: 'Courses',
+  title: 'Programs',
 };
 
 type props = {

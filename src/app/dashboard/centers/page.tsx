@@ -2,6 +2,8 @@ import { fetchCenters, fetchCities, fetchCityNeighborhoods } from 'src/actions/c
 import CentersView from 'src/sections/main/centers/view';
 import { ICenter } from 'src/types/centers';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata = {
   title: 'Centers',

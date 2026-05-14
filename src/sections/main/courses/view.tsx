@@ -60,10 +60,28 @@ import {
   enrollmentConfirmDialogTitleSx,
 } from './components/enrollment-confirm-dialog-styles';
 import { enrollmentTurquoiseSwitchSx } from './components/flexible-model-config';
+import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
 
 type props = {
   count: number;
   courses: any[];
+};
+
+const getDiscountedPrice = (course: any): number | null => {
+  const basePrice = Number(course?.price ?? 0);
+  const discountAmount = Number(course?.discount_amount ?? 0);
+  const discountType = String(course?.discount_type ?? '').toLowerCase();
+
+  if (!Number.isFinite(basePrice) || basePrice <= 0) return null;
+  if (!Number.isFinite(discountAmount) || discountAmount <= 0) return null;
+
+  // Current backend exposes total/specific with numeric amount; treat as percentage for display.
+  if (discountType !== 'total' && discountType !== 'specific') return null;
+
+  const discounted = basePrice - (basePrice * discountAmount) / 100;
+  if (!Number.isFinite(discounted)) return null;
+
+  return Math.max(0, Math.round(discounted * 100) / 100);
 };
 
 const CoursesView = ({ count, courses }: Readonly<props>) => {
@@ -72,6 +90,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const isIpadViewport = useMediaQuery(
     '(min-width: 768px) and (max-width: 1366px) and (pointer: coarse)'
   );
+  useAdminEntityListsRealtimeRefresh();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -139,7 +158,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+      enqueueSnackbar(t('MESSAGE.PROGRAM_DELETED_SUCCESSFULLY'), {
         variant: 'success',
       });
     }
@@ -149,7 +168,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const handleConfirmActivate = async () => {
     const res = await editCourseStatus(selectedCourse);
     if (!res?.error) {
-      enqueueSnackbar(t('MESSAGE.ACTIVATED_SUCCESSFULLY'));
+      enqueueSnackbar(t('MESSAGE.PROGRAM_ACTIVATED_SUCCESSFULLY'));
       confirmActivate.onFalse();
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
@@ -158,7 +177,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const handleConfirmDeactivate = async () => {
     const res = await editCourseStatus(selectedCourse);
     if (!res?.error) {
-      enqueueSnackbar(t('MESSAGE.DEACTIVATED_SUCCESSFULLY'));
+      enqueueSnackbar(t('MESSAGE.PROGRAM_DEACTIVATED_SUCCESSFULLY'));
       confirmDeactivate.onFalse();
     } else {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
@@ -294,7 +313,11 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           customRender={{
             name: (item: any) => (
               <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {item?.name || (i18n.language === 'ar' ? item?.name_ar : item?.name_en) || '-'}
+                {(i18n.language === 'ar'
+                  ? item?.name_ar || item?.name_en
+                  : item?.name_en || item?.name_ar) ||
+                  item?.name ||
+                  '-'}
               </Box>
             ),
             students: (item: any) => (
@@ -412,26 +435,40 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               );
             },
 
-            price: (item: any) => (
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={0.75}
-                sx={{ color: item?.is_active ? 'inherit' : 'red' }}
-              >
-                {item?.is_active ? (
-                  <Image src="/assets/images/sar-logo.svg" alt="sar logo" height={20} width={20} />
-                ) : (
-                  <Image
-                    src="/assets/images/red-sar-logo.svg"
-                    alt="sar logo"
-                    height={20}
-                    width={20}
-                  />
-                )}
-                <span>{Math.round(item?.price ?? 0)}</span>
-              </Stack>
-            ),
+            price: (item: any) => {
+              const discountedPrice = getDiscountedPrice(item);
+              const basePrice = Math.round(item?.price ?? 0);
+              const sarIcon = item?.is_active
+                ? '/assets/images/sar-logo.svg'
+                : '/assets/images/red-sar-logo.svg';
+              return (
+                <Stack
+                  direction="column"
+                  alignItems="flex-start"
+                  spacing={0.5}
+                  sx={{ color: item?.is_active ? 'inherit' : 'red' }}
+                >
+                  <Stack direction="row" alignItems="center" spacing={0.75}>
+                    <Image src={sarIcon} alt="sar logo" height={20} width={20} />
+                    <span
+                      style={
+                        discountedPrice != null
+                          ? { textDecoration: 'line-through', opacity: 0.85 }
+                          : undefined
+                      }
+                    >
+                      {basePrice}
+                    </span>
+                  </Stack>
+                  {discountedPrice != null ? (
+                    <Stack direction="row" alignItems="center" spacing={0.75}>
+                      <Image src={sarIcon} alt="sar logo" height={20} width={20} />
+                      <span style={{ fontWeight: 700 }}>{Math.round(discountedPrice)}</span>
+                    </Stack>
+                  ) : null}
+                </Stack>
+              );
+            },
           }}
         />
         <Box

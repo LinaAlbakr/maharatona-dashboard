@@ -26,6 +26,7 @@ import { ICenter } from 'src/types/centers';
 
 import SendNotification from './center-details/components/send-notification';
 import { useTranslation } from 'react-i18next';
+import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
 
 type props = {
   centers: ICenter[];
@@ -36,6 +37,8 @@ type props = {
 
 /** Inactive / “blocked” centers have `is_active === false` (matches admin deactivate toggle). */
 const isCenterInactive = (row: Pick<ICenter, 'is_active'>) => row.is_active === false;
+/** Text color for blocked center cells only (no row background). */
+const BLOCKED_CENTER_TEXT_COLOR = '#C97A1A';
 
 const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>) => {
   const settings = useSettingsContext();
@@ -53,6 +56,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
   const { i18n } = useTranslation();
+  useAdminEntityListsRealtimeRefresh();
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -107,7 +111,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (selectedId) {
       const res = await changeCenterStatus(selectedId, { userStatus: 'BlockedClient' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
+        enqueueSnackbar('Center blocked successfully');
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }
@@ -119,7 +123,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (selectedId) {
       const res = await changeCenterStatus(selectedId, { userStatus: 'ActiveClient' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
+        enqueueSnackbar('Center unblocked successfully');
       } else {
         enqueueSnackbar(`${res?.error}`, { variant: 'error' });
       }
@@ -140,7 +144,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
-      enqueueSnackbar(t('MESSAGE.DELETED_SUCCESS'), {
+      enqueueSnackbar(t('MESSAGE.CENTER_DELETED_SUCCESSFULLY'), {
         variant: 'success',
       });
     }
@@ -294,12 +298,12 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           ]}
           customRender={{
             name: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.name}
               </Box>
             ),
             neighborhood: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {typeof item?.neighborhood === 'string'
                   ? item?.neighborhood
                   : (i18n.language === 'ar'
@@ -308,7 +312,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               </Box>
             ),
             id: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {typeof item?.city === 'string'
                   ? item?.city
                   : (i18n.language === 'ar'
@@ -320,24 +324,24 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               <Box
                 sx={{
                   direction: 'ltr',
-                  color: isCenterInactive(item) ? 'error.main' : 'inherit',
+                  color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit',
                 }}
               >
                 {item?.phone}
               </Box>
             ),
             number_of_registrants: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.number_of_registrants}
               </Box>
             ),
             number_of_courses: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.number_of_courses}
               </Box>
             ),
             walletBalance: (item: any) => (
-              <Box sx={{ color: isCenterInactive(item) ? 'error.main' : 'inherit' }}>
+              <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
                 {item?.walletBalance ?? 0}
               </Box>
             ),

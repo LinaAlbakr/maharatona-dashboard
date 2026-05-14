@@ -74,6 +74,11 @@ export function useNavData() {
       {
         items: [
           { title: t('SIDEBAR.MAIN'), path: paths.dashboard.root, icon: ICONS.home },
+          {
+            title: t('SIDEBAR.NOTIFICATIONS'),
+            path: paths.dashboard.notifications,
+            icon: ICONS.notifications,
+          },
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
           { title: t('SIDEBAR.COURSES'), path: paths.dashboard.courses, icon: ICONS.bag },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },

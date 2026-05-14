@@ -2,7 +2,7 @@
 
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -28,6 +28,7 @@ import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomA
 import { ICenter } from 'src/types/centers';
 
 import SendNotification from './client-details/components/send-notification';
+import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
 
 type props = {
   clients: any[];
@@ -46,9 +47,12 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const confirmUnblock = useBoolean();
   const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string >("");
+  const selectedIdRef = useRef<string>('');
+  const [statusActionLoading, setStatusActionLoading] = useState(false);
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
+  useAdminEntityListsRealtimeRefresh();
 
   useEffect(() => {
     router.push(`${pathname}`);
@@ -99,39 +103,51 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   );
 
   const handleConfirmBlock = async () => {
-    if (!selectedId) {
+    const clientId = selectedIdRef.current || selectedId;
+    if (!clientId || statusActionLoading) {
       confirmBlock.onFalse();
       return;
     }
+    setStatusActionLoading(true);
     try {
-      const res = await changeClientStatus(selectedId, { userStatus: 'BlockedClient' });
+      const res = await changeClientStatus(clientId, { userStatus: 'inactive' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.BLOCK_SUCCESSFULLY'));
+        enqueueSnackbar(t('MESSAGE.BLOCK_CLIENT_SUCCESSFULLY'));
         router.refresh();
       } else {
         enqueueSnackbar(String(res ?? ''), { variant: 'error' });
       }
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
+    } finally {
+      setStatusActionLoading(false);
     }
+    selectedIdRef.current = '';
+    setSelectedId('');
     confirmBlock.onFalse();
   };
   const handleConfirmUnblock = async () => {
-    if (!selectedId) {
+    const clientId = selectedIdRef.current || selectedId;
+    if (!clientId || statusActionLoading) {
       confirmUnblock.onFalse();
       return;
     }
+    setStatusActionLoading(true);
     try {
-      const res = await changeClientStatus(selectedId, { userStatus: 'ActiveClient' });
+      const res = await changeClientStatus(clientId, { userStatus: 'active' });
       if (res === 200) {
-        enqueueSnackbar(t('MESSAGE.UNBLOCK_SUCCESSFULLY'));
+        enqueueSnackbar(t('MESSAGE.UNBLOCK_CLIENT_SUCCESSFULLY'));
         router.refresh();
       } else {
         enqueueSnackbar(String(res ?? ''), { variant: 'error' });
       }
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
+    } finally {
+      setStatusActionLoading(false);
     }
+    selectedIdRef.current = '';
+    setSelectedId('');
     confirmUnblock.onFalse();
   };
     const handleconfirmDelete = async () => {
@@ -255,7 +271,9 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               label: t('LABEL.UNBLOCK'),
               icon: 'gg:unblock',
               onClick: (item: any) => {
-                setSelectedId(item._id || item.id);
+                const id = item._id || item.id;
+                selectedIdRef.current = id;
+                setSelectedId(id);
                 confirmUnblock.onTrue();
               },
               hide: (row) => !isClientBlocked(row),
@@ -265,7 +283,9 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
               label: t('LABEL.BLOCK'),
               icon: 'ic:outline-block',
               onClick: (item: any) => {
-                setSelectedId(item._id || item.id);
+                const id = item._id || item.id;
+                selectedIdRef.current = id;
+                setSelectedId(id);
                 confirmBlock.onTrue();
               },
               hide: (row) => isClientBlocked(row),
@@ -392,6 +412,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             onClick={() => {
               handleConfirmBlock();
             }}
+            disabled={statusActionLoading}
           >
             {t('BUTTON.BLOCK')}
           </Button>
@@ -409,6 +430,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             onClick={() => {
               handleConfirmUnblock();
             }}
+            disabled={statusActionLoading}
           >
             {t('BUTTON.UNBLOCK')}
           </Button>
