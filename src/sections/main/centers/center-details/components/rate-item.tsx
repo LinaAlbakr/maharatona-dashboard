@@ -17,11 +17,18 @@ const RateItem = ({ rate }: props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
+  const reviewId = rate?.id ?? rate?._id;
+  const clientName =
+    rate?.client?.name ?? rate?.client?.username ?? '—';
+  const commentText = rate?.comment_center ?? rate?.comment ?? '';
+  const ratingValue = rate?.rate_center ?? rate?.rate ?? 0;
+  const createdAt = rate?.created_at ?? rate?.createdAt;
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = async () => {
-    const res = await deleteRate(rate.id, params?.centerId);
+    const res = await deleteRate(reviewId, params?.centerId);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
@@ -70,17 +77,17 @@ const RateItem = ({ rate }: props) => {
     >
       <Box>
         <Typography variant="h6" color="info.dark" fontWeight={700}>
-          {rate.client.name}
+          {clientName}
         </Typography>
         <Typography variant="body1" color="info.dark">
-          {rate.comment_center}
+          {commentText}
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
-          <Rating value={rate.rate_center} precision={0.5} readOnly />
+          <Rating value={ratingValue} precision={0.5} readOnly />
           <Typography variant="body1" color="info.dark">
-            {convertDate(fDate(rate?.created_at, 'dd-MM'))}
+            {createdAt ? convertDate(fDate(createdAt, 'dd-MM')) : '—'}
           </Typography>
         </Box>
         <Box>
