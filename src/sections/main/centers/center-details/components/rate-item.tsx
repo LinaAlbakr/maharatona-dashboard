@@ -28,7 +28,13 @@ const RateItem = ({ rate }: props) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = async () => {
-    const res = await deleteRate(reviewId, params?.centerId);
+    if (!reviewId || !params?.centerId) {
+      enqueueSnackbar('Unable to delete this review', { variant: 'error' });
+      setAnchorEl(null);
+      return;
+    }
+
+    const res = await deleteRate(reviewId, params.centerId);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {

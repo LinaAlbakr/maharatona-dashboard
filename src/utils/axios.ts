@@ -159,7 +159,8 @@ export const endpoints = {
     reports: (centerId: string) => `/admin/reports/${centerId}`,
     reviews: (centerId: string) => `/admin-panel/center/${centerId}/reviews`,
     changeStatus: (centerId: string) => `/admin/deactivate-center/${centerId}`,
-    deleteReview: (reviewId: string) => `/admin-panel/center-review/${reviewId}`,
+    deleteReview: (centerId: string, reviewId: string) =>
+      `/admin/delete-center-review/${centerId}/${reviewId}`,
     clearWallet: (centerId: string) => `/admin-panel/clearing-the-center-wallet/${centerId}`,
     deleteCenter: (centerId: string) => `/admin/delete-center/${centerId}`,
   },
