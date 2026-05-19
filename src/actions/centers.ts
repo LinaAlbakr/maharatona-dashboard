@@ -203,16 +203,23 @@ export async function changeCenterStatus(centerId: string, reqBody: any): Promis
 }
 
 export const deleteRate = async (rateId: string, centerId: any): Promise<any> => {
+  if (!rateId || !centerId) {
+    return { error: 'Missing review or center id' };
+  }
+
   try {
     const accessToken = cookies().get('access_token')?.value;
     const lang = cookies().get('Language')?.value;
 
-    const res = await axiosInstance.delete(endpoints.centers.deleteReview(rateId), {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Accept-Language': lang,
-      },
-    });
+    await axiosInstance.delete(
+      endpoints.centers.deleteReview(String(centerId), String(rateId)),
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Accept-Language': lang,
+        },
+      }
+    );
   } catch (error) {
     return {
       error: getErrorMessage(error),
