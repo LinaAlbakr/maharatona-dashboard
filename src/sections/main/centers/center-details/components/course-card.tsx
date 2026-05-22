@@ -6,8 +6,13 @@ type props = {
   course: any;
 };
 
+const REGISTRANT_BLUE = '#2065B2';
+
 const CourseCard = ({ course }: props) => {
   const { t } = useTranslate();
+  const categoryName =
+    course?.field &&
+    (i18n.language === 'ar' ? course.field?.name_ar : course.field?.name_en);
 
   return (
     <Card
@@ -39,30 +44,27 @@ const CourseCard = ({ course }: props) => {
         <ListItemText
           sx={{
             gridColumn: 'span',
-            color: 'primary.main',
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
           }}
-          primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
-          secondary={course.enrolled_children || 0}
-          secondaryTypographyProps={{ color: 'info.dark', fontSize: '17px', fontWeight: 'bold' }}
-        />{' '}
-        <ListItemText
-          primary={t('LABEL.FIELD_NAME')}
-          secondary={
-            // eslint-disable-next-line no-nested-ternary
-            course?.field
-              ? i18n.language === 'ar'
-                ? course.field?.name_ar
-                : course.field?.name_en
-              : '-'
-          }
+          primary={t('LABEL.NO_OF_REGISTRANTS')}
+          secondary={course.enrolled_children ?? 0}
           primaryTypographyProps={{
-            sx: { color: 'info.dark', fontWeight: "700" },
+            sx: { color: REGISTRANT_BLUE, fontSize: '16px', fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: 'primary.main', fontWeight: "700" },
+            sx: { color: 'primary.main', fontSize: '14px', fontWeight: 700 },
+          }}
+        />
+        <ListItemText
+          primary={t('LABEL.CATEGORIES')}
+          secondary={categoryName || '-'}
+          primaryTypographyProps={{
+            sx: { color: 'info.dark', fontWeight: 700 },
+          }}
+          secondaryTypographyProps={{
+            sx: { color: 'primary.main', fontWeight: 700 },
           }}
         />
       </Box>
