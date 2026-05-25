@@ -170,21 +170,22 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           disablePagination
           actions={[
             {
-              sx: { color: 'error.main' },
-              label: t('LABEL.DELETE'),
-              icon: 'material-symbols:delete',
-              onClick: (item) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
               label: t('LABEL.EDIT'),
               icon: 'material-symbols:edit',
               onClick: (item) => {
                 setSelectedReason(item);
                 setIsFormDialogOpen(true);
+              },
+            },
+            {
+              dividerBefore: true,
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'material-symbols:delete',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
             },
           ]}

@@ -262,21 +262,22 @@ const FaqView = ({ count, categories, categoriesCenter }: Readonly<props>) => {
                 },
               },
               {
-                sx: { color: 'error.dark' },
-                label: t('LABEL.DELETE'),
-                icon: 'eva:trash-2-outline',
-                onClick: (item: any) => {
-                  setSelectedId(item.id);
-                  confirmBlock.onTrue();
-                },
-              },
-              {
                 sx: { color: 'info.dark' },
                 label: t('LABEL.EDIT'),
                 icon: 'material-symbols:edit',
                 onClick: (item) => {
                   setSelectedCategory(item);
                   setIsFormDialogOpen(true);
+                },
+              },
+              {
+                dividerBefore: true,
+                sx: { color: 'error.dark' },
+                label: t('LABEL.DELETE'),
+                icon: 'eva:trash-2-outline',
+                onClick: (item: any) => {
+                  setSelectedId(item.id);
+                  confirmBlock.onTrue();
                 },
               },
             ]}
@@ -305,21 +306,22 @@ const FaqView = ({ count, categories, categoriesCenter }: Readonly<props>) => {
                 },
               },
               {
-                sx: { color: 'error.dark' },
-                label: t('LABEL.DELETE'),
-                icon: 'eva:trash-2-outline',
-                onClick: (item: any) => {
-                  setSelectedId(item.id);
-                  confirmBlock.onTrue();
-                },
-              },
-              {
                 sx: { color: 'info.dark' },
                 label: t('LABEL.EDIT'),
                 icon: 'material-symbols:edit',
                 onClick: (item) => {
                   setSelectedCategory(item);
                   setIsFormDialogOpen(true);
+                },
+              },
+              {
+                dividerBefore: true,
+                sx: { color: 'error.dark' },
+                label: t('LABEL.DELETE'),
+                icon: 'eva:trash-2-outline',
+                onClick: (item: any) => {
+                  setSelectedId(item.id);
+                  confirmBlock.onTrue();
                 },
               },
             ]}

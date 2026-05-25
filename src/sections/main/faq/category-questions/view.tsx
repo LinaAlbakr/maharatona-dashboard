@@ -187,21 +187,22 @@ const CategoryQuestionsView = ({
           disablePagination
           actions={[
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'ic:outline-block',
-              onClick: (item: any) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
               label: t('LABEL.EDIT'),
               icon: 'material-symbols:edit',
               onClick: (item) => {
                 setSelectedQuestion(item);
                 setIsFormDialogOpen(true);
+              },
+            },
+            {
+              dividerBefore: true,
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'ic:outline-block',
+              onClick: (item: any) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
             },
           ]}
