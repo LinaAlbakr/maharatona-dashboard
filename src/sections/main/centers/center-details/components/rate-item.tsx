@@ -64,7 +64,7 @@ const RateItem = ({ rate }: props) => {
           minHeight: 80,
         }}
       >
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           <Typography variant="h6" color="info.dark" fontWeight={700}>
             {clientName}
           </Typography>
@@ -73,7 +73,14 @@ const RateItem = ({ rate }: props) => {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 3 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'end',
+              gap: 1,
+            }}
+          >
             <Rating value={ratingValue} precision={0.5} readOnly />
             <Typography variant="body1" color="info.dark">
               {createdAt ? formatReviewDate(createdAt) : '—'}
