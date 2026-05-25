@@ -2,6 +2,9 @@ import { Avatar, Box, Card, ListItemText, Typography } from '@mui/material';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
 
+const LABEL_BLUE = '#2065B2';
+const VALUE_PINK = '#CC3899';
+
 type props = {
   course: any;
 };
@@ -45,9 +48,11 @@ const CourseCardReport = ({ course }: props) => {
           primary={t('LABEL.NO_OF_REGISTRANTS')}
           secondary={course.registrants}
           primaryTypographyProps={{
-            sx: { color: 'info.dark', fontWeight: 700 },
+            sx: { color: LABEL_BLUE, fontWeight: 700 },
           }}
-          secondaryTypographyProps={{ color: '#EF1844', fontSize: '17px', fontWeight: 'bold' }}
+          secondaryTypographyProps={{
+            sx: { color: VALUE_PINK, fontSize: '17px', fontWeight: 'bold' },
+          }}
         />
         <ListItemText
           primary={t('LABEL.CATEGORY')}
@@ -59,10 +64,10 @@ const CourseCardReport = ({ course }: props) => {
               : '-'
           }
           primaryTypographyProps={{
-            sx: { color: '#EF1844', fontWeight: 700 },
+            sx: { color: LABEL_BLUE, fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: '#EF1844', fontWeight: 700 },
+            sx: { color: VALUE_PINK, fontWeight: 700 },
           }}
         />
       </Box>

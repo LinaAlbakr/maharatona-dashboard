@@ -6,7 +6,8 @@ type props = {
   course: any;
 };
 
-const REGISTRANT_BLUE = '#2065B2';
+const LABEL_BLUE = '#2065B2';
+const VALUE_PINK = '#CC3899';
 
 const CourseCard = ({ course }: props) => {
   const { t } = useTranslate();
@@ -51,20 +52,20 @@ const CourseCard = ({ course }: props) => {
           primary={t('LABEL.NO_OF_REGISTRANTS')}
           secondary={course.enrolled_children ?? 0}
           primaryTypographyProps={{
-            sx: { color: REGISTRANT_BLUE, fontSize: '16px', fontWeight: 700 },
+            sx: { color: LABEL_BLUE, fontSize: '16px', fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: 'primary.main', fontSize: '14px', fontWeight: 700 },
+            sx: { color: VALUE_PINK, fontSize: '14px', fontWeight: 700 },
           }}
         />
         <ListItemText
           primary={t('LABEL.CATEGORY')}
           secondary={categoryName || '-'}
           primaryTypographyProps={{
-            sx: { color: 'info.dark', fontWeight: 700 },
+            sx: { color: LABEL_BLUE, fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: 'primary.main', fontWeight: 700 },
+            sx: { color: VALUE_PINK, fontWeight: 700 },
           }}
         />
       </Box>
