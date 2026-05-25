@@ -1,12 +1,10 @@
-import { Box, Button, Menu, MenuItem, Rating, Typography } from '@mui/material';
+import { Box, IconButton, Rating, Typography } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { deleteRate } from 'src/actions/centers';
-import  { usePopover } from 'src/components/custom-popover';
-import Iconify from 'src/components/iconify';
 import { useTranslate } from 'src/locales';
-import { fDate } from 'src/utils/format-time';
+import i18n from 'src/locales/i18n';
 
 type props = {
   rate: any;
@@ -14,8 +12,7 @@ type props = {
 const RateItem = ({ rate }: props) => {
   const { t } = useTranslate();
   const params = useParams();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const reviewId = rate?.id ?? rate?._id;
   const clientName =
@@ -24,16 +21,13 @@ const RateItem = ({ rate }: props) => {
   const ratingValue = rate?.rate_center ?? rate?.rate ?? 0;
   const createdAt = rate?.created_at ?? rate?.createdAt;
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = async () => {
+  const handleDelete = async () => {
     if (!reviewId || !params?.centerId) {
       enqueueSnackbar('Unable to delete this review', { variant: 'error' });
-      setAnchorEl(null);
       return;
     }
 
+    setIsDeleting(true);
     const res = await deleteRate(reviewId, params.centerId);
     if (res?.error) {
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
@@ -42,35 +36,17 @@ const RateItem = ({ rate }: props) => {
         variant: 'success',
       });
     }
-    setAnchorEl(null);
+    setIsDeleting(false);
   };
-  const popover = usePopover();
-  function convertDate(dateString: string) {
-    // Define an array with Arabic month names.
-    const arabicMonths = [
-      'يناير',
-      'فبراير',
-      'مارس',
-      'أبريل',
-      'مايو',
-      'يونيو',
-      'يوليو',
-      'أغسطس',
-      'سبتمبر',
-      'أكتوبر',
-      'نوفمبر',
-      'ديسمبر',
-    ];
-
-    // Split the input date into day and month.
-    const [day, month] = dateString.split('-');
-
-    // Convert the month number to an integer and get the corresponding Arabic month name.
-    const monthName = arabicMonths[parseInt(month) - 1];
-
-    // Return the formatted date.
-    return `${day} ${monthName}`;
-  }
+  const formatReviewDate = (date: string | Date) => {
+    const parsed = new Date(date);
+    if (Number.isNaN(parsed.getTime())) return '—';
+    return new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(parsed);
+  };
 
   return (
     <Box
@@ -89,22 +65,30 @@ const RateItem = ({ rate }: props) => {
           {commentText}
         </Typography>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', gap: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
           <Rating value={ratingValue} precision={0.5} readOnly />
           <Typography variant="body1" color="info.dark">
-            {createdAt ? convertDate(fDate(createdAt, 'dd-MM')) : '—'}
+            {createdAt ? formatReviewDate(createdAt) : '—'}
           </Typography>
         </Box>
-        <Box>
-          {' '}
-          <Button sx={{ width: 'fit-content' }} onClick={handleClick}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </Button>
-          <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={()=>setAnchorEl(null)}>
-            <MenuItem onClick={handleClose}>{t(`LABEL.DELETE`)}</MenuItem>
-          </Menu>
-        </Box>
+        <IconButton
+          onClick={handleDelete}
+          disabled={isDeleting}
+          aria-label={t('LABEL.DELETE')}
+          sx={{
+            p: 0,
+            borderRadius: '8px',
+            '&:hover': { bgcolor: 'transparent', opacity: 0.85 },
+          }}
+        >
+          <Box
+            component="img"
+            src="/assets/icons/actions/Delete.svg"
+            alt=""
+            sx={{ width: 39, height: 39, display: 'block' }}
+          />
+        </IconButton>
       </Box>
     </Box>
   );

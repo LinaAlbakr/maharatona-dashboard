@@ -46,7 +46,7 @@ const CourseCardReport = ({ course }: props) => {
           }}
           primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
           secondary={course.registrants}
-          secondaryTypographyProps={{ color: 'info.dark', fontSize: '17px', fontWeight: 'bold' }}
+          secondaryTypographyProps={{ color: '#EF1844', fontSize: '17px', fontWeight: 'bold' }}
         />{' '}
         <ListItemText
           primary={t('LABEL.FIELD_NAME')}
@@ -62,7 +62,7 @@ const CourseCardReport = ({ course }: props) => {
             sx: { color: 'info.dark', fontWeight: "700" },
           }}
           secondaryTypographyProps={{
-            sx: { color: 'primary.main', fontWeight: "700" },
+            sx: { color: '#EF1844', fontWeight: '700' },
           }}
         />
       </Box>
