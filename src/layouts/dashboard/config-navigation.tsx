@@ -100,8 +100,8 @@ export function useNavData() {
                 path: paths.dashboard.supportGroup.technical_support,
               },
               {
-                title: t('SIDEBAR.CALLS_REASONS'),
-                path: paths.dashboard.supportGroup.calls_reasons,
+                title: t('SIDEBAR.CONTACT_REASONS'),
+                path: paths.dashboard.supportGroup.contact_reasons,
               },
             ],
           },

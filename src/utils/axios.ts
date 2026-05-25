@@ -191,7 +191,7 @@ export const endpoints = {
     changePhone: `/admin/auth/change-phone-number`,
   },
   support: {
-    calls_reasons: {
+    contact_reasons: {
       fetch: '/admin/get-all-calls-reasons',
       delete_reason: (reasonId: string) => `/admin/delete-calls-reason/${reasonId}`,
       new: '/admin/add-calls-reason',

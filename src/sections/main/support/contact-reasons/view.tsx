@@ -22,7 +22,7 @@ type props = {
   count: number;
 };
 
-const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
+const ContactReasonsView = ({ count, reasons }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -114,7 +114,7 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           }}
         >
           <Typography variant="h3" color="white">
-            {t('LABEL.CALLS_REASONS')}
+            {t('LABEL.CONTACT_REASONS')}
           </Typography>
           <Grid
             sx={{
@@ -264,4 +264,4 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
   );
 };
 
-export default CallsReasonsView;
+export default ContactReasonsView;

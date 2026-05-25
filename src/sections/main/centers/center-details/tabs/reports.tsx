@@ -259,12 +259,28 @@ const Reports = ({ CenterReports }: Props) => {
                 customRender={{
                   amount: (row) => (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Box
-                        component="img"
-                        src="/assets/icons/rial.svg"
-                        alt="Riyal"
-                        sx={{ width: 16, height: 16 }}
-                      />
+                      <Typography
+                        component="span"
+                        aria-label="Riyal"
+                        sx={{
+                          color: '#2B509C',
+                          fontWeight: 700,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          lineHeight: 0,
+                        }}
+                      >
+                        <Box
+                          component="span"
+                          sx={{
+                            width: 17,
+                            height: 17,
+                            bgcolor: 'currentColor',
+                            mask: 'url(/assets/icons/rial.svg) no-repeat center / contain',
+                            WebkitMask: 'url(/assets/icons/rial.svg) no-repeat center / contain',
+                          }}
+                        />
+                      </Typography>
                       {formatAmount(row.amount)}
                     </Box>
                   ),

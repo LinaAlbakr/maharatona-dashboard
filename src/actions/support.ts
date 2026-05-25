@@ -15,7 +15,7 @@ interface IParams {
   filters?: string;
   type?: null | string;
 }
-export const fetchCallsReasons = async ({
+export const fetchContactReasons = async ({
   limit = 50,
   filters = '',
 }: IParams): Promise<any> => {
@@ -23,7 +23,7 @@ export const fetchCallsReasons = async ({
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.support.calls_reasons.fetch, {
+    const res = await axiosInstance.get(endpoints.support.contact_reasons.fetch, {
       params: {
         limit,
         by_name: filters,
@@ -48,14 +48,14 @@ export const deleteReason = async (reasonId: string): Promise<any> => {
     const lang = cookies().get('Language')?.value;
 
     const res = await axiosInstance.delete(
-      endpoints.support.calls_reasons.delete_reason(reasonId),
+      endpoints.support.contact_reasons.delete_reason(reasonId),
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
     );
-    revalidatePath(`/dashboard/support/calls-reasons/`);
+    revalidatePath(`/dashboard/support/contact-reasons/`);
     return res.status;
   } catch (error) {
     return {
@@ -68,12 +68,12 @@ export const newReason = async (reqBody: any): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    await axiosInstance.post(endpoints.support.calls_reasons.new, reqBody, {
+    await axiosInstance.post(endpoints.support.contact_reasons.new, reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    revalidatePath('/dashboard/support/calls-reasons/');
+    revalidatePath('/dashboard/support/contact-reasons/');
   } catch (error) {
     throw new Error(error);
   }
@@ -83,12 +83,12 @@ export const editReason = async (reqBody: any, reasonId: string): Promise<any> =
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;
   try {
-    await axiosInstance.put(endpoints.support.calls_reasons.edit(reasonId), reqBody, {
+    await axiosInstance.put(endpoints.support.contact_reasons.edit(reasonId), reqBody, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    revalidatePath('/dashboard/support/calls-reasons/');
+    revalidatePath('/dashboard/support/contact-reasons/');
   } catch (error) {
     throw new Error(error);
   }

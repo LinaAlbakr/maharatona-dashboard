@@ -32,7 +32,7 @@ export const paths = {
       courses: `${ROOTS.DASHBOARD}/courses`,
     supportGroup: {
       root: `${ROOTS.DASHBOARD}/support`,
-      calls_reasons: `${ROOTS.DASHBOARD}/support/calls-reasons`,
+      contact_reasons: `${ROOTS.DASHBOARD}/support/contact-reasons`,
       technical_support: `${ROOTS.DASHBOARD}/support/technical-support`,
     },
     categories: `${ROOTS.DASHBOARD}/categories`,

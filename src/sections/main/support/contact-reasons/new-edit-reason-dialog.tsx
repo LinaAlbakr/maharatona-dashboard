@@ -53,13 +53,13 @@ export function NewEditReasonDialog({ open, onClose, reason }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (reason) {
-        await axiosInstance.put(endpoints.support.calls_reasons.edit(reason.id), data);
+        await axiosInstance.put(endpoints.support.contact_reasons.edit(reason.id), data);
         enqueueSnackbar(t('MESSAGE.REASON_UPDATED_SUCCESSFULLY'));
       } else {
-        await axiosInstance.post(endpoints.support.calls_reasons.new, data);
+        await axiosInstance.post(endpoints.support.contact_reasons.new, data);
         enqueueSnackbar(t('MESSAGE.REASON_CREATED_SUCCESSFULLY'));
       }
-      invalidatePath(paths.dashboard.supportGroup.calls_reasons);
+      invalidatePath(paths.dashboard.supportGroup.contact_reasons);
       onClose();
     } catch (error) {
       enqueueSnackbar(getErrorMessage(error), { variant: 'error' });
