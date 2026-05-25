@@ -38,20 +38,20 @@ const CourseCardReport = ({ course }: props) => {
       >
         <ListItemText
           sx={{
-            gridColumn: 'span',
-            color: 'primary.main',
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
           }}
-          primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
+          primary={t('LABEL.NO_OF_REGISTRANTS')}
           secondary={course.registrants}
+          primaryTypographyProps={{
+            sx: { color: 'info.dark', fontWeight: 700 },
+          }}
           secondaryTypographyProps={{ color: '#EF1844', fontSize: '17px', fontWeight: 'bold' }}
-        />{' '}
+        />
         <ListItemText
-          primary={t('LABEL.FIELD_NAME')}
+          primary={t('LABEL.CATEGORY')}
           secondary={
-            // eslint-disable-next-line no-nested-ternary
             course?.feild
               ? i18n.language === 'ar'
                 ? course.feild?.name_ar
@@ -59,10 +59,10 @@ const CourseCardReport = ({ course }: props) => {
               : '-'
           }
           primaryTypographyProps={{
-            sx: { color: 'info.dark', fontWeight: "700" },
+            sx: { color: '#EF1844', fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: '#EF1844', fontWeight: '700' },
+            sx: { color: '#EF1844', fontWeight: 700 },
           }}
         />
       </Box>

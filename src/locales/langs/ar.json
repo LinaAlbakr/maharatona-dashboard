@@ -71,6 +71,8 @@
     "AMOUNT": "المبلغ",
     "NUMBER_OF_COURSES": "عدد الدورات",
     "NUMBER_OF_REGISTRANTS": "عدد المسجلين",
+    "NO_OF_REGISTRANTS": "عدد المسجلين",
+    "CATEGORY": "الفئة",
     "SETTINGS": "الإعدادات",
     "MAINTENANCE_MODE": "الصيانة",
     "PARENT_MAINTENANCE_MODE": "صيانة تطبيق ولي الأمر",

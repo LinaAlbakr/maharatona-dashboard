@@ -58,7 +58,7 @@ const CourseCard = ({ course }: props) => {
           }}
         />
         <ListItemText
-          primary={t('LABEL.CATEGORIES')}
+          primary={t('LABEL.CATEGORY')}
           secondary={categoryName || '-'}
           primaryTypographyProps={{
             sx: { color: 'info.dark', fontWeight: 700 },

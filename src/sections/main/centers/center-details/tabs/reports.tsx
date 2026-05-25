@@ -198,14 +198,18 @@ const Reports = ({ CenterReports }: Props) => {
               <Typography variant="body1" color="#EF1844">
                 {t('LABEL.TOTAL_PROFIT')}
               </Typography>
-              <Typography variant="h3" color="#EF1844">
-                {CenterReports?.data?.totalProfit}{' '}
+              <Typography
+                variant="h3"
+                color="#EF1844"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+              >
                 <Image
                   src="/assets/images/red-sar-logo.svg"
                   alt="sar logo"
                   height={40}
                   width={40}
                 />
+                {CenterReports?.data?.totalProfit}
               </Typography>
             </Box>
             <Image src="/assets/images/centers/profit.svg" alt="image" width={50} height={50} />

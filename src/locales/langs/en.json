@@ -69,6 +69,8 @@
     "AMOUNT": "Amount",
     "NUMBER_OF_COURSES": "Number of courses",
     "NUMBER_OF_REGISTRANTS": "Number of registrants",
+    "NO_OF_REGISTRANTS": "No of Registrants",
+    "CATEGORY": "Category",
     "SETTINGS": "Settings",
     "MAINTENANCE_MODE": "Maintenance",
     "PARENT_MAINTENANCE_MODE": "Parent Maintenance",
