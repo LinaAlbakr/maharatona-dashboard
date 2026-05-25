@@ -72,7 +72,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     { id: 'phone', label: 'LABEL.PHONE' },
     { id: 'number_of_courses', label: 'LABEL.NUMBER_OF_COURSES' },
     { id: 'number_of_registrants', label: 'LABEL.NUMBER_OF_REGISTRANTS' },
-    { id: 'walletBalance', label: 'LABEL.WALLET_BALANCE' },
+    { id: 'walletBalance', label: 'LABEL.NEXT_PAYOUT' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
