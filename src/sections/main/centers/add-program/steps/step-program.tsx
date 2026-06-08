@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CalendarIcon, RiyalIcon } from '../components/course-icons';
 import ProgramImagesUpload from '../components/program-images-upload';
+import PriceVatLabel from '../components/price-vat-label';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
 import { programFieldSx, programPlaceholderTextSx } from '../styles';
@@ -93,7 +94,7 @@ export default function StepProgram({ categories }: Props) {
         </Grid>
 
         <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.PRICE_VAT')}</RequiredLabel>
+          <PriceVatLabel required labelKey="ADD_PROGRAM.PRICE_VAT" />
           <Controller
             name="price"
             control={control}

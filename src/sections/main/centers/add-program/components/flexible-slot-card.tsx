@@ -22,6 +22,7 @@ import { useTranslate } from 'src/locales';
 
 import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
+import PriceVatLabel from './price-vat-label';
 import RequiredLabel from './required-label';
 import { FLEXIBLE_BOOKING_MODELS, GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { innerCardSx, programFieldSx, programRadioLabelSx } from '../styles';
@@ -360,7 +361,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
 
         {modelKey !== 'trial' ? (
           <Grid xs={12} md={6}>
-            <RequiredLabel required>{t(priceLabelKey)}</RequiredLabel>
+            <PriceVatLabel required labelKey={priceLabelKey} />
             <Controller
               name={`${basePath}.price`}
               control={control}

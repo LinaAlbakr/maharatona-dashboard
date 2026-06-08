@@ -19,6 +19,7 @@ import { useTranslate } from 'src/locales';
 import Iconify from 'src/components/iconify';
 
 import { DeleteIcon, RiyalIcon } from '../components/course-icons';
+import PriceVatLabel from '../components/price-vat-label';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
 import { EMPTY_MATERIAL, EMPTY_QUESTION, FIELD_LABEL_COLOR, PROGRAM_TEAL } from '../constants';
@@ -228,7 +229,7 @@ export default function StepAdditional() {
             </Grid>
 
             <Grid xs={12}>
-              <RequiredLabel required>{t('ADD_PROGRAM.PRICE_VAT')}</RequiredLabel>
+              <PriceVatLabel required labelKey="ADD_PROGRAM.PRICE_VAT" />
               <Controller
                 name={`addOnMaterials.${index}.price`}
                 control={control}

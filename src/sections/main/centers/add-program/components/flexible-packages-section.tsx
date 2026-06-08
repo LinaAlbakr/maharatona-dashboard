@@ -15,6 +15,7 @@ import { useTranslate } from 'src/locales';
 import Iconify from 'src/components/iconify';
 
 import { DeleteIcon, RiyalIcon } from './course-icons';
+import PriceVatLabel from './price-vat-label';
 import RequiredLabel from './required-label';
 import { EMPTY_FLEXIBLE_PACKAGE } from '../constants';
 import { dashedAddButtonSx, innerCardSx, programFieldSx, programSectionTitleSx } from '../styles';
@@ -89,7 +90,7 @@ export default function FlexiblePackagesSection({ modelKey }: Props) {
               />
             </Grid>
             <Grid xs={12} md={6}>
-              <RequiredLabel required>{t('ADD_PROGRAM.PRICE_VAT')}</RequiredLabel>
+              <PriceVatLabel required labelKey="ADD_PROGRAM.PRICE_VAT" />
               <Controller
                 name={`flexibleModels.${modelKey}.packages.${index}.price`}
                 control={control}
