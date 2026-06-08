@@ -1,10 +1,11 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
+import Popover from '@mui/material/Popover';
 import Grid from '@mui/material/Unstable_Grid2';
-import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,17 +15,26 @@ import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
+import { DateCalendar } from '@mui/x-date-pickers';
 import { TimePicker } from '@mui/x-date-pickers';
-import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 
 import { useTranslate } from 'src/locales';
+
+import Iconify from 'src/components/iconify';
 
 import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
 import PriceVatLabel from './price-vat-label';
 import RequiredLabel from './required-label';
-import { FLEXIBLE_BOOKING_MODELS, GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
+import SelectedDateTag from './selected-date-tag';
+import {
+  ADD_BOX_TEXT_COLOR,
+  FLEXIBLE_BOOKING_MODELS,
+  GENDER_OPTIONS,
+  PROGRAM_SECTION_HEADING_COLOR,
+  PROGRAM_TEAL,
+} from '../constants';
 import { innerCardSx, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
 
@@ -43,6 +53,9 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
   const basePath = `flexibleModels.${modelKey}.slots.${slotIndex}` as const;
   const recurringDays = watch(`${basePath}.recurring_days`);
   const customDates = watch(`${basePath}.custom_dates`) || [];
+
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const addDatesRef = useRef<HTMLButtonElement>(null);
 
   const seatLabelKey = getSeatCapacityLabel(modelKey, timeType);
   const priceLabelKey = getPriceLabel(modelKey, timeType);
@@ -225,33 +238,79 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
         {modelConfig.hasRecurring && !recurringDays ? (
           <Grid xs={12}>
             <RequiredLabel required>{t('ADD_PROGRAM.SELECT_DATES')}</RequiredLabel>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1.5 }}>
-              {customDates.map((item) => (
-                <Chip
-                  key={item.id}
-                  label={item.label || (item.date ? format(item.date, 'dd MM dd MMM, yyyy') : '')}
-                  onDelete={() => handleRemoveDate(item.id)}
-                  sx={{
-                    bgcolor: PROGRAM_TEAL,
-                    color: 'common.white',
-                    '& .MuiChip-deleteIcon': { color: 'common.white' },
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 1.5 }}>
+              {customDates.map((item) =>
+                item.date ? (
+                  <SelectedDateTag
+                    key={item.id}
+                    date={item.date}
+                    onRemove={() => handleRemoveDate(item.id)}
+                  />
+                ) : null
+              )}
+            </Box>
+            <Box sx={{ display: 'inline-block' }}>
+              <Box
+                ref={addDatesRef}
+                component="button"
+                type="button"
+                onClick={() => setDatePickerOpen(true)}
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 0.75,
+                  boxSizing: 'border-box',
+                  width: 116,
+                  minWidth: 116,
+                  height: 28,
+                  minHeight: 28,
+                  px: 1,
+                  py: 0,
+                  borderRadius: '8px',
+                  border: '1px dotted',
+                  borderColor: ADD_BOX_TEXT_COLOR,
+                  bgcolor: 'transparent',
+                  color: ADD_BOX_TEXT_COLOR,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  fontFamily: 'inherit',
+                  lineHeight: 1,
+                  cursor: 'pointer',
+                  outline: 'none',
+                  whiteSpace: 'nowrap',
+                  '&:hover': {
+                    borderColor: ADD_BOX_TEXT_COLOR,
+                    bgcolor: 'transparent',
+                    color: ADD_BOX_TEXT_COLOR,
+                  },
+                }}
+              >
+                <Iconify
+                  icon="solar:calendar-linear"
+                  width={16}
+                  sx={{ color: ADD_BOX_TEXT_COLOR, flexShrink: 0, pointerEvents: 'none' }}
+                />
+                <Box component="span" sx={{ pointerEvents: 'none' }}>
+                  {t('ADD_PROGRAM.ADD_DATES')}
+                </Box>
+              </Box>
+              <Popover
+                open={datePickerOpen}
+                anchorEl={addDatesRef.current}
+                onClose={() => setDatePickerOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                PaperProps={{ sx: { mt: 0.5 } }}
+              >
+                <DateCalendar
+                  onChange={(date) => {
+                    handleAddDate(date);
+                    setDatePickerOpen(false);
                   }}
                 />
-              ))}
+              </Popover>
             </Box>
-            <DatePicker
-              onChange={handleAddDate}
-              slotProps={{
-                textField: {
-                  size: 'small',
-                  placeholder: t('ADD_PROGRAM.ADD_DATES'),
-                  sx: { maxWidth: 200 },
-                },
-              }}
-              slots={{
-                openPickerIcon: CalendarIcon,
-              }}
-            />
           </Grid>
         ) : (
           <Grid xs={12}>
@@ -384,6 +443,49 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 />
               </Grid>
             ) : null}
+          </>
+        ) : modelKey === 'daily' ? (
+          <>
+            <Grid xs={12} md={6}>
+              <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
+              <Controller
+                name={`${basePath}.seat_capacity`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <PriceVatLabel required labelKey={priceLabelKey} />
+              <Controller
+                name={`${basePath}.price`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RiyalIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={programFieldSx}
+                  />
+                )}
+              />
+            </Grid>
           </>
         ) : (
           <>
