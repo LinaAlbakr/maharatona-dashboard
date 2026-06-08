@@ -102,18 +102,10 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
   const renderStep = () => {
     switch (activeStep) {
       case 0:
-        return (
-          <>
-            <BookingTypeToggle
-              value={bookingType}
-              onChange={(value) => setValue('bookingType', value)}
-            />
-            {bookingType === 'fixed' ? (
-              <StepProgram categories={categories} />
-            ) : (
-              <StepFlexibleProgram categories={categories} />
-            )}
-          </>
+        return bookingType === 'fixed' ? (
+          <StepProgram categories={categories} />
+        ) : (
+          <StepFlexibleProgram categories={categories} />
         );
       case 1:
         return bookingType === 'fixed' ? <StepSession /> : <StepFlexibleSession />;
@@ -154,6 +146,13 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
       >
         <ProgramStepper activeStep={activeStep} />
       </Card>
+
+      {activeStep === 0 ? (
+        <BookingTypeToggle
+          value={bookingType}
+          onChange={(value) => setValue('bookingType', value)}
+        />
+      ) : null}
 
       <Card sx={programCardSx}>{renderStep()}</Card>
 
