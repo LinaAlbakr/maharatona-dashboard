@@ -119,6 +119,6 @@ export const createDefaultFlexibleModels = () => {
   const models = Object.fromEntries(
     FLEXIBLE_BOOKING_MODELS.map(({ key }) => [key, createEmptyFlexibleModel()])
   ) as Record<FlexibleBookingModelKey, ReturnType<typeof createEmptyFlexibleModel>>;
-  models.minutes.enabled = true;
+  models.trial.enabled = true;
   return models;
 };

@@ -129,19 +129,41 @@ const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
   });
 };
 
+const optionalRowComplete = (fields: (string | undefined)[]) => {
+  const values = fields.map((value) => value?.trim() ?? '');
+  const anyFilled = values.some(Boolean);
+  if (!anyFilled) return true;
+  return values.every(Boolean);
+};
+
 const step2Schema = yup.object({
   additional_questions: yup.array().of(
-    yup.object({
-      question_ar: yup.string().required(requiredMsg),
-      question_en: yup.string().required(requiredMsg),
-    })
+    yup
+      .object({
+        question_ar: yup.string(),
+        question_en: yup.string(),
+      })
+      .test('complete-or-empty', requiredMsg, (row) =>
+        optionalRowComplete([row?.question_ar, row?.question_en])
+      )
   ),
   addOnMaterials: yup.array().of(
-    yup.object({
-      name_ar: yup.string().required(requiredMsg),
-      name_en: yup.string().required(requiredMsg),
-      price: numberField(),
-    })
+    yup
+      .object({
+        name_ar: yup.string(),
+        name_en: yup.string(),
+        desc_ar: yup.string(),
+        desc_en: yup.string(),
+        price: yup.string(),
+      })
+      .test('complete-or-empty', requiredMsg, (row) => {
+        const nameAr = row?.name_ar?.trim() ?? '';
+        const nameEn = row?.name_en?.trim() ?? '';
+        const price = row?.price?.trim() ?? '';
+        const anyFilled = Boolean(nameAr || nameEn || price || row?.desc_ar?.trim() || row?.desc_en?.trim());
+        if (!anyFilled) return true;
+        return Boolean(nameAr && nameEn && price && !Number.isNaN(Number(price)));
+      })
   ),
 });
 

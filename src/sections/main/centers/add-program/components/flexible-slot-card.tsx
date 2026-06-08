@@ -48,7 +48,7 @@ type Props = {
 
 export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemove }: Props) {
   const { t } = useTranslate();
-  const { control, watch, setValue } = useFormContext<ProgramFormValues>();
+  const { control, watch, setValue, getFieldState, formState } = useFormContext<ProgramFormValues>();
 
   const modelConfig = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === modelKey)!;
   const basePath = `flexibleModels.${modelKey}.slots.${slotIndex}` as const;
@@ -60,6 +60,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
 
   const seatLabelKey = getSeatCapacityLabel(modelKey, timeType);
   const priceLabelKey = getPriceLabel(modelKey, timeType);
+  const customDatesError = getFieldState(`${basePath}.custom_dates`, formState).error;
 
   const handleAddDate = (date: Date | null) => {
     if (!date) return;
@@ -326,7 +327,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
         )}
 
         {modelConfig.hasRecurring && !recurringDays ? (
-          <Grid xs={12}>
+          <Grid xs={12} data-field={`${basePath}.custom_dates`}>
             <RequiredLabel required>{t('ADD_PROGRAM.SELECT_DATES')}</RequiredLabel>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
               {customDates.map((item) =>
@@ -401,6 +402,11 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 />
               </Popover>
             </Box>
+            {customDatesError ? (
+              <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                {t(String(customDatesError.message))}
+              </Typography>
+            ) : null}
           </Grid>
         ) : (
           <Grid xs={12}>
@@ -408,8 +414,15 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
             <Controller
               name={`${basePath}.selected_days`}
               control={control}
-              render={({ field }) => (
-                <DaySelector value={field.value || []} onChange={field.onChange} />
+              render={({ field, fieldState: { error } }) => (
+                <Box data-field={`${basePath}.selected_days`}>
+                  <DaySelector value={field.value || []} onChange={field.onChange} />
+                  {error ? (
+                    <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                      {t(String(error.message))}
+                    </Typography>
+                  ) : null}
+                </Box>
               )}
             />
           </Grid>

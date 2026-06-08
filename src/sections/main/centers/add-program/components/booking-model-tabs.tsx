@@ -22,19 +22,19 @@ import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 type Props = {
   activeModel: FlexibleBookingModelKey;
   enabledModels: FlexibleBookingModelKey[];
-  onActiveChange: (model: FlexibleBookingModelKey) => void;
-  onToggleModel: (model: FlexibleBookingModelKey) => void;
+  onSelectTrial: () => void;
+  onSelectMainModel: (model: FlexibleBookingModelKey) => void;
 };
 
 export default function BookingModelTabs({
   activeModel,
   enabledModels,
-  onActiveChange,
-  onToggleModel,
+  onSelectTrial,
+  onSelectMainModel,
 }: Props) {
   const { t } = useTranslate();
   const { control } = useFormContext<ProgramFormValues>();
-  const isFreeSelected = useWatch({ control, name: 'flexibleModels.trial.enabled' }) === true;
+  const isTrialEnabled = useWatch({ control, name: 'flexibleModels.trial.enabled' }) === true;
 
   const mainModels = FLEXIBLE_BOOKING_MODELS.filter((m) => m.key !== 'trial');
   const trialModel = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === 'trial')!;
@@ -51,15 +51,10 @@ export default function BookingModelTabs({
         <Box
           component="button"
           type="button"
-          onClick={() => {
-            onToggleModel('trial');
-            if (!isFreeSelected) {
-              onActiveChange('trial');
-            }
-          }}
+          onClick={onSelectTrial}
           style={{
-            backgroundColor: isFreeSelected ? FREE_BOOKING_COLOR : '#FFFFFF',
-            color: isFreeSelected ? '#FFFFFF' : FREE_BOOKING_COLOR,
+            backgroundColor: isTrialEnabled ? FREE_BOOKING_COLOR : '#FFFFFF',
+            color: isTrialEnabled ? '#FFFFFF' : FREE_BOOKING_COLOR,
             border: `1px solid ${FREE_BOOKING_COLOR}`,
           }}
           sx={{
@@ -78,16 +73,12 @@ export default function BookingModelTabs({
             cursor: 'pointer',
             outline: 'none',
             '&:hover': {
-              backgroundColor: isFreeSelected ? FREE_BOOKING_COLOR : '#FFFFFF',
-              color: isFreeSelected ? '#FFFFFF' : FREE_BOOKING_COLOR,
+              backgroundColor: isTrialEnabled ? FREE_BOOKING_COLOR : '#FFFFFF',
+              color: isTrialEnabled ? '#FFFFFF' : FREE_BOOKING_COLOR,
             },
           }}
         >
-          <Iconify
-            icon="mingcute:add-line"
-            width={16}
-            sx={{ color: 'inherit', flexShrink: 0 }}
-          />
+          <Iconify icon="mingcute:add-line" width={16} sx={{ color: 'inherit', flexShrink: 0 }} />
           {t(trialModel.labelKey)}
         </Box>
       </Box>
@@ -107,21 +98,20 @@ export default function BookingModelTabs({
         }}
       >
         {mainModels.map((model) => {
-          const enabled = enabledModels.includes(model.key);
-          const active = activeModel === model.key;
+          const selected = activeModel === model.key && enabledModels.includes(model.key);
 
           return (
             <Box
               key={model.key}
               component="button"
               type="button"
-              onClick={() => {
-                if (!enabled) onToggleModel(model.key);
-                onActiveChange(model.key);
+              onClick={(e) => {
+                (e.currentTarget as HTMLButtonElement).blur();
+                onSelectMainModel(model.key);
               }}
               style={{
-                backgroundColor: active ? PROGRAM_SECTION_HEADING_COLOR : '#FFFFFF',
-                color: active ? '#FFFFFF' : FIELD_LABEL_COLOR,
+                backgroundColor: selected ? PROGRAM_SECTION_HEADING_COLOR : '#FFFFFF',
+                color: selected ? '#FFFFFF' : FIELD_LABEL_COLOR,
               }}
               sx={{
                 flexShrink: 0,
@@ -132,16 +122,19 @@ export default function BookingModelTabs({
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: '15px',
-                border: 'none',
+                border: '2px solid transparent',
                 fontSize: 16,
                 fontWeight: 600,
                 fontFamily: 'inherit',
                 lineHeight: 1,
                 cursor: 'pointer',
                 outline: 'none',
+                boxSizing: 'border-box',
+                '&:focus': { outline: 'none' },
+                '&:focus-visible': { outline: 'none' },
                 '&:hover': {
-                  backgroundColor: active ? PROGRAM_SECTION_HEADING_COLOR : '#FFFFFF',
-                  color: active ? '#FFFFFF' : FIELD_LABEL_COLOR,
+                  backgroundColor: selected ? PROGRAM_SECTION_HEADING_COLOR : '#FFFFFF',
+                  color: selected ? '#FFFFFF' : FIELD_LABEL_COLOR,
                 },
               }}
             >
@@ -151,7 +144,7 @@ export default function BookingModelTabs({
         })}
       </Box>
 
-      {enabledModels.includes('trial') ? (
+      {isTrialEnabled ? (
         <Typography variant="caption" sx={{ mt: 1, display: 'block', color: PROGRAM_TEAL }}>
           {t('ADD_PROGRAM.TRIAL_ENABLED')}
         </Typography>

@@ -526,6 +526,7 @@
     "FLEXIBLE_COMING_SOON": "الحجز المرن سيتوفر قريبا",
     "PUBLISH_PLACEHOLDER": "النموذج جاهز — ربط API قادم",
     "PUBLISH_SUCCESS": "تم نشر البرنامج بنجاح",
+    "FIX_STEP_ERRORS": "يرجى تصحيح الحقول المميزة قبل المتابعة",
     "DAYS_OFF": "ايام العطلة",
     "RECURRING_DAYS": "ايام متكررة",
     "CUSTOM_DATES": "تواريخ مخصصة",

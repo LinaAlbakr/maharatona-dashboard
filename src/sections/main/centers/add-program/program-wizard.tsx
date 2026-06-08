@@ -66,19 +66,37 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
       clearErrors();
       return true;
     } catch (error: any) {
+      let firstPath: string | undefined;
+
       if (error?.inner?.length) {
-        error.inner.forEach((item: any) => {
+        error.inner.forEach((item: any, index: number) => {
           if (item.path) {
             const path = String(item.path).replace(/\[(\d+)\]/g, '.$1');
+            if (index === 0) firstPath = path;
             setError(path as keyof ProgramFormValues, {
               type: 'manual',
               message: item.message,
             });
           }
         });
-      } else if (error?.message) {
-        enqueueSnackbar(t(String(error.message)), { variant: 'error' });
+      } else if (error?.path) {
+        firstPath = String(error.path).replace(/\[(\d+)\]/g, '.$1');
+        setError(firstPath as keyof ProgramFormValues, {
+          type: 'manual',
+          message: error.message,
+        });
       }
+
+      if (firstPath) {
+        requestAnimationFrame(() => {
+          const field =
+            document.querySelector<HTMLElement>(`[name="${firstPath}"]`) ||
+            document.querySelector<HTMLElement>(`[data-field="${firstPath}"]`);
+          field?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          field?.focus?.();
+        });
+      }
+
       return false;
     }
   };

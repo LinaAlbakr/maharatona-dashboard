@@ -57,7 +57,7 @@ export default function ProgramImagesUpload() {
       name="courseImages"
       control={control}
       render={({ fieldState: { error } }) => (
-        <Box>
+        <Box data-field="courseImages">
           <RequiredLabel required>{t('ADD_PROGRAM.PROGRAM_PICTURES')}</RequiredLabel>
           <Stack direction="row" flexWrap="wrap" gap={2}>
             {images.map((file, index) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -24,9 +24,18 @@ import {
 import { dashedAddButtonSx, programStepHeadingSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
+const MAIN_MODEL_KEYS = FLEXIBLE_BOOKING_MODELS.filter((m) => m.key !== 'trial').map(
+  (m) => m.key
+);
+
 export default function StepFlexibleSession() {
   const { t } = useTranslate();
-  const { control, watch, setValue } = useFormContext<ProgramFormValues>();
+  const {
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<ProgramFormValues>();
   const flexibleModels = watch('flexibleModels');
 
   const enabledModels = useMemo(
@@ -37,9 +46,68 @@ export default function StepFlexibleSession() {
     [flexibleModels]
   );
 
-  const [activeModel, setActiveModel] = useState<FlexibleBookingModelKey>(
-    enabledModels[0] || 'minutes'
+  const [activeModel, setActiveModel] = useState<FlexibleBookingModelKey>('trial');
+
+  const updateFlexibleModels = useCallback(
+    (next: ProgramFormValues['flexibleModels']) => {
+      setValue('flexibleModels', next, { shouldDirty: true, shouldValidate: true });
+    },
+    [setValue]
   );
+
+  const handleSelectTrial = useCallback(() => {
+    const next = { ...flexibleModels };
+    (Object.keys(next) as FlexibleBookingModelKey[]).forEach((key) => {
+      next[key] = { ...next[key], enabled: key === 'trial' };
+    });
+    updateFlexibleModels(next);
+    setActiveModel('trial');
+  }, [flexibleModels, updateFlexibleModels]);
+
+  const handleSelectMainModel = useCallback(
+    (modelKey: FlexibleBookingModelKey) => {
+      const isActive = activeModel === modelKey && flexibleModels[modelKey]?.enabled;
+
+      if (isActive) {
+        handleSelectTrial();
+        return;
+      }
+
+      const next = { ...flexibleModels };
+      MAIN_MODEL_KEYS.forEach((key) => {
+        next[key] = { ...next[key], enabled: key === modelKey };
+      });
+      next.trial = { ...next.trial, enabled: false };
+      updateFlexibleModels(next);
+      setActiveModel(modelKey);
+    },
+    [activeModel, flexibleModels, handleSelectTrial, updateFlexibleModels]
+  );
+
+  useEffect(() => {
+    if (enabledModels.length === 0) {
+      handleSelectTrial();
+    }
+  }, [enabledModels.length, handleSelectTrial]);
+
+  useEffect(() => {
+    if (!enabledModels.includes(activeModel)) {
+      setActiveModel(enabledModels[0] || 'trial');
+    }
+  }, [enabledModels, activeModel]);
+
+  useEffect(() => {
+    const modelErrors = errors.flexibleModels;
+    if (!modelErrors || typeof modelErrors !== 'object') return;
+
+    const modelWithError = (Object.keys(flexibleModels) as FlexibleBookingModelKey[]).find(
+      (key) => Boolean((modelErrors as Record<string, unknown>)[key])
+    );
+
+    if (modelWithError && modelWithError !== activeModel) {
+      setActiveModel(modelWithError);
+    }
+  }, [errors.flexibleModels, flexibleModels, activeModel]);
 
   const currentModel = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === activeModel)!;
   const timeType = flexibleModels[activeModel]?.timeType || 'open';
@@ -49,31 +117,13 @@ export default function StepFlexibleSession() {
     name: `flexibleModels.${activeModel}.slots`,
   });
 
-  const handleToggleModel = (modelKey: FlexibleBookingModelKey) => {
-    const isEnabled = flexibleModels[modelKey]?.enabled;
-    setValue(
-      'flexibleModels',
-      {
-        ...flexibleModels,
-        [modelKey]: {
-          ...flexibleModels[modelKey],
-          enabled: !isEnabled,
-        },
-      },
-      { shouldDirty: true, shouldValidate: true }
-    );
-    if (!isEnabled) {
-      setActiveModel(modelKey);
-    }
-  };
-
   return (
     <Box>
       <BookingModelTabs
         activeModel={activeModel}
         enabledModels={enabledModels}
-        onActiveChange={setActiveModel}
-        onToggleModel={handleToggleModel}
+        onSelectTrial={handleSelectTrial}
+        onSelectMainModel={handleSelectMainModel}
       />
 
       {enabledModels.length === 0 ? (
