@@ -30,6 +30,7 @@ import RequiredLabel from './required-label';
 import SelectedDateTag from './selected-date-tag';
 import {
   ADD_BOX_TEXT_COLOR,
+  FIELD_BORDER_COLOR,
   FLEXIBLE_BOOKING_MODELS,
   GENDER_OPTIONS,
   PROGRAM_SECTION_HEADING_COLOR,
@@ -175,70 +176,159 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           />
         </Grid>
 
-        {modelConfig.hasRecurring ? (
+        {modelConfig.hasRecurring && modelConfig.hasFixStartDate ? (
           <Grid xs={12}>
-            <RequiredLabel required>{t('ADD_PROGRAM.RECURRING_DAYS')}</RequiredLabel>
-            <Controller
-              name={`${basePath}.recurring_days`}
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  row
-                  value={field.value ? 'yes' : 'no'}
-                  onChange={(e) => field.onChange(e.target.value === 'yes')}
-                >
-                  <FormControlLabel
-                    value="yes"
-                    control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
-                    label={t('ADD_PROGRAM.YES')}
-                    sx={programRadioLabelSx}
-                  />
-                  <FormControlLabel
-                    value="no"
-                    control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
-                    label={t('ADD_PROGRAM.NO')}
-                    sx={programRadioLabelSx}
-                  />
-                </RadioGroup>
-              )}
-            />
-          </Grid>
-        ) : null}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+              <Box>
+                <RequiredLabel required>{t('ADD_PROGRAM.RECURRING_DAYS')}</RequiredLabel>
+                <Controller
+                  name={`${basePath}.recurring_days`}
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      row
+                      value={field.value ? 'yes' : 'no'}
+                      onChange={(e) => field.onChange(e.target.value === 'yes')}
+                    >
+                      <FormControlLabel
+                        value="yes"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.YES')}
+                        sx={programRadioLabelSx}
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.NO')}
+                        sx={programRadioLabelSx}
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </Box>
 
-        {modelConfig.hasFixStartDate ? (
-          <Grid xs={12}>
-            <RequiredLabel required>{t('ADD_PROGRAM.FIX_START_DATE')}</RequiredLabel>
-            <Controller
-              name={`${basePath}.fixed_start_date`}
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  row
-                  value={field.value ? 'yes' : 'no'}
-                  onChange={(e) => field.onChange(e.target.value === 'yes')}
-                >
-                  <FormControlLabel
-                    value="yes"
-                    control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
-                    label={t('ADD_PROGRAM.YES')}
-                    sx={programRadioLabelSx}
-                  />
-                  <FormControlLabel
-                    value="no"
-                    control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
-                    label={t('ADD_PROGRAM.NO')}
-                    sx={programRadioLabelSx}
-                  />
-                </RadioGroup>
-              )}
-            />
+              <Box
+                sx={{
+                  width: '1px',
+                  alignSelf: 'stretch',
+                  bgcolor: FIELD_BORDER_COLOR,
+                  flexShrink: 0,
+                }}
+              />
+
+              <Box>
+                <RequiredLabel required>{t('ADD_PROGRAM.FIX_START_DATE')}</RequiredLabel>
+                <Controller
+                  name={`${basePath}.fixed_start_date`}
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      row
+                      value={field.value ? 'yes' : 'no'}
+                      onChange={(e) => field.onChange(e.target.value === 'yes')}
+                    >
+                      <FormControlLabel
+                        value="yes"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.YES')}
+                        sx={programRadioLabelSx}
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.NO')}
+                        sx={programRadioLabelSx}
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </Box>
+            </Box>
           </Grid>
-        ) : null}
+        ) : (
+          <>
+            {modelConfig.hasRecurring ? (
+              <Grid xs={12}>
+                <RequiredLabel required>{t('ADD_PROGRAM.RECURRING_DAYS')}</RequiredLabel>
+                <Controller
+                  name={`${basePath}.recurring_days`}
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      row
+                      value={field.value ? 'yes' : 'no'}
+                      onChange={(e) => field.onChange(e.target.value === 'yes')}
+                    >
+                      <FormControlLabel
+                        value="yes"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.YES')}
+                        sx={programRadioLabelSx}
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.NO')}
+                        sx={programRadioLabelSx}
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </Grid>
+            ) : null}
+
+            {modelConfig.hasFixStartDate ? (
+              <Grid xs={12}>
+                <RequiredLabel required>{t('ADD_PROGRAM.FIX_START_DATE')}</RequiredLabel>
+                <Controller
+                  name={`${basePath}.fixed_start_date`}
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      row
+                      value={field.value ? 'yes' : 'no'}
+                      onChange={(e) => field.onChange(e.target.value === 'yes')}
+                    >
+                      <FormControlLabel
+                        value="yes"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.YES')}
+                        sx={programRadioLabelSx}
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={
+                          <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                        }
+                        label={t('ADD_PROGRAM.NO')}
+                        sx={programRadioLabelSx}
+                      />
+                    </RadioGroup>
+                  )}
+                />
+              </Grid>
+            ) : null}
+          </>
+        )}
 
         {modelConfig.hasRecurring && !recurringDays ? (
           <Grid xs={12}>
             <RequiredLabel required>{t('ADD_PROGRAM.SELECT_DATES')}</RequiredLabel>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, mb: 1.5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
               {customDates.map((item) =>
                 item.date ? (
                   <SelectedDateTag
@@ -444,7 +534,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               </Grid>
             ) : null}
           </>
-        ) : modelKey === 'daily' ? (
+        ) : modelKey === 'daily' || modelKey === 'weekly' ? (
           <>
             <Grid xs={12} md={6}>
               <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
