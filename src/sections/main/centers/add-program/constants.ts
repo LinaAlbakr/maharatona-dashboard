@@ -2,6 +2,9 @@ import type { FlexibleBookingModelKey, ProgramStep } from './types';
 
 export const PROGRAM_TEAL = '#3AB0AD';
 export const PROGRAM_TEAL_DARK = '#2C8B8E';
+export const FIELD_LABEL_COLOR = '#2B509C';
+export const FIELD_BORDER_COLOR = '#D9D9D9';
+export const FIELD_PLACEHOLDER_COLOR = '#A29F9D';
 
 export const PROGRAM_STEPS: { key: ProgramStep; labelKey: string }[] = [
   { key: 0, labelKey: 'ADD_PROGRAM.STEP_PROGRAM' },

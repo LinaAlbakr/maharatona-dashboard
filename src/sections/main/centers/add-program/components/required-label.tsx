@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { FIELD_LABEL_COLOR } from '../constants';
+
 type Props = {
   children: React.ReactNode;
   required?: boolean;
@@ -10,8 +12,14 @@ export default function RequiredLabel({ children, required = false }: Props) {
   return (
     <Typography
       component="label"
-      variant="body2"
-      sx={{ mb: 1, display: 'block', fontWeight: 500, color: 'text.primary' }}
+      sx={{
+        mb: 1,
+        display: 'block',
+        fontSize: 16,
+        fontWeight: 500,
+        color: FIELD_LABEL_COLOR,
+        lineHeight: 1.4,
+      }}
     >
       {children}
       {required ? (

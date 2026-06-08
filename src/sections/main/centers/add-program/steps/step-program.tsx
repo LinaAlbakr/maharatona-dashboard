@@ -18,7 +18,7 @@ import ProgramImagesUpload from '../components/program-images-upload';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
 import { PROGRAM_TEAL } from '../constants';
-import { programFieldSx } from '../styles';
+import { programFieldSx, programPlaceholderTextSx } from '../styles';
 import type { CategoryOption, ProgramFormValues } from '../types';
 
 type Props = {
@@ -78,7 +78,7 @@ export default function StepProgram({ categories }: Props) {
           />
         </Grid>
 
-        <Grid xs={12} md={6}>
+        <Grid xs={12}>
           <WordCountTextarea
             name="desc_ar"
             label={t('ADD_PROGRAM.PROGRAM_DESC_AR')}
@@ -86,7 +86,7 @@ export default function StepProgram({ categories }: Props) {
           />
         </Grid>
 
-        <Grid xs={12} md={6}>
+        <Grid xs={12}>
           <WordCountTextarea
             name="desc_en"
             label={t('ADD_PROGRAM.PROGRAM_DESC_EN')}
@@ -133,6 +133,20 @@ export default function StepProgram({ categories }: Props) {
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
+                SelectProps={{
+                  displayEmpty: true,
+                  renderValue: (value) => {
+                    if (!value) {
+                      return (
+                        <Box component="span" sx={programPlaceholderTextSx}>
+                          {t('ADD_PROGRAM.CHOOSE_CATEGORY')}
+                        </Box>
+                      );
+                    }
+                    const category = categories.find((c) => c.id === value);
+                    return category ? getCategoryName(category) : '';
+                  },
+                }}
               >
                 <MenuItem value="" disabled>
                   {t('ADD_PROGRAM.CHOOSE_CATEGORY')}

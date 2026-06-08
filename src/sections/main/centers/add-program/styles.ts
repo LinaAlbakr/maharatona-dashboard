@@ -1,4 +1,10 @@
-import { PROGRAM_TEAL, PROGRAM_TEAL_DARK } from './constants';
+import {
+  FIELD_BORDER_COLOR,
+  FIELD_LABEL_COLOR,
+  FIELD_PLACEHOLDER_COLOR,
+  PROGRAM_TEAL,
+  PROGRAM_TEAL_DARK,
+} from './constants';
 
 export const programCardSx = {
   bgcolor: 'background.paper',
@@ -11,10 +17,35 @@ export const programFieldSx = {
   '& .MuiOutlinedInput-root': {
     borderRadius: '12px',
     bgcolor: 'background.paper',
+    fontSize: 14,
+    '& fieldset': {
+      borderColor: FIELD_BORDER_COLOR,
+    },
+    '&:hover fieldset': {
+      borderColor: FIELD_BORDER_COLOR,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: FIELD_BORDER_COLOR,
+      borderWidth: '1px',
+    },
+  },
+  '& .MuiOutlinedInput-input': {
+    fontSize: 14,
+    '&::placeholder': {
+      color: FIELD_PLACEHOLDER_COLOR,
+      opacity: 1,
+      fontSize: 14,
+    },
   },
   '& .MuiInputLabel-root': {
     display: 'none',
   },
+};
+
+export const programPlaceholderTextSx = {
+  color: FIELD_PLACEHOLDER_COLOR,
+  fontSize: 14,
+  fontWeight: 400,
 };
 
 export const programTitleSx = {
@@ -24,9 +55,9 @@ export const programTitleSx = {
 };
 
 export const programSectionTitleSx = {
-  color: PROGRAM_TEAL,
+  color: FIELD_LABEL_COLOR,
   fontWeight: 600,
-  fontSize: '1.125rem',
+  fontSize: 16,
   mb: 2,
 };
 
