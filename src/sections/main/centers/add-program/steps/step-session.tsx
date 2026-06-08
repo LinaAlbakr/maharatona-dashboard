@@ -16,7 +16,7 @@ import { useTranslate } from 'src/locales';
 import { ClockIcon } from '../components/course-icons';
 import RequiredLabel from '../components/required-label';
 import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
-import { programFieldSx } from '../styles';
+import { programFieldSx, programRadioLabelSx } from '../styles';
 import type { ProgramFormValues } from '../types';
 
 export default function StepSession() {
@@ -107,7 +107,9 @@ export default function StepSession() {
         </Grid>
 
         <Grid xs={12}>
-          <RequiredLabel required>{t('ADD_PROGRAM.SAME_AGE_RANGE')}</RequiredLabel>
+          <RequiredLabel required sx={{ fontWeight: 700 }}>
+            {t('ADD_PROGRAM.SAME_AGE_RANGE')}
+          </RequiredLabel>
           <Controller
             name="same_age_range"
             control={control}
@@ -121,11 +123,13 @@ export default function StepSession() {
                   value="yes"
                   control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
                   label={t('ADD_PROGRAM.YES')}
+                  sx={programRadioLabelSx}
                 />
                 <FormControlLabel
                   value="no"
                   control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
                   label={t('ADD_PROGRAM.NO')}
+                  sx={programRadioLabelSx}
                 />
               </RadioGroup>
             )}
@@ -133,83 +137,107 @@ export default function StepSession() {
         </Grid>
 
         <Grid xs={12}>
-          <RequiredLabel>{t('ADD_PROGRAM.BOYS')}</RequiredLabel>
-        </Grid>
-
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.AGE_FROM')}</RequiredLabel>
-          <Controller
-            name="boys_age_from"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.MINIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
+          <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{t('ADD_PROGRAM.BOYS')}</RequiredLabel>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2.5,
+              width: 1,
+              flexDirection: { xs: 'column', md: 'row' },
+            }}
+          >
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <RequiredLabel required size="sm">
+                {t('ADD_PROGRAM.AGE_FROM')}
+              </RequiredLabel>
+              <Controller
+                name="boys_age_from"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    placeholder={t('ADD_PROGRAM.MINIMUM')}
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
+            </Box>
 
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.AGE_TO')}</RequiredLabel>
-          <Controller
-            name="boys_age_to"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <RequiredLabel required size="sm">
+                {t('ADD_PROGRAM.AGE_TO')}
+              </RequiredLabel>
+              <Controller
+                name="boys_age_to"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    placeholder={t('ADD_PROGRAM.MAXIMUM')}
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
               />
-            )}
-          />
+            </Box>
+          </Box>
         </Grid>
 
         <Grid xs={12}>
-          <RequiredLabel>{t('ADD_PROGRAM.GIRLS')}</RequiredLabel>
-        </Grid>
-
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.AGE_FROM')}</RequiredLabel>
-          <Controller
-            name="girls_age_from"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.MINIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
+          <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{t('ADD_PROGRAM.GIRLS')}</RequiredLabel>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2.5,
+              width: 1,
+              flexDirection: { xs: 'column', md: 'row' },
+            }}
+          >
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <RequiredLabel required size="sm">
+                {t('ADD_PROGRAM.AGE_FROM')}
+              </RequiredLabel>
+              <Controller
+                name="girls_age_from"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    placeholder={t('ADD_PROGRAM.MINIMUM')}
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
+            </Box>
 
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.AGE_TO')}</RequiredLabel>
-          <Controller
-            name="girls_age_to"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <RequiredLabel required size="sm">
+                {t('ADD_PROGRAM.AGE_TO')}
+              </RequiredLabel>
+              <Controller
+                name="girls_age_to"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    placeholder={t('ADD_PROGRAM.MAXIMUM')}
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
               />
-            )}
-          />
+            </Box>
+          </Box>
         </Grid>
 
         <Grid xs={12}>

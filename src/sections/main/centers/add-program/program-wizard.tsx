@@ -21,6 +21,7 @@ import StepFlexibleProgram from './steps/step-flexible-program';
 import StepFlexibleSession from './steps/step-flexible-session';
 import StepProgram from './steps/step-program';
 import StepSession from './steps/step-session';
+import { SKIP_PROGRAM_STEP_VALIDATION } from './constants';
 import { programCardSx } from './styles';
 import type { CategoryOption, ProgramFormValues, ProgramStep } from './types';
 import { getStepSchema } from './validation';
@@ -77,8 +78,12 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
   };
 
   const handleNext = async () => {
-    const isValid = await validateCurrentStep();
-    if (!isValid) return;
+    if (!SKIP_PROGRAM_STEP_VALIDATION) {
+      const isValid = await validateCurrentStep();
+      if (!isValid) return;
+    } else {
+      clearErrors();
+    }
 
     if (activeStep < 3) {
       setActiveStep((prev) => (prev + 1) as ProgramStep);

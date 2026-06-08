@@ -2,6 +2,7 @@ import {
   FIELD_BORDER_COLOR,
   FIELD_LABEL_COLOR,
   FIELD_PLACEHOLDER_COLOR,
+  PROGRAM_FIELD_HEIGHT,
   PROGRAM_TEAL,
   PROGRAM_TEAL_DARK,
 } from './constants';
@@ -18,6 +19,10 @@ export const programFieldSx = {
     borderRadius: '12px',
     bgcolor: 'background.paper',
     fontSize: 14,
+    '&:not(.MuiInputBase-multiline)': {
+      height: PROGRAM_FIELD_HEIGHT,
+      alignItems: 'center',
+    },
     '& fieldset': {
       borderColor: FIELD_BORDER_COLOR,
     },
@@ -36,6 +41,26 @@ export const programFieldSx = {
       opacity: 1,
       fontSize: 14,
     },
+  },
+  '& .MuiSelect-select': {
+    display: 'flex',
+    alignItems: 'center',
+    py: 0,
+    minHeight: 'unset !important',
+    height: '100%',
+    boxSizing: 'border-box',
+    color: FIELD_PLACEHOLDER_COLOR,
+    fontSize: 14,
+  },
+  '& input.MuiOutlinedInput-input': {
+    py: 0,
+    height: '100%',
+    boxSizing: 'border-box',
+  },
+  '& .MuiOutlinedInput-root:not(.MuiInputBase-multiline) .MuiInputAdornment-root': {
+    height: '100%',
+    maxHeight: 'none',
+    alignItems: 'center',
   },
   '& .MuiInputLabel-root': {
     display: 'none',
@@ -101,6 +126,12 @@ export const programOutlinedButtonSx = {
   '&:hover': {
     borderColor: PROGRAM_TEAL_DARK,
     bgcolor: 'rgba(58, 176, 173, 0.04)',
+  },
+};
+
+export const programRadioLabelSx = {
+  '& .MuiFormControlLabel-label': {
+    color: FIELD_LABEL_COLOR,
   },
 };
 

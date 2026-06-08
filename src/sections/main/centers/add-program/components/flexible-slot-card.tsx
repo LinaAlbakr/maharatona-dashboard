@@ -24,7 +24,7 @@ import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
 import RequiredLabel from './required-label';
 import { FLEXIBLE_BOOKING_MODELS, GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
-import { innerCardSx, programFieldSx } from '../styles';
+import { innerCardSx, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
 
 type Props = {
@@ -123,7 +123,9 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
         </Grid>
 
         <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.AGE_FROM')}</RequiredLabel>
+          <RequiredLabel required size="sm">
+            {t('ADD_PROGRAM.AGE_FROM')}
+          </RequiredLabel>
           <Controller
             name={`${basePath}.age_from`}
             control={control}
@@ -140,7 +142,9 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           />
         </Grid>
         <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.AGE_TO')}</RequiredLabel>
+          <RequiredLabel required size="sm">
+            {t('ADD_PROGRAM.AGE_TO')}
+          </RequiredLabel>
           <Controller
             name={`${basePath}.age_to`}
             control={control}
@@ -173,11 +177,13 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                     value="yes"
                     control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
                     label={t('ADD_PROGRAM.YES')}
+                    sx={programRadioLabelSx}
                   />
                   <FormControlLabel
                     value="no"
                     control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
                     label={t('ADD_PROGRAM.NO')}
+                    sx={programRadioLabelSx}
                   />
                 </RadioGroup>
               )}
@@ -201,11 +207,13 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                     value="yes"
                     control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
                     label={t('ADD_PROGRAM.YES')}
+                    sx={programRadioLabelSx}
                   />
                   <FormControlLabel
                     value="no"
                     control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
                     label={t('ADD_PROGRAM.NO')}
+                    sx={programRadioLabelSx}
                   />
                 </RadioGroup>
               )}
