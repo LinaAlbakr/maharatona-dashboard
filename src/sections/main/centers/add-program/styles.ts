@@ -151,6 +151,17 @@ export const programRadioLabelSx = {
   },
 };
 
+export const programRadioControlLabelSx = {
+  alignItems: 'center',
+  margin: 0,
+  '& .MuiFormControlLabel-label': {
+    color: FIELD_LABEL_COLOR,
+    fontSize: 16,
+    fontWeight: 500,
+    lineHeight: 1.4,
+  },
+};
+
 export const programSwitchSx = {
   '& .MuiSwitch-switchBase.Mui-checked': {
     color: '#ffffff',

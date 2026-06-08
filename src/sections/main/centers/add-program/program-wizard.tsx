@@ -160,7 +160,7 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         />
       ) : null}
 
-      {activeStep === 2 ? (
+      {activeStep === 2 || activeStep === 3 ? (
         <Box>{renderStep()}</Box>
       ) : (
         <Card sx={programCardSx}>{renderStep()}</Card>
