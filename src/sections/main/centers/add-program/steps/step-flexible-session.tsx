@@ -50,7 +50,17 @@ export default function StepFlexibleSession() {
 
   const handleToggleModel = (modelKey: FlexibleBookingModelKey) => {
     const isEnabled = flexibleModels[modelKey]?.enabled;
-    setValue(`flexibleModels.${modelKey}.enabled`, !isEnabled);
+    setValue(
+      'flexibleModels',
+      {
+        ...flexibleModels,
+        [modelKey]: {
+          ...flexibleModels[modelKey],
+          enabled: !isEnabled,
+        },
+      },
+      { shouldDirty: true, shouldValidate: true }
+    );
     if (!isEnabled) {
       setActiveModel(modelKey);
     }

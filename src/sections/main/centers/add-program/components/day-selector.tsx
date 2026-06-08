@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 
 import { useTranslate } from 'src/locales';
 
-import { PROGRAM_TEAL, WEEKDAYS } from '../constants';
+import { FIELD_LABEL_COLOR, PROGRAM_TEAL, WEEKDAYS } from '../constants';
 
 type Props = {
   value: string[];
@@ -24,21 +24,35 @@ export default function DaySelector({ value, onChange }: Props) {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 1,
+        flexWrap: { xs: 'wrap', sm: 'nowrap' },
+      }}
+    >
       {WEEKDAYS.map((day) => {
         const selected = value.includes(day.value);
         return (
           <Button
             key={day.value}
-            size="small"
             onClick={() => toggleDay(day.value)}
             sx={{
-              minWidth: 72,
-              borderRadius: '20px',
+              width: 100,
+              height: 49,
+              minWidth: 100,
+              flexShrink: 0,
+              borderRadius: '12px',
               textTransform: 'none',
               fontWeight: 500,
+              fontSize: 16,
+              lineHeight: 1,
+              px: 0,
               bgcolor: selected ? PROGRAM_TEAL : 'grey.100',
-              color: selected ? 'common.white' : 'text.secondary',
+              color: selected ? 'common.white' : FIELD_LABEL_COLOR,
               boxShadow: 'none',
               '&:hover': {
                 bgcolor: selected ? PROGRAM_TEAL : 'grey.200',

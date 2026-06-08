@@ -9,6 +9,7 @@ export const FIELD_BORDER_COLOR = '#D9D9D9';
 export const FIELD_PLACEHOLDER_COLOR = '#A29F9D';
 export const ADD_BOX_TEXT_COLOR = '#8B8D91';
 export const ADD_BOX_BG_COLOR = '#8B8D9152';
+export const FREE_BOOKING_COLOR = '#CC3899';
 export const PROGRAM_FIELD_HEIGHT = 51;
 
 /** Dev-only: bypass step validation so the wizard can be navigated without filling every field. */

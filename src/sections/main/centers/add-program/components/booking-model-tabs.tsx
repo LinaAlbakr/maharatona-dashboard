@@ -1,7 +1,8 @@
 'use client';
 
+import { useFormContext, useWatch } from 'react-hook-form';
+
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
@@ -9,7 +10,13 @@ import { useTranslate } from 'src/locales';
 import Iconify from 'src/components/iconify';
 
 import RequiredLabel from './required-label';
-import { FLEXIBLE_BOOKING_MODELS, PROGRAM_TEAL } from '../constants';
+import {
+  FIELD_LABEL_COLOR,
+  FLEXIBLE_BOOKING_MODELS,
+  FREE_BOOKING_COLOR,
+  PROGRAM_SECTION_HEADING_COLOR,
+  PROGRAM_TEAL,
+} from '../constants';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
 type Props = {
@@ -26,6 +33,8 @@ export default function BookingModelTabs({
   onToggleModel,
 }: Props) {
   const { t } = useTranslate();
+  const { control } = useFormContext<ProgramFormValues>();
+  const isFreeSelected = useWatch({ control, name: 'flexibleModels.trial.enabled' }) === true;
 
   const mainModels = FLEXIBLE_BOOKING_MODELS.filter((m) => m.key !== 'trial');
   const trialModel = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === 'trial')!;
@@ -34,62 +43,105 @@ export default function BookingModelTabs({
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
         <RequiredLabel required>{t('ADD_PROGRAM.CHOOSE_BOOKING_MODEL')}</RequiredLabel>
-        <Button
-          size="small"
-          variant="outlined"
-          startIcon={<Iconify icon="mingcute:add-line" />}
+        <Box
+          component="button"
+          type="button"
           onClick={() => {
             onToggleModel('trial');
-            onActiveChange('trial');
+            if (!isFreeSelected) {
+              onActiveChange('trial');
+            }
+          }}
+          style={{
+            backgroundColor: isFreeSelected ? FREE_BOOKING_COLOR : '#FFFFFF',
+            color: isFreeSelected ? '#FFFFFF' : FREE_BOOKING_COLOR,
+            border: `1px solid ${FREE_BOOKING_COLOR}`,
           }}
           sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 0.5,
+            width: 140,
+            height: 32,
+            px: 1.5,
             borderRadius: '20px',
-            borderColor: 'primary.main',
-            color: 'primary.main',
+            fontSize: 16,
             fontWeight: 600,
-            textTransform: 'none',
+            fontFamily: 'inherit',
+            lineHeight: 1,
+            cursor: 'pointer',
+            outline: 'none',
+            '&:hover': {
+              backgroundColor: isFreeSelected ? FREE_BOOKING_COLOR : '#FFFFFF',
+              color: isFreeSelected ? '#FFFFFF' : FREE_BOOKING_COLOR,
+            },
           }}
         >
+          <Iconify
+            icon="mingcute:add-line"
+            width={16}
+            sx={{ color: 'inherit', flexShrink: 0 }}
+          />
           {t(trialModel.labelKey)}
-        </Button>
+        </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0 }}>
-        {mainModels.map((model, index) => {
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          height: 52,
+          px: 1.5,
+          borderRadius: '26px',
+          bgcolor: 'grey.100',
+          gap: 1,
+          overflowX: 'auto',
+        }}
+      >
+        {mainModels.map((model) => {
           const enabled = enabledModels.includes(model.key);
           const active = activeModel === model.key;
 
           return (
-            <Button
+            <Box
               key={model.key}
+              component="button"
+              type="button"
               onClick={() => {
                 if (!enabled) onToggleModel(model.key);
                 onActiveChange(model.key);
               }}
+              style={{
+                backgroundColor: active ? PROGRAM_SECTION_HEADING_COLOR : '#FFFFFF',
+                color: active ? '#FFFFFF' : FIELD_LABEL_COLOR,
+              }}
               sx={{
-                flex: 1,
-                minWidth: 80,
-                py: 1.25,
-                borderRadius:
-                  index === 0
-                    ? '8px 0 0 8px'
-                    : index === mainModels.length - 1
-                      ? '0 8px 8px 0'
-                      : 0,
-                textTransform: 'none',
+                flexShrink: 0,
+                width: 140,
+                minWidth: 140,
+                height: 30,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '15px',
+                border: 'none',
+                fontSize: 16,
                 fontWeight: 600,
-                bgcolor: active ? PROGRAM_TEAL : 'common.white',
-                color: active ? 'common.white' : 'text.secondary',
-                border: '1px solid',
-                borderColor: active ? PROGRAM_TEAL : 'grey.300',
-                borderLeft: index > 0 ? 'none' : undefined,
+                fontFamily: 'inherit',
+                lineHeight: 1,
+                cursor: 'pointer',
+                outline: 'none',
                 '&:hover': {
-                  bgcolor: active ? PROGRAM_TEAL : 'grey.50',
+                  backgroundColor: active ? PROGRAM_SECTION_HEADING_COLOR : '#FFFFFF',
+                  color: active ? '#FFFFFF' : FIELD_LABEL_COLOR,
                 },
               }}
             >
               {t(model.labelKey)}
-            </Button>
+            </Box>
           );
         })}
       </Box>
