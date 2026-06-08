@@ -99,7 +99,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           />
         </Grid>
 
-        <Grid xs={12} md={modelConfig.hasRecurring ? 12 : 6}>
+        <Grid xs={12}>
           <RequiredLabel required>{t('ADD_PROGRAM.GENDER')}</RequiredLabel>
           <Controller
             name={`${basePath}.gender`}
@@ -342,23 +342,6 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           </Grid>
         ) : null}
 
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
-          <Controller
-            name={`${basePath}.seat_capacity`}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
-              />
-            )}
-          />
-        </Grid>
-
         {modelKey !== 'trial' ? (
           <Grid xs={12} md={6}>
             <PriceVatLabel required labelKey={priceLabelKey} />
@@ -384,6 +367,23 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
             />
           </Grid>
         ) : null}
+
+        <Grid xs={12} md={6}>
+          <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
+          <Controller
+            name={`${basePath}.seat_capacity`}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
+          />
+        </Grid>
       </Grid>
 
       {onRemove ? (

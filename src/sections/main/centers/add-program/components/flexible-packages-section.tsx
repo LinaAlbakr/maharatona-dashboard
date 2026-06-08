@@ -18,7 +18,7 @@ import { DeleteIcon, RiyalIcon } from './course-icons';
 import PriceVatLabel from './price-vat-label';
 import RequiredLabel from './required-label';
 import { EMPTY_FLEXIBLE_PACKAGE } from '../constants';
-import { dashedAddButtonSx, innerCardSx, programFieldSx, programSectionTitleSx } from '../styles';
+import { dashedAddButtonSx, innerCardSx, programFieldSx, programStepHeadingSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
 type Props = {
@@ -36,7 +36,7 @@ export default function FlexiblePackagesSection({ modelKey }: Props) {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography sx={programSectionTitleSx}>{t('ADD_PROGRAM.CREATE_PACKAGES')}</Typography>
+      <Typography sx={programStepHeadingSx}>{t('ADD_PROGRAM.CREATE_PACKAGES')}</Typography>
 
       {fields.map((field, index) => (
         <Box key={field.id} sx={innerCardSx}>

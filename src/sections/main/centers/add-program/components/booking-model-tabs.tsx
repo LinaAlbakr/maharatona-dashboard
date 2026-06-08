@@ -9,7 +9,6 @@ import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
-import RequiredLabel from './required-label';
 import {
   FIELD_LABEL_COLOR,
   FLEXIBLE_BOOKING_MODELS,
@@ -17,6 +16,7 @@ import {
   PROGRAM_SECTION_HEADING_COLOR,
   PROGRAM_TEAL,
 } from '../constants';
+import { programStepHeadingSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
 type Props = {
@@ -42,7 +42,12 @@ export default function BookingModelTabs({
   return (
     <Box sx={{ mb: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-        <RequiredLabel required>{t('ADD_PROGRAM.CHOOSE_BOOKING_MODEL')}</RequiredLabel>
+        <Typography sx={{ ...programStepHeadingSx, mb: 0 }}>
+          {t('ADD_PROGRAM.CHOOSE_BOOKING_MODEL')}
+          <Box component="span" sx={{ color: 'error.main', ml: 0.25 }}>
+            *
+          </Box>
+        </Typography>
         <Box
           component="button"
           type="button"

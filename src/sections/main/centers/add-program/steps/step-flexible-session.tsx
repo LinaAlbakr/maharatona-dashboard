@@ -17,10 +17,11 @@ import FlexibleSlotCard from '../components/flexible-slot-card';
 import TimeTypeSelector from '../components/time-type-selector';
 import {
   EMPTY_FLEXIBLE_SLOT,
+  FIELD_LABEL_COLOR,
   FLEXIBLE_BOOKING_MODELS,
-  PROGRAM_TEAL,
+  PROGRAM_SECTION_HEADING_COLOR,
 } from '../constants';
-import { dashedAddButtonSx, programSectionTitleSx } from '../styles';
+import { dashedAddButtonSx, programStepHeadingSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
 export default function StepFlexibleSession() {
@@ -92,7 +93,7 @@ export default function StepFlexibleSession() {
             <FlexiblePackagesSection modelKey={activeModel} />
           ) : null}
 
-          <Typography sx={programSectionTitleSx}>{t('ADD_PROGRAM.CREATE_SLOTS')}</Typography>
+          <Typography sx={programStepHeadingSx}>{t('ADD_PROGRAM.CREATE_SLOTS')}</Typography>
 
           {fields.map((field, index) => (
             <FlexibleSlotCard
@@ -117,8 +118,12 @@ export default function StepFlexibleSession() {
       )}
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 3 }}>
-        <Iconify icon="eva:info-outline" width={18} sx={{ color: PROGRAM_TEAL }} />
-        <Typography variant="body2" color="text.secondary">
+        <Iconify
+          icon="eva:info-outline"
+          width={18}
+          sx={{ color: PROGRAM_SECTION_HEADING_COLOR, flexShrink: 0 }}
+        />
+        <Typography sx={{ fontSize: 16, color: FIELD_LABEL_COLOR, lineHeight: 1.4 }}>
           {t('ADD_PROGRAM.MULTI_MODEL_HINT')}
         </Typography>
       </Box>
