@@ -16,11 +16,11 @@ import Iconify from 'src/components/iconify';
 import Image from 'src/components/image';
 
 import RequiredLabel from './required-label';
-import type { FixedProgramFormValues } from '../types';
+import type { ProgramFormValues } from '../types';
 
 export default function ProgramImagesUpload() {
   const { t } = useTranslate();
-  const { control, setValue, watch } = useFormContext<FixedProgramFormValues>();
+  const { control, setValue, watch } = useFormContext<ProgramFormValues>();
   const images = watch('courseImages');
 
   const onDrop = useCallback(

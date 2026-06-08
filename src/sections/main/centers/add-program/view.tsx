@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 
 import { useSettingsContext } from 'src/components/settings';
 
-import FixedProgramWizard from './fixed-program-wizard';
+import ProgramWizard from './program-wizard';
 import type { CategoryOption } from './types';
 
 type Props = {
@@ -21,7 +21,7 @@ const AddProgramView = ({ centerId, centerName, categories }: Props) => {
       maxWidth={settings.themeStretch ? false : 'lg'}
       sx={{ py: { xs: 3, md: 4 } }}
     >
-      <FixedProgramWizard
+      <ProgramWizard
         centerId={centerId}
         centerName={centerName}
         categories={categories}

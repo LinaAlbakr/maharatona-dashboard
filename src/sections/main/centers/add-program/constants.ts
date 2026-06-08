@@ -1,4 +1,4 @@
-import type { ProgramStep } from './types';
+import type { FlexibleBookingModelKey, ProgramStep } from './types';
 
 export const PROGRAM_TEAL = '#3AB0AD';
 export const PROGRAM_TEAL_DARK = '#2C8B8E';
@@ -44,4 +44,69 @@ export const EMPTY_DISCOUNT_GROUP = {
   title_ar: '',
   title_en: '',
   discounts: [{ ...EMPTY_DISCOUNT_ROW }, { ...EMPTY_DISCOUNT_ROW }],
+};
+
+export const WEEKDAYS = [
+  { value: 'Sunday', labelKey: 'ADD_PROGRAM.SUNDAY' },
+  { value: 'Monday', labelKey: 'ADD_PROGRAM.MONDAY' },
+  { value: 'Tuesday', labelKey: 'ADD_PROGRAM.TUESDAY' },
+  { value: 'Wednesday', labelKey: 'ADD_PROGRAM.WEDNESDAY' },
+  { value: 'Thursday', labelKey: 'ADD_PROGRAM.THURSDAY' },
+  { value: 'Friday', labelKey: 'ADD_PROGRAM.FRIDAY' },
+  { value: 'Saturday', labelKey: 'ADD_PROGRAM.SATURDAY' },
+] as const;
+
+export const FLEXIBLE_BOOKING_MODELS: {
+  key: FlexibleBookingModelKey;
+  labelKey: string;
+  hasPackages: boolean;
+  hasTimeType: boolean;
+  hasRecurring: boolean;
+  hasFixStartDate: boolean;
+}[] = [
+  { key: 'trial', labelKey: 'ADD_PROGRAM.FREE', hasPackages: false, hasTimeType: false, hasRecurring: false, hasFixStartDate: false },
+  { key: 'minutes', labelKey: 'LABEL.BOOKING_MODEL_MINUTES', hasPackages: true, hasTimeType: true, hasRecurring: false, hasFixStartDate: false },
+  { key: 'hourly', labelKey: 'LABEL.BOOKING_MODEL_HOURLY', hasPackages: true, hasTimeType: true, hasRecurring: false, hasFixStartDate: false },
+  { key: 'daily', labelKey: 'LABEL.BOOKING_MODEL_DAILY', hasPackages: true, hasTimeType: false, hasRecurring: true, hasFixStartDate: false },
+  { key: 'weekly', labelKey: 'LABEL.BOOKING_MODEL_WEEKLY', hasPackages: true, hasTimeType: false, hasRecurring: true, hasFixStartDate: false },
+  { key: 'monthly', labelKey: 'LABEL.BOOKING_MODEL_MONTHLY', hasPackages: true, hasTimeType: false, hasRecurring: true, hasFixStartDate: true },
+];
+
+export const EMPTY_FLEXIBLE_PACKAGE = {
+  title_ar: '',
+  title_en: '',
+  number_of_classes: '',
+  price: '',
+};
+
+export const EMPTY_FLEXIBLE_SLOT = {
+  title_ar: '',
+  title_en: '',
+  gender: 'Boys',
+  age_from: '',
+  age_to: '',
+  selected_days: [] as string[],
+  start_time: null as Date | null,
+  end_time: null as Date | null,
+  seat_capacity: '',
+  price: '',
+  class_time: '',
+  recurring_days: true,
+  fixed_start_date: false,
+  custom_dates: [] as { id: string; date: Date | null; label: string }[],
+};
+
+export const createEmptyFlexibleModel = () => ({
+  enabled: false,
+  timeType: 'open' as const,
+  packages: [{ ...EMPTY_FLEXIBLE_PACKAGE }],
+  slots: [{ ...EMPTY_FLEXIBLE_SLOT }],
+});
+
+export const createDefaultFlexibleModels = () => {
+  const models = Object.fromEntries(
+    FLEXIBLE_BOOKING_MODELS.map(({ key }) => [key, createEmptyFlexibleModel()])
+  ) as Record<FlexibleBookingModelKey, ReturnType<typeof createEmptyFlexibleModel>>;
+  models.minutes.enabled = true;
+  return models;
 };

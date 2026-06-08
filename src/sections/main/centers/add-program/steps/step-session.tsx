@@ -18,11 +18,11 @@ import Iconify from 'src/components/iconify';
 import RequiredLabel from '../components/required-label';
 import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { programFieldSx } from '../styles';
-import type { FixedProgramFormValues } from '../types';
+import type { ProgramFormValues } from '../types';
 
 export default function StepSession() {
   const { t } = useTranslate();
-  const { control } = useFormContext<FixedProgramFormValues>();
+  const { control } = useFormContext<ProgramFormValues>();
 
   return (
     <Box>

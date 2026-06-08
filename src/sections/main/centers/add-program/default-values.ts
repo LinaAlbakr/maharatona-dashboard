@@ -1,11 +1,12 @@
 import {
+  createDefaultFlexibleModels,
   EMPTY_DISCOUNT_GROUP,
   EMPTY_MATERIAL,
   EMPTY_QUESTION,
 } from './constants';
-import type { FixedProgramFormValues } from './types';
+import type { ProgramFormValues } from './types';
 
-export const getFixedProgramDefaultValues = (): FixedProgramFormValues => ({
+export const getProgramDefaultValues = (): ProgramFormValues => ({
   bookingType: 'fixed',
   courseImages: [],
   name_ar: '',
@@ -16,6 +17,10 @@ export const getFixedProgramDefaultValues = (): FixedProgramFormValues => ({
   field_id: '',
   start_date: null,
   end_date: null,
+  daysOffRecurring: true,
+  daysOffCustom: true,
+  daysOffList: ['Sunday', 'Tuesday', 'Thursday'],
+  datesOffList: [],
   start_time: null,
   end_time: null,
   gender: 'Mixed',
@@ -25,6 +30,7 @@ export const getFixedProgramDefaultValues = (): FixedProgramFormValues => ({
   girls_age_from: '',
   girls_age_to: '',
   seats: '',
+  flexibleModels: createDefaultFlexibleModels(),
   additional_questions: [{ ...EMPTY_QUESTION }],
   addOnMaterials: [{ ...EMPTY_MATERIAL }],
   enableDiscount: true,
@@ -32,3 +38,6 @@ export const getFixedProgramDefaultValues = (): FixedProgramFormValues => ({
   discount_amount: '',
   discount: [{ ...EMPTY_DISCOUNT_GROUP }],
 });
+
+/** @deprecated use getProgramDefaultValues */
+export const getFixedProgramDefaultValues = getProgramDefaultValues;

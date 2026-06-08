@@ -14,13 +14,15 @@ import FormProvider from 'src/components/hook-form';
 import FormActions from './components/form-actions';
 import ProgramStepper from './components/program-stepper';
 import BookingTypeToggle from './components/booking-type-toggle';
-import { getFixedProgramDefaultValues } from './default-values';
+import { getProgramDefaultValues } from './default-values';
 import StepAdditional from './steps/step-additional';
 import StepDiscount from './steps/step-discount';
+import StepFlexibleProgram from './steps/step-flexible-program';
+import StepFlexibleSession from './steps/step-flexible-session';
 import StepProgram from './steps/step-program';
 import StepSession from './steps/step-session';
 import { programCardSx } from './styles';
-import type { CategoryOption, FixedProgramFormValues, ProgramStep } from './types';
+import type { CategoryOption, ProgramFormValues, ProgramStep } from './types';
 import { getStepSchema } from './validation';
 
 type Props = {
@@ -29,31 +31,14 @@ type Props = {
   categories: CategoryOption[];
 };
 
-const STEP_FIELDS: Record<ProgramStep, (keyof FixedProgramFormValues)[]> = {
-  0: ['courseImages', 'name_ar', 'name_en', 'price', 'field_id', 'start_date', 'end_date'],
-  1: [
-    'start_time',
-    'end_time',
-    'gender',
-    'same_age_range',
-    'boys_age_from',
-    'boys_age_to',
-    'girls_age_from',
-    'girls_age_to',
-    'seats',
-  ],
-  2: ['additional_questions', 'addOnMaterials'],
-  3: ['enableDiscount', 'discount_type', 'discount_amount', 'discount'],
-};
-
-export default function FixedProgramWizard({ centerId, centerName, categories }: Props) {
+export default function ProgramWizard({ centerId, centerName, categories }: Props) {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const [activeStep, setActiveStep] = useState<ProgramStep>(0);
 
-  const defaultValues = useMemo(() => getFixedProgramDefaultValues(), []);
+  const defaultValues = useMemo(() => getProgramDefaultValues(), []);
 
-  const methods = useForm<FixedProgramFormValues>({
+  const methods = useForm<ProgramFormValues>({
     defaultValues,
     mode: 'onChange',
   });
@@ -65,18 +50,11 @@ export default function FixedProgramWizard({ centerId, centerName, categories }:
     activeStep === 0 && centerName ? centerName : t('ADD_PROGRAM.CREATE_PROGRAM');
 
   const validateCurrentStep = async () => {
-    const schema = getStepSchema(activeStep);
     const values = methods.getValues();
-    const stepValues = STEP_FIELDS[activeStep].reduce(
-      (acc, key) => {
-        acc[key] = values[key];
-        return acc;
-      },
-      {} as Record<string, unknown>
-    );
+    const schema = getStepSchema(activeStep, bookingType, values.flexibleModels);
 
     try {
-      await schema.validate(stepValues, { abortEarly: false });
+      await schema.validate(values, { abortEarly: false });
       clearErrors();
       return true;
     } catch (error: any) {
@@ -84,23 +62,20 @@ export default function FixedProgramWizard({ centerId, centerName, categories }:
         error.inner.forEach((item: any) => {
           if (item.path) {
             const path = String(item.path).replace(/\[(\d+)\]/g, '.$1');
-            setError(path as keyof FixedProgramFormValues, {
+            setError(path as keyof ProgramFormValues, {
               type: 'manual',
               message: item.message,
             });
           }
         });
+      } else if (error?.message) {
+        enqueueSnackbar(t(String(error.message)), { variant: 'error' });
       }
       return false;
     }
   };
 
   const handleNext = async () => {
-    if (bookingType === 'flexible') {
-      enqueueSnackbar(t('ADD_PROGRAM.FLEXIBLE_COMING_SOON'), { variant: 'info' });
-      return;
-    }
-
     const isValid = await validateCurrentStep();
     if (!isValid) return;
 
@@ -118,9 +93,8 @@ export default function FixedProgramWizard({ centerId, centerName, categories }:
     }
   };
 
-  const onPublish = (data: FixedProgramFormValues) => {
-    // API integration will be added in a follow-up step.
-    console.log('Publish fixed program', { centerId, data });
+  const onPublish = (data: ProgramFormValues) => {
+    console.log('Publish program', { centerId, data });
     enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_PLACEHOLDER'), { variant: 'info' });
   };
 
@@ -136,14 +110,12 @@ export default function FixedProgramWizard({ centerId, centerName, categories }:
             {bookingType === 'fixed' ? (
               <StepProgram categories={categories} />
             ) : (
-              <Typography variant="body1" color="text.secondary" sx={{ py: 6, textAlign: 'center' }}>
-                {t('ADD_PROGRAM.FLEXIBLE_COMING_SOON')}
-              </Typography>
+              <StepFlexibleProgram categories={categories} />
             )}
           </>
         );
       case 1:
-        return <StepSession />;
+        return bookingType === 'fixed' ? <StepSession /> : <StepFlexibleSession />;
       case 2:
         return <StepAdditional />;
       case 3:
