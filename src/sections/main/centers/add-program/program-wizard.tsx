@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnackbar } from 'notistack';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
@@ -159,7 +160,11 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         />
       ) : null}
 
-      <Card sx={programCardSx}>{renderStep()}</Card>
+      {activeStep === 2 ? (
+        <Box>{renderStep()}</Box>
+      ) : (
+        <Card sx={programCardSx}>{renderStep()}</Card>
+      )}
 
       <FormActions
         showPrevious={activeStep > 0}

@@ -1,8 +1,11 @@
 import {
+  ADD_BOX_BG_COLOR,
+  ADD_BOX_TEXT_COLOR,
   FIELD_BORDER_COLOR,
   FIELD_LABEL_COLOR,
   FIELD_PLACEHOLDER_COLOR,
   PROGRAM_FIELD_HEIGHT,
+  PROGRAM_SECTION_HEADING_COLOR,
   PROGRAM_TEAL,
   PROGRAM_TEAL_DARK,
 } from './constants';
@@ -86,17 +89,30 @@ export const programSectionTitleSx = {
   mb: 2,
 };
 
+export const programStepHeadingSx = {
+  color: PROGRAM_SECTION_HEADING_COLOR,
+  fontWeight: 700,
+  fontSize: 22,
+  mb: 2,
+  lineHeight: 1.3,
+};
+
 export const dashedAddButtonSx = {
   borderStyle: 'dashed',
-  borderColor: 'grey.300',
+  borderColor: ADD_BOX_TEXT_COLOR,
   borderRadius: '12px',
-  color: PROGRAM_TEAL,
+  bgcolor: ADD_BOX_BG_COLOR,
+  color: ADD_BOX_TEXT_COLOR,
   py: 1.75,
   fontWeight: 600,
+  '& .MuiButton-startIcon': {
+    color: ADD_BOX_TEXT_COLOR,
+  },
   '&:hover': {
     borderStyle: 'dashed',
-    borderColor: PROGRAM_TEAL,
-    bgcolor: 'rgba(58, 176, 173, 0.04)',
+    borderColor: ADD_BOX_TEXT_COLOR,
+    bgcolor: ADD_BOX_BG_COLOR,
+    color: ADD_BOX_TEXT_COLOR,
   },
 };
 
@@ -150,5 +166,13 @@ export const innerCardSx = {
   borderColor: 'grey.200',
   borderRadius: '12px',
   p: { xs: 2, md: 3 },
+  mb: 2,
+};
+
+export const programItemCardSx = {
+  bgcolor: 'background.paper',
+  borderRadius: '16px',
+  boxShadow: '0px 4px 24px rgba(145, 158, 171, 0.12)',
+  p: { xs: 2.5, md: 3 },
   mb: 2,
 };
