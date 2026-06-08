@@ -20,8 +20,7 @@ import { format } from 'date-fns';
 
 import { useTranslate } from 'src/locales';
 
-import Iconify from 'src/components/iconify';
-
+import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
 import RequiredLabel from './required-label';
 import { FLEXIBLE_BOOKING_MODELS, GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
@@ -240,6 +239,9 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                   sx: { maxWidth: 200 },
                 },
               }}
+              slots={{
+                openPickerIcon: CalendarIcon,
+              }}
             />
           </Grid>
         ) : (
@@ -276,9 +278,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                   },
                 }}
                 slots={{
-                  openPickerIcon: () => (
-                    <Iconify icon="solar:clock-circle-outline" width={22} sx={{ color: PROGRAM_TEAL }} />
-                  ),
+                  openPickerIcon: ClockIcon,
                 }}
               />
             )}
@@ -306,9 +306,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                   },
                 }}
                 slots={{
-                  openPickerIcon: () => (
-                    <Iconify icon="solar:clock-circle-outline" width={22} sx={{ color: PROGRAM_TEAL }} />
-                  ),
+                  openPickerIcon: ClockIcon,
                 }}
               />
             )}
@@ -367,7 +365,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Iconify icon="solar:wallet-money-bold" width={22} sx={{ color: PROGRAM_TEAL }} />
+                        <RiyalIcon />
                       </InputAdornment>
                     ),
                   }}
@@ -381,8 +379,8 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
 
       {onRemove ? (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-          <IconButton color="error" onClick={onRemove}>
-            <Iconify icon="material-symbols:delete-outline-rounded" />
+          <IconButton onClick={onRemove} sx={{ p: 0.75 }}>
+            <DeleteIcon />
           </IconButton>
         </Box>
       ) : null}

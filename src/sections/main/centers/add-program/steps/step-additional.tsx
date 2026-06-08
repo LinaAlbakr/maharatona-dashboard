@@ -17,6 +17,7 @@ import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
+import { DeleteIcon, RiyalIcon } from '../components/course-icons';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
 import { EMPTY_MATERIAL, EMPTY_QUESTION, PROGRAM_TEAL } from '../constants';
@@ -143,8 +144,8 @@ export default function StepAdditional() {
             </Box>
 
             {questionFields.length > 1 ? (
-              <IconButton color="error" onClick={() => removeQuestion(index)}>
-                <Iconify icon="material-symbols:delete-outline-rounded" />
+              <IconButton onClick={() => removeQuestion(index)} sx={{ p: 0.75 }}>
+                <DeleteIcon />
               </IconButton>
             ) : null}
           </Box>
@@ -233,7 +234,7 @@ export default function StepAdditional() {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Iconify icon="solar:wallet-money-bold" width={22} sx={{ color: PROGRAM_TEAL }} />
+                          <RiyalIcon />
                         </InputAdornment>
                       ),
                     }}
@@ -260,8 +261,8 @@ export default function StepAdditional() {
               />
             </Box>
             {materialFields.length > 1 ? (
-              <IconButton color="error" onClick={() => removeMaterial(index)}>
-                <Iconify icon="material-symbols:delete-outline-rounded" />
+              <IconButton onClick={() => removeMaterial(index)} sx={{ p: 0.75 }}>
+                <DeleteIcon />
               </IconButton>
             ) : null}
           </Box>

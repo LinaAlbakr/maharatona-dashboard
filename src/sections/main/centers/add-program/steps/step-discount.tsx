@@ -17,6 +17,7 @@ import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
+import { DeleteIcon } from '../components/course-icons';
 import RequiredLabel from '../components/required-label';
 import { EMPTY_DISCOUNT_GROUP, EMPTY_DISCOUNT_ROW, PROGRAM_TEAL } from '../constants';
 import {
@@ -155,8 +156,8 @@ export default function StepDiscount() {
 
                   {discountGroups.length > 1 ? (
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                      <IconButton color="error" onClick={() => removeDiscountGroup(groupIndex)}>
-                        <Iconify icon="material-symbols:delete-outline-rounded" />
+                      <IconButton onClick={() => removeDiscountGroup(groupIndex)} sx={{ p: 0.75 }}>
+                        <DeleteIcon />
                       </IconButton>
                     </Box>
                   ) : null}
@@ -228,8 +229,8 @@ function DiscountRows({ groupIndex }: { groupIndex: number }) {
           </Grid>
           <Grid xs={12} md={1} sx={{ display: 'flex', alignItems: 'flex-end', pb: 0.5 }}>
             {fields.length > 1 ? (
-              <IconButton color="error" onClick={() => remove(rowIndex)}>
-                <Iconify icon="material-symbols:delete-outline-rounded" />
+              <IconButton onClick={() => remove(rowIndex)} sx={{ p: 0.75 }}>
+                <DeleteIcon />
               </IconButton>
             ) : null}
           </Grid>

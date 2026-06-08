@@ -14,8 +14,9 @@ import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
+import { DeleteIcon, RiyalIcon } from './course-icons';
 import RequiredLabel from './required-label';
-import { EMPTY_FLEXIBLE_PACKAGE, PROGRAM_TEAL } from '../constants';
+import { EMPTY_FLEXIBLE_PACKAGE } from '../constants';
 import { dashedAddButtonSx, innerCardSx, programFieldSx, programSectionTitleSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
@@ -101,7 +102,7 @@ export default function FlexiblePackagesSection({ modelKey }: Props) {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Iconify icon="solar:wallet-money-bold" width={22} sx={{ color: PROGRAM_TEAL }} />
+                          <RiyalIcon />
                         </InputAdornment>
                       ),
                     }}
@@ -114,8 +115,8 @@ export default function FlexiblePackagesSection({ modelKey }: Props) {
 
           {fields.length > 1 ? (
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-              <IconButton color="error" onClick={() => remove(index)}>
-                <Iconify icon="material-symbols:delete-outline-rounded" />
+              <IconButton onClick={() => remove(index)} sx={{ p: 0.75 }}>
+                <DeleteIcon />
               </IconButton>
             </Box>
           ) : null}

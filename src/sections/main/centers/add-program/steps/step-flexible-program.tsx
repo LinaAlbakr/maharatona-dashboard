@@ -11,13 +11,11 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { useTranslate } from 'src/locales';
 import { useTranslation } from 'react-i18next';
 
-import Iconify from 'src/components/iconify';
-
+import { CalendarIcon } from '../components/course-icons';
 import DaysOffSection from '../components/days-off-section';
 import ProgramImagesUpload from '../components/program-images-upload';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
-import { PROGRAM_TEAL } from '../constants';
 import { programFieldSx, programPlaceholderTextSx } from '../styles';
 import type { CategoryOption, ProgramFormValues } from '../types';
 
@@ -114,9 +112,7 @@ export default function StepFlexibleProgram({ categories }: Props) {
                   },
                 }}
                 slots={{
-                  openPickerIcon: () => (
-                    <Iconify icon="solar:calendar-mark-bold-duotone" width={22} sx={{ color: PROGRAM_TEAL }} />
-                  ),
+                  openPickerIcon: CalendarIcon,
                 }}
               />
             )}
@@ -143,9 +139,7 @@ export default function StepFlexibleProgram({ categories }: Props) {
                   },
                 }}
                 slots={{
-                  openPickerIcon: () => (
-                    <Iconify icon="solar:calendar-mark-bold-duotone" width={22} sx={{ color: PROGRAM_TEAL }} />
-                  ),
+                  openPickerIcon: CalendarIcon,
                 }}
               />
             )}

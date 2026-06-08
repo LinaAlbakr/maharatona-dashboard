@@ -13,8 +13,7 @@ import { TimePicker } from '@mui/x-date-pickers';
 
 import { useTranslate } from 'src/locales';
 
-import Iconify from 'src/components/iconify';
-
+import { ClockIcon } from '../components/course-icons';
 import RequiredLabel from '../components/required-label';
 import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { programFieldSx } from '../styles';
@@ -48,9 +47,7 @@ export default function StepSession() {
                   },
                 }}
                 slots={{
-                  openPickerIcon: () => (
-                    <Iconify icon="solar:clock-circle-outline" width={22} sx={{ color: PROGRAM_TEAL }} />
-                  ),
+                  openPickerIcon: ClockIcon,
                 }}
               />
             )}
@@ -78,9 +75,7 @@ export default function StepSession() {
                   },
                 }}
                 slots={{
-                  openPickerIcon: () => (
-                    <Iconify icon="solar:clock-circle-outline" width={22} sx={{ color: PROGRAM_TEAL }} />
-                  ),
+                  openPickerIcon: ClockIcon,
                 }}
               />
             )}

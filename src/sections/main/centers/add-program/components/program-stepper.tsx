@@ -7,10 +7,9 @@ import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
-import { PROGRAM_STEPS, PROGRAM_TEAL } from '../constants';
+import { FIELD_LABEL_COLOR, PROGRAM_STEPS, PROGRAM_TEAL, STEP_INACTIVE_COLOR } from '../constants';
 import type { ProgramStep } from '../types';
 
-const STEP_LABEL_COLOR = '#2B509C';
 const STEP_ICON_SIZE = 36;
 
 type Props = {
@@ -31,8 +30,7 @@ export default function ProgramStepper({ activeStep }: Props) {
           right: STEP_ICON_SIZE / 2,
           borderTop: '2px dashed',
           borderColor: 'transparent',
-          borderImage:
-            'repeating-linear-gradient(to right, #C4CDD5 0, #C4CDD5 6px, transparent 6px, transparent 12px) 1',
+          borderImage: `repeating-linear-gradient(to right, ${STEP_INACTIVE_COLOR} 0, ${STEP_INACTIVE_COLOR} 6px, transparent 6px, transparent 12px) 1`,
           zIndex: 0,
         }}
       />
@@ -71,8 +69,8 @@ export default function ProgramStepper({ activeStep }: Props) {
                   justifyContent: 'center',
                   bgcolor: completed || active ? PROGRAM_TEAL : 'common.white',
                   border: completed || active ? 'none' : '2px solid',
-                  borderColor: 'grey.300',
-                  color: completed || active ? 'common.white' : 'text.secondary',
+                  borderColor: STEP_INACTIVE_COLOR,
+                  color: completed || active ? 'common.white' : STEP_INACTIVE_COLOR,
                 }}
               >
                 {completed ? (
@@ -88,8 +86,8 @@ export default function ProgramStepper({ activeStep }: Props) {
                 sx={{
                   mt: 0.75,
                   fontSize: 12,
-                  fontWeight: active || completed ? 700 : 500,
-                  color: STEP_LABEL_COLOR,
+                  fontWeight: active ? 700 : 500,
+                  color: active ? FIELD_LABEL_COLOR : STEP_INACTIVE_COLOR,
                   lineHeight: 1.4,
                   textAlign: isFirst ? 'left' : isLast ? 'right' : 'center',
                   whiteSpace: 'nowrap',
