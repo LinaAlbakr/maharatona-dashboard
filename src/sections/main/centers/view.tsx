@@ -248,6 +248,14 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             },
             {
               sx: { color: 'info.dark' },
+              label: t('LABEL.ADD_PROGRAM'),
+              icon: 'mingcute:add-line',
+              onClick: (item) => {
+                router.push(paths.dashboard.centerAddProgram(item.id));
+              },
+            },
+            {
+              sx: { color: 'info.dark' },
               label: t('LABEL.SEND_NOTIFICATION'),
               icon: 'mingcute:notification-fill',
               onClick: (item) => {

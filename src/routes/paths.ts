@@ -26,6 +26,7 @@ export const paths = {
     root: ROOTS.DASHBOARD,
     notifications: `${ROOTS.DASHBOARD}/notifications`,
     centers: `${ROOTS.DASHBOARD}/centers`,
+    centerAddProgram: (centerId: string) => `${ROOTS.DASHBOARD}/centers/${centerId}/add-program`,
     clients: `${ROOTS.DASHBOARD}/clients`,
     payouts: `${ROOTS.DASHBOARD}/payouts`,
     invoices: `${ROOTS.DASHBOARD}/invoices`,
