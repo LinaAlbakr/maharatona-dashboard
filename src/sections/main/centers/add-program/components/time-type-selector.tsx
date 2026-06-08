@@ -38,10 +38,11 @@ export default function TimeTypeSelector({ value, onChange }: Props) {
 
       <Card
         sx={{
-          height: 77,
           borderRadius: '16px',
           boxShadow: '0px 4px 24px rgba(145, 158, 171, 0.12)',
           px: 2,
+          py: 1.5,
+          bgcolor: 'background.paper',
           display: 'flex',
           alignItems: 'center',
           overflow: 'hidden',
@@ -54,7 +55,6 @@ export default function TimeTypeSelector({ value, onChange }: Props) {
             alignItems: 'center',
             justifyContent: { xs: 'flex-start', lg: 'center' },
             gap: 2,
-            height: 77,
             width: '100%',
             overflowX: 'auto',
             flexShrink: 0,
@@ -76,43 +76,52 @@ export default function TimeTypeSelector({ value, onChange }: Props) {
                 flex: { xs: 1, md: '0 0 505px' },
                 display: 'flex',
                 alignItems: 'center',
-                gap: 1,
+                justifyContent: 'center',
                 px: 2,
                 borderRadius: '12px',
                 border: '1px solid',
-                borderColor: selected ? PROGRAM_SECTION_HEADING_COLOR : FIELD_BORDER_COLOR,
-                bgcolor: selected ? 'rgba(60, 184, 187, 0.08)' : 'common.white',
+                borderColor: selected ? PROGRAM_SECTION_HEADING_COLOR : 'transparent',
+                bgcolor: FIELD_BORDER_COLOR,
                 cursor: 'pointer',
                 outline: 'none',
                 fontFamily: 'inherit',
-                textAlign: 'center',
                 '&:hover': {
                   borderColor: PROGRAM_SECTION_HEADING_COLOR,
                 },
               }}
             >
-              <Radio
-                checked={selected}
-                tabIndex={-1}
-                disableRipple
+              <Box
                 sx={{
-                  p: 0,
-                  flexShrink: 0,
-                  color: PROGRAM_SECTION_HEADING_COLOR,
-                  '&.Mui-checked': { color: PROGRAM_SECTION_HEADING_COLOR },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  minWidth: 0,
                 }}
-              />
-              <Box sx={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
-                <Typography
-                  sx={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: PROGRAM_SECTION_HEADING_COLOR,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {t(option.titleKey)}
-                </Typography>
+              >
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
+                  <Radio
+                    checked={selected}
+                    tabIndex={-1}
+                    disableRipple
+                    sx={{
+                      p: 0,
+                      flexShrink: 0,
+                      color: PROGRAM_SECTION_HEADING_COLOR,
+                      '&.Mui-checked': { color: PROGRAM_SECTION_HEADING_COLOR },
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: 16,
+                      fontWeight: 600,
+                      color: PROGRAM_SECTION_HEADING_COLOR,
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {t(option.titleKey)}
+                  </Typography>
+                </Box>
                 <Typography
                   sx={{
                     fontSize: 14,

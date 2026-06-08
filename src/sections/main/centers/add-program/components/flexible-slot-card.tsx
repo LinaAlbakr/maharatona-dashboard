@@ -323,67 +323,114 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
         </Grid>
 
         {modelConfig.hasTimeType && timeType === 'fixed' ? (
-          <Grid xs={12} md={6}>
-            <RequiredLabel required>{t('ADD_PROGRAM.DURATION')}</RequiredLabel>
-            <Controller
-              name={`${basePath}.class_time`}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  placeholder={t('ADD_PROGRAM.MINUTES_PLACEHOLDER')}
-                  error={!!error}
-                  helperText={error ? t(String(error.message)) : undefined}
-                  sx={programFieldSx}
-                />
-              )}
-            />
-          </Grid>
-        ) : null}
-
-        {modelKey !== 'trial' ? (
-          <Grid xs={12} md={6}>
-            <PriceVatLabel required labelKey={priceLabelKey} />
-            <Controller
-              name={`${basePath}.price`}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  error={!!error}
-                  helperText={error ? t(String(error.message)) : undefined}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <RiyalIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={programFieldSx}
-                />
-              )}
-            />
-          </Grid>
-        ) : null}
-
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
-          <Controller
-            name={`${basePath}.seat_capacity`}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
+          <>
+            <Grid xs={12} md={6}>
+              <RequiredLabel required>{t('ADD_PROGRAM.DURATION')}</RequiredLabel>
+              <Controller
+                name={`${basePath}.class_time`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    placeholder={t('ADD_PROGRAM.MINUTES_PLACEHOLDER')}
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
               />
-            )}
-          />
-        </Grid>
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
+              <Controller
+                name={`${basePath}.seat_capacity`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
+              />
+            </Grid>
+
+            {modelKey !== 'trial' ? (
+              <Grid xs={12}>
+                <PriceVatLabel required labelKey={priceLabelKey} />
+                <Controller
+                  name={`${basePath}.price`}
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      error={!!error}
+                      helperText={error ? t(String(error.message)) : undefined}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <RiyalIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={programFieldSx}
+                    />
+                  )}
+                />
+              </Grid>
+            ) : null}
+          </>
+        ) : (
+          <>
+            {modelKey !== 'trial' ? (
+              <Grid xs={12} md={6}>
+                <PriceVatLabel required labelKey={priceLabelKey} />
+                <Controller
+                  name={`${basePath}.price`}
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      error={!!error}
+                      helperText={error ? t(String(error.message)) : undefined}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <RiyalIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={programFieldSx}
+                    />
+                  )}
+                />
+              </Grid>
+            ) : null}
+
+            <Grid xs={12} md={6}>
+              <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
+              <Controller
+                name={`${basePath}.seat_capacity`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
+              />
+            </Grid>
+          </>
+        )}
       </Grid>
 
       {onRemove ? (
