@@ -46,8 +46,9 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
   const { handleSubmit, watch, setError, clearErrors, setValue } = methods;
   const bookingType = watch('bookingType');
 
-  const pageTitle =
-    activeStep === 0 && centerName ? centerName : t('ADD_PROGRAM.CREATE_PROGRAM');
+  const pageTitle = centerName
+    ? `${t('LABEL.ADD_PROGRAM')} - ${centerName}`
+    : t('LABEL.ADD_PROGRAM');
 
   const validateCurrentStep = async () => {
     const values = methods.getValues();
@@ -127,11 +128,32 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
 
   return (
     <FormProvider methods={methods}>
-      <Typography variant="h4" sx={{ color: '#2C8B8E', fontWeight: 700, mb: 3 }}>
+      <Typography
+        sx={{
+          fontSize: 24,
+          fontWeight: 700,
+          color: '#2C8B8E',
+          mb: 2,
+          lineHeight: 1.3,
+        }}
+      >
         {pageTitle}
       </Typography>
 
-      <ProgramStepper activeStep={activeStep} />
+      <Card
+        sx={{
+          ...programCardSx,
+          height: 90,
+          display: 'flex',
+          alignItems: 'center',
+          p: 0,
+          px: { xs: 2, md: 2.5 },
+          mb: 3,
+          width: '100%',
+        }}
+      >
+        <ProgramStepper activeStep={activeStep} />
+      </Card>
 
       <Card sx={programCardSx}>{renderStep()}</Card>
 

@@ -24,7 +24,13 @@ const Page = async ({ params }: IProps) => {
   return (
     <AddProgramView
       centerId={params.centerId}
-      centerName={centerInfo?.name ?? ''}
+      centerName={
+        centerInfo?.name ||
+        centerInfo?.name_en ||
+        centerInfo?.name_ar ||
+        centerInfo?.center_name ||
+        ''
+      }
       categories={categories}
     />
   );
