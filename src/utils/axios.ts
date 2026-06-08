@@ -163,6 +163,9 @@ export const endpoints = {
       `/admin/delete-center-review/${centerId}/${reviewId}`,
     clearWallet: (centerId: string) => `/admin-panel/clearing-the-center-wallet/${centerId}`,
     deleteCenter: (centerId: string) => `/admin/delete-center/${centerId}`,
+    createCourse: (centerId: string) => `/admin/center/${centerId}/create-course`,
+    createFlexibleCourse: (centerId: string) =>
+      `/admin/center/${centerId}/create-flexible-course`,
   },
   courses: {
     fetch: '/admin/get-all-courses',

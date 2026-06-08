@@ -156,7 +156,6 @@ export default function StepFlexibleProgram({ categories }: Props) {
                 {...field}
                 select
                 fullWidth
-                displayEmpty
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}

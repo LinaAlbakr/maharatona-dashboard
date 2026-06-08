@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
+import { paths } from 'src/routes/paths';
 import { useTranslate } from 'src/locales';
 
 import FormProvider from 'src/components/hook-form';
@@ -25,6 +27,7 @@ import StepSession from './steps/step-session';
 import { SKIP_PROGRAM_STEP_VALIDATION } from './constants';
 import { programCardSx } from './styles';
 import type { CategoryOption, ProgramFormValues, ProgramStep } from './types';
+import { submitProgram } from './utils/submit-program';
 import { getStepSchema } from './validation';
 
 type Props = {
@@ -35,8 +38,10 @@ type Props = {
 
 export default function ProgramWizard({ centerId, centerName, categories }: Props) {
   const { t } = useTranslate();
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [activeStep, setActiveStep] = useState<ProgramStep>(0);
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const defaultValues = useMemo(() => getProgramDefaultValues(), []);
 
@@ -100,9 +105,24 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
     }
   };
 
-  const onPublish = (data: ProgramFormValues) => {
-    console.log('Publish program', { centerId, data });
-    enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_PLACEHOLDER'), { variant: 'info' });
+  const onPublish = async (data: ProgramFormValues) => {
+    setIsPublishing(true);
+    try {
+      const result = await submitProgram(centerId, data);
+
+      if (!result.success) {
+        enqueueSnackbar(result.error, { variant: 'error' });
+        return;
+      }
+
+      enqueueSnackbar(
+        result.message || t('ADD_PROGRAM.PUBLISH_SUCCESS'),
+        { variant: 'success' }
+      );
+      router.push(`${paths.dashboard.centers}/${centerId}`);
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const renderStep = () => {
@@ -171,6 +191,7 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         onPrevious={handlePrevious}
         onNext={handleNext}
         nextLabel={activeStep === 3 ? t('ADD_PROGRAM.PUBLISH') : t('ADD_PROGRAM.NEXT')}
+        isSubmitting={isPublishing}
       />
     </FormProvider>
   );
