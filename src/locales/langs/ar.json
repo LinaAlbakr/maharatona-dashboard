@@ -570,6 +570,17 @@
     "SELECT_AT_LEAST_ONE_MODEL": "يرجى اختيار نموذج حجز واحد على الاقل",
     "MULTI_MODEL_HINT": "يمكنك اختيار اكثر من نموذج حجز قبل المتابعة"
   },
+  "PROGRAM_DETAILS": {
+    "TITLE": "تفاصيل البرنامج",
+    "EDIT_PROGRAM": "تعديل البرنامج",
+    "PROGRAM_SECTION": "تفاصيل البرنامج",
+    "SESSION_SECTION": "تفاصيل الجلسة",
+    "ADDITIONAL_SECTION": "تفاصيل اضافية",
+    "DISCOUNT_SECTION": "تفاصيل الخصم",
+    "PROGRAM_NAME": "اسم البرنامج",
+    "PROGRAM_DESCRIPTION": "وصف البرنامج",
+    "YEARS": "سنوات"
+  },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",
     "REASON_NAME_IN_ARABIC": "اسم السبب باللغة العربية",
