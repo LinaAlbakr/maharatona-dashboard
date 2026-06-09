@@ -46,14 +46,90 @@ type Props = {
   onRemove?: () => void;
 };
 
+type SlotAgeRangeFieldsProps = {
+  basePath: `flexibleModels.${FlexibleBookingModelKey}.slots.${number}`;
+  fromName: 'boys_age_from' | 'girls_age_from';
+  toName: 'boys_age_to' | 'girls_age_to';
+  sectionLabel?: string;
+};
+
+function SlotAgeRangeFields({ basePath, fromName, toName, sectionLabel }: SlotAgeRangeFieldsProps) {
+  const { t } = useTranslate();
+  const { control } = useFormContext<ProgramFormValues>();
+
+  return (
+    <Grid xs={12}>
+      {sectionLabel ? (
+        <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{sectionLabel}</RequiredLabel>
+      ) : null}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2.5,
+          width: 1,
+          flexDirection: { xs: 'column', md: 'row' },
+        }}
+      >
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <RequiredLabel required size="sm">
+            {t('ADD_PROGRAM.AGE_FROM')}
+          </RequiredLabel>
+          <Controller
+            name={`${basePath}.${fromName}`}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                placeholder={t('ADD_PROGRAM.MINIMUM')}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
+          />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <RequiredLabel required size="sm">
+            {t('ADD_PROGRAM.AGE_TO')}
+          </RequiredLabel>
+          <Controller
+            name={`${basePath}.${toName}`}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                placeholder={t('ADD_PROGRAM.MAXIMUM')}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
+          />
+        </Box>
+      </Box>
+    </Grid>
+  );
+}
+
 export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemove }: Props) {
   const { t } = useTranslate();
   const { control, watch, setValue, getFieldState, formState } = useFormContext<ProgramFormValues>();
 
   const modelConfig = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === modelKey)!;
   const basePath = `flexibleModels.${modelKey}.slots.${slotIndex}` as const;
+  const gender = watch(`${basePath}.gender`);
+  const sameAgeRange = watch(`${basePath}.same_age_range`);
   const recurringDays = watch(`${basePath}.recurring_days`);
   const customDates = watch(`${basePath}.custom_dates`) || [];
+
+  const isMixed = gender === 'Mixed';
+  const showSameAgeRange = isMixed;
+  const showSharedAgeField = isMixed && sameAgeRange;
+  const showBoysAgeRange = isMixed && !sameAgeRange;
+  const showGirlsAgeRange = isMixed && !sameAgeRange;
+  const showSingleGenderAgeRange = !isMixed;
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const addDatesRef = useRef<HTMLButtonElement>(null);
@@ -127,6 +203,13 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
+                onChange={(event) => {
+                  const nextGender = event.target.value;
+                  field.onChange(nextGender);
+                  if (nextGender !== 'Mixed') {
+                    setValue(`${basePath}.same_age_range`, false);
+                  }
+                }}
               >
                 {GENDER_OPTIONS.map((opt) => (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -138,44 +221,87 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           />
         </Grid>
 
-        <Grid xs={12} md={6}>
-          <RequiredLabel required size="sm">
-            {t('ADD_PROGRAM.AGE_FROM')}
-          </RequiredLabel>
-          <Controller
-            name={`${basePath}.age_from`}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.MINIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
-              />
-            )}
+        {showSameAgeRange ? (
+          <Grid xs={12}>
+            <RequiredLabel required sx={{ fontWeight: 700 }}>
+              {t('ADD_PROGRAM.SAME_AGE_RANGE')}
+            </RequiredLabel>
+            <Controller
+              name={`${basePath}.same_age_range`}
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  row
+                  value={field.value ? 'yes' : 'no'}
+                  onChange={(event) => field.onChange(event.target.value === 'yes')}
+                >
+                  <FormControlLabel
+                    value="yes"
+                    control={
+                      <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                    }
+                    label={t('ADD_PROGRAM.YES')}
+                    sx={programRadioLabelSx}
+                  />
+                  <FormControlLabel
+                    value="no"
+                    control={
+                      <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                    }
+                    label={t('ADD_PROGRAM.NO')}
+                    sx={programRadioLabelSx}
+                  />
+                </RadioGroup>
+              )}
+            />
+          </Grid>
+        ) : null}
+
+        {showSharedAgeField ? (
+          <Grid xs={12} md={6}>
+            <RequiredLabel required>{t('LABEL.AGE')}</RequiredLabel>
+            <Controller
+              name={`${basePath}.boys_age_from`}
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  placeholder={t('ADD_PROGRAM.MINIMUM')}
+                  error={!!error}
+                  helperText={error ? t(String(error.message)) : undefined}
+                  sx={programFieldSx}
+                />
+              )}
+            />
+          </Grid>
+        ) : null}
+
+        {showBoysAgeRange ? (
+          <SlotAgeRangeFields
+            basePath={basePath}
+            fromName="boys_age_from"
+            toName="boys_age_to"
+            sectionLabel={t('ADD_PROGRAM.BOYS')}
           />
-        </Grid>
-        <Grid xs={12} md={6}>
-          <RequiredLabel required size="sm">
-            {t('ADD_PROGRAM.AGE_TO')}
-          </RequiredLabel>
-          <Controller
-            name={`${basePath}.age_to`}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
-              />
-            )}
+        ) : null}
+
+        {showGirlsAgeRange ? (
+          <SlotAgeRangeFields
+            basePath={basePath}
+            fromName="girls_age_from"
+            toName="girls_age_to"
+            sectionLabel={t('ADD_PROGRAM.GIRLS')}
           />
-        </Grid>
+        ) : null}
+
+        {showSingleGenderAgeRange ? (
+          <SlotAgeRangeFields
+            basePath={basePath}
+            fromName={gender === 'Girls' ? 'girls_age_from' : 'boys_age_from'}
+            toName={gender === 'Girls' ? 'girls_age_to' : 'boys_age_to'}
+          />
+        ) : null}
 
         {modelConfig.hasRecurring && modelConfig.hasFixStartDate ? (
           <Grid xs={12}>

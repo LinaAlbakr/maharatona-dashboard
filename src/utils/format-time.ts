@@ -82,9 +82,20 @@ export function convertTime24to12(time: string) {
   return `${hourNum}:${minute} ${period}`;
 }
 
-export const englishDate = (date: string) => {
-  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long' }).format(new Date(date));
+function toValidDate(date: InputValue): Date | null {
+  if (date == null || date === '') return null;
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+export const englishDate = (date: InputValue, fallback = '-') => {
+  const parsed = toValidDate(date);
+  if (!parsed) return fallback;
+  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'long' }).format(parsed);
 };
-export const arabicDate = (date: string) => {
-  return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long' }).format(new Date(date));
+
+export const arabicDate = (date: InputValue, fallback = '-') => {
+  const parsed = toValidDate(date);
+  if (!parsed) return fallback;
+  return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long' }).format(parsed);
 };

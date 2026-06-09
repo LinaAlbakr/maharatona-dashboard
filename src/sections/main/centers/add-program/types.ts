@@ -59,6 +59,11 @@ export type FlexibleSlot = {
   title_ar: string;
   title_en: string;
   gender: string;
+  same_age_range: boolean;
+  boys_age_from: string;
+  boys_age_to: string;
+  girls_age_from: string;
+  girls_age_to: string;
   age_from: string;
   age_to: string;
   selected_days: string[];

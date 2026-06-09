@@ -113,6 +113,15 @@ export const fetchCourseInfo = async (courseId: string): Promise<any> => {
         course_images: Array.isArray(c.course_images)
           ? c.course_images.map((img: any) => (typeof img === 'string' ? { url: img } : img))
           : [],
+        package: c.package || {},
+        trialSlots: c.trialSlots || [],
+        minutesSlots: c.minutesSlots || [],
+        hourlySlots: c.hourlySlots || [],
+        dailySlots: c.dailySlots || [],
+        weeklySlots: c.weeklySlots || [],
+        monthlySlots: c.monthlySlots || [],
+        daysOffList: c.daysOffList || [],
+        datesOffList: c.datesOffList || [],
       };
       return { data: normalized, message: responseData.message };
     }

@@ -96,6 +96,11 @@ export const EMPTY_FLEXIBLE_SLOT = {
   title_ar: '',
   title_en: '',
   gender: 'Boys',
+  same_age_range: false,
+  boys_age_from: '',
+  boys_age_to: '',
+  girls_age_from: '',
+  girls_age_to: '',
   age_from: '',
   age_to: '',
   selected_days: [] as string[],
@@ -120,6 +125,5 @@ export const createDefaultFlexibleModels = () => {
   const models = Object.fromEntries(
     FLEXIBLE_BOOKING_MODELS.map(({ key }) => [key, createEmptyFlexibleModel()])
   ) as Record<FlexibleBookingModelKey, ReturnType<typeof createEmptyFlexibleModel>>;
-  models.trial.enabled = true;
   return models;
 };

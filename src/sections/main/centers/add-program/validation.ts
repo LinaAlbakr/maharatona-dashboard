@@ -2,6 +2,7 @@ import * as yup from 'yup';
 
 import { FLEXIBLE_BOOKING_MODELS } from './constants';
 import type { BookingType, ProgramStep } from './types';
+import { getConfiguredFlexibleModelKeys } from './utils/flexible-model-config';
 
 const requiredMsg = 'LABEL.THIS_FIELD_IS_REQUIRED';
 
@@ -23,8 +24,37 @@ const slotSchema = (opts: {
     title_ar: yup.string(),
     title_en: yup.string(),
     gender: yup.string().required(requiredMsg),
-    age_from: numberField(),
-    age_to: numberField(),
+    same_age_range: yup.boolean().when('gender', {
+      is: 'Mixed',
+      then: (schema) => schema.required(requiredMsg),
+      otherwise: (schema) => schema,
+    }),
+    boys_age_from: yup.string().when(['gender', 'same_age_range'], {
+      is: (gender: string, same_age_range: boolean) =>
+        gender === 'Boys' || gender === 'Mixed',
+      then: () => numberField(),
+      otherwise: (schema) => schema,
+    }),
+    boys_age_to: yup.string().when(['gender', 'same_age_range'], {
+      is: (gender: string, same_age_range: boolean) =>
+        gender === 'Boys' || (gender === 'Mixed' && !same_age_range),
+      then: () => numberField(),
+      otherwise: (schema) => schema,
+    }),
+    girls_age_from: yup.string().when(['gender', 'same_age_range'], {
+      is: (gender: string, same_age_range: boolean) =>
+        gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
+      then: () => numberField(),
+      otherwise: (schema) => schema,
+    }),
+    girls_age_to: yup.string().when(['gender', 'same_age_range'], {
+      is: (gender: string, same_age_range: boolean) =>
+        gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
+      then: () => numberField(),
+      otherwise: (schema) => schema,
+    }),
+    age_from: yup.string(),
+    age_to: yup.string(),
     selected_days: yup.array().when(['recurring_days'], {
       is: (recurring_days: boolean) => opts.hasRecurring ? recurring_days !== false : true,
       then: (schema) => schema.min(1, requiredMsg),
@@ -114,9 +144,7 @@ const fixedStep1Schema = yup.object({
 });
 
 const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
-  const enabledKeys = (Object.keys(flexibleModels) as string[]).filter(
-    (key) => flexibleModels[key]?.enabled
-  );
+  const enabledKeys = getConfiguredFlexibleModelKeys(flexibleModels);
 
   if (enabledKeys.length === 0) {
     return yup.object({

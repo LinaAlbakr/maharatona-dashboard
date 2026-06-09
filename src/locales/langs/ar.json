@@ -568,7 +568,7 @@
     "PRICE_PER_MONTH": "السعر (لكل شهر)",
     "FIX_START_DATE": "تثبيت تاريخ البداية",
     "SELECT_AT_LEAST_ONE_MODEL": "يرجى اختيار نموذج حجز واحد على الاقل",
-    "MULTI_MODEL_HINT": "يمكنك اختيار اكثر من نموذج حجز قبل المتابعة"
+    "MULTI_MODEL_HINT": "بدّل بين التبويبات لإعداد كل نموذج حجز. تبقى بياناتك محفوظة عند تغيير التبويب."
   },
   "PROGRAM_DETAILS": {
     "TITLE": "تفاصيل البرنامج",
@@ -579,7 +579,21 @@
     "DISCOUNT_SECTION": "تفاصيل الخصم",
     "PROGRAM_NAME": "اسم البرنامج",
     "PROGRAM_DESCRIPTION": "وصف البرنامج",
-    "YEARS": "سنوات"
+    "YEARS": "سنوات",
+    "PACKAGES": "الباقات",
+    "SLOTS": "الفترات",
+    "DAYS": "الايام",
+    "SLOT": "فترة",
+    "PACKAGE_TITLE": "العنوان",
+    "NO_OF_SESSIONS": "عدد الجلسات",
+    "PRICE_PER_MINUTE": "السعر (لكل دقيقة)",
+    "DURATION_MINUTES": "المدة (بالدقائق)",
+    "PRICE_PER_HOUR": "السعر (لكل ساعة)",
+    "DURATION_HOURS": "المدة (بالساعات)",
+    "PRICE_PER_DAY": "السعر (لكل يوم)",
+    "PRICE_PER_WEEK": "السعر (لكل اسبوع)",
+    "PRICE_PER_MONTH": "السعر (لكل شهر)",
+    "NO_MODEL_DATA": "لا توجد بيانات لهذا نموذج الحجز."
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "اسم السبب باللغة الانجليزية",

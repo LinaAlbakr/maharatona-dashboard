@@ -30,7 +30,7 @@ export const detailSubsectionTitleSx = {
 
 export const questionsSubsectionTitleSx = {
   color: '#DE0E75',
-  fontWeight: 400,
+  fontWeight: 700,
   fontSize: 18,
   mb: 2,
   lineHeight: 1.3,
@@ -38,7 +38,7 @@ export const questionsSubsectionTitleSx = {
 
 export const addonsMaterialsSubsectionTitleSx = {
   color: FREE_BOOKING_COLOR,
-  fontWeight: 400,
+  fontWeight: 700,
   fontSize: 18,
   mb: 2,
   lineHeight: 1.3,
@@ -103,6 +103,12 @@ export const detailValueSx = {
   lineHeight: 1.6,
 };
 
+export const detailGridSx = {
+  display: 'grid',
+  gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
+  gap: { xs: 2, md: 3 },
+};
+
 export const editProgramButtonSx = {
   borderRadius: '40px',
   py: 1.25,
@@ -132,7 +138,7 @@ export const discountValueBoxSx = {
 
 export const specificDiscountTitleSx = {
   color: '#DE0E75',
-  fontWeight: 400,
+  fontWeight: 700,
   fontSize: 18,
   mb: 2,
   lineHeight: 1.3,

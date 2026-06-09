@@ -567,7 +567,7 @@
     "PRICE_PER_MONTH": "Price (per month)",
     "FIX_START_DATE": "Fix Start Date",
     "SELECT_AT_LEAST_ONE_MODEL": "Please select at least one booking model",
-    "MULTI_MODEL_HINT": "You can select more than one booking model before proceeding"
+    "MULTI_MODEL_HINT": "Switch tabs to configure each booking model. Your data is kept when you change tabs."
   },
   "PROGRAM_DETAILS": {
     "TITLE": "Program Details",
@@ -578,7 +578,21 @@
     "DISCOUNT_SECTION": "Discount Details",
     "PROGRAM_NAME": "Program Name",
     "PROGRAM_DESCRIPTION": "Program Description",
-    "YEARS": "Years"
+    "YEARS": "Years",
+    "PACKAGES": "Packages",
+    "SLOTS": "Slots",
+    "DAYS": "Days",
+    "SLOT": "Slot",
+    "PACKAGE_TITLE": "Title",
+    "NO_OF_SESSIONS": "No. of Sessions",
+    "PRICE_PER_MINUTE": "Price (per minute)",
+    "DURATION_MINUTES": "Duration (Minutes)",
+    "PRICE_PER_HOUR": "Price (per hour)",
+    "DURATION_HOURS": "Duration (Hours)",
+    "PRICE_PER_DAY": "Price (per day)",
+    "PRICE_PER_WEEK": "Price (per week)",
+    "PRICE_PER_MONTH": "Price (per month)",
+    "NO_MODEL_DATA": "No data configured for this booking model."
   },
   "PLACEHOLDER": {
     "REASON_NAME_IN_ENGLISH": "Reason name in english",

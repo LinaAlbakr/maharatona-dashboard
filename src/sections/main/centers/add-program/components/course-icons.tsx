@@ -8,6 +8,7 @@ const COURSE_ICONS = {
   clock: '/assets/icons/course/clock.svg',
   delete: '/assets/icons/course/delete.svg',
   riyal: '/assets/icons/course/Riyal.svg',
+  slot: '/assets/icons/course/slot.svg',
 } as const;
 
 type IconProps = {
@@ -54,6 +55,17 @@ export function RiyalIcon({ sx }: IconProps) {
       src={COURSE_ICONS.riyal}
       alt=""
       sx={{ width: 11, height: 13, display: 'block', flexShrink: 0, ...sx }}
+    />
+  );
+}
+
+export function SlotIcon({ sx }: IconProps) {
+  return (
+    <Box
+      component="img"
+      src={COURSE_ICONS.slot}
+      alt=""
+      sx={{ width: 19, height: 18, display: 'block', flexShrink: 0, ...sx }}
     />
   );
 }

@@ -21,14 +21,12 @@ import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 
 type Props = {
   activeModel: FlexibleBookingModelKey;
-  enabledModels: FlexibleBookingModelKey[];
   onSelectTrial: () => void;
   onSelectMainModel: (model: FlexibleBookingModelKey) => void;
 };
 
 export default function BookingModelTabs({
   activeModel,
-  enabledModels,
   onSelectTrial,
   onSelectMainModel,
 }: Props) {
@@ -98,7 +96,7 @@ export default function BookingModelTabs({
         }}
       >
         {mainModels.map((model) => {
-          const selected = activeModel === model.key && enabledModels.includes(model.key);
+          const selected = activeModel === model.key;
 
           return (
             <Box

@@ -1,7 +1,7 @@
 'use client';
 
 import FixedProgramDetailsView from './fixed-program-details';
-import LegacyCourseDetailsView from './legacy-course-details';
+import FlexibleProgramDetailsView from './flexible-program-details';
 import { isFixedCourse } from './utils';
 
 interface Props {
@@ -15,7 +15,7 @@ const CourseDetailsView = ({ CourseInfo }: Props) => {
     return <FixedProgramDetailsView course={course} />;
   }
 
-  return <LegacyCourseDetailsView course={course} />;
+  return <FlexibleProgramDetailsView course={course} />;
 };
 
 export default CourseDetailsView;

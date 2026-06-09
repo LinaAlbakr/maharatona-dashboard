@@ -14,6 +14,11 @@ import {
   normalizeGender,
   usesWeekDays,
 } from './course-api-helpers';
+import {
+  getConfiguredFlexibleModelKeys,
+  isFlexibleModelConfigured,
+  isFlexibleSlotConfigured,
+} from './flexible-model-config';
 
 const PACKAGE_KEYS: FlexibleBookingModelKey[] = [
   'trial',
@@ -38,11 +43,44 @@ function mapSlotDays(slot: FlexibleSlot) {
   };
 }
 
+function mapSlotAges(slot: FlexibleSlot) {
+  const gender = normalizeGender(slot.gender);
+  const isMixed = gender === 'Mixed';
+
+  if (isMixed && slot.same_age_range) {
+    const age = slot.boys_age_from;
+    return {
+      age_from: age,
+      age_to: age,
+      same_age_range: true,
+    };
+  }
+
+  if (isMixed && !slot.same_age_range) {
+    return {
+      age_from: slot.boys_age_from,
+      age_to: slot.boys_age_to,
+      boys_age_from: slot.boys_age_from,
+      boys_age_to: slot.boys_age_to,
+      girls_age_from: slot.girls_age_from,
+      girls_age_to: slot.girls_age_to,
+      same_age_range: false,
+    };
+  }
+
+  const ageFrom = gender === 'Girls' ? slot.girls_age_from : slot.boys_age_from;
+  const ageTo = gender === 'Girls' ? slot.girls_age_to : slot.boys_age_to;
+
+  return {
+    age_from: ageFrom,
+    age_to: ageTo,
+  };
+}
+
 function mapTrialSlot(slot: FlexibleSlot) {
   return {
     gender: normalizeGender(slot.gender),
-    age_from: slot.age_from,
-    age_to: slot.age_to,
+    ...mapSlotAges(slot),
     selected_days: convertDaysListToEnglish(slot.selected_days ?? []),
     start_time: formatTimeForApi(slot.start_time),
     end_time: formatTimeForApi(slot.end_time),
@@ -91,7 +129,7 @@ function buildPackages(values: ProgramFormValues) {
 
   PACKAGE_KEYS.forEach((key) => {
     const model = values.flexibleModels[key];
-    if (!model?.enabled || !model.slots?.length) return;
+    if (!isFlexibleModelConfigured(model, key)) return;
 
     packageMap[key] = (model.packages ?? []).map((pkg) => ({
       title_ar: pkg.title_ar,
@@ -157,24 +195,37 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
       : null;
 
   const models = values.flexibleModels;
+  const configuredKeys = getConfiguredFlexibleModelKeys(models);
 
-  if (models.trial.enabled) {
-    map.trialSlots = models.trial.slots.map(mapTrialSlot);
+  if (configuredKeys.includes('trial')) {
+    map.trialSlots = models.trial.slots
+      .filter(isFlexibleSlotConfigured)
+      .map(mapTrialSlot);
   }
-  if (models.minutes.enabled) {
-    map.minutesSlots = models.minutes.slots.map(mapTimedSlot);
+  if (configuredKeys.includes('minutes')) {
+    map.minutesSlots = models.minutes.slots
+      .filter(isFlexibleSlotConfigured)
+      .map(mapTimedSlot);
   }
-  if (models.hourly.enabled) {
-    map.hourlySlots = models.hourly.slots.map(mapTimedSlot);
+  if (configuredKeys.includes('hourly')) {
+    map.hourlySlots = models.hourly.slots
+      .filter(isFlexibleSlotConfigured)
+      .map(mapTimedSlot);
   }
-  if (models.daily.enabled) {
-    map.dailySlots = models.daily.slots.map(mapRecurringSlot);
+  if (configuredKeys.includes('daily')) {
+    map.dailySlots = models.daily.slots
+      .filter(isFlexibleSlotConfigured)
+      .map(mapRecurringSlot);
   }
-  if (models.weekly.enabled) {
-    map.weeklySlots = models.weekly.slots.map(mapRecurringSlot);
+  if (configuredKeys.includes('weekly')) {
+    map.weeklySlots = models.weekly.slots
+      .filter(isFlexibleSlotConfigured)
+      .map(mapRecurringSlot);
   }
-  if (models.monthly.enabled) {
-    map.monthlySlots = models.monthly.slots.map(mapMonthlySlot);
+  if (configuredKeys.includes('monthly')) {
+    map.monthlySlots = models.monthly.slots
+      .filter(isFlexibleSlotConfigured)
+      .map(mapMonthlySlot);
   }
 
   return cleanFormData(map);
