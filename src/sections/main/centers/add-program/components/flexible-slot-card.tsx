@@ -36,7 +36,7 @@ import {
   PROGRAM_SECTION_HEADING_COLOR,
   PROGRAM_TEAL,
 } from '../constants';
-import { innerCardSx, programFieldSx, programRadioLabelSx } from '../styles';
+import { innerCardSx, programDatePickerDaySlotProps, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
 
 type Props = {
@@ -395,6 +395,9 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 PaperProps={{ sx: { mt: 0.5 } }}
               >
                 <DateCalendar
+                  slotProps={{
+                    day: programDatePickerDaySlotProps,
+                  }}
                   onChange={(date) => {
                     handleAddDate(date);
                     setDatePickerOpen(false);

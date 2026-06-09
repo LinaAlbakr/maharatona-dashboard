@@ -16,7 +16,7 @@ import DaysOffSection from '../components/days-off-section';
 import ProgramImagesUpload from '../components/program-images-upload';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
-import { programFieldSx, programPlaceholderTextSx } from '../styles';
+import { programDatePickerDaySlotProps, programFieldSx, programPlaceholderTextSx } from '../styles';
 import type { CategoryOption, ProgramFormValues } from '../types';
 
 type Props = {
@@ -103,6 +103,7 @@ export default function StepFlexibleProgram({ categories }: Props) {
                 onChange={(value) => field.onChange(value)}
                 format="dd-MM-yyyy"
                 slotProps={{
+                  day: programDatePickerDaySlotProps,
                   textField: {
                     fullWidth: true,
                     placeholder: t('ADD_PROGRAM.START_DATE_PLACEHOLDER'),
@@ -130,6 +131,7 @@ export default function StepFlexibleProgram({ categories }: Props) {
                 onChange={(value) => field.onChange(value)}
                 format="dd-MM-yyyy"
                 slotProps={{
+                  day: programDatePickerDaySlotProps,
                   textField: {
                     fullWidth: true,
                     placeholder: t('ADD_PROGRAM.END_DATE_PLACEHOLDER'),

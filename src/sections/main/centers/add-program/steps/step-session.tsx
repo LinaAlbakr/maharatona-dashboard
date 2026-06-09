@@ -19,9 +19,85 @@ import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { programFieldSx, programRadioLabelSx } from '../styles';
 import type { ProgramFormValues } from '../types';
 
-export default function StepSession() {
+type AgeRangeFieldsProps = {
+  fromName: 'boys_age_from' | 'girls_age_from';
+  toName: 'boys_age_to' | 'girls_age_to';
+  sectionLabel?: string;
+};
+
+function AgeRangeFields({ fromName, toName, sectionLabel }: AgeRangeFieldsProps) {
   const { t } = useTranslate();
   const { control } = useFormContext<ProgramFormValues>();
+
+  return (
+    <Grid xs={12}>
+      {sectionLabel ? (
+        <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{sectionLabel}</RequiredLabel>
+      ) : null}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2.5,
+          width: 1,
+          flexDirection: { xs: 'column', md: 'row' },
+        }}
+      >
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <RequiredLabel required size="sm">
+            {t('ADD_PROGRAM.AGE_FROM')}
+          </RequiredLabel>
+          <Controller
+            name={fromName}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                placeholder={t('ADD_PROGRAM.MINIMUM')}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
+          />
+        </Box>
+
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <RequiredLabel required size="sm">
+            {t('ADD_PROGRAM.AGE_TO')}
+          </RequiredLabel>
+          <Controller
+            name={toName}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                placeholder={t('ADD_PROGRAM.MAXIMUM')}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
+          />
+        </Box>
+      </Box>
+    </Grid>
+  );
+}
+
+export default function StepSession() {
+  const { t } = useTranslate();
+  const { control, watch, setValue } = useFormContext<ProgramFormValues>();
+  const gender = watch('gender');
+  const sameAgeRange = watch('same_age_range');
+
+  const isMixed = gender === 'Mixed';
+  const showSameAgeRange = isMixed;
+  const showSharedAgeField = isMixed && sameAgeRange;
+  const showBoysAgeRange = isMixed && !sameAgeRange;
+  const showGirlsAgeRange = isMixed && !sameAgeRange;
+  const showSingleGenderAgeRange = !isMixed;
 
   return (
     <Box>
@@ -95,6 +171,13 @@ export default function StepSession() {
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
+                onChange={(event) => {
+                  const nextGender = event.target.value;
+                  field.onChange(nextGender);
+                  if (nextGender !== 'Mixed') {
+                    setValue('same_age_range', false);
+                  }
+                }}
               >
                 {GENDER_OPTIONS.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -106,139 +189,84 @@ export default function StepSession() {
           />
         </Grid>
 
-        <Grid xs={12}>
-          <RequiredLabel required sx={{ fontWeight: 700 }}>
-            {t('ADD_PROGRAM.SAME_AGE_RANGE')}
-          </RequiredLabel>
-          <Controller
-            name="same_age_range"
-            control={control}
-            render={({ field }) => (
-              <RadioGroup
-                row
-                value={field.value ? 'yes' : 'no'}
-                onChange={(event) => field.onChange(event.target.value === 'yes')}
-              >
-                <FormControlLabel
-                  value="yes"
-                  control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
-                  label={t('ADD_PROGRAM.YES')}
-                  sx={programRadioLabelSx}
+        {showSameAgeRange ? (
+          <Grid xs={12}>
+            <RequiredLabel required sx={{ fontWeight: 700 }}>
+              {t('ADD_PROGRAM.SAME_AGE_RANGE')}
+            </RequiredLabel>
+            <Controller
+              name="same_age_range"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  row
+                  value={field.value ? 'yes' : 'no'}
+                  onChange={(event) => field.onChange(event.target.value === 'yes')}
+                >
+                  <FormControlLabel
+                    value="yes"
+                    control={
+                      <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                    }
+                    label={t('ADD_PROGRAM.YES')}
+                    sx={programRadioLabelSx}
+                  />
+                  <FormControlLabel
+                    value="no"
+                    control={
+                      <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
+                    }
+                    label={t('ADD_PROGRAM.NO')}
+                    sx={programRadioLabelSx}
+                  />
+                </RadioGroup>
+              )}
+            />
+          </Grid>
+        ) : null}
+
+        {showSharedAgeField ? (
+          <Grid xs={12} md={6}>
+            <RequiredLabel required>{t('LABEL.AGE')}</RequiredLabel>
+            <Controller
+              name="boys_age_from"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  placeholder={t('ADD_PROGRAM.MINIMUM')}
+                  error={!!error}
+                  helperText={error ? t(String(error.message)) : undefined}
+                  sx={programFieldSx}
                 />
-                <FormControlLabel
-                  value="no"
-                  control={<Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />}
-                  label={t('ADD_PROGRAM.NO')}
-                  sx={programRadioLabelSx}
-                />
-              </RadioGroup>
-            )}
+              )}
+            />
+          </Grid>
+        ) : null}
+
+        {showBoysAgeRange ? (
+          <AgeRangeFields
+            fromName="boys_age_from"
+            toName="boys_age_to"
+            sectionLabel={t('ADD_PROGRAM.BOYS')}
           />
-        </Grid>
+        ) : null}
 
-        <Grid xs={12}>
-          <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{t('ADD_PROGRAM.BOYS')}</RequiredLabel>
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2.5,
-              width: 1,
-              flexDirection: { xs: 'column', md: 'row' },
-            }}
-          >
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <RequiredLabel required size="sm">
-                {t('ADD_PROGRAM.AGE_FROM')}
-              </RequiredLabel>
-              <Controller
-                name="boys_age_from"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    placeholder={t('ADD_PROGRAM.MINIMUM')}
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
-            </Box>
+        {showGirlsAgeRange ? (
+          <AgeRangeFields
+            fromName="girls_age_from"
+            toName="girls_age_to"
+            sectionLabel={t('ADD_PROGRAM.GIRLS')}
+          />
+        ) : null}
 
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <RequiredLabel required size="sm">
-                {t('ADD_PROGRAM.AGE_TO')}
-              </RequiredLabel>
-              <Controller
-                name="boys_age_to"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
-            </Box>
-          </Box>
-        </Grid>
-
-        <Grid xs={12}>
-          <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{t('ADD_PROGRAM.GIRLS')}</RequiredLabel>
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2.5,
-              width: 1,
-              flexDirection: { xs: 'column', md: 'row' },
-            }}
-          >
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <RequiredLabel required size="sm">
-                {t('ADD_PROGRAM.AGE_FROM')}
-              </RequiredLabel>
-              <Controller
-                name="girls_age_from"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    placeholder={t('ADD_PROGRAM.MINIMUM')}
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
-            </Box>
-
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <RequiredLabel required size="sm">
-                {t('ADD_PROGRAM.AGE_TO')}
-              </RequiredLabel>
-              <Controller
-                name="girls_age_to"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
-            </Box>
-          </Box>
-        </Grid>
+        {showSingleGenderAgeRange ? (
+          <AgeRangeFields
+            fromName={gender === 'Girls' ? 'girls_age_from' : 'boys_age_from'}
+            toName={gender === 'Girls' ? 'girls_age_to' : 'boys_age_to'}
+          />
+        ) : null}
 
         <Grid xs={12}>
           <RequiredLabel required>{t('ADD_PROGRAM.SEAT_CAPACITY')}</RequiredLabel>

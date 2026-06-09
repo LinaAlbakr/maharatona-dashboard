@@ -133,10 +133,7 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         return;
       }
 
-      enqueueSnackbar(
-        result.message || t('ADD_PROGRAM.PUBLISH_SUCCESS'),
-        { variant: 'success' }
-      );
+      enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_SUCCESS'), { variant: 'success' });
       router.push(`${paths.dashboard.centers}/${centerId}`);
     } finally {
       setIsPublishing(false);

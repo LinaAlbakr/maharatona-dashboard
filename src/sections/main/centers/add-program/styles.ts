@@ -1,6 +1,7 @@
 import {
   ADD_BOX_BG_COLOR,
   ADD_BOX_TEXT_COLOR,
+  CALENDAR_SELECTED_COLOR,
   FIELD_BORDER_COLOR,
   FIELD_LABEL_COLOR,
   FIELD_PLACEHOLDER_COLOR,
@@ -39,6 +40,7 @@ export const programFieldSx = {
   },
   '& .MuiOutlinedInput-input': {
     fontSize: 14,
+    color: FIELD_LABEL_COLOR,
     '&::placeholder': {
       color: FIELD_PLACEHOLDER_COLOR,
       opacity: 1,
@@ -52,7 +54,7 @@ export const programFieldSx = {
     minHeight: 'unset !important',
     height: '100%',
     boxSizing: 'border-box',
-    color: FIELD_PLACEHOLDER_COLOR,
+    color: FIELD_LABEL_COLOR,
     fontSize: 14,
   },
   '& input.MuiOutlinedInput-input': {
@@ -74,6 +76,21 @@ export const programPlaceholderTextSx = {
   color: FIELD_PLACEHOLDER_COLOR,
   fontSize: 14,
   fontWeight: 400,
+};
+
+export const programDatePickerDaySlotProps = {
+  sx: {
+    '&.Mui-selected': {
+      backgroundColor: CALENDAR_SELECTED_COLOR,
+      color: 'common.white',
+      '&:hover': {
+        backgroundColor: CALENDAR_SELECTED_COLOR,
+      },
+      '&:focus': {
+        backgroundColor: CALENDAR_SELECTED_COLOR,
+      },
+    },
+  },
 };
 
 export const programTitleSx = {

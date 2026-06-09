@@ -69,12 +69,19 @@ export function buildFixedCourseFormMap(values: ProgramFormValues): Record<strin
     if (values.girls_age_from.trim()) map.girls_age_from = values.girls_age_from;
     if (values.girls_age_to.trim()) map.girls_age_to = values.girls_age_to;
     map.same_age_range = 'false';
+  } else if (isMixed && values.same_age_range) {
+    const age = values.boys_age_from.trim();
+    if (age) {
+      map.age_from = age;
+      map.age_to = age;
+    }
+    map.same_age_range = 'true';
   } else {
-    const ageFrom = values.boys_age_from.trim() || values.girls_age_from.trim();
-    const ageTo = values.boys_age_to.trim() || values.girls_age_to.trim();
+    const ageFrom =
+      gender === 'Girls' ? values.girls_age_from.trim() : values.boys_age_from.trim();
+    const ageTo = gender === 'Girls' ? values.girls_age_to.trim() : values.boys_age_to.trim();
     if (ageFrom) map.age_from = ageFrom;
     if (ageTo) map.age_to = ageTo;
-    if (isMixed) map.same_age_range = 'true';
   }
 
   if (gender) map.gender = gender;

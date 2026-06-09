@@ -81,11 +81,35 @@ const fixedStep1Schema = yup.object({
   start_time: timeField(),
   end_time: timeField(),
   gender: yup.string().required(requiredMsg),
-  same_age_range: yup.boolean().required(requiredMsg),
-  boys_age_from: numberField(),
-  boys_age_to: numberField(),
-  girls_age_from: numberField(),
-  girls_age_to: numberField(),
+  same_age_range: yup.boolean().when('gender', {
+    is: 'Mixed',
+    then: (schema) => schema.required(requiredMsg),
+    otherwise: (schema) => schema,
+  }),
+  boys_age_from: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Boys' || gender === 'Mixed',
+    then: () => numberField(),
+    otherwise: (schema) => schema,
+  }),
+  boys_age_to: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Boys' || (gender === 'Mixed' && !same_age_range),
+    then: () => numberField(),
+    otherwise: (schema) => schema,
+  }),
+  girls_age_from: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
+    then: () => numberField(),
+    otherwise: (schema) => schema,
+  }),
+  girls_age_to: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
+    then: () => numberField(),
+    otherwise: (schema) => schema,
+  }),
   seats: numberField(),
 });
 
