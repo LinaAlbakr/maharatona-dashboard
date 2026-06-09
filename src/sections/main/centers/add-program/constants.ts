@@ -1,4 +1,4 @@
-import type { FlexibleBookingModelKey, ProgramStep } from './types';
+import type { FlexibleBookingModelKey, FlexibleModelConfig, ProgramStep } from './types';
 
 export const PROGRAM_TEAL = '#3AB0AD';
 export const PROGRAM_SECTION_HEADING_COLOR = '#3CB8BB';
@@ -14,7 +14,7 @@ export const FREE_BOOKING_COLOR = '#CC3899';
 export const PROGRAM_FIELD_HEIGHT = 51;
 
 /** Dev-only: bypass step validation so the wizard can be navigated without filling every field. */
-export const SKIP_PROGRAM_STEP_VALIDATION = true;
+export const SKIP_PROGRAM_STEP_VALIDATION = false;
 
 export const PROGRAM_STEPS: { key: ProgramStep; labelKey: string }[] = [
   { key: 0, labelKey: 'ADD_PROGRAM.STEP_PROGRAM' },
@@ -114,16 +114,14 @@ export const EMPTY_FLEXIBLE_SLOT = {
   custom_dates: [] as { id: string; date: Date | null; label: string }[],
 };
 
-export const createEmptyFlexibleModel = () => ({
+export const createEmptyFlexibleModel = (): FlexibleModelConfig => ({
   enabled: false,
-  timeType: 'open' as const,
+  timeType: 'open',
   packages: [{ ...EMPTY_FLEXIBLE_PACKAGE }],
   slots: [{ ...EMPTY_FLEXIBLE_SLOT }],
 });
 
-export const createDefaultFlexibleModels = () => {
-  const models = Object.fromEntries(
+export const createDefaultFlexibleModels = (): Record<FlexibleBookingModelKey, FlexibleModelConfig> =>
+  Object.fromEntries(
     FLEXIBLE_BOOKING_MODELS.map(({ key }) => [key, createEmptyFlexibleModel()])
-  ) as Record<FlexibleBookingModelKey, ReturnType<typeof createEmptyFlexibleModel>>;
-  return models;
-};
+  ) as Record<FlexibleBookingModelKey, FlexibleModelConfig>;

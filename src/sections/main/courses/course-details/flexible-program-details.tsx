@@ -6,8 +6,11 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
+import { useRouter } from 'next/navigation';
+
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
+import { paths } from 'src/routes/paths';
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -41,8 +44,10 @@ type Props = {
 
 export default function FlexibleProgramDetailsView({ course }: Props) {
   const settings = useSettingsContext();
+  const router = useRouter();
   const { t } = useTranslate();
   const isArabic = i18n.language === 'ar';
+  const courseId = String(course?.id ?? course?._id ?? '');
 
   const filledModels = useMemo(() => getEnabledFlexibleModels(course), [course]);
   const [activeModel, setActiveModel] = useState<FlexibleBookingModelKey>(() =>
@@ -73,7 +78,15 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ py: { xs: 2, md: 3 } }}>
-      <ProgramDetailHeader />
+      <ProgramDetailHeader
+        onEdit={
+          courseId
+            ? () => {
+                router.push(paths.dashboard.courseEdit(courseId));
+              }
+            : undefined
+        }
+      />
 
       <DetailSectionCard title={t('PROGRAM_DETAILS.PROGRAM_SECTION')}>
         <Box sx={{ mb: 3 }}>

@@ -25,7 +25,17 @@ function appendImages(formData: FormData, images: (File | string)[]) {
   });
 }
 
-export async function submitProgram(centerId: string, values: ProgramFormValues) {
+type SubmitProgramOptions = {
+  mode?: 'create' | 'edit';
+  courseId?: string;
+};
+
+export async function submitProgram(
+  centerId: string,
+  values: ProgramFormValues,
+  options: SubmitProgramOptions = {}
+) {
+  const isEdit = options.mode === 'edit' && Boolean(options.courseId);
   const isFlexible = values.bookingType === 'flexible';
   const formMap = isFlexible
     ? buildFlexibleCourseFormMap(values)
@@ -35,16 +45,22 @@ export async function submitProgram(centerId: string, values: ProgramFormValues)
   appendFormDataFields(formData, formMap);
   appendImages(formData, values.courseImages);
 
-  const url = isFlexible
-    ? endpoints.centers.createFlexibleCourse(centerId)
-    : endpoints.centers.createCourse(centerId);
+  const url = isEdit
+    ? endpoints.centers.updateCourse(centerId, options.courseId!)
+    : isFlexible
+      ? endpoints.centers.createFlexibleCourse(centerId)
+      : endpoints.centers.createCourse(centerId);
 
   try {
-    const res = await axiosInstance.post(url, formData, {
+    const requestConfig = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
+    };
+
+    const res = isEdit
+      ? await axiosInstance.put(url, formData, requestConfig)
+      : await axiosInstance.post(url, formData, requestConfig);
 
     const course = res.data?.course;
 
@@ -52,7 +68,7 @@ export async function submitProgram(centerId: string, values: ProgramFormValues)
       success: true as const,
       message: res.data?.message as string | undefined,
       course,
-      courseId: getCreatedCourseId(course),
+      courseId: getCreatedCourseId(course) ?? options.courseId ?? null,
     };
   } catch (error) {
     return {

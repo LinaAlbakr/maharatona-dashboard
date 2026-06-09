@@ -7,8 +7,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import { useRouter } from 'next/navigation';
+
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
+import { paths } from 'src/routes/paths';
 
 import { RiyalIcon } from 'src/sections/main/centers/add-program/components/course-icons';
 import { useSettingsContext } from 'src/components/settings';
@@ -188,8 +191,10 @@ function SpecificDiscountSection({
 
 export default function FixedProgramDetailsView({ course }: Props) {
   const settings = useSettingsContext();
+  const router = useRouter();
   const { t } = useTranslate();
   const isArabic = i18n.language === 'ar';
+  const courseId = String(course?.id ?? course?._id ?? '');
   const discountedPrice = getDiscountedPrice(course);
   const sessionAges = getSessionAgeDisplay(course);
 
@@ -227,7 +232,15 @@ export default function FixedProgramDetailsView({ course }: Props) {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'} sx={{ py: { xs: 2, md: 3 } }}>
-      <ProgramDetailHeader />
+      <ProgramDetailHeader
+        onEdit={
+          courseId
+            ? () => {
+                router.push(paths.dashboard.courseEdit(courseId));
+              }
+            : undefined
+        }
+      />
 
       <DetailSectionCard title={t('PROGRAM_DETAILS.PROGRAM_SECTION')}>
         <Box sx={{ mb: 3 }}>
@@ -235,7 +248,7 @@ export default function FixedProgramDetailsView({ course }: Props) {
             {t('ADD_PROGRAM.PROGRAM_PICTURES')}
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {(images.length ? images : [null, null, null]).slice(0, 3).map((image, index) => (
+            {(images.length ? images : [null, null, null]).slice(0, 3).map((image: any, index: number) => (
               <Box
                 key={index}
                 component="img"

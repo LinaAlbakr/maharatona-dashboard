@@ -166,6 +166,8 @@ export const endpoints = {
     createCourse: (centerId: string) => `/admin/center/${centerId}/create-course`,
     createFlexibleCourse: (centerId: string) =>
       `/admin/center/${centerId}/create-flexible-course`,
+    updateCourse: (centerId: string, courseId: string) =>
+      `/admin/center/${centerId}/update-course/${courseId}`,
   },
   courses: {
     fetch: '/admin/get-all-courses',

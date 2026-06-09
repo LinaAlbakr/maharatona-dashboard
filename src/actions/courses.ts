@@ -122,6 +122,9 @@ export const fetchCourseInfo = async (courseId: string): Promise<any> => {
         monthlySlots: c.monthlySlots || [],
         daysOffList: c.daysOffList || [],
         datesOffList: c.datesOffList || [],
+        center_id: c.center_id?._id ?? c.center_id ?? '',
+        desc_ar: c.desc_ar || c.description_ar,
+        desc_en: c.desc_en || c.description_en,
       };
       return { data: normalized, message: responseData.message };
     }

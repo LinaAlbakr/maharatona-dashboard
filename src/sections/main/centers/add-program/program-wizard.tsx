@@ -32,19 +32,33 @@ import { submitProgram } from './utils/submit-program';
 import { getStepSchema } from './validation';
 
 type Props = {
+  mode?: 'create' | 'edit';
+  courseId?: string;
   centerId: string;
   centerName: string;
   categories: CategoryOption[];
+  initialValues?: ProgramFormValues;
 };
 
-export default function ProgramWizard({ centerId, centerName, categories }: Props) {
+export default function ProgramWizard({
+  mode = 'create',
+  courseId,
+  centerId,
+  centerName,
+  categories,
+  initialValues,
+}: Props) {
   const { t } = useTranslate();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
   const [activeStep, setActiveStep] = useState<ProgramStep>(0);
   const [isPublishing, setIsPublishing] = useState(false);
 
-  const defaultValues = useMemo(() => getProgramDefaultValues(), []);
+  const defaultValues = useMemo(
+    () => initialValues ?? getProgramDefaultValues(),
+    [initialValues]
+  );
+  const isEditMode = mode === 'edit';
 
   const methods = useForm<ProgramFormValues>({
     defaultValues,
@@ -55,8 +69,8 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
   const bookingType = watch('bookingType');
 
   const pageTitle = centerName
-    ? `${t('LABEL.ADD_PROGRAM')} - ${centerName}`
-    : t('LABEL.ADD_PROGRAM');
+    ? `${t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM')} - ${centerName}`
+    : t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM');
 
   const validateCurrentStep = async () => {
     const values = methods.getValues();
@@ -127,25 +141,36 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
   const onPublish = async (data: ProgramFormValues) => {
     setIsPublishing(true);
     try {
-      const result = await submitProgram(centerId, data);
+      const result = await submitProgram(centerId, data, {
+        mode: isEditMode ? 'edit' : 'create',
+        courseId,
+      });
 
       if (!result.success) {
         enqueueSnackbar(result.error, { variant: 'error' });
         return;
       }
 
-      if (!result.courseId) {
-        enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_SUCCESS'), { variant: 'success' });
+      const savedCourseId = result.courseId ?? courseId;
+
+      if (!savedCourseId) {
+        enqueueSnackbar(
+          t(isEditMode ? 'ADD_PROGRAM.UPDATE_SUCCESS' : 'ADD_PROGRAM.PUBLISH_SUCCESS'),
+          { variant: 'success' }
+        );
         await revalidateAfterCourseCreate(undefined, centerId);
         router.push(paths.dashboard.courses);
         router.refresh();
         return;
       }
 
-      await revalidateAfterCourseCreate(result.courseId, centerId);
+      await revalidateAfterCourseCreate(savedCourseId, centerId);
 
-      enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_SUCCESS'), { variant: 'success' });
-      router.push(paths.dashboard.courseDetails(result.courseId));
+      enqueueSnackbar(
+        t(isEditMode ? 'ADD_PROGRAM.UPDATE_SUCCESS' : 'ADD_PROGRAM.PUBLISH_SUCCESS'),
+        { variant: 'success' }
+      );
+      router.push(paths.dashboard.courseDetails(savedCourseId));
       router.refresh();
     } finally {
       setIsPublishing(false);
@@ -200,7 +225,7 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         <ProgramStepper activeStep={activeStep} />
       </Card>
 
-      {activeStep === 0 ? (
+      {activeStep === 0 && !isEditMode ? (
         <BookingTypeToggle
           value={bookingType}
           onChange={(value) => setValue('bookingType', value)}
@@ -217,7 +242,11 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         showPrevious={activeStep > 0}
         onPrevious={handlePrevious}
         onNext={handleNext}
-        nextLabel={activeStep === 3 ? t('ADD_PROGRAM.PUBLISH') : t('ADD_PROGRAM.NEXT')}
+        nextLabel={
+          activeStep === 3
+            ? t(isEditMode ? 'ADD_PROGRAM.UPDATE' : 'ADD_PROGRAM.PUBLISH')
+            : t('ADD_PROGRAM.NEXT')
+        }
         isSubmitting={isPublishing}
       />
     </FormProvider>
