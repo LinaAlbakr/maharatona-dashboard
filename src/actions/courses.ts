@@ -146,6 +146,18 @@ export const editPercentage = async (data: any): Promise<any> => {
   }
 };
 
+export const revalidateAfterCourseCreate = async (
+  courseId: string | undefined,
+  centerId: string
+): Promise<void> => {
+  revalidatePath('/dashboard/courses');
+  if (courseId) {
+    revalidatePath(`/dashboard/courses/${courseId}`);
+  }
+  revalidatePath(`/dashboard/centers/${centerId}`);
+  revalidatePath('/dashboard/centers');
+};
+
 export const deleteCousre = async (courseId: string): Promise<any> => {
   try {
     const accessToken = cookies().get('access_token')?.value;

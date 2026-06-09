@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useTranslate } from 'src/locales';
+import { revalidateAfterCourseCreate } from 'src/actions/courses';
 
 import FormProvider from 'src/components/hook-form';
 
@@ -133,8 +134,19 @@ export default function ProgramWizard({ centerId, centerName, categories }: Prop
         return;
       }
 
+      if (!result.courseId) {
+        enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_SUCCESS'), { variant: 'success' });
+        await revalidateAfterCourseCreate(undefined, centerId);
+        router.push(paths.dashboard.courses);
+        router.refresh();
+        return;
+      }
+
+      await revalidateAfterCourseCreate(result.courseId, centerId);
+
       enqueueSnackbar(t('ADD_PROGRAM.PUBLISH_SUCCESS'), { variant: 'success' });
-      router.push(`${paths.dashboard.centers}/${centerId}`);
+      router.push(paths.dashboard.courseDetails(result.courseId));
+      router.refresh();
     } finally {
       setIsPublishing(false);
     }

@@ -24,9 +24,11 @@ import {
   discountValueBoxSx,
   specificDiscountCardSx,
   specificDiscountCardTitleSx,
+  specificDiscountTableContainerSx,
   specificDiscountTableHeaderCellSx,
   specificDiscountTableHeaderSx,
   specificDiscountTableRowSx,
+  specificDiscountTableValueSx,
   specificDiscountTitleSx,
   specificDiscountWrapperSx,
   questionCheckboxLabelSx,
@@ -126,11 +128,11 @@ function SpecificDiscountCard({
   if (!rows.length) return null;
 
   return (
-    <Box sx={specificDiscountCardSx}>
+    <Box sx={{ ...specificDiscountCardSx, ...specificDiscountTableContainerSx }}>
       <Typography sx={specificDiscountCardTitleSx}>{title}</Typography>
 
       <Box sx={specificDiscountTableHeaderSx}>
-        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'center' }}>
+        <Typography sx={specificDiscountTableHeaderCellSx}>
           {t('ADD_PROGRAM.NO_OF_KIDS')}
         </Typography>
         <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'right' }}>
@@ -140,10 +142,10 @@ function SpecificDiscountCard({
 
       {rows.map((row, index) => (
         <Box key={`${row.no_of_kids}-${index}`} sx={specificDiscountTableRowSx}>
-          <Typography sx={{ ...detailValueSx, textAlign: 'center' }}>
+          <Typography sx={specificDiscountTableValueSx}>
             {row.no_of_kids ?? '-'}
           </Typography>
-          <Typography sx={{ ...detailValueSx, textAlign: 'right' }}>
+          <Typography sx={{ ...specificDiscountTableValueSx, textAlign: 'right' }}>
             {row.discount != null ? `${row.discount}%` : '-'}
           </Typography>
         </Box>
@@ -167,21 +169,18 @@ function SpecificDiscountSection({
     <Box>
       <Typography sx={specificDiscountTitleSx}>{t('ADD_PROGRAM.SPECIFIC_DISCOUNT')}</Typography>
       <Box sx={specificDiscountWrapperSx}>
-        <Grid container spacing={2.5}>
-          {groups.map((group, index) => (
-            <Grid key={index} xs={12} md={6}>
-              <SpecificDiscountCard
-                title={getLocalizedText(
-                  isArabic,
-                  group.title_ar,
-                  group.title_en,
-                  t('ADD_PROGRAM.SPECIFIC_DISCOUNT')
-                )}
-                rows={group.discounts || []}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {groups.map((group, index) => (
+          <SpecificDiscountCard
+            key={index}
+            title={getLocalizedText(
+              isArabic,
+              group.title_ar,
+              group.title_en,
+              t('ADD_PROGRAM.SPECIFIC_DISCOUNT')
+            )}
+            rows={group.discounts || []}
+          />
+        ))}
       </Box>
     </Box>
   );

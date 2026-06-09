@@ -5,6 +5,18 @@ import { buildFlexibleCourseFormMap } from './build-flexible-course-payload';
 import { appendFormDataFields } from './course-api-helpers';
 import type { ProgramFormValues } from '../types';
 
+function getCreatedCourseId(course: unknown): string | null {
+  if (!course || typeof course !== 'object') return null;
+
+  const rawId =
+    (course as { _id?: unknown; id?: unknown })._id ?? (course as { id?: unknown }).id;
+
+  if (typeof rawId === 'string' && rawId.trim()) return rawId;
+  if (rawId == null) return null;
+
+  return String(rawId);
+}
+
 function appendImages(formData: FormData, images: (File | string)[]) {
   images.forEach((image) => {
     if (image instanceof File) {
@@ -34,10 +46,13 @@ export async function submitProgram(centerId: string, values: ProgramFormValues)
       },
     });
 
+    const course = res.data?.course;
+
     return {
       success: true as const,
       message: res.data?.message as string | undefined,
-      course: res.data?.course ?? res.data?.images,
+      course,
+      courseId: getCreatedCourseId(course),
     };
   } catch (error) {
     return {

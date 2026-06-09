@@ -30,7 +30,8 @@ export const paths = {
     clients: `${ROOTS.DASHBOARD}/clients`,
     payouts: `${ROOTS.DASHBOARD}/payouts`,
     invoices: `${ROOTS.DASHBOARD}/invoices`,
-      courses: `${ROOTS.DASHBOARD}/courses`,
+    courses: `${ROOTS.DASHBOARD}/courses`,
+    courseDetails: (courseId: string) => `${ROOTS.DASHBOARD}/courses/${courseId}`,
     supportGroup: {
       root: `${ROOTS.DASHBOARD}/support`,
       contact_reasons: `${ROOTS.DASHBOARD}/support/contact-reasons`,

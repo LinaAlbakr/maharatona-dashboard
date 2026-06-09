@@ -265,7 +265,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               label: t('LABEL.VIEW'),
               icon: 'lets-icons:view',
               onClick: (item) => {
-                router.push(`${paths.dashboard.courses}/${item.id}`);
+                router.push(paths.dashboard.courseDetails(item.id));
               },
             },
             {

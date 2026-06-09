@@ -145,10 +145,9 @@ export const specificDiscountTitleSx = {
 };
 
 export const specificDiscountWrapperSx = {
-  bgcolor: 'background.paper',
-  borderRadius: '16px',
-  boxShadow: '0px 4px 24px rgba(145, 158, 171, 0.12)',
-  p: { xs: 2, md: 3 },
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 2.5,
 };
 
 export const specificDiscountCardSx = {
@@ -167,6 +166,11 @@ export const specificDiscountCardTitleSx = {
   lineHeight: 1.4,
 };
 
+export const specificDiscountTableContainerSx = {
+  width: 500,
+  maxWidth: '100%',
+};
+
 export const specificDiscountTableHeaderSx = {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
@@ -183,7 +187,15 @@ export const specificDiscountTableHeaderCellSx = {
 export const specificDiscountTableRowSx = {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
+  alignItems: 'center',
   py: 1.25,
   borderTop: '1px solid',
   borderColor: 'grey.200',
+};
+
+export const specificDiscountTableValueSx = {
+  color: '#A29F9D',
+  fontWeight: 400,
+  fontSize: 14,
+  lineHeight: 1.6,
 };

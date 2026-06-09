@@ -1,7 +1,6 @@
 'use client';
 
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
@@ -10,9 +9,12 @@ import {
   detailValueSx,
   discountValueBoxSx,
   specificDiscountCardSx,
+  specificDiscountCardTitleSx,
+  specificDiscountTableContainerSx,
   specificDiscountTableHeaderCellSx,
   specificDiscountTableHeaderSx,
   specificDiscountTableRowSx,
+  specificDiscountTableValueSx,
   specificDiscountTitleSx,
   specificDiscountWrapperSx,
 } from '../styles';
@@ -31,13 +33,11 @@ function SpecificDiscountCard({
   if (!rows.length) return null;
 
   return (
-    <Box sx={specificDiscountCardSx}>
-      <Typography sx={{ color: '#2B509C', fontWeight: 400, fontSize: 16, mb: 2, lineHeight: 1.4 }}>
-        {title}
-      </Typography>
+    <Box sx={{ ...specificDiscountCardSx, ...specificDiscountTableContainerSx }}>
+      <Typography sx={specificDiscountCardTitleSx}>{title}</Typography>
 
       <Box sx={specificDiscountTableHeaderSx}>
-        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'center' }}>
+        <Typography sx={specificDiscountTableHeaderCellSx}>
           {t('ADD_PROGRAM.NO_OF_KIDS')}
         </Typography>
         <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'right' }}>
@@ -47,10 +47,10 @@ function SpecificDiscountCard({
 
       {rows.map((row, index) => (
         <Box key={`${row.no_of_kids}-${index}`} sx={specificDiscountTableRowSx}>
-          <Typography sx={{ ...detailValueSx, textAlign: 'center' }}>
+          <Typography sx={specificDiscountTableValueSx}>
             {row.no_of_kids ?? '-'}
           </Typography>
-          <Typography sx={{ ...detailValueSx, textAlign: 'right' }}>
+          <Typography sx={{ ...specificDiscountTableValueSx, textAlign: 'right' }}>
             {row.discount != null ? `${row.discount}%` : '-'}
           </Typography>
         </Box>
@@ -91,21 +91,18 @@ export default function DiscountDetailsSection({ course, isArabic }: Props) {
         <Box>
           <Typography sx={specificDiscountTitleSx}>{t('ADD_PROGRAM.SPECIFIC_DISCOUNT')}</Typography>
           <Box sx={specificDiscountWrapperSx}>
-            <Grid container spacing={2.5}>
-              {specificDiscounts.map((group: any, index: number) => (
-                <Grid key={index} xs={12} md={6}>
-                  <SpecificDiscountCard
-                    title={getLocalizedText(
-                      isArabic,
-                      group.title_ar,
-                      group.title_en,
-                      t('ADD_PROGRAM.SPECIFIC_DISCOUNT')
-                    )}
-                    rows={group.discounts || []}
-                  />
-                </Grid>
-              ))}
-            </Grid>
+            {specificDiscounts.map((group: any, index: number) => (
+              <SpecificDiscountCard
+                key={index}
+                title={getLocalizedText(
+                  isArabic,
+                  group.title_ar,
+                  group.title_en,
+                  t('ADD_PROGRAM.SPECIFIC_DISCOUNT')
+                )}
+                rows={group.discounts || []}
+              />
+            ))}
           </Box>
         </Box>
       )}
