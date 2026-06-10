@@ -164,7 +164,7 @@ export default function StepDiscount() {
                                     <TextField
                                       {...titleField}
                                       fullWidth
-                                      placeholder="ex: Sibling Discount"
+                                      placeholder="Ex: Sibling Discount"
                                       error={!!error}
                                       helperText={error ? t(String(error.message)) : undefined}
                                       sx={programFieldSx}

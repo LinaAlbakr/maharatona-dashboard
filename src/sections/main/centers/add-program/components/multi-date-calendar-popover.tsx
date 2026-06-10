@@ -22,7 +22,7 @@ type Props = {
 };
 
 function MultiSelectDay(
-  props: PickersDayProps & {
+  props: PickersDayProps<Date> & {
     selectedDates: Date[];
     onToggle: (date: Date) => void;
   }
@@ -92,10 +92,10 @@ export default function MultiDateCalendarPopover({ open, anchorEl, onClose, onCo
       transformOrigin={{ vertical: 'top', horizontal: 'left' }}
       PaperProps={{ sx: { mt: 0.5, p: 1 } }}
     >
-      <DateCalendar
+      <DateCalendar<Date>
         onChange={() => undefined}
         slots={{
-          day: (dayProps) => (
+          day: (dayProps: PickersDayProps<Date>) => (
             <MultiSelectDay
               {...dayProps}
               selectedDates={pendingDates}
