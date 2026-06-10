@@ -94,6 +94,62 @@ export default function StepProgram({ categories }: Props) {
         </Grid>
 
         <Grid xs={12} md={6}>
+          <RequiredLabel required>{t('LABEL.START_DATE')}</RequiredLabel>
+          <Controller
+            name="start_date"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <DatePicker
+                value={field.value}
+                onChange={(value) => field.onChange(value)}
+                format="dd-MM-yyyy"
+                slotProps={{
+                  day: programDatePickerDaySlotProps,
+                  textField: {
+                    fullWidth: true,
+                    placeholder: t('ADD_PROGRAM.START_DATE_PLACEHOLDER'),
+                    error: !!error,
+                    helperText: error ? t(String(error.message)) : undefined,
+                    sx: programFieldSx,
+                  },
+                }}
+                slots={{
+                  openPickerIcon: CalendarIcon,
+                }}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid xs={12} md={6}>
+          <RequiredLabel required>{t('LABEL.END_DATE')}</RequiredLabel>
+          <Controller
+            name="end_date"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <DatePicker
+                value={field.value}
+                onChange={(value) => field.onChange(value)}
+                format="dd-MM-yyyy"
+                slotProps={{
+                  day: programDatePickerDaySlotProps,
+                  textField: {
+                    fullWidth: true,
+                    placeholder: t('ADD_PROGRAM.END_DATE_PLACEHOLDER'),
+                    error: !!error,
+                    helperText: error ? t(String(error.message)) : undefined,
+                    sx: programFieldSx,
+                  },
+                }}
+                slots={{
+                  openPickerIcon: CalendarIcon,
+                }}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid xs={12} md={6}>
           <PriceVatLabel required labelKey="ADD_PROGRAM.PRICE_VAT" />
           <Controller
             name="price"
@@ -155,62 +211,6 @@ export default function StepProgram({ categories }: Props) {
                   </MenuItem>
                 ))}
               </TextField>
-            )}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('LABEL.START_DATE')}</RequiredLabel>
-          <Controller
-            name="start_date"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <DatePicker
-                value={field.value}
-                onChange={(value) => field.onChange(value)}
-                format="dd-MM-yyyy"
-                slotProps={{
-                  day: programDatePickerDaySlotProps,
-                  textField: {
-                    fullWidth: true,
-                    placeholder: t('ADD_PROGRAM.START_DATE_PLACEHOLDER'),
-                    error: !!error,
-                    helperText: error ? t(String(error.message)) : undefined,
-                    sx: programFieldSx,
-                  },
-                }}
-                slots={{
-                  openPickerIcon: CalendarIcon,
-                }}
-              />
-            )}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('LABEL.END_DATE')}</RequiredLabel>
-          <Controller
-            name="end_date"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <DatePicker
-                value={field.value}
-                onChange={(value) => field.onChange(value)}
-                format="dd-MM-yyyy"
-                slotProps={{
-                  day: programDatePickerDaySlotProps,
-                  textField: {
-                    fullWidth: true,
-                    placeholder: t('ADD_PROGRAM.END_DATE_PLACEHOLDER'),
-                    error: !!error,
-                    helperText: error ? t(String(error.message)) : undefined,
-                    sx: programFieldSx,
-                  },
-                }}
-                slots={{
-                  openPickerIcon: CalendarIcon,
-                }}
-              />
             )}
           />
         </Grid>

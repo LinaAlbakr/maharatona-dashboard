@@ -10,6 +10,7 @@ import {
   FLEXIBLE_BOOKING_MODELS,
 } from '../constants';
 import { getProgramDefaultValues } from '../default-values';
+import { parseFormBoolean } from './course-api-helpers';
 import type {
   FlexibleBookingModelKey,
   FlexibleModelConfig,
@@ -103,7 +104,7 @@ function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBooki
   }));
 
   const gender = str(slot.gender || 'Boys');
-  const sameAgeRange = Boolean(slot.same_age_range);
+  const sameAgeRange = parseFormBoolean(slot.same_age_range);
 
   return {
     title_ar: str(slot.title_ar),
@@ -170,7 +171,7 @@ function mapFlexibleModels(course: Record<string, unknown>): Record<FlexibleBook
 function mapFixedSessionFields(course: Record<string, unknown>) {
   const gender = str(course.gender || 'Mixed');
   const isMixed = gender === 'Mixed';
-  const sameAgeRange = Boolean(course.same_age_range);
+  const sameAgeRange = parseFormBoolean(course.same_age_range);
 
   let boys_age_from = '';
   let boys_age_to = '';

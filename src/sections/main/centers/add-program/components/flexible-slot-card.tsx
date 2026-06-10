@@ -38,6 +38,7 @@ import {
 } from '../constants';
 import { innerCardSx, programDatePickerDaySlotProps, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
+import { parseFormBoolean } from '../utils/course-api-helpers';
 
 type Props = {
   modelKey: FlexibleBookingModelKey;
@@ -120,7 +121,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
   const modelConfig = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === modelKey)!;
   const basePath = `flexibleModels.${modelKey}.slots.${slotIndex}` as const;
   const gender = watch(`${basePath}.gender`);
-  const sameAgeRange = watch(`${basePath}.same_age_range`);
+  const sameAgeRange = parseFormBoolean(watch(`${basePath}.same_age_range`));
   const recurringDays = watch(`${basePath}.recurring_days`);
   const customDates = watch(`${basePath}.custom_dates`) || [];
 
@@ -232,8 +233,15 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               render={({ field }) => (
                 <RadioGroup
                   row
-                  value={field.value ? 'yes' : 'no'}
-                  onChange={(event) => field.onChange(event.target.value === 'yes')}
+                  value={parseFormBoolean(field.value) ? 'yes' : 'no'}
+                  onChange={(event) => {
+                    const isYes = event.target.value === 'yes';
+                    field.onChange(isYes);
+                    if (isYes) {
+                      setValue(`${basePath}.girls_age_from`, '');
+                      setValue(`${basePath}.girls_age_to`, '');
+                    }
+                  }}
                 >
                   <FormControlLabel
                     value="yes"
@@ -258,23 +266,11 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
         ) : null}
 
         {showSharedAgeField ? (
-          <Grid xs={12} md={6}>
-            <RequiredLabel required>{t('LABEL.AGE')}</RequiredLabel>
-            <Controller
-              name={`${basePath}.boys_age_from`}
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  placeholder={t('ADD_PROGRAM.MINIMUM')}
-                  error={!!error}
-                  helperText={error ? t(String(error.message)) : undefined}
-                  sx={programFieldSx}
-                />
-              )}
-            />
-          </Grid>
+          <SlotAgeRangeFields
+            basePath={basePath}
+            fromName="boys_age_from"
+            toName="boys_age_to"
+          />
         ) : null}
 
         {showBoysAgeRange ? (

@@ -18,6 +18,7 @@ import RequiredLabel from '../components/required-label';
 import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { programFieldSx, programRadioLabelSx } from '../styles';
 import type { ProgramFormValues } from '../types';
+import { parseFormBoolean } from '../utils/course-api-helpers';
 
 type AgeRangeFieldsProps = {
   fromName: 'boys_age_from' | 'girls_age_from';
@@ -200,8 +201,15 @@ export default function StepSession() {
               render={({ field }) => (
                 <RadioGroup
                   row
-                  value={field.value ? 'yes' : 'no'}
-                  onChange={(event) => field.onChange(event.target.value === 'yes')}
+                  value={parseFormBoolean(field.value) ? 'yes' : 'no'}
+                  onChange={(event) => {
+                    const isYes = event.target.value === 'yes';
+                    field.onChange(isYes);
+                    if (isYes) {
+                      setValue('girls_age_from', '');
+                      setValue('girls_age_to', '');
+                    }
+                  }}
                 >
                   <FormControlLabel
                     value="yes"
@@ -226,23 +234,7 @@ export default function StepSession() {
         ) : null}
 
         {showSharedAgeField ? (
-          <Grid xs={12} md={6}>
-            <RequiredLabel required>{t('LABEL.AGE')}</RequiredLabel>
-            <Controller
-              name="boys_age_from"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  placeholder={t('ADD_PROGRAM.MINIMUM')}
-                  error={!!error}
-                  helperText={error ? t(String(error.message)) : undefined}
-                  sx={programFieldSx}
-                />
-              )}
-            />
-          </Grid>
+          <AgeRangeFields fromName="boys_age_from" toName="boys_age_to" />
         ) : null}
 
         {showBoysAgeRange ? (

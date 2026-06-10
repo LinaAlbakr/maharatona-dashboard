@@ -1,5 +1,11 @@
 import { format } from 'date-fns';
 
+export function parseFormBoolean(value: unknown): boolean {
+  if (value === true || value === 'true') return true;
+  if (value === false || value === 'false' || value === '' || value == null) return false;
+  return Boolean(value);
+}
+
 const DAY_TO_ABBREV: Record<string, string> = {
   Sunday: 'Sun',
   Monday: 'Mon',

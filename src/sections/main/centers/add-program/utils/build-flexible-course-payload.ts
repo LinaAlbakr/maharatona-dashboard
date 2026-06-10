@@ -48,10 +48,9 @@ function mapSlotAges(slot: FlexibleSlot) {
   const isMixed = gender === 'Mixed';
 
   if (isMixed && slot.same_age_range) {
-    const age = slot.boys_age_from;
     return {
-      age_from: age,
-      age_to: age,
+      age_from: slot.boys_age_from,
+      age_to: slot.boys_age_to,
       same_age_range: true,
     };
   }

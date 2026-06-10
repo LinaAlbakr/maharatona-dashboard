@@ -36,8 +36,7 @@ const slotSchema = (opts: {
       otherwise: (schema) => schema,
     }),
     boys_age_to: yup.string().when(['gender', 'same_age_range'], {
-      is: (gender: string, same_age_range: boolean) =>
-        gender === 'Boys' || (gender === 'Mixed' && !same_age_range),
+      is: (gender: string) => gender === 'Boys' || gender === 'Mixed',
       then: () => numberField(),
       otherwise: (schema) => schema,
     }),
@@ -98,6 +97,7 @@ const flexibleStep0Schema = yup.object({
   courseImages: yup.array().min(1, requiredMsg),
   name_ar: yup.string().required(requiredMsg),
   name_en: yup.string().required(requiredMsg),
+  price: numberField(),
   field_id: yup.string().required(requiredMsg),
   start_date: yup.date().nullable().required(requiredMsg),
   end_date: yup
@@ -123,8 +123,7 @@ const fixedStep1Schema = yup.object({
     otherwise: (schema) => schema,
   }),
   boys_age_to: yup.string().when(['gender', 'same_age_range'], {
-    is: (gender: string, same_age_range: boolean) =>
-      gender === 'Boys' || (gender === 'Mixed' && !same_age_range),
+    is: (gender: string) => gender === 'Boys' || gender === 'Mixed',
     then: () => numberField(),
     otherwise: (schema) => schema,
   }),

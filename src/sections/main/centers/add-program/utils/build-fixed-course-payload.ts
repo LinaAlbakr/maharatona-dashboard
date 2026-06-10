@@ -70,11 +70,8 @@ export function buildFixedCourseFormMap(values: ProgramFormValues): Record<strin
     if (values.girls_age_to.trim()) map.girls_age_to = values.girls_age_to;
     map.same_age_range = 'false';
   } else if (isMixed && values.same_age_range) {
-    const age = values.boys_age_from.trim();
-    if (age) {
-      map.age_from = age;
-      map.age_to = age;
-    }
+    if (values.boys_age_from.trim()) map.age_from = values.boys_age_from;
+    if (values.boys_age_to.trim()) map.age_to = values.boys_age_to;
     map.same_age_range = 'true';
   } else {
     const ageFrom =
