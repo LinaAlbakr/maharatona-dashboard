@@ -17,13 +17,13 @@ export const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
 };
 
 const DAY_ORDER = [
-  'Sunday',
   'Monday',
   'Tuesday',
   'Wednesday',
   'Thursday',
   'Friday',
   'Saturday',
+  'Sunday',
 ] as const;
 
 const ABBREV_TO_DAY: Record<string, (typeof DAY_ORDER)[number]> = {
@@ -49,7 +49,11 @@ const DAY_LABEL_KEYS: Record<string, string> = {
 const normalizeDayName = (day: string): string => {
   const trimmed = day.trim();
   if (DAY_LABEL_KEYS[trimmed]) return trimmed;
-  if (ABBREV_TO_DAY[trimmed]) return ABBREV_TO_DAY[trimmed];
+
+  const abbrev = Object.entries(ABBREV_TO_DAY).find(
+    ([key]) => key.toLowerCase() === trimmed.toLowerCase()
+  );
+  if (abbrev) return abbrev[1];
 
   const match = DAY_ORDER.find((name) => name.toLowerCase() === trimmed.toLowerCase());
   return match ?? trimmed;

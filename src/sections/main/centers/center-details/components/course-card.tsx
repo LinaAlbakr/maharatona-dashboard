@@ -1,6 +1,7 @@
 import { Avatar, Box, Card, ListItemText, Typography } from '@mui/material';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
+import { resolveCourseImageUrl } from 'src/sections/main/courses/course-details/utils';
 
 type props = {
   course: any;
@@ -14,6 +15,7 @@ const CourseCard = ({ course }: props) => {
   const categoryName =
     course?.field &&
     (i18n.language === 'ar' ? course.field?.name_ar : course.field?.name_en);
+  const imageUrl = resolveCourseImageUrl(course.course_images?.[0]);
 
   return (
     <Card
@@ -29,7 +31,7 @@ const CourseCard = ({ course }: props) => {
     >
       <Avatar
         sx={{ width: 150, height: 150 }}
-        src={course.course_images?.[0]?.trim() || '/assets/images/centers/gray.jpeg'}
+        src={imageUrl || undefined}
       />
       <Typography variant="h4" color="info.dark">
         {i18n.language === 'ar' ? (course?.name_ar || course?.name) : (course?.name_en || course?.name)}

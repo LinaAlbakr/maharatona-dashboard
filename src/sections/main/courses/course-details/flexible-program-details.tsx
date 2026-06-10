@@ -60,7 +60,9 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
     }
   }, [course, activeModel]);
 
-  const images = Array.isArray(course?.course_images) ? course.course_images : [];
+  const images = (Array.isArray(course?.course_images) ? course.course_images : [])
+    .map((image: unknown) => getCourseImageUrl(image))
+    .filter(Boolean);
   const packages = getPackagesForModel(course, activeModel);
   const slots = getSlotsForModel(course, activeModel);
 
@@ -89,18 +91,17 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
       />
 
       <DetailSectionCard title={t('PROGRAM_DETAILS.PROGRAM_SECTION')}>
-        <Box sx={{ mb: 3 }}>
-          <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>
-            {t('ADD_PROGRAM.PROGRAM_PICTURES')}
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {(images.length ? images : [null, null, null])
-              .slice(0, 3)
-              .map((image: any, index: number) => (
+        {images.length > 0 ? (
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>
+              {t('ADD_PROGRAM.PROGRAM_PICTURES')}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              {images.slice(0, 3).map((src, index) => (
                 <Box
                   key={index}
                   component="img"
-                  src={getCourseImageUrl(image)}
+                  src={src}
                   alt=""
                   sx={{
                     width: 156,
@@ -112,8 +113,9 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
                   }}
                 />
               ))}
+            </Box>
           </Box>
-        </Box>
+        ) : null}
 
         <Box sx={detailGridSx}>
           <DetailField

@@ -198,7 +198,9 @@ export default function FixedProgramDetailsView({ course }: Props) {
   const discountedPrice = getDiscountedPrice(course);
   const sessionAges = getSessionAgeDisplay(course);
 
-  const images = Array.isArray(course?.course_images) ? course.course_images : [];
+  const images = (Array.isArray(course?.course_images) ? course.course_images : [])
+    .map((image: unknown) => getCourseImageUrl(image))
+    .filter(Boolean);
   const questions = (course?.additional_questions || []).filter(
     (item: any) => item?.question_ar?.trim() || item?.question_en?.trim()
   );
@@ -248,29 +250,31 @@ export default function FixedProgramDetailsView({ course }: Props) {
       />
 
       <DetailSectionCard title={t('PROGRAM_DETAILS.PROGRAM_SECTION')}>
-        <Box sx={{ mb: 3 }}>
-          <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>
-            {t('ADD_PROGRAM.PROGRAM_PICTURES')}
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            {(images.length ? images : [null, null, null]).slice(0, 3).map((image: any, index: number) => (
-              <Box
-                key={index}
-                component="img"
-                src={getCourseImageUrl(image)}
-                alt=""
-                sx={{
-                  width: 156,
-                  height: 90,
-                  borderRadius: '12px',
-                  objectFit: 'cover',
-                  bgcolor: 'grey.100',
-                  flexShrink: 0,
-                }}
-              />
-            ))}
+        {images.length > 0 ? (
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>
+              {t('ADD_PROGRAM.PROGRAM_PICTURES')}
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              {images.slice(0, 3).map((src, index) => (
+                <Box
+                  key={index}
+                  component="img"
+                  src={src}
+                  alt=""
+                  sx={{
+                    width: 156,
+                    height: 90,
+                    borderRadius: '12px',
+                    objectFit: 'cover',
+                    bgcolor: 'grey.100',
+                    flexShrink: 0,
+                  }}
+                />
+              ))}
+            </Box>
           </Box>
-        </Box>
+        ) : null}
 
         <Box sx={detailGridSx}>
           <DetailField

@@ -30,11 +30,15 @@ export const formatAgeYears = (age: number | string | null | undefined, yearsLab
   return `${age} ${yearsLabel}`;
 };
 
-export const getCourseImageUrl = (image: string | { url?: string } | null | undefined) => {
-  if (!image) return '/assets/images/centers/gray.jpeg';
-  if (typeof image === 'string') return image;
-  return image.url || '/assets/images/centers/gray.jpeg';
+export const resolveCourseImageUrl = (
+  image: string | { url?: string; path?: string } | null | undefined
+) => {
+  if (!image) return '';
+  if (typeof image === 'string') return image.trim();
+  return String(image.url ?? image.path ?? '').trim();
 };
+
+export const getCourseImageUrl = resolveCourseImageUrl;
 
 export const isFixedCourse = (course: any) =>
   !course?.course_type || String(course.course_type).toLowerCase() === 'fixed';
