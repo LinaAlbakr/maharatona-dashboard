@@ -189,7 +189,7 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
   map.daysOffList =
     daysOff.length > 0 ? convertDaysListToEnglish(daysOff) : null;
   map.datesOffList =
-    values.datesOffList.length > 0
+    values.daysOffCustom && values.datesOffList.length > 0
       ? values.datesOffList.map((date) => format(date, 'yyyy-MM-dd'))
       : null;
 

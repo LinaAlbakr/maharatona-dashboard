@@ -289,7 +289,7 @@ export function mapCourseToProgramFormValues(course: Record<string, unknown>): P
     end_date: parseApiDate(course.end_date),
     daysOffRecurring: daysOffList.length > 0,
     daysOffCustom: datesOffList.length > 0,
-    daysOffList: daysOffList.length > 0 ? daysOffList : defaults.daysOffList,
+    daysOffList,
     datesOffList,
     ...(bookingType === 'fixed' ? mapFixedSessionFields(course) : {}),
     flexibleModels:
