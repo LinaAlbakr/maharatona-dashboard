@@ -210,12 +210,17 @@ export default function FixedProgramDetailsView({ course }: Props) {
       item?.desc_en?.trim() ||
       item?.price
   );
-  const specificDiscounts = (course?.discount || []).filter(
-    (group: any) => Array.isArray(group?.discounts) && group.discounts.length > 0
-  );
+  const discountType = String(course?.discount_type ?? '').toLowerCase();
+  const isTotalDiscount = discountType === 'total';
+  const isSpecificDiscount = discountType === 'specific';
+
   const hasTotalDiscount =
-    String(course?.discount_type).toLowerCase() === 'total' &&
-    Number(course?.discount_amount) > 0;
+    isTotalDiscount && Number(course?.discount_amount) > 0;
+  const specificDiscounts = isSpecificDiscount
+    ? (course?.discount || []).filter(
+        (group: any) => Array.isArray(group?.discounts) && group.discounts.length > 0
+      )
+    : [];
 
   const getGenderLabel = (gender?: string) => {
     switch (gender) {

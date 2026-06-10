@@ -39,7 +39,7 @@ import type { FixedProgramFormValues } from '../types';
 
 export default function StepDiscount() {
   const { t } = useTranslate();
-  const { control, watch } = useFormContext<FixedProgramFormValues>();
+  const { control, watch, setValue } = useFormContext<FixedProgramFormValues>();
   const enableDiscount = watch('enableDiscount');
   const discountType = watch('discount_type');
 
@@ -58,7 +58,14 @@ export default function StepDiscount() {
           render={({ field }) => (
             <Switch
               checked={field.value}
-              onChange={(event) => field.onChange(event.target.checked)}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                field.onChange(checked);
+                if (!checked) {
+                  setValue('discount_amount', '');
+                  setValue('discount', [{ ...EMPTY_DISCOUNT_GROUP }]);
+                }
+              }}
               sx={programSwitchSx}
             />
           )}
@@ -78,7 +85,10 @@ export default function StepDiscount() {
                     control={
                       <Radio
                         checked={field.value === 'total'}
-                        onChange={() => field.onChange('total')}
+                        onChange={() => {
+                          field.onChange('total');
+                          setValue('discount', [{ ...EMPTY_DISCOUNT_GROUP }]);
+                        }}
                         sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }}
                       />
                     }
@@ -111,7 +121,10 @@ export default function StepDiscount() {
                     control={
                       <Radio
                         checked={field.value === 'specific'}
-                        onChange={() => field.onChange('specific')}
+                        onChange={() => {
+                          field.onChange('specific');
+                          setValue('discount_amount', '');
+                        }}
                         sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }}
                       />
                     }

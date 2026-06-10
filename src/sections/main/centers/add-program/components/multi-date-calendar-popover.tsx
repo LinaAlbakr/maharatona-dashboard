@@ -1,0 +1,124 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
+import { DateCalendar } from '@mui/x-date-pickers';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { isSameDay } from 'date-fns';
+
+import { useTranslate } from 'src/locales';
+
+import { PROGRAM_TEAL } from '../constants';
+import { programDatePickerDaySlotProps } from '../styles';
+
+type Props = {
+  open: boolean;
+  anchorEl: HTMLElement | null;
+  onClose: () => void;
+  onConfirm: (dates: Date[]) => void;
+};
+
+function MultiSelectDay(
+  props: PickersDayProps & {
+    selectedDates: Date[];
+    onToggle: (date: Date) => void;
+  }
+) {
+  const { selectedDates, onToggle, day, outsideCurrentMonth, ...other } = props;
+  const selected = selectedDates.some((date) => isSameDay(date, day));
+
+  return (
+    <PickersDay
+      {...other}
+      day={day}
+      outsideCurrentMonth={outsideCurrentMonth}
+      selected={selected}
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!outsideCurrentMonth && !other.disabled) {
+          onToggle(day);
+        }
+      }}
+      sx={{
+        ...programDatePickerDaySlotProps.sx,
+        ...(selected
+          ? {
+              bgcolor: `${PROGRAM_TEAL} !important`,
+              color: 'common.white !important',
+            }
+          : {}),
+      }}
+    />
+  );
+}
+
+export default function MultiDateCalendarPopover({ open, anchorEl, onClose, onConfirm }: Props) {
+  const { t } = useTranslate();
+  const [pendingDates, setPendingDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    if (open) {
+      setPendingDates([]);
+    }
+  }, [open]);
+
+  const toggleDate = (date: Date) => {
+    setPendingDates((current) => {
+      const exists = current.some((item) => isSameDay(item, date));
+      if (exists) {
+        return current.filter((item) => !isSameDay(item, date));
+      }
+      return [...current, date];
+    });
+  };
+
+  const handleConfirm = () => {
+    if (pendingDates.length > 0) {
+      onConfirm(pendingDates);
+    }
+    onClose();
+  };
+
+  return (
+    <Popover
+      open={open}
+      anchorEl={anchorEl}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      PaperProps={{ sx: { mt: 0.5, p: 1 } }}
+    >
+      <DateCalendar
+        onChange={() => undefined}
+        slots={{
+          day: (dayProps) => (
+            <MultiSelectDay
+              {...dayProps}
+              selectedDates={pendingDates}
+              onToggle={toggleDate}
+            />
+          ),
+        }}
+      />
+
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 1, pb: 0.5 }}>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={handleConfirm}
+          disabled={pendingDates.length === 0}
+          sx={{
+            bgcolor: PROGRAM_TEAL,
+            '&:hover': { bgcolor: PROGRAM_TEAL },
+          }}
+        >
+          {t('ADD_PROGRAM.ADD_DATES')}
+        </Button>
+      </Box>
+    </Popover>
+  );
+}

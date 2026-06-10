@@ -14,6 +14,7 @@ import {
   normalizeGender,
   usesWeekDays,
 } from './course-api-helpers';
+import { applyDiscountFields } from './build-discount-fields';
 import {
   getConfiguredFlexibleModelKeys,
   isFlexibleModelConfigured,
@@ -147,20 +148,10 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
       price: material.price,
       required: material.required,
     })),
-    discount_type: values.discount_type,
-    discount_amount: values.enableDiscount ? values.discount_amount : null,
-    discount: values.enableDiscount
-      ? values.discount.map((group) => ({
-          title_ar: group.title_ar,
-          title_en: group.title_en,
-          discounts: group.discounts.map((item) => ({
-            no_of_kids: item.no_of_kids,
-            discount: item.discount,
-          })),
-        }))
-      : [],
     package: buildPackages(values),
   };
+
+  applyDiscountFields(map, values, { stringifyDiscount: false });
 
   const daysOff = values.daysOffRecurring ? values.daysOffList : [];
   map.daysOffList =

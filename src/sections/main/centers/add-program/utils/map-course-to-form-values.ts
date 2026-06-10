@@ -218,10 +218,13 @@ function mapDiscountFields(course: Record<string, unknown>) {
   );
 
   const enableDiscount =
-    discountType === 'total' ? discountAmount > 0 : hasSpecific;
+    discountType === 'total'
+      ? discountAmount > 0
+      : discountType === 'specific' && hasSpecific;
 
-  const discount = hasSpecific
-    ? discountGroups.map((group) => {
+  const discount =
+    discountType === 'specific' && hasSpecific
+      ? discountGroups.map((group) => {
         const record = group as Record<string, unknown>;
         const rows = Array.isArray(record.discounts) ? record.discounts : [];
         return {
@@ -243,7 +246,8 @@ function mapDiscountFields(course: Record<string, unknown>) {
   return {
     enableDiscount,
     discount_type: discountType as ProgramFormValues['discount_type'],
-    discount_amount: discountAmount > 0 ? str(discountAmount) : '',
+    discount_amount:
+      discountType === 'total' && discountAmount > 0 ? str(discountAmount) : '',
     discount,
   };
 }

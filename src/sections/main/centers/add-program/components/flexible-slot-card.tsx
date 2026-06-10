@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
-import Popover from '@mui/material/Popover';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
@@ -15,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
-import { DateCalendar } from '@mui/x-date-pickers';
 import { TimePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 
@@ -27,7 +25,8 @@ import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
 import PriceVatLabel from './price-vat-label';
 import RequiredLabel from './required-label';
-import SelectedDateTag from './selected-date-tag';
+import MultiDateCalendarPopover from './multi-date-calendar-popover';
+import SelectedDateGroupTag from './selected-date-group-tag';
 import {
   ADD_BOX_TEXT_COLOR,
   FIELD_BORDER_COLOR,
@@ -36,8 +35,13 @@ import {
   PROGRAM_SECTION_HEADING_COLOR,
   PROGRAM_TEAL,
 } from '../constants';
-import { innerCardSx, programDatePickerDaySlotProps, programFieldSx, programRadioLabelSx } from '../styles';
+import { innerCardSx, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
+import {
+  groupDatesByWeekAndMonth,
+  mergeUniqueDates,
+  removeDateGroup,
+} from '../utils/custom-dates';
 
 type Props = {
   modelKey: FlexibleBookingModelKey;
@@ -125,18 +129,27 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
   const priceLabelKey = getPriceLabel(modelKey, timeType);
   const customDatesError = getFieldState(`${basePath}.custom_dates`, formState).error;
 
-  const handleAddDate = (date: Date | null) => {
-    if (!date) return;
-    const label = format(date, 'dd MM dd MMM, yyyy');
-    const id = `${Date.now()}-${slotIndex}`;
-    setValue(`${basePath}.custom_dates`, [...customDates, { id, date, label }]);
-  };
+  const slotDates = customDates
+    .map((entry) => entry.date)
+    .filter((date): date is Date => date instanceof Date);
+  const weekGroups = groupDatesByWeekAndMonth(slotDates);
+  const weekLabelFor = (weekNumber: number) =>
+    t('ADD_PROGRAM.WEEK_NUMBER', { number: weekNumber });
 
-  const handleRemoveDate = (dateId: string) => {
+  const setSlotDates = (dates: Date[]) => {
     setValue(
       `${basePath}.custom_dates`,
-      customDates.filter((d) => d.id !== dateId)
+      dates.map((date, index) => ({
+        id: `${date.getTime()}-${index}`,
+        date,
+        label: format(date, 'yyyy-MM-dd'),
+      })),
+      { shouldValidate: true }
     );
+  };
+
+  const handleConfirmDates = (dates: Date[]) => {
+    setSlotDates(mergeUniqueDates(slotDates, dates));
   };
 
   return (
@@ -357,15 +370,14 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           <Grid xs={12} data-field={`${basePath}.custom_dates`}>
             <RequiredLabel required>{t('ADD_PROGRAM.SELECT_DATES')}</RequiredLabel>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
-              {customDates.map((item) =>
-                item.date ? (
-                  <SelectedDateTag
-                    key={item.id}
-                    date={item.date}
-                    onRemove={() => handleRemoveDate(item.id)}
-                  />
-                ) : null
-              )}
+              {weekGroups.map((group) => (
+                <SelectedDateGroupTag
+                  key={group.key}
+                  group={group}
+                  weekLabel={weekLabelFor(group.weekNumber)}
+                  onRemove={() => setSlotDates(removeDateGroup(slotDates, group))}
+                />
+              ))}
             </Box>
             <Box sx={{ display: 'inline-block' }}>
               <Box
@@ -413,24 +425,12 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                   {t('ADD_PROGRAM.ADD_DATES')}
                 </Box>
               </Box>
-              <Popover
+              <MultiDateCalendarPopover
                 open={datePickerOpen}
                 anchorEl={addDatesRef.current}
                 onClose={() => setDatePickerOpen(false)}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                PaperProps={{ sx: { mt: 0.5 } }}
-              >
-                <DateCalendar
-                  slotProps={{
-                    day: programDatePickerDaySlotProps,
-                  }}
-                  onChange={(date) => {
-                    handleAddDate(date);
-                    setDatePickerOpen(false);
-                  }}
-                />
-              </Popover>
+                onConfirm={handleConfirmDates}
+              />
             </Box>
             {customDatesError ? (
               <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>

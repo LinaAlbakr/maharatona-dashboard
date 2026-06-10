@@ -1,4 +1,5 @@
 import type { ProgramFormValues } from '../types';
+import { applyDiscountFields } from './build-discount-fields';
 import {
   cleanFormData,
   formatDateForApi,
@@ -27,17 +28,6 @@ function buildAddOnMaterials(values: ProgramFormValues) {
   }));
 }
 
-function buildSpecificDiscounts(values: ProgramFormValues) {
-  return values.discount.map((group) => ({
-    title_ar: group.title_ar,
-    title_en: group.title_en,
-    discounts: group.discounts.map((item) => ({
-      no_of_kids: Number.parseInt(item.no_of_kids, 10) || 0,
-      discount: Number.parseInt(item.discount, 10) || 0,
-    })),
-  }));
-}
-
 export function buildFixedCourseFormMap(values: ProgramFormValues): Record<string, unknown> {
   const map: Record<string, unknown> = {
     name_ar: values.name_ar,
@@ -48,7 +38,6 @@ export function buildFixedCourseFormMap(values: ProgramFormValues): Record<strin
     end_time: formatTimeForApi(values.end_time),
     field_id: values.field_id,
     modifiable: 'true',
-    discount_type: values.discount_type,
     course_type: 'fixed',
     is_active: 'true',
     additional_questions: JSON.stringify(buildAdditionalQuestions(values)),
@@ -83,16 +72,7 @@ export function buildFixedCourseFormMap(values: ProgramFormValues): Record<strin
 
   if (gender) map.gender = gender;
 
-  if (values.enableDiscount) {
-    if (values.discount_type === 'total') {
-      if (values.discount_amount.trim()) map.discount_amount = values.discount_amount;
-      map.discount = JSON.stringify([]);
-    } else {
-      map.discount = JSON.stringify(buildSpecificDiscounts(values));
-    }
-  } else {
-    map.discount = JSON.stringify([]);
-  }
+  applyDiscountFields(map, values);
 
   return cleanFormData(map);
 }

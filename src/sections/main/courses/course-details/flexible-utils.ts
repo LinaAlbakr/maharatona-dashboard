@@ -3,6 +3,8 @@ import type { TFunction } from 'i18next';
 import { FLEXIBLE_BOOKING_MODELS } from 'src/sections/main/centers/add-program/constants';
 import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-program/types';
 
+import { formatGroupedDatesText } from 'src/sections/main/centers/add-program/utils/custom-dates';
+
 import { formatAgeYears, formatProgramTime, getLocalizedText } from './utils';
 
 export const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
@@ -14,6 +16,26 @@ export const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
   monthly: 'monthlySlots',
 };
 
+const DAY_ORDER = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+] as const;
+
+const ABBREV_TO_DAY: Record<string, (typeof DAY_ORDER)[number]> = {
+  Sun: 'Sunday',
+  Mon: 'Monday',
+  Tue: 'Tuesday',
+  Wed: 'Wednesday',
+  Thu: 'Thursday',
+  Fri: 'Friday',
+  Sat: 'Saturday',
+};
+
 const DAY_LABEL_KEYS: Record<string, string> = {
   Sunday: 'ADD_PROGRAM.SUNDAY',
   Monday: 'ADD_PROGRAM.MONDAY',
@@ -22,6 +44,20 @@ const DAY_LABEL_KEYS: Record<string, string> = {
   Thursday: 'ADD_PROGRAM.THURSDAY',
   Friday: 'ADD_PROGRAM.FRIDAY',
   Saturday: 'ADD_PROGRAM.SATURDAY',
+};
+
+const normalizeDayName = (day: string): string => {
+  const trimmed = day.trim();
+  if (DAY_LABEL_KEYS[trimmed]) return trimmed;
+  if (ABBREV_TO_DAY[trimmed]) return ABBREV_TO_DAY[trimmed];
+
+  const match = DAY_ORDER.find((name) => name.toLowerCase() === trimmed.toLowerCase());
+  return match ?? trimmed;
+};
+
+const daySortIndex = (day: string): number => {
+  const index = DAY_ORDER.indexOf(normalizeDayName(day) as (typeof DAY_ORDER)[number]);
+  return index === -1 ? DAY_ORDER.length : index;
 };
 
 export const FLEXIBLE_TAB_MODELS = FLEXIBLE_BOOKING_MODELS.filter((m) => m.key !== 'trial');
@@ -73,9 +109,10 @@ export const getSlotsForModel = (course: any, modelKey: FlexibleBookingModelKey)
 
 export const formatDaysList = (days: string[] | undefined, t: TFunction) => {
   if (!days?.length) return '-';
-  return days
+  return [...days]
+    .sort((a, b) => daySortIndex(a) - daySortIndex(b))
     .map((day) => {
-      const key = DAY_LABEL_KEYS[day];
+      const key = DAY_LABEL_KEYS[normalizeDayName(day)];
       return key ? t(key) : day;
     })
     .join(', ');
@@ -98,15 +135,22 @@ export const formatDaysOff = (course: any, t: TFunction) => {
 
   const customDates = course?.datesOffList;
   if (Array.isArray(customDates) && customDates.length > 0) {
-    return customDates
+    const parsedDates = customDates
       .map((date: string | Date) => {
         try {
-          return new Date(date).toLocaleDateString();
+          const parsed = date instanceof Date ? date : new Date(String(date));
+          return Number.isNaN(parsed.getTime()) ? null : parsed;
         } catch {
-          return String(date);
+          return null;
         }
       })
-      .join(', ');
+      .filter((date): date is Date => date instanceof Date);
+
+    if (parsedDates.length > 0) {
+      return formatGroupedDatesText(parsedDates, (weekNumber) =>
+        t('ADD_PROGRAM.WEEK_NUMBER', { number: weekNumber })
+      );
+    }
   }
 
   return '-';

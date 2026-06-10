@@ -5,14 +5,16 @@ import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 
 import { FIELD_LABEL_COLOR } from '../constants';
+import type { DateWeekGroup } from '../utils/custom-dates';
 
 type Props = {
-  date: Date;
+  group: DateWeekGroup;
+  weekLabel: string;
   onRemove: () => void;
 };
 
-export default function SelectedDateTag({ date, onRemove }: Props) {
-  const parts = [format(date, 'dd'), format(date, 'MM'), format(date, 'dd')];
+export default function SelectedDateGroupTag({ group, weekLabel, onRemove }: Props) {
+  const monthYear = format(group.dates[0], 'MMMM, yyyy');
 
   return (
     <Box
@@ -25,11 +27,23 @@ export default function SelectedDateTag({ date, onRemove }: Props) {
         borderRadius: '999px',
         bgcolor: 'rgba(60, 184, 187, 0.18)',
         maxWidth: '100%',
+        flexWrap: 'wrap',
       }}
     >
-      {parts.map((part, index) => (
+      <Typography
+        sx={{
+          fontSize: 14,
+          fontWeight: 600,
+          color: FIELD_LABEL_COLOR,
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {weekLabel}:
+      </Typography>
+
+      {group.dates.map((date) => (
         <Box
-          key={`${part}-${index}`}
+          key={date.toISOString()}
           sx={{
             width: 32,
             height: 32,
@@ -44,7 +58,7 @@ export default function SelectedDateTag({ date, onRemove }: Props) {
             flexShrink: 0,
           }}
         >
-          {part}
+          {format(date, 'dd')}
         </Box>
       ))}
 
@@ -53,17 +67,16 @@ export default function SelectedDateTag({ date, onRemove }: Props) {
           fontSize: 14,
           fontWeight: 500,
           color: FIELD_LABEL_COLOR,
-          ml: 0.25,
           whiteSpace: 'nowrap',
         }}
       >
-        {format(date, 'MMM, yyyy')}
+        {monthYear}
       </Typography>
 
       <Box
         component="button"
         type="button"
-        aria-label="Remove date"
+        aria-label="Remove dates"
         onClick={onRemove}
         sx={{
           width: 22,
@@ -80,7 +93,7 @@ export default function SelectedDateTag({ date, onRemove }: Props) {
           fontWeight: 700,
           lineHeight: 1,
           flexShrink: 0,
-          ml: 0.5,
+          ml: 0.25,
           p: 0,
           '&:hover': {
             bgcolor: 'error.dark',

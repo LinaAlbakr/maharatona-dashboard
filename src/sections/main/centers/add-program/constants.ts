@@ -14,7 +14,7 @@ export const FREE_BOOKING_COLOR = '#CC3899';
 export const PROGRAM_FIELD_HEIGHT = 51;
 
 /** Dev-only: bypass step validation so the wizard can be navigated without filling every field. */
-export const SKIP_PROGRAM_STEP_VALIDATION = false;
+export const SKIP_PROGRAM_STEP_VALIDATION = true;
 
 export const PROGRAM_STEPS: { key: ProgramStep; labelKey: string }[] = [
   { key: 0, labelKey: 'ADD_PROGRAM.STEP_PROGRAM' },
@@ -56,7 +56,7 @@ export const EMPTY_DISCOUNT_ROW = {
 export const EMPTY_DISCOUNT_GROUP = {
   title_ar: '',
   title_en: '',
-  discounts: [{ ...EMPTY_DISCOUNT_ROW }, { ...EMPTY_DISCOUNT_ROW }],
+  discounts: [{ ...EMPTY_DISCOUNT_ROW }],
 };
 
 export const WEEKDAYS = [

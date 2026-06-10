@@ -7,7 +7,7 @@ export const getDiscountedPrice = (course: any): number | null => {
 
   if (!Number.isFinite(basePrice) || basePrice <= 0) return null;
   if (!Number.isFinite(discountAmount) || discountAmount <= 0) return null;
-  if (discountType !== 'total' && discountType !== 'specific') return null;
+  if (discountType !== 'total') return null;
 
   const discounted = basePrice - (basePrice * discountAmount) / 100;
   if (!Number.isFinite(discounted)) return null;

@@ -5,20 +5,23 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import Popover from '@mui/material/Popover';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { DateCalendar } from '@mui/x-date-pickers';
 
 import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
 import DaySelector from './day-selector';
+import MultiDateCalendarPopover from './multi-date-calendar-popover';
 import RequiredLabel from './required-label';
-import SelectedDateTag from './selected-date-tag';
+import SelectedDateGroupTag from './selected-date-group-tag';
 import { ADD_BOX_TEXT_COLOR, PROGRAM_TEAL } from '../constants';
-import { programDatePickerDaySlotProps } from '../styles';
 import type { ProgramFormValues } from '../types';
+import {
+  groupDatesByWeekAndMonth,
+  mergeUniqueDates,
+  removeDateGroup,
+} from '../utils/custom-dates';
 
 export default function DaysOffSection() {
   const { t } = useTranslate();
@@ -32,6 +35,10 @@ export default function DaysOffSection() {
   const calendarAnchorRef = useRef<HTMLButtonElement>(null);
   const prevCustomRef = useRef(daysOffCustom);
 
+  const weekGroups = groupDatesByWeekAndMonth(datesOffList);
+  const weekLabelFor = (weekNumber: number) =>
+    t('ADD_PROGRAM.WEEK_NUMBER', { number: weekNumber });
+
   useEffect(() => {
     if (daysOffCustom && !prevCustomRef.current) {
       setDatePickerOpen(true);
@@ -42,25 +49,8 @@ export default function DaysOffSection() {
     prevCustomRef.current = daysOffCustom;
   }, [daysOffCustom]);
 
-  const handleAddDate = (date: Date | null) => {
-    if (!date) return;
-    const alreadySelected = datesOffList.some(
-      (selected) => selected.toDateString() === date.toDateString()
-    );
-    if (alreadySelected) {
-      setDatePickerOpen(false);
-      return;
-    }
-    setValue('datesOffList', [...datesOffList, date], { shouldValidate: true });
-    setDatePickerOpen(false);
-  };
-
-  const handleRemoveDate = (index: number) => {
-    setValue(
-      'datesOffList',
-      datesOffList.filter((_, itemIndex) => itemIndex !== index),
-      { shouldValidate: true }
-    );
+  const handleConfirmDates = (dates: Date[]) => {
+    setValue('datesOffList', mergeUniqueDates(datesOffList, dates), { shouldValidate: true });
   };
 
   return (
@@ -133,11 +123,16 @@ export default function DaysOffSection() {
               mb: 1.5,
             }}
           >
-            {datesOffList.map((date, index) => (
-              <SelectedDateTag
-                key={`${date.toISOString()}-${index}`}
-                date={date}
-                onRemove={() => handleRemoveDate(index)}
+            {weekGroups.map((group) => (
+              <SelectedDateGroupTag
+                key={group.key}
+                group={group}
+                weekLabel={weekLabelFor(group.weekNumber)}
+                onRemove={() =>
+                  setValue('datesOffList', removeDateGroup(datesOffList, group), {
+                    shouldValidate: true,
+                  })
+                }
               />
             ))}
           </Box>
@@ -189,21 +184,12 @@ export default function DaysOffSection() {
               </Box>
             </Box>
 
-            <Popover
+            <MultiDateCalendarPopover
               open={datePickerOpen}
               anchorEl={calendarAnchorRef.current}
               onClose={() => setDatePickerOpen(false)}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-              PaperProps={{ sx: { mt: 0.5 } }}
-            >
-              <DateCalendar
-                slotProps={{
-                  day: programDatePickerDaySlotProps,
-                }}
-                onChange={handleAddDate}
-              />
-            </Popover>
+              onConfirm={handleConfirmDates}
+            />
           </Box>
         </Box>
       ) : null}

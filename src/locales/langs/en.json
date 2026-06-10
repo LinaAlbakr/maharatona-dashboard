@@ -544,6 +544,7 @@
     "FRIDAY": "Friday",
     "SATURDAY": "Saturday",
     "ADD_DATES": "Add Dates",
+    "WEEK_NUMBER": "Week {{number}}",
     "CHOOSE_BOOKING_MODEL": "Choose Booking Model",
     "FREE": "Free",
     "TRIAL_ENABLED": "Free trial model enabled",
