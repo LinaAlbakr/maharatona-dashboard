@@ -104,19 +104,20 @@ function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBooki
   }));
 
   const gender = str(slot.gender || 'Boys');
-  const sameAgeRange = parseFormBoolean(slot.same_age_range);
+  const ageFrom = str(slot.age_from ?? slot.boys_age_from ?? '');
+  const ageTo = str(slot.age_to ?? slot.boys_age_to ?? '');
 
   return {
     title_ar: str(slot.title_ar),
     title_en: str(slot.title_en),
     gender,
-    same_age_range: sameAgeRange,
-    boys_age_from: str(slot.boys_age_from ?? slot.age_from ?? ''),
-    boys_age_to: str(slot.boys_age_to ?? slot.age_to ?? ''),
-    girls_age_from: str(slot.girls_age_from ?? ''),
-    girls_age_to: str(slot.girls_age_to ?? ''),
-    age_from: str(slot.age_from ?? ''),
-    age_to: str(slot.age_to ?? ''),
+    same_age_range: false,
+    boys_age_from: '',
+    boys_age_to: '',
+    girls_age_from: '',
+    girls_age_to: '',
+    age_from: ageFrom,
+    age_to: ageTo,
     selected_days: selectedDays,
     start_time: parseApiTime(slot.start_time),
     end_time: parseApiTime(slot.end_time),

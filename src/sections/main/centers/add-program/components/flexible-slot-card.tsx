@@ -38,7 +38,6 @@ import {
 } from '../constants';
 import { innerCardSx, programDatePickerDaySlotProps, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
-import { parseFormBoolean } from '../utils/course-api-helpers';
 
 type Props = {
   modelKey: FlexibleBookingModelKey;
@@ -49,20 +48,16 @@ type Props = {
 
 type SlotAgeRangeFieldsProps = {
   basePath: `flexibleModels.${FlexibleBookingModelKey}.slots.${number}`;
-  fromName: 'boys_age_from' | 'girls_age_from';
-  toName: 'boys_age_to' | 'girls_age_to';
-  sectionLabel?: string;
+  fromName: 'age_from';
+  toName: 'age_to';
 };
 
-function SlotAgeRangeFields({ basePath, fromName, toName, sectionLabel }: SlotAgeRangeFieldsProps) {
+function SlotAgeRangeFields({ basePath, fromName, toName }: SlotAgeRangeFieldsProps) {
   const { t } = useTranslate();
   const { control } = useFormContext<ProgramFormValues>();
 
   return (
-    <Grid xs={12}>
-      {sectionLabel ? (
-        <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{sectionLabel}</RequiredLabel>
-      ) : null}
+    <Grid xs={12} data-field={`${basePath}.${toName}`}>
       <Box
         sx={{
           display: 'flex',
@@ -120,17 +115,8 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
 
   const modelConfig = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === modelKey)!;
   const basePath = `flexibleModels.${modelKey}.slots.${slotIndex}` as const;
-  const gender = watch(`${basePath}.gender`);
-  const sameAgeRange = parseFormBoolean(watch(`${basePath}.same_age_range`));
   const recurringDays = watch(`${basePath}.recurring_days`);
   const customDates = watch(`${basePath}.custom_dates`) || [];
-
-  const isMixed = gender === 'Mixed';
-  const showSameAgeRange = isMixed;
-  const showSharedAgeField = isMixed && sameAgeRange;
-  const showBoysAgeRange = isMixed && !sameAgeRange;
-  const showGirlsAgeRange = isMixed && !sameAgeRange;
-  const showSingleGenderAgeRange = !isMixed;
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const addDatesRef = useRef<HTMLButtonElement>(null);
@@ -204,13 +190,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
-                onChange={(event) => {
-                  const nextGender = event.target.value;
-                  field.onChange(nextGender);
-                  if (nextGender !== 'Mixed') {
-                    setValue(`${basePath}.same_age_range`, false);
-                  }
-                }}
+                onChange={(event) => field.onChange(event.target.value)}
               >
                 {GENDER_OPTIONS.map((opt) => (
                   <MenuItem key={opt.value} value={opt.value}>
@@ -222,82 +202,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           />
         </Grid>
 
-        {showSameAgeRange ? (
-          <Grid xs={12}>
-            <RequiredLabel required sx={{ fontWeight: 700 }}>
-              {t('ADD_PROGRAM.SAME_AGE_RANGE')}
-            </RequiredLabel>
-            <Controller
-              name={`${basePath}.same_age_range`}
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  row
-                  value={parseFormBoolean(field.value) ? 'yes' : 'no'}
-                  onChange={(event) => {
-                    const isYes = event.target.value === 'yes';
-                    field.onChange(isYes);
-                    if (isYes) {
-                      setValue(`${basePath}.girls_age_from`, '');
-                      setValue(`${basePath}.girls_age_to`, '');
-                    }
-                  }}
-                >
-                  <FormControlLabel
-                    value="yes"
-                    control={
-                      <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
-                    }
-                    label={t('ADD_PROGRAM.YES')}
-                    sx={programRadioLabelSx}
-                  />
-                  <FormControlLabel
-                    value="no"
-                    control={
-                      <Radio sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }} />
-                    }
-                    label={t('ADD_PROGRAM.NO')}
-                    sx={programRadioLabelSx}
-                  />
-                </RadioGroup>
-              )}
-            />
-          </Grid>
-        ) : null}
-
-        {showSharedAgeField ? (
-          <SlotAgeRangeFields
-            basePath={basePath}
-            fromName="boys_age_from"
-            toName="boys_age_to"
-          />
-        ) : null}
-
-        {showBoysAgeRange ? (
-          <SlotAgeRangeFields
-            basePath={basePath}
-            fromName="boys_age_from"
-            toName="boys_age_to"
-            sectionLabel={t('ADD_PROGRAM.BOYS')}
-          />
-        ) : null}
-
-        {showGirlsAgeRange ? (
-          <SlotAgeRangeFields
-            basePath={basePath}
-            fromName="girls_age_from"
-            toName="girls_age_to"
-            sectionLabel={t('ADD_PROGRAM.GIRLS')}
-          />
-        ) : null}
-
-        {showSingleGenderAgeRange ? (
-          <SlotAgeRangeFields
-            basePath={basePath}
-            fromName={gender === 'Girls' ? 'girls_age_from' : 'boys_age_from'}
-            toName={gender === 'Girls' ? 'girls_age_to' : 'boys_age_to'}
-          />
-        ) : null}
+        <SlotAgeRangeFields basePath={basePath} fromName="age_from" toName="age_to" />
 
         {modelConfig.hasRecurring && modelConfig.hasFixStartDate ? (
           <Grid xs={12}>

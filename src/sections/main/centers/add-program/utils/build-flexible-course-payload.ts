@@ -44,31 +44,8 @@ function mapSlotDays(slot: FlexibleSlot) {
 }
 
 function mapSlotAges(slot: FlexibleSlot) {
-  const gender = normalizeGender(slot.gender);
-  const isMixed = gender === 'Mixed';
-
-  if (isMixed && slot.same_age_range) {
-    return {
-      age_from: slot.boys_age_from,
-      age_to: slot.boys_age_to,
-      same_age_range: true,
-    };
-  }
-
-  if (isMixed && !slot.same_age_range) {
-    return {
-      age_from: slot.boys_age_from,
-      age_to: slot.boys_age_to,
-      boys_age_from: slot.boys_age_from,
-      boys_age_to: slot.boys_age_to,
-      girls_age_from: slot.girls_age_from,
-      girls_age_to: slot.girls_age_to,
-      same_age_range: false,
-    };
-  }
-
-  const ageFrom = gender === 'Girls' ? slot.girls_age_from : slot.boys_age_from;
-  const ageTo = gender === 'Girls' ? slot.girls_age_to : slot.boys_age_to;
+  const ageFrom = slot.age_from?.trim() || slot.boys_age_from?.trim() || '';
+  const ageTo = slot.age_to?.trim() || slot.boys_age_to?.trim() || '';
 
   return {
     age_from: ageFrom,

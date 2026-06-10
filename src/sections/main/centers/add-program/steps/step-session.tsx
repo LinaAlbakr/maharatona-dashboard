@@ -31,7 +31,7 @@ function AgeRangeFields({ fromName, toName, sectionLabel }: AgeRangeFieldsProps)
   const { control } = useFormContext<ProgramFormValues>();
 
   return (
-    <Grid xs={12}>
+    <Grid xs={12} data-field={toName}>
       {sectionLabel ? (
         <RequiredLabel sx={{ mb: 0.75, fontWeight: 700 }}>{sectionLabel}</RequiredLabel>
       ) : null}
@@ -131,7 +131,7 @@ export default function StepSession() {
           />
         </Grid>
 
-        <Grid xs={12} md={6}>
+        <Grid xs={12} md={6} data-field="end_time">
           <RequiredLabel required>{t('ADD_PROGRAM.END_TIME')}</RequiredLabel>
           <Controller
             name="end_time"
@@ -260,7 +260,7 @@ export default function StepSession() {
           />
         ) : null}
 
-        <Grid xs={12}>
+        <Grid xs={12} data-field="seats">
           <RequiredLabel required>{t('ADD_PROGRAM.SEAT_CAPACITY')}</RequiredLabel>
           <Controller
             name="seats"

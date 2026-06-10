@@ -12,7 +12,33 @@ const numberField = () =>
     .required(requiredMsg)
     .test('is-number', requiredMsg, (value) => value !== '' && !Number.isNaN(Number(value)));
 
+const seatsMustBePositiveMsg = 'ADD_PROGRAM.SEATS_MUST_BE_GREATER_THAN_ZERO';
+
+const positiveNumberField = () =>
+  numberField().test(
+    'positive',
+    seatsMustBePositiveMsg,
+    (value) => value !== '' && Number(value) > 0
+  );
+
+const endTimeAfterStartMsg = 'ADD_PROGRAM.END_TIME_MUST_BE_AFTER_START_TIME';
+const ageToMustBeGreaterMsg = 'ADD_PROGRAM.AGE_TO_MUST_BE_GREATER_THAN_AGE_FROM';
+
 const timeField = () => yup.date().nullable().required(requiredMsg);
+
+const ageToField = (fromField: string) =>
+  numberField().test('age-order', ageToMustBeGreaterMsg, function validateAgeTo(to) {
+    const from = (this.parent as Record<string, string | undefined>)[fromField];
+    if (!from?.trim() || !to?.trim()) return true;
+    return Number(to) >= Number(from);
+  });
+
+const endTimeAfterStartTime = () =>
+  timeField().test('after-start', endTimeAfterStartMsg, function validateEndTime(endTime) {
+    const { start_time: startTime } = this.parent as { start_time?: Date | null };
+    if (!startTime || !endTime) return true;
+    return endTime.getTime() > startTime.getTime();
+  });
 
 const slotSchema = (opts: {
   hasPrice: boolean;
@@ -24,44 +50,21 @@ const slotSchema = (opts: {
     title_ar: yup.string(),
     title_en: yup.string(),
     gender: yup.string().required(requiredMsg),
-    same_age_range: yup.boolean().when('gender', {
-      is: 'Mixed',
-      then: (schema) => schema.required(requiredMsg),
-      otherwise: (schema) => schema,
-    }),
-    boys_age_from: yup.string().when(['gender', 'same_age_range'], {
-      is: (gender: string, same_age_range: boolean) =>
-        gender === 'Boys' || gender === 'Mixed',
-      then: () => numberField(),
-      otherwise: (schema) => schema,
-    }),
-    boys_age_to: yup.string().when(['gender', 'same_age_range'], {
-      is: (gender: string) => gender === 'Boys' || gender === 'Mixed',
-      then: () => numberField(),
-      otherwise: (schema) => schema,
-    }),
-    girls_age_from: yup.string().when(['gender', 'same_age_range'], {
-      is: (gender: string, same_age_range: boolean) =>
-        gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
-      then: () => numberField(),
-      otherwise: (schema) => schema,
-    }),
-    girls_age_to: yup.string().when(['gender', 'same_age_range'], {
-      is: (gender: string, same_age_range: boolean) =>
-        gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
-      then: () => numberField(),
-      otherwise: (schema) => schema,
-    }),
-    age_from: yup.string(),
-    age_to: yup.string(),
+    same_age_range: yup.boolean(),
+    boys_age_from: yup.string(),
+    boys_age_to: yup.string(),
+    girls_age_from: yup.string(),
+    girls_age_to: yup.string(),
+    age_from: numberField(),
+    age_to: ageToField('age_from'),
     selected_days: yup.array().when(['recurring_days'], {
       is: (recurring_days: boolean) => opts.hasRecurring ? recurring_days !== false : true,
       then: (schema) => schema.min(1, requiredMsg),
       otherwise: (schema) => schema,
     }),
     start_time: timeField(),
-    end_time: timeField(),
-    seat_capacity: numberField(),
+    end_time: endTimeAfterStartTime(),
+    seat_capacity: positiveNumberField(),
     price: opts.hasPrice ? numberField() : yup.string(),
     class_time:
       opts.hasTimeType && opts.timeType === 'fixed' ? numberField() : yup.string(),
@@ -109,7 +112,7 @@ const flexibleStep0Schema = yup.object({
 
 const fixedStep1Schema = yup.object({
   start_time: timeField(),
-  end_time: timeField(),
+  end_time: endTimeAfterStartTime(),
   gender: yup.string().required(requiredMsg),
   same_age_range: yup.boolean().when('gender', {
     is: 'Mixed',
@@ -124,7 +127,7 @@ const fixedStep1Schema = yup.object({
   }),
   boys_age_to: yup.string().when(['gender', 'same_age_range'], {
     is: (gender: string) => gender === 'Boys' || gender === 'Mixed',
-    then: () => numberField(),
+    then: () => ageToField('boys_age_from'),
     otherwise: (schema) => schema,
   }),
   girls_age_from: yup.string().when(['gender', 'same_age_range'], {
@@ -136,10 +139,10 @@ const fixedStep1Schema = yup.object({
   girls_age_to: yup.string().when(['gender', 'same_age_range'], {
     is: (gender: string, same_age_range: boolean) =>
       gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
-    then: () => numberField(),
+    then: () => ageToField('girls_age_from'),
     otherwise: (schema) => schema,
   }),
-  seats: numberField(),
+  seats: positiveNumberField(),
 });
 
 const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {

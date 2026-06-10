@@ -38,6 +38,8 @@ export default function ProgramStepper({ activeStep }: Props) {
       <Box
         sx={{
           display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
           width: '100%',
           position: 'relative',
           zIndex: 1,
@@ -53,10 +55,10 @@ export default function ProgramStepper({ activeStep }: Props) {
             <Box
               key={step.key}
               sx={{
-                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: isFirst ? 'flex-start' : isLast ? 'flex-end' : 'center',
+                flexShrink: 0,
               }}
             >
               <Box
