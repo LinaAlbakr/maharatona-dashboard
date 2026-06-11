@@ -14,7 +14,6 @@ import {
   FLEXIBLE_BOOKING_MODELS,
   FREE_BOOKING_COLOR,
   PROGRAM_SECTION_HEADING_COLOR,
-  PROGRAM_TEAL,
 } from '../constants';
 import { programStepHeadingSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
@@ -142,11 +141,6 @@ export default function BookingModelTabs({
         })}
       </Box>
 
-      {isTrialEnabled ? (
-        <Typography variant="caption" sx={{ mt: 1, display: 'block', color: PROGRAM_TEAL }}>
-          {t('ADD_PROGRAM.TRIAL_ENABLED')}
-        </Typography>
-      ) : null}
     </Box>
   );
 }

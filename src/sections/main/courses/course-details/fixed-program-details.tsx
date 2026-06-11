@@ -43,7 +43,7 @@ import {
   formatAgeYears,
   formatProgramDate,
   formatProgramTime,
-  getCourseImageUrl,
+  getCourseImageUrls,
   getDiscountedPrice,
   getLocalizedText,
   getSessionAgeDisplay,
@@ -198,9 +198,7 @@ export default function FixedProgramDetailsView({ course }: Props) {
   const discountedPrice = getDiscountedPrice(course);
   const sessionAges = getSessionAgeDisplay(course);
 
-  const images = (Array.isArray(course?.course_images) ? course.course_images : [])
-    .map((image: unknown) => getCourseImageUrl(image))
-    .filter(Boolean);
+  const images = getCourseImageUrls(course?.course_images);
   const questions = (course?.additional_questions || []).filter(
     (item: any) => item?.question_ar?.trim() || item?.question_en?.trim()
   );

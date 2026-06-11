@@ -576,7 +576,8 @@
     "PRICE_PER_MONTH": "Price (per month)",
     "FIX_START_DATE": "Fix Start Date",
     "SELECT_AT_LEAST_ONE_MODEL": "Please select at least one booking model",
-    "MULTI_MODEL_HINT": "Switch tabs to configure each booking model. Your data is kept when you change tabs."
+    "MULTI_MODEL_HINT": "You can select more than one booking model before proceeding.",
+    "SLOT_TITLE_PLACEHOLDER": "Evening group"
   },
   "PROGRAM_DETAILS": {
     "TITLE": "Program Details",

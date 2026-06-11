@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -42,6 +42,7 @@ import {
   mergeUniqueDates,
   removeDateGroup,
 } from '../utils/custom-dates';
+import { getDaysOffRestrictions } from '../utils/days-off-restrictions';
 
 type Props = {
   modelKey: FlexibleBookingModelKey;
@@ -121,6 +122,21 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
   const basePath = `flexibleModels.${modelKey}.slots.${slotIndex}` as const;
   const recurringDays = watch(`${basePath}.recurring_days`);
   const customDates = watch(`${basePath}.custom_dates`) || [];
+  const daysOffRecurring = watch('daysOffRecurring');
+  const daysOffCustom = watch('daysOffCustom');
+  const daysOffList = watch('daysOffList');
+  const datesOffList = watch('datesOffList');
+
+  const daysOffRestrictions = useMemo(
+    () =>
+      getDaysOffRestrictions({
+        daysOffRecurring,
+        daysOffCustom,
+        daysOffList,
+        datesOffList,
+      }),
+    [daysOffRecurring, daysOffCustom, daysOffList, datesOffList]
+  );
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const addDatesRef = useRef<HTMLButtonElement>(null);
@@ -165,7 +181,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               <TextField
                 {...field}
                 fullWidth
-                placeholder="Evening Classes"
+                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER')}
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
@@ -182,7 +198,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               <TextField
                 {...field}
                 fullWidth
-                placeholder="Evening Classes"
+                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER')}
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
@@ -435,6 +451,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 anchorEl={addDatesRef.current}
                 onClose={() => setDatePickerOpen(false)}
                 onConfirm={handleConfirmDates}
+                daysOffRestrictions={daysOffRestrictions}
               />
             </Box>
             {customDatesError ? (
@@ -451,7 +468,11 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <Box data-field={`${basePath}.selected_days`}>
-                  <DaySelector value={field.value || []} onChange={field.onChange} />
+                  <DaySelector
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    disabledDays={daysOffRestrictions.disabledWeekdays}
+                  />
                   {error ? (
                     <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
                       {t(String(error.message))}

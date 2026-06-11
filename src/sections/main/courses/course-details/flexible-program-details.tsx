@@ -35,7 +35,7 @@ import {
   getSlotsForModel,
   modelHasDataOnCourse,
 } from './flexible-utils';
-import { formatProgramDate, getCourseImageUrl, getLocalizedText } from './utils';
+import { formatProgramDate, getCourseImageUrls, getLocalizedText } from './utils';
 import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-program/types';
 
 type Props = {
@@ -60,9 +60,7 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
     }
   }, [course, activeModel]);
 
-  const images = (Array.isArray(course?.course_images) ? course.course_images : [])
-    .map((image: unknown) => getCourseImageUrl(image))
-    .filter(Boolean);
+  const images = getCourseImageUrls(course?.course_images);
   const packages = getPackagesForModel(course, activeModel);
   const slots = getSlotsForModel(course, activeModel);
 

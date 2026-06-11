@@ -13,39 +13,55 @@ import { useTranslate } from 'src/locales';
 
 import { PROGRAM_TEAL } from '../constants';
 import { programDatePickerDaySlotProps } from '../styles';
+import {
+  type DaysOffRestrictions,
+  isDateDisabledByDaysOff,
+} from '../utils/days-off-restrictions';
 
 type Props = {
   open: boolean;
   anchorEl: HTMLElement | null;
   onClose: () => void;
   onConfirm: (dates: Date[]) => void;
+  daysOffRestrictions?: DaysOffRestrictions;
 };
 
 function MultiSelectDay(
   props: PickersDayProps<Date> & {
     selectedDates: Date[];
     onToggle: (date: Date) => void;
+    daysOffRestrictions?: DaysOffRestrictions;
   }
 ) {
-  const { selectedDates, onToggle, day, outsideCurrentMonth, ...other } = props;
+  const { selectedDates, onToggle, daysOffRestrictions, day, outsideCurrentMonth, ...other } = props;
   const selected = selectedDates.some((date) => isSameDay(date, day));
+  const blockedByDaysOff =
+    daysOffRestrictions && isDateDisabledByDaysOff(day, daysOffRestrictions);
+  const isDisabled = Boolean(other.disabled || blockedByDaysOff);
 
   return (
     <PickersDay
       {...other}
       day={day}
       outsideCurrentMonth={outsideCurrentMonth}
-      selected={selected}
+      selected={selected && !isDisabled}
+      disabled={isDisabled}
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        if (!outsideCurrentMonth && !other.disabled) {
+        if (!outsideCurrentMonth && !isDisabled) {
           onToggle(day);
         }
       }}
       sx={{
         ...programDatePickerDaySlotProps.sx,
-        ...(selected
+        ...(isDisabled
+          ? {
+              opacity: 0.38,
+              pointerEvents: 'none',
+            }
+          : {}),
+        ...(selected && !isDisabled
           ? {
               bgcolor: `${PROGRAM_TEAL} !important`,
               color: 'common.white !important',
@@ -56,7 +72,13 @@ function MultiSelectDay(
   );
 }
 
-export default function MultiDateCalendarPopover({ open, anchorEl, onClose, onConfirm }: Props) {
+export default function MultiDateCalendarPopover({
+  open,
+  anchorEl,
+  onClose,
+  onConfirm,
+  daysOffRestrictions,
+}: Props) {
   const { t } = useTranslate();
   const [pendingDates, setPendingDates] = useState<Date[]>([]);
 
@@ -104,6 +126,7 @@ export default function MultiDateCalendarPopover({ open, anchorEl, onClose, onCo
               {...dayProps}
               selectedDates={pendingDates}
               onToggle={toggleDate}
+              daysOffRestrictions={daysOffRestrictions}
             />
           ),
         }}
