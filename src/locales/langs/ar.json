@@ -577,6 +577,7 @@
     "PRICE_PER_MONTH": "السعر (لكل شهر)",
     "FIX_START_DATE": "تاريخ بدء ثابت",
     "SELECT_AT_LEAST_ONE_MODEL": "يرجى اختيار نموذج حجز واحد على الاقل",
+    "TRIAL_CANNOT_COMBINE": "لا تدمج الحصص التجريبية",
     "MULTI_MODEL_HINT": "يمكنك اختيار أكثر من نموذج حجز قبل المتابعة.",
     "SLOT_TITLE_PLACEHOLDER": "فترة مسائية"
   },

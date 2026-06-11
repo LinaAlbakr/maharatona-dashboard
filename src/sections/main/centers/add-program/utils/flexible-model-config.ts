@@ -71,3 +71,30 @@ export const MAIN_FLEXIBLE_MODEL_KEYS: FlexibleBookingModelKey[] = [
   'weekly',
   'monthly',
 ];
+
+export function hasFlexibleTrialSlotData(model: FlexibleModelConfig | undefined): boolean {
+  if (!model) return false;
+  return (model.slots ?? []).some((slot) => isFlexibleSlotConfigured(slot));
+}
+
+export function hasFlexibleMainModelData(
+  flexibleModels: Record<FlexibleBookingModelKey, FlexibleModelConfig>
+): boolean {
+  return MAIN_FLEXIBLE_MODEL_KEYS.some((key) => {
+    const model = flexibleModels[key];
+    if (!model) return false;
+
+    const hasSlots = (model.slots ?? []).some((slot) => isFlexibleSlotConfigured(slot));
+    const hasPackages = (model.packages ?? []).some((pkg) => isFlexiblePackageConfigured(pkg));
+    return hasSlots || hasPackages;
+  });
+}
+
+export function hasTrialAndMainModelConflict(
+  flexibleModels: Record<FlexibleBookingModelKey, FlexibleModelConfig>
+): boolean {
+  return (
+    hasFlexibleTrialSlotData(flexibleModels.trial) &&
+    hasFlexibleMainModelData(flexibleModels)
+  );
+}

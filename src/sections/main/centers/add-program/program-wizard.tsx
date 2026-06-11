@@ -83,6 +83,21 @@ export default function ProgramWizard({
     } catch (error: any) {
       let firstPath: string | undefined;
 
+      const validationErrors = error?.inner?.length
+        ? error.inner
+        : error?.path
+          ? [error]
+          : [];
+
+      if (
+        validationErrors.some(
+          (item: any) => item.message === 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE'
+        ) ||
+        error?.message === 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE'
+      ) {
+        enqueueSnackbar(t('ADD_PROGRAM.TRIAL_CANNOT_COMBINE'), { variant: 'error' });
+      }
+
       if (error?.inner?.length) {
         error.inner.forEach((item: any, index: number) => {
           if (item.path) {

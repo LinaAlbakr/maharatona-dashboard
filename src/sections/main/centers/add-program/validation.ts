@@ -2,7 +2,10 @@ import * as yup from 'yup';
 
 import { FLEXIBLE_BOOKING_MODELS } from './constants';
 import type { BookingType, ProgramStep } from './types';
-import { getConfiguredFlexibleModelKeys } from './utils/flexible-model-config';
+import {
+  getConfiguredFlexibleModelKeys,
+  hasTrialAndMainModelConflict,
+} from './utils/flexible-model-config';
 
 const requiredMsg = 'LABEL.THIS_FIELD_IS_REQUIRED';
 
@@ -145,6 +148,14 @@ const fixedStep1Schema = yup.object({
 });
 
 const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
+  if (hasTrialAndMainModelConflict(flexibleModels)) {
+    return yup.object({
+      flexibleModels: yup
+        .mixed()
+        .test('trial-combine', 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE', () => false),
+    });
+  }
+
   const enabledKeys = getConfiguredFlexibleModelKeys(flexibleModels);
 
   if (enabledKeys.length === 0) {

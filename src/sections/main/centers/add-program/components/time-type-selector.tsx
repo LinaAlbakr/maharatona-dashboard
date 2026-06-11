@@ -80,13 +80,13 @@ export default function TimeTypeSelector({ value, onChange }: Props) {
                 px: 2,
                 borderRadius: '12px',
                 border: '1px solid',
-                borderColor: selected ? PROGRAM_SECTION_HEADING_COLOR : 'transparent',
-                bgcolor: FIELD_BORDER_COLOR,
+                borderColor: FIELD_BORDER_COLOR,
+                bgcolor: '#F5F5F5',
                 cursor: 'pointer',
                 outline: 'none',
                 fontFamily: 'inherit',
                 '&:hover': {
-                  borderColor: PROGRAM_SECTION_HEADING_COLOR,
+                  borderColor: FIELD_BORDER_COLOR,
                 },
               }}
             >

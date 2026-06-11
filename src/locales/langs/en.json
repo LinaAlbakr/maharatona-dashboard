@@ -576,6 +576,7 @@
     "PRICE_PER_MONTH": "Price (per month)",
     "FIX_START_DATE": "Fix Start Date",
     "SELECT_AT_LEAST_ONE_MODEL": "Please select at least one booking model",
+    "TRIAL_CANNOT_COMBINE": "Trial slots cannot be combined",
     "MULTI_MODEL_HINT": "You can select more than one booking model before proceeding.",
     "SLOT_TITLE_PLACEHOLDER": "Evening group"
   },

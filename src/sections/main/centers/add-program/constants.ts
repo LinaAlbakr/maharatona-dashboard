@@ -9,7 +9,7 @@ export const STEP_INACTIVE_COLOR = '#BABABA';
 export const FIELD_BORDER_COLOR = '#D9D9D9';
 export const FIELD_PLACEHOLDER_COLOR = '#A29F9D';
 export const ADD_BOX_TEXT_COLOR = '#8B8D91';
-export const ADD_BOX_BG_COLOR = '#8B8D9152';
+export const ADD_BOX_BG_COLOR = 'rgba(139, 141, 145, 0.14)';
 export const FREE_BOOKING_COLOR = '#CC3899';
 export const PROGRAM_FIELD_HEIGHT = 51;
 
