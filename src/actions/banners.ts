@@ -12,6 +12,12 @@ import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 import { Banner } from 'src/types/banners';
 
+/** Server actions run in Node — avoid `instanceof File` (not always defined). */
+function appendFormUploadFile(payload: FormData, value: FormDataEntryValue | null) {
+  if (!value || typeof value === 'string') return;
+  payload.append('file', value);
+}
+
 interface IParams {
   page?: number; // Optional, kept for backward compatibility
   limit: number;
@@ -124,10 +130,7 @@ export const newBanner = async (reqBody: FormData): Promise<any> => {
   try {
     // Remap form keys to API-required field names
     const payload = new FormData();
-    const imageCover = reqBody.get('image_cover');
-    if (imageCover instanceof File) {
-      payload.append('file', imageCover);
-    }
+    appendFormUploadFile(payload, reqBody.get('image_cover'));
     const mappings: Record<string, string> = {
       name_en: 'name_en',
       name_ar: 'name_ar',
@@ -171,10 +174,7 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
   try {
     // Remap form keys to API-required field names
     const payload = new FormData();
-    const imageCover = reqBody.get('image_cover');
-    if (imageCover instanceof File) {
-      payload.append('file', imageCover);
-    }
+    appendFormUploadFile(payload, reqBody.get('image_cover'));
     const mappings: Record<string, string> = {
       name_en: 'name_en',
       name_ar: 'name_ar',
@@ -182,8 +182,8 @@ export const editBanner = async (reqBody: FormData, bannerId: string): Promise<a
       order: 'order',
       price: 'price',
       advertisement_type: 'type',
-      description_ar: 'desc_ar',
-      description_en: 'desc_en',
+      desc_ar: 'desc_ar',
+      desc_en: 'desc_en',
       advertisement_status: 'advertisement_status',
     };
     Object.entries(mappings).forEach(([from, to]) => {
@@ -272,10 +272,7 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
     // Backend Multer is configured to accept the file field as "file" (not "media")
     const payload = new FormData();
 
-    const mediaFile = reqBody.get('media');
-    if (mediaFile instanceof File) {
-      payload.append('file', mediaFile);
-    }
+    appendFormUploadFile(payload, reqBody.get('media'));
 
     // Forward text fields exactly as backend expects in req.body
     const fieldId = reqBody.get('field_id');
