@@ -29,30 +29,32 @@ export default function FlexibleSlotDetailCard({
   variant = 'default',
 }: Props) {
   const { t } = useTranslate();
-  const title = getSlotTitle(slot, isArabic, t, index);
+  const title = getSlotTitle(slot, isArabic);
   const fields = getSlotDetailFields(modelKey, slot, t, isArabic);
   const cardSx = variant === 'trial' ? freeTrialSlotCardSx : { ...sessionNestedCardSx, mb: 2 };
 
   return (
     <Box sx={cardSx}>
-      <Box
-        sx={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 0.75,
-          bgcolor: 'rgba(43, 80, 156, 0.08)',
-          color: '#2B509C',
-          px: 1.5,
-          py: 0.75,
-          borderRadius: '8px',
-          fontSize: 14,
-          fontWeight: 600,
-          mb: 2,
-        }}
-      >
-        <SlotIcon />
-        {title}
-      </Box>
+      {title ? (
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.75,
+            bgcolor: 'rgba(43, 80, 156, 0.08)',
+            color: '#2B509C',
+            px: 1.5,
+            py: 0.75,
+            borderRadius: '8px',
+            fontSize: 14,
+            fontWeight: 600,
+            mb: 2,
+          }}
+        >
+          <SlotIcon />
+          {title}
+        </Box>
+      ) : null}
       <Box sx={detailGridSx}>
         {fields.map((field) => (
           <DetailField

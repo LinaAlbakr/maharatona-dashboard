@@ -14,6 +14,7 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { useTranslate } from 'src/locales';
 
 import { ClockIcon } from '../components/course-icons';
+import NumericTextField from '../components/numeric-text-field';
 import RequiredLabel from '../components/required-label';
 import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { programFieldSx, programRadioLabelSx } from '../styles';
@@ -51,13 +52,10 @@ function AgeRangeFields({ fromName, toName, sectionLabel }: AgeRangeFieldsProps)
             name={fromName}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
+              <NumericTextField
+                field={field}
+                error={error}
                 placeholder={t('ADD_PROGRAM.MINIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
               />
             )}
           />
@@ -71,13 +69,10 @@ function AgeRangeFields({ fromName, toName, sectionLabel }: AgeRangeFieldsProps)
             name={toName}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
+              <NumericTextField
+                field={field}
+                error={error}
                 placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
               />
             )}
           />

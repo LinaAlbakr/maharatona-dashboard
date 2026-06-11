@@ -197,6 +197,12 @@ export type SlotDetailField = {
 
 const slotHasFixedDuration = (slot: any) => Boolean(String(slot?.class_time ?? '').trim());
 
+const formatSlotDuration = (classTime: unknown, t: TFunction) => {
+  const value = String(classTime ?? '').trim();
+  if (!value) return '-';
+  return `\u200E${value} ${t('ADD_PROGRAM.MINUTES_PLACEHOLDER')}`;
+};
+
 const appendSlotAgeFields = (
   fields: SlotDetailField[],
   slot: any,
@@ -287,8 +293,8 @@ export const getSlotDetailFields = (
 
     if (slotHasFixedDuration(slot)) {
       fields.push({
-        label: t('PROGRAM_DETAILS.DURATION_MINUTES'),
-        value: slot?.class_time ?? '-',
+        label: t('ADD_PROGRAM.DURATION'),
+        value: formatSlotDuration(slot?.class_time, t),
       });
     }
 
@@ -304,8 +310,8 @@ export const getSlotDetailFields = (
 
     if (slotHasFixedDuration(slot)) {
       fields.push({
-        label: t('PROGRAM_DETAILS.DURATION_HOURS'),
-        value: slot?.class_time ?? '-',
+        label: t('ADD_PROGRAM.DURATION'),
+        value: formatSlotDuration(slot?.class_time, t),
       });
     }
 
@@ -356,5 +362,5 @@ export const getSlotDetailFields = (
   return fields;
 };
 
-export const getSlotTitle = (slot: any, isArabic: boolean, t: TFunction, index: number) =>
-  getLocalizedText(isArabic, slot?.title_ar, slot?.title_en, `${t('PROGRAM_DETAILS.SLOT')} ${index + 1}`);
+export const getSlotTitle = (slot: any, isArabic: boolean) =>
+  getLocalizedText(isArabic, slot?.title_ar, slot?.title_en, '');

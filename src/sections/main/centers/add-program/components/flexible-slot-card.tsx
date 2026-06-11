@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, type Control } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -24,14 +24,18 @@ import Iconify from 'src/components/iconify';
 import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
 import PriceVatLabel from './price-vat-label';
+import NumericTextField from './numeric-text-field';
 import RequiredLabel from './required-label';
 import MultiDateCalendarPopover from './multi-date-calendar-popover';
 import SelectedDateGroupTag from './selected-date-group-tag';
 import {
   ADD_BOX_TEXT_COLOR,
   FIELD_BORDER_COLOR,
+  FIELD_LABEL_COLOR,
+  FIELD_PLACEHOLDER_COLOR,
   FLEXIBLE_BOOKING_MODELS,
   GENDER_OPTIONS,
+  PROGRAM_FIELD_HEIGHT,
   PROGRAM_SECTION_HEADING_COLOR,
   PROGRAM_TEAL,
 } from '../constants';
@@ -57,6 +61,91 @@ type SlotAgeRangeFieldsProps = {
   toName: 'age_to';
 };
 
+type DurationFieldProps = {
+  name: `flexibleModels.${FlexibleBookingModelKey}.slots.${number}.class_time`;
+  control: Control<ProgramFormValues>;
+};
+
+function DurationField({ name, control }: DurationFieldProps) {
+  const { t } = useTranslate();
+  const minutesLabel = t('ADD_PROGRAM.MINUTES_PLACEHOLDER');
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState: { error } }) => {
+        const numericValue = String(field.value ?? '').replace(/\D/g, '');
+        const durationTextSx = {
+          fontSize: 14,
+          color: FIELD_LABEL_COLOR,
+          lineHeight: 1,
+          fontFamily: 'inherit',
+        };
+
+        return (
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.75,
+                boxSizing: 'border-box',
+                width: 1,
+                height: PROGRAM_FIELD_HEIGHT,
+                px: 1.75,
+                borderRadius: '12px',
+                border: '1px solid',
+                borderColor: error ? 'error.main' : FIELD_BORDER_COLOR,
+                bgcolor: 'background.paper',
+              }}
+            >
+              <Box
+                component="input"
+                type="text"
+                inputMode="numeric"
+                name={field.name}
+                ref={field.ref}
+                value={numericValue}
+                onBlur={field.onBlur}
+                onChange={(event) => {
+                  field.onChange(event.target.value.replace(/\D/g, ''));
+                }}
+                placeholder={numericValue ? undefined : minutesLabel}
+                sx={{
+                  border: 'none',
+                  outline: 'none',
+                  bgcolor: 'transparent',
+                  p: 0,
+                  m: 0,
+                  flex: numericValue ? '0 0 auto' : 1,
+                  width: numericValue ? `${Math.max(numericValue.length, 1)}ch` : 1,
+                  minWidth: 0,
+                  ...durationTextSx,
+                  '&::placeholder': {
+                    color: FIELD_PLACEHOLDER_COLOR,
+                    opacity: 1,
+                  },
+                }}
+              />
+              {numericValue ? (
+                <Typography component="span" sx={{ ...durationTextSx, flexShrink: 0 }}>
+                  {minutesLabel}
+                </Typography>
+              ) : null}
+            </Box>
+            {error ? (
+              <Typography sx={{ color: 'error.main', fontSize: 12, mt: 0.5, mx: 1.75 }}>
+                {t(String(error.message))}
+              </Typography>
+            ) : null}
+          </Box>
+        );
+      }}
+    />
+  );
+}
+
 function SlotAgeRangeFields({ basePath, fromName, toName }: SlotAgeRangeFieldsProps) {
   const { t } = useTranslate();
   const { control } = useFormContext<ProgramFormValues>();
@@ -79,13 +168,10 @@ function SlotAgeRangeFields({ basePath, fromName, toName }: SlotAgeRangeFieldsPr
             name={`${basePath}.${fromName}`}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
+              <NumericTextField
+                field={field}
+                error={error}
                 placeholder={t('ADD_PROGRAM.MINIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
               />
             )}
           />
@@ -98,13 +184,10 @@ function SlotAgeRangeFields({ basePath, fromName, toName }: SlotAgeRangeFieldsPr
             name={`${basePath}.${toName}`}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
+              <NumericTextField
+                field={field}
+                error={error}
                 placeholder={t('ADD_PROGRAM.MAXIMUM')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
               />
             )}
           />
@@ -544,20 +627,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           <>
             <Grid xs={12} md={6}>
               <RequiredLabel required>{t('ADD_PROGRAM.DURATION')}</RequiredLabel>
-              <Controller
-                name={`${basePath}.class_time`}
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    placeholder={t('ADD_PROGRAM.MINUTES_PLACEHOLDER')}
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
+              <DurationField name={`${basePath}.class_time`} control={control} />
             </Grid>
 
             <Grid xs={12} md={6}>
