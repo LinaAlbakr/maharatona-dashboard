@@ -20,6 +20,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { IBanner, IBannerCenter } from 'src/types/banners';
 
 import { BannerCenterDialog } from './banner-center-dialog';
+import { getPackageAdTypeLabel } from '../package-ad-type';
 
 type props = {
   banners?: IBannerCenter[];
@@ -114,7 +115,7 @@ const SingleBannerView = ({ data,  banner }: Readonly<props>) => {
               <Typography fontWeight="bold" color="primary.dark" variant="subtitle2" sx={{ mb: 1 }}>
                 {t('LABEL.CENTER_TYPE')}
               </Typography>
-              {t(`LABEL.${banner?.advertisementType}`) || '- - - -'}
+              {getPackageAdTypeLabel(banner?.advertisementType ?? '', t) || '- - - -'}
               <br />
               <br />
             </Stack>

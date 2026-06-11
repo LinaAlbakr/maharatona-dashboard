@@ -256,6 +256,8 @@
     "NUMBER_OF_CENTERS": "Number of Centers",
     "BOTH": "Both",
     "MAIN": "Main",
+    "PACKAGE_TYPE_HOMEPAGE": "Homepage",
+    "PACKAGE_TYPE_CATEGORY": "Category",
     "WEEKS": "Weeks",
     "DESCRIPTION_IN_ARABIC": "Description in arabic",
     "DESCRIPTION_IN_ENGLISH": "Description in english",

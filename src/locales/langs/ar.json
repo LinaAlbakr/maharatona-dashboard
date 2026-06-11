@@ -262,6 +262,8 @@
     "NUMBER_OF_CENTERS": "عدد المراكز",
     "BOTH": "كلاهما",
     "MAIN": "الصفحة الرئيسية",
+    "PACKAGE_TYPE_HOMEPAGE": "الصفحة الرئيسية",
+    "PACKAGE_TYPE_CATEGORY": "الفئة",
     "WEEKS": "اسابيع",
     "DESCRIPTION_IN_ARABIC": "الوصف باللغة العربية",
     "DESCRIPTION_IN_ENGLISH": "الوصف باللغة الانجليزية",

@@ -40,6 +40,7 @@ import { Banner } from 'src/types/banners';
 
 import FileManagerNewFolderDialog from './add-banner';
 import { NewEditBannerDialog } from './new-edit-banner-dialog';
+import { getPackageAdTypeLabel } from './package-ad-type';
 
 type props = {
   banners: Banner[];
@@ -283,9 +284,7 @@ const BannersView = ({ banners, count, fieldsName }: Readonly<props>) => {
           ]}
           customRender={{
             advertisementType: (item) =>
-              item.advertisementType === 'FIELD'
-                ? t(`LABEL.${item.advertisementType}S`)
-                : t(`LABEL.${item.advertisementType}`),
+              getPackageAdTypeLabel(item.advertisementType, t),
             price: (item) => (
               <>
                 {Math.floor(+item.price)}{' '}
