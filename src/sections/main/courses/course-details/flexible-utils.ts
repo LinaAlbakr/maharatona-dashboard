@@ -195,6 +195,8 @@ export type SlotDetailField = {
   value: React.ReactNode;
 };
 
+const slotHasFixedDuration = (slot: any) => Boolean(String(slot?.class_time ?? '').trim());
+
 const appendSlotAgeFields = (
   fields: SlotDetailField[],
   slot: any,
@@ -278,35 +280,39 @@ export const getSlotDetailFields = (
   );
 
   if (modelKey === 'minutes') {
-    fields.push(
-      {
-        label: t('PROGRAM_DETAILS.PRICE_PER_MINUTE'),
-        value: slot?.price ?? '-',
-      },
-      {
+    fields.push({
+      label: t('PROGRAM_DETAILS.PRICE_PER_MINUTE'),
+      value: slot?.price ?? '-',
+    });
+
+    if (slotHasFixedDuration(slot)) {
+      fields.push({
         label: t('PROGRAM_DETAILS.DURATION_MINUTES'),
         value: slot?.class_time ?? '-',
-      },
-      {
-        label: t('ADD_PROGRAM.SEAT_CAPACITY'),
-        value: slot?.seat_capacity ?? '-',
-      }
-    );
+      });
+    }
+
+    fields.push({
+      label: t('ADD_PROGRAM.SEAT_CAPACITY'),
+      value: slot?.seat_capacity ?? '-',
+    });
   } else if (modelKey === 'hourly') {
-    fields.push(
-      {
-        label: t('PROGRAM_DETAILS.PRICE_PER_HOUR'),
-        value: slot?.price ?? '-',
-      },
-      {
+    fields.push({
+      label: t('PROGRAM_DETAILS.PRICE_PER_HOUR'),
+      value: slot?.price ?? '-',
+    });
+
+    if (slotHasFixedDuration(slot)) {
+      fields.push({
         label: t('PROGRAM_DETAILS.DURATION_HOURS'),
         value: slot?.class_time ?? '-',
-      },
-      {
-        label: t('ADD_PROGRAM.SEAT_CAPACITY'),
-        value: slot?.seat_capacity ?? '-',
-      }
-    );
+      });
+    }
+
+    fields.push({
+      label: t('ADD_PROGRAM.SEAT_CAPACITY'),
+      value: slot?.seat_capacity ?? '-',
+    });
   } else if (modelKey === 'daily') {
     fields.push(
       {

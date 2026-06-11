@@ -3,7 +3,6 @@ import { isValid, parse } from 'date-fns';
 import {
   createDefaultFlexibleModels,
   EMPTY_DISCOUNT_GROUP,
-  EMPTY_FLEXIBLE_PACKAGE,
   EMPTY_FLEXIBLE_SLOT,
   EMPTY_MATERIAL,
   EMPTY_QUESTION,
@@ -159,7 +158,7 @@ function mapFlexibleModels(course: Record<string, unknown>): Record<FlexibleBook
               price: str(record.price ?? ''),
             };
           })
-        : [{ ...EMPTY_FLEXIBLE_PACKAGE }],
+        : [],
       slots: slots.length
         ? slots.map((slot) => mapApiSlotToForm(slot as Record<string, unknown>, key))
         : [{ ...EMPTY_FLEXIBLE_SLOT }],

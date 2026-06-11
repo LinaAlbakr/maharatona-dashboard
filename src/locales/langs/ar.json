@@ -580,7 +580,9 @@
     "TRIAL_CANNOT_COMBINE": "لا تدمج الحصص التجريبية",
     "MULTI_MODEL_HINT": "يمكنك اختيار أكثر من نموذج حجز قبل المتابعة.",
     "SLOT_TITLE_PLACEHOLDER_AR": "فترة مسائية",
-    "SLOT_TITLE_PLACEHOLDER_EN": "Evening group"
+    "SLOT_TITLE_PLACEHOLDER_EN": "Evening group",
+    "errorMinClassTime60": "أدخل مدة لا تقل عن 60 دقيقة",
+    "errorTimeIncrement15": "اختر مدة بمضاعفات 15 دقيقة"
   },
   "PROGRAM_DETAILS": {
     "TITLE": "تفاصيل البرنامج",

@@ -18,6 +18,7 @@ import { applyDiscountFields } from './build-discount-fields';
 import {
   getConfiguredFlexibleModelKeys,
   isFlexibleModelConfigured,
+  isFlexiblePackageConfigured,
   isFlexibleSlotConfigured,
   isTrialBookingActive,
 } from './flexible-model-config';
@@ -109,12 +110,14 @@ function buildPackages(values: ProgramFormValues) {
     const model = values.flexibleModels[key];
     if (!isFlexibleModelConfigured(model, key)) return;
 
-    packageMap[key] = (model.packages ?? []).map((pkg) => ({
-      title_ar: pkg.title_ar,
-      title_en: pkg.title_en,
-      price: pkg.price,
-      number_of_classes: pkg.number_of_classes,
-    }));
+    packageMap[key] = (model.packages ?? [])
+      .filter(isFlexiblePackageConfigured)
+      .map((pkg) => ({
+        title_ar: pkg.title_ar,
+        title_en: pkg.title_en,
+        price: pkg.price,
+        number_of_classes: pkg.number_of_classes,
+      }));
   });
 
   return packageMap;

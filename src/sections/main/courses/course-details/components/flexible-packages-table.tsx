@@ -7,7 +7,7 @@ import { useTranslate } from 'src/locales';
 
 import {
   detailValueSx,
-  specificDiscountCardSx,
+  sessionNestedCardSx,
   specificDiscountTableHeaderCellSx,
   specificDiscountTableHeaderSx,
   specificDiscountTableRowSx,
@@ -32,16 +32,20 @@ export default function FlexiblePackagesTable({ packages, isArabic }: Props) {
 
   if (!packages.length) return null;
 
+  const packagesTableGridSx = {
+    gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' },
+  };
+
   return (
-    <Box sx={specificDiscountCardSx}>
-      <Box sx={{ ...specificDiscountTableHeaderSx, gridTemplateColumns: '1.2fr 1fr 1fr' }}>
-        <Typography sx={specificDiscountTableHeaderCellSx}>
+    <Box sx={sessionNestedCardSx}>
+      <Box sx={{ ...specificDiscountTableHeaderSx, ...packagesTableGridSx }}>
+        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'left' }}>
           {t('PROGRAM_DETAILS.PACKAGE_TITLE')}
         </Typography>
-        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'center' }}>
+        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'left' }}>
           {t('PROGRAM_DETAILS.NO_OF_SESSIONS')}
         </Typography>
-        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'right' }}>
+        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'left' }}>
           {t('LABEL.PRICE')}
         </Typography>
       </Box>
@@ -51,18 +55,14 @@ export default function FlexiblePackagesTable({ packages, isArabic }: Props) {
           key={index}
           sx={{
             ...specificDiscountTableRowSx,
-            gridTemplateColumns: '1.2fr 1fr 1fr',
+            ...packagesTableGridSx,
           }}
         >
           <Typography sx={detailValueSx}>
             {getLocalizedText(isArabic, pkg.title_ar, pkg.title_en)}
           </Typography>
-          <Typography sx={{ ...detailValueSx, textAlign: 'center' }}>
-            {pkg.number_of_classes ?? '-'}
-          </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <PriceValue amount={pkg.price} />
-          </Box>
+          <Typography sx={detailValueSx}>{pkg.number_of_classes ?? '-'}</Typography>
+          <PriceValue amount={pkg.price} />
         </Box>
       ))}
     </Box>

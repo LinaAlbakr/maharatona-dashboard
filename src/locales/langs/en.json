@@ -579,7 +579,9 @@
     "TRIAL_CANNOT_COMBINE": "Trial slots cannot be combined",
     "MULTI_MODEL_HINT": "You can select more than one booking model before proceeding.",
     "SLOT_TITLE_PLACEHOLDER_AR": "فترة مسائية",
-    "SLOT_TITLE_PLACEHOLDER_EN": "Evening group"
+    "SLOT_TITLE_PLACEHOLDER_EN": "Evening group",
+    "errorMinClassTime60": "Enter a duration of at least 60 minutes",
+    "errorTimeIncrement15": "Choose a duration in 15-minute increments"
   },
   "PROGRAM_DETAILS": {
     "TITLE": "Program Details",

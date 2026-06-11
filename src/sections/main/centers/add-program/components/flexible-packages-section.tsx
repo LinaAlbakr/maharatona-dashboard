@@ -114,13 +114,11 @@ export default function FlexiblePackagesSection({ modelKey }: Props) {
             </Grid>
           </Grid>
 
-          {fields.length > 1 ? (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-              <IconButton onClick={() => remove(index)} sx={{ p: 0.75 }}>
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          ) : null}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+            <IconButton onClick={() => remove(index)} sx={{ p: 0.75 }}>
+              <DeleteIcon />
+            </IconButton>
+          </Box>
         </Box>
       ))}
 

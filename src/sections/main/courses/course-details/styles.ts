@@ -12,6 +12,11 @@ export const detailCardSx = {
   mb: 2.5,
 };
 
+export const sessionNestedCardSx = {
+  ...detailCardSx,
+  mb: 0,
+};
+
 export const detailSectionTitleSx = {
   color: '#3CB8BB',
   fontWeight: 700,
@@ -214,6 +219,7 @@ export const specificDiscountTableHeaderCellSx = {
   fontWeight: 600,
   fontSize: 16,
   lineHeight: 1.4,
+  textAlign: 'center',
 };
 
 export const specificDiscountTableRowSx = {
@@ -230,4 +236,5 @@ export const specificDiscountTableValueSx = {
   fontWeight: 400,
   fontSize: 14,
   lineHeight: 1.6,
+  textAlign: 'center',
 };

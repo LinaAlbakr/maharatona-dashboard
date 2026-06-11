@@ -8,7 +8,7 @@ import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-prog
 
 import { SlotIcon } from 'src/sections/main/centers/add-program/components/course-icons';
 
-import { detailCardSx, detailGridSx, freeTrialSlotCardSx } from '../styles';
+import { detailGridSx, freeTrialSlotCardSx, sessionNestedCardSx } from '../styles';
 import { getSlotDetailFields, getSlotTitle } from '../flexible-utils';
 import DetailField from './detail-field';
 import PriceValue from './price-value';
@@ -31,7 +31,7 @@ export default function FlexibleSlotDetailCard({
   const { t } = useTranslate();
   const title = getSlotTitle(slot, isArabic, t, index);
   const fields = getSlotDetailFields(modelKey, slot, t, isArabic);
-  const cardSx = variant === 'trial' ? freeTrialSlotCardSx : { ...detailCardSx, mb: 2 };
+  const cardSx = variant === 'trial' ? freeTrialSlotCardSx : { ...sessionNestedCardSx, mb: 2 };
 
   return (
     <Box sx={cardSx}>

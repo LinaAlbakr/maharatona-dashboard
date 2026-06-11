@@ -117,7 +117,7 @@ export const EMPTY_FLEXIBLE_SLOT = {
 export const createEmptyFlexibleModel = (): FlexibleModelConfig => ({
   enabled: false,
   timeType: 'open',
-  packages: [{ ...EMPTY_FLEXIBLE_PACKAGE }],
+  packages: [],
   slots: [{ ...EMPTY_FLEXIBLE_SLOT }],
 });
 

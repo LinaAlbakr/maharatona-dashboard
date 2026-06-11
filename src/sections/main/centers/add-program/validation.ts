@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 import { FLEXIBLE_BOOKING_MODELS } from './constants';
-import type { BookingType, ProgramStep } from './types';
+import type { BookingType, FlexibleBookingModelKey, ProgramStep } from './types';
 import {
   getConfiguredFlexibleModelKeys,
   hasTrialAndMainModelConflict,
@@ -44,7 +44,19 @@ const endTimeAfterStartTime = () =>
     return endTime.getTime() > startTime.getTime();
   });
 
+const hourlyClassTimeField = () =>
+  numberField()
+    .test('min-60', 'ADD_PROGRAM.errorMinClassTime60', (value) => {
+      if (!value?.trim()) return true;
+      return Number(value) >= 60;
+    })
+    .test('increment-15', 'ADD_PROGRAM.errorTimeIncrement15', (value) => {
+      if (!value?.trim()) return true;
+      return Number(value) % 15 === 0;
+    });
+
 const slotSchema = (opts: {
+  modelKey?: FlexibleBookingModelKey;
   hasPrice: boolean;
   hasTimeType?: boolean;
   timeType?: string;
@@ -71,7 +83,11 @@ const slotSchema = (opts: {
     seat_capacity: positiveNumberField(),
     price: opts.hasPrice ? numberField() : yup.string(),
     class_time:
-      opts.hasTimeType && opts.timeType === 'fixed' ? numberField() : yup.string(),
+      opts.hasTimeType && opts.timeType === 'fixed'
+        ? opts.modelKey === 'hourly'
+          ? hourlyClassTimeField()
+          : numberField()
+        : yup.string(),
     custom_dates: yup.array().when(['recurring_days'], {
       is: (recurring_days: boolean) => opts.hasRecurring && recurring_days === false,
       then: (schema) => schema.min(1, requiredMsg),
@@ -79,12 +95,23 @@ const slotSchema = (opts: {
     }),
   });
 
-const packageSchema = yup.object({
-  title_ar: yup.string().required(requiredMsg),
-  title_en: yup.string().required(requiredMsg),
-  number_of_classes: numberField(),
-  price: numberField(),
-});
+const packageSchema = yup
+  .object({
+    title_ar: yup.string(),
+    title_en: yup.string(),
+    number_of_classes: yup.string(),
+    price: yup.string(),
+  })
+  .test('complete-or-empty', requiredMsg, (row) => {
+    const titleAr = row?.title_ar?.trim() ?? '';
+    const titleEn = row?.title_en?.trim() ?? '';
+    const sessions = row?.number_of_classes?.trim() ?? '';
+    const price = row?.price?.trim() ?? '';
+    const anyFilled = Boolean(titleAr || titleEn || sessions || price);
+    if (!anyFilled) return true;
+    if (!titleAr || !titleEn || !sessions || !price) return false;
+    return !Number.isNaN(Number(sessions)) && !Number.isNaN(Number(price));
+  });
 
 const fixedStep0Schema = yup.object({
   courseImages: yup.array().min(1, requiredMsg),
@@ -174,12 +201,13 @@ const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
           key,
           yup.object({
             packages: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasPackages
-              ? yup.array().of(packageSchema).min(1)
+              ? yup.array().of(packageSchema)
               : yup.array(),
             slots: yup
               .array()
               .of(
                 slotSchema({
+                  modelKey: key as FlexibleBookingModelKey,
                   hasPrice: key !== 'trial',
                   hasTimeType: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasTimeType,
                   timeType: flexibleModels[key]?.timeType,

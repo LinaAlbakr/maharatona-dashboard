@@ -172,7 +172,9 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
           <>
             {packages.length > 0 && (
               <Box sx={{ mb: 3 }}>
-                <Typography sx={questionsSubsectionTitleSx}>
+                <Typography
+                  sx={isFreeTrial ? detailSubsectionTitleSx : questionsSubsectionTitleSx}
+                >
                   {t('PROGRAM_DETAILS.PACKAGES')}
                 </Typography>
                 <FlexiblePackagesTable packages={packages} isArabic={isArabic} />
@@ -181,7 +183,9 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
 
             {slots.length > 0 && (
               <Box>
-                <Typography sx={isFreeTrial ? detailSubsectionTitleSx : questionsSubsectionTitleSx}>
+                <Typography
+                  sx={isFreeTrial ? detailSubsectionTitleSx : questionsSubsectionTitleSx}
+                >
                   {t('PROGRAM_DETAILS.SLOTS')}
                 </Typography>
                 {slots.map((slot: any, index: number) => (

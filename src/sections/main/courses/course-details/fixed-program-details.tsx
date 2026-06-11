@@ -128,7 +128,7 @@ function SpecificDiscountCard({
         <Typography sx={specificDiscountTableHeaderCellSx}>
           {t('ADD_PROGRAM.NO_OF_KIDS')}
         </Typography>
-        <Typography sx={{ ...specificDiscountTableHeaderCellSx, textAlign: 'right' }}>
+        <Typography sx={specificDiscountTableHeaderCellSx}>
           {t('ADD_PROGRAM.DISCOUNT_PERCENT')}
         </Typography>
       </Box>
@@ -138,7 +138,7 @@ function SpecificDiscountCard({
           <Typography sx={specificDiscountTableValueSx}>
             {row.no_of_kids ?? '-'}
           </Typography>
-          <Typography sx={{ ...specificDiscountTableValueSx, textAlign: 'right' }}>
+          <Typography sx={specificDiscountTableValueSx}>
             {row.discount != null ? `${row.discount}%` : '-'}
           </Typography>
         </Box>
