@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -25,9 +26,11 @@ import {
   EMPTY_DISCOUNT_ROW,
   PROGRAM_FIELD_HEIGHT,
   PROGRAM_TEAL,
+  STEP_INACTIVE_COLOR,
 } from '../constants';
 import {
   dashedAddButtonSx,
+  disabledProgramSectionSx,
   innerCardSx,
   programFieldSx,
   programItemCardSx,
@@ -35,13 +38,23 @@ import {
   programStepHeadingSx,
   programSwitchSx,
 } from '../styles';
-import type { FixedProgramFormValues } from '../types';
+import type { ProgramFormValues } from '../types';
+import { isTrialBookingActive } from '../utils/flexible-model-config';
+import { applyTrialBookingSideEffects } from '../utils/trial-booking-side-effects';
 
 export default function StepDiscount() {
   const { t } = useTranslate();
-  const { control, watch, setValue } = useFormContext<FixedProgramFormValues>();
+  const { control, watch, setValue } = useFormContext<ProgramFormValues>();
+  const bookingType = watch('bookingType');
+  const flexibleModels = watch('flexibleModels');
+  const isTrialActive = isTrialBookingActive(bookingType, flexibleModels);
   const enableDiscount = watch('enableDiscount');
   const discountType = watch('discount_type');
+
+  useEffect(() => {
+    if (!isTrialActive) return;
+    applyTrialBookingSideEffects(setValue);
+  }, [isTrialActive, setValue]);
 
   const { fields: discountGroups, append: appendDiscountGroup } = useFieldArray({
     control,
@@ -49,15 +62,24 @@ export default function StepDiscount() {
   });
 
   return (
-    <Box>
+    <Box sx={isTrialActive ? disabledProgramSectionSx : undefined}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-        <Typography sx={{ ...programStepHeadingSx, mb: 0 }}>{t('ADD_PROGRAM.ENABLE_DISCOUNT')}</Typography>
+        <Typography
+          sx={{
+            ...programStepHeadingSx,
+            mb: 0,
+            ...(isTrialActive ? { color: STEP_INACTIVE_COLOR } : {}),
+          }}
+        >
+          {t('ADD_PROGRAM.ENABLE_DISCOUNT')}
+        </Typography>
         <Controller
           name="enableDiscount"
           control={control}
           render={({ field }) => (
             <Switch
               checked={field.value}
+              disabled={isTrialActive}
               onChange={(event) => {
                 const checked = event.target.checked;
                 field.onChange(checked);
@@ -72,7 +94,7 @@ export default function StepDiscount() {
         />
       </Box>
 
-      {enableDiscount ? (
+      {enableDiscount && !isTrialActive ? (
         <Box>
           <Controller
             name="discount_type"
@@ -204,7 +226,7 @@ export default function StepDiscount() {
 
 function DiscountRows({ groupIndex }: { groupIndex: number }) {
   const { t } = useTranslate();
-  const { control } = useFormContext<FixedProgramFormValues>();
+  const { control } = useFormContext<ProgramFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,

@@ -19,6 +19,7 @@ import {
   getConfiguredFlexibleModelKeys,
   isFlexibleModelConfigured,
   isFlexibleSlotConfigured,
+  isTrialBookingActive,
 } from './flexible-model-config';
 
 const PACKAGE_KEYS: FlexibleBookingModelKey[] = [
@@ -139,14 +140,16 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
       isYesNo: option.isYesNo,
       required: option.required,
     })),
-    addOnMaterials: values.addOnMaterials.map((material) => ({
-      name_ar: material.name_ar,
-      name_en: material.name_en,
-      desc_ar: material.desc_ar,
-      desc_en: material.desc_en,
-      price: material.price,
-      required: material.required,
-    })),
+    addOnMaterials: isTrialBookingActive(values.bookingType, values.flexibleModels)
+      ? []
+      : values.addOnMaterials.map((material) => ({
+          name_ar: material.name_ar,
+          name_en: material.name_en,
+          desc_ar: material.desc_ar,
+          desc_en: material.desc_en,
+          price: material.price,
+          required: material.required,
+        })),
     package: buildPackages(values),
   };
 

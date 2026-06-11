@@ -13,9 +13,11 @@ import Iconify from 'src/components/iconify';
 
 import BookingModelTabs from '../components/booking-model-tabs';
 import FlexibleModelSessionContent from '../components/flexible-model-session-content';
-import { FIELD_LABEL_COLOR, PROGRAM_SECTION_HEADING_COLOR } from '../constants';
+import { EMPTY_MATERIAL, FIELD_LABEL_COLOR, PROGRAM_SECTION_HEADING_COLOR } from '../constants';
+import { applyTrialBookingSideEffects } from '../utils/trial-booking-side-effects';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 import {
+  getDefaultFlexibleSessionModel,
   hasFlexibleMainModelData,
   hasFlexibleTrialSlotData,
 } from '../utils/flexible-model-config';
@@ -30,7 +32,9 @@ export default function StepFlexibleSession() {
   } = useFormContext<ProgramFormValues>();
   const flexibleModels = watch('flexibleModels');
 
-  const [activeModel, setActiveModel] = useState<FlexibleBookingModelKey>('minutes');
+  const [activeModel, setActiveModel] = useState<FlexibleBookingModelKey>(() =>
+    getDefaultFlexibleSessionModel(flexibleModels)
+  );
 
   const showTrialCombineError = useCallback(() => {
     enqueueSnackbar(t('ADD_PROGRAM.TRIAL_CANNOT_COMBINE'), { variant: 'error' });
@@ -54,8 +58,9 @@ export default function StepFlexibleSession() {
       next[key] = { ...next[key], enabled: key === 'trial' };
     });
     updateFlexibleModels(next);
+    applyTrialBookingSideEffects(setValue);
     setActiveModel('trial');
-  }, [flexibleModels, showTrialCombineError, updateFlexibleModels]);
+  }, [flexibleModels, setValue, showTrialCombineError, updateFlexibleModels]);
 
   const handleSelectMainModel = useCallback(
     (modelKey: FlexibleBookingModelKey) => {
@@ -65,8 +70,12 @@ export default function StepFlexibleSession() {
       }
 
       const next = { ...flexibleModels };
+      const wasTrialActive = next.trial.enabled;
       next.trial = { ...next.trial, enabled: false };
       updateFlexibleModels(next);
+      if (wasTrialActive) {
+        setValue('addOnMaterials', [{ ...EMPTY_MATERIAL }], { shouldDirty: true });
+      }
       setActiveModel(modelKey);
     },
     [flexibleModels, showTrialCombineError, updateFlexibleModels]

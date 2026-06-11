@@ -114,6 +114,12 @@ export const programStepHeadingSx = {
   lineHeight: 1.3,
 };
 
+export const disabledProgramSectionSx = {
+  opacity: 0.38,
+  pointerEvents: 'none',
+  userSelect: 'none',
+};
+
 export const dashedAddButtonSx = {
   borderStyle: 'dashed',
   borderColor: ADD_BOX_TEXT_COLOR,

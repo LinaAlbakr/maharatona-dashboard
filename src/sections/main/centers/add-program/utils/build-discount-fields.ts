@@ -1,4 +1,5 @@
 import type { ProgramFormValues } from '../types';
+import { isTrialBookingActive } from './flexible-model-config';
 
 function buildSpecificDiscounts(values: ProgramFormValues) {
   return values.discount.map((group) => ({
@@ -18,7 +19,7 @@ export type DiscountFields = {
 };
 
 export function buildDiscountFields(values: ProgramFormValues): DiscountFields {
-  if (!values.enableDiscount) {
+  if (!values.enableDiscount || isTrialBookingActive(values.bookingType, values.flexibleModels)) {
     return {
       discount_type: 'total',
       discount_amount: '0',

@@ -1,4 +1,7 @@
-import { convertTime24to12, fDate } from 'src/utils/format-time';
+import { format } from 'date-fns';
+import { enUS } from 'date-fns/locale';
+
+import { convertTime24to12 } from 'src/utils/format-time';
 
 export const getDiscountedPrice = (course: any): number | null => {
   const basePrice = Number(course?.price ?? 0);
@@ -15,9 +18,19 @@ export const getDiscountedPrice = (course: any): number | null => {
   return Math.max(0, Math.round(discounted * 100) / 100);
 };
 
+const toValidProgramDate = (date: string | Date | null | undefined): Date | null => {
+  if (date == null || date === '') return null;
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
 export const formatProgramDate = (date: string | Date | null | undefined) => {
-  if (!date) return '-';
-  return fDate(date, 'd MMM yyyy');
+  const parsed = toValidProgramDate(date);
+  if (!parsed) return '-';
+
+  // Keep day-month-year order in Arabic RTL layouts (e.g. "13 Jun 2026").
+  const formatted = format(parsed, 'd MMM yyyy', { locale: enUS });
+  return `\u200E${formatted}`;
 };
 
 export const formatProgramTime = (value: string | undefined) => {

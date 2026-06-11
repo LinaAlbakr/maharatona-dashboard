@@ -1,9 +1,17 @@
 import type {
+  BookingType,
   FlexibleBookingModelKey,
   FlexibleModelConfig,
   FlexiblePackage,
   FlexibleSlot,
 } from '../types';
+
+export function isTrialBookingActive(
+  bookingType: BookingType,
+  flexibleModels: Record<FlexibleBookingModelKey, FlexibleModelConfig> | undefined
+): boolean {
+  return bookingType === 'flexible' && flexibleModels?.trial?.enabled === true;
+}
 
 export function isFlexibleSlotConfigured(slot: Partial<FlexibleSlot> | undefined): boolean {
   if (!slot) return false;
@@ -97,4 +105,22 @@ export function hasTrialAndMainModelConflict(
     hasFlexibleTrialSlotData(flexibleModels.trial) &&
     hasFlexibleMainModelData(flexibleModels)
   );
+}
+
+/** Pick the booking-model tab that matches saved program data (edit mode). */
+export function getDefaultFlexibleSessionModel(
+  flexibleModels: Record<FlexibleBookingModelKey, FlexibleModelConfig>
+): FlexibleBookingModelKey {
+  if (flexibleModels.trial?.enabled) {
+    return 'trial';
+  }
+
+  for (const key of MAIN_FLEXIBLE_MODEL_KEYS) {
+    const model = flexibleModels[key];
+    if (model?.enabled || isFlexibleModelConfigured(model, key)) {
+      return key;
+    }
+  }
+
+  return 'minutes';
 }

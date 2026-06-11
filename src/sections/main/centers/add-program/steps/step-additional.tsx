@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -22,19 +23,36 @@ import { DeleteIcon, RiyalIcon } from '../components/course-icons';
 import PriceVatLabel from '../components/price-vat-label';
 import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
-import { EMPTY_MATERIAL, EMPTY_QUESTION, FIELD_LABEL_COLOR, PROGRAM_TEAL } from '../constants';
+import {
+  EMPTY_MATERIAL,
+  EMPTY_QUESTION,
+  FIELD_LABEL_COLOR,
+  PROGRAM_TEAL,
+  STEP_INACTIVE_COLOR,
+} from '../constants';
 import {
   dashedAddButtonSx,
+  disabledProgramSectionSx,
   programFieldSx,
   programItemCardSx,
   programStepHeadingSx,
   programSwitchSx,
 } from '../styles';
-import type { FixedProgramFormValues } from '../types';
+import type { ProgramFormValues } from '../types';
+import { isTrialBookingActive } from '../utils/flexible-model-config';
+import { applyTrialBookingSideEffects } from '../utils/trial-booking-side-effects';
 
 export default function StepAdditional() {
   const { t } = useTranslate();
-  const { control } = useFormContext<FixedProgramFormValues>();
+  const { control, watch, setValue } = useFormContext<ProgramFormValues>();
+  const bookingType = watch('bookingType');
+  const flexibleModels = watch('flexibleModels');
+  const isTrialActive = isTrialBookingActive(bookingType, flexibleModels);
+
+  useEffect(() => {
+    if (!isTrialActive) return;
+    applyTrialBookingSideEffects(setValue);
+  }, [isTrialActive, setValue]);
 
   const {
     fields: questionFields,
@@ -171,7 +189,16 @@ export default function StepAdditional() {
         {t('ADD_PROGRAM.ADD_MORE_QUESTIONS')}
       </Button>
 
-      <Typography sx={{ ...programStepHeadingSx, mt: 4 }}>{t('ADD_PROGRAM.ADDONS_MATERIALS')}</Typography>
+      <Box sx={isTrialActive ? disabledProgramSectionSx : undefined}>
+        <Typography
+          sx={{
+            ...programStepHeadingSx,
+            mt: 4,
+            ...(isTrialActive ? { color: STEP_INACTIVE_COLOR } : {}),
+          }}
+        >
+          {t('ADD_PROGRAM.ADDONS_MATERIALS')}
+        </Typography>
 
       {materialFields.map((field, index) => (
         <Card key={field.id} sx={programItemCardSx}>
@@ -297,10 +324,12 @@ export default function StepAdditional() {
         variant="outlined"
         startIcon={<Iconify icon="mingcute:add-line" />}
         onClick={() => appendMaterial({ ...EMPTY_MATERIAL })}
+        disabled={isTrialActive}
         sx={{ ...dashedAddButtonSx, mb: 0 }}
       >
         {t('ADD_PROGRAM.ADD_MORE_MATERIALS')}
       </Button>
+      </Box>
     </Box>
   );
 }

@@ -5,6 +5,7 @@ import type { BookingType, ProgramStep } from './types';
 import {
   getConfiguredFlexibleModelKeys,
   hasTrialAndMainModelConflict,
+  isTrialBookingActive,
 } from './utils/flexible-model-config';
 
 const requiredMsg = 'LABEL.THIS_FIELD_IS_REQUIRED';
@@ -200,68 +201,92 @@ const optionalRowComplete = (fields: (string | undefined)[]) => {
   return values.every(Boolean);
 };
 
-const step2Schema = yup.object({
-  additional_questions: yup.array().of(
-    yup
-      .object({
-        question_ar: yup.string(),
-        question_en: yup.string(),
-      })
-      .test('complete-or-empty', requiredMsg, (row) =>
-        optionalRowComplete([row?.question_ar, row?.question_en])
-      )
-  ),
-  addOnMaterials: yup.array().of(
-    yup
-      .object({
-        name_ar: yup.string(),
-        name_en: yup.string(),
-        desc_ar: yup.string(),
-        desc_en: yup.string(),
-        price: yup.string(),
-      })
-      .test('complete-or-empty', requiredMsg, (row) => {
-        const nameAr = row?.name_ar?.trim() ?? '';
-        const nameEn = row?.name_en?.trim() ?? '';
-        const price = row?.price?.trim() ?? '';
-        const anyFilled = Boolean(nameAr || nameEn || price || row?.desc_ar?.trim() || row?.desc_en?.trim());
-        if (!anyFilled) return true;
-        return Boolean(nameAr && nameEn && price && !Number.isNaN(Number(price)));
-      })
-  ),
-});
+const buildStep2Schema = (
+  bookingType: BookingType,
+  flexibleModels?: Record<string, any>
+) => {
+  const trialActive = isTrialBookingActive(bookingType, flexibleModels);
 
-const step3Schema = yup.object({
-  enableDiscount: yup.boolean(),
-  discount_type: yup.string(),
-  discount_amount: yup.string().when(['enableDiscount', 'discount_type'], {
-    is: (enableDiscount: boolean, discount_type: string) =>
-      enableDiscount && discount_type === 'total',
-    then: (schema) => schema.required(requiredMsg),
-    otherwise: (schema) => schema,
-  }),
-  discount: yup.array().when(['enableDiscount', 'discount_type'], {
-    is: (enableDiscount: boolean, discount_type: string) =>
-      enableDiscount && discount_type === 'specific',
-    then: (schema) =>
-      schema.of(
-        yup.object({
-          title_ar: yup.string().required(requiredMsg),
-          title_en: yup.string().required(requiredMsg),
-          discounts: yup
-            .array()
-            .min(1)
-            .of(
-              yup.object({
-                no_of_kids: numberField(),
-                discount: numberField(),
-              })
-            ),
+  return yup.object({
+    additional_questions: yup.array().of(
+      yup
+        .object({
+          question_ar: yup.string(),
+          question_en: yup.string(),
         })
-      ),
-    otherwise: (schema) => schema,
-  }),
-});
+        .test('complete-or-empty', requiredMsg, (row) =>
+          optionalRowComplete([row?.question_ar, row?.question_en])
+        )
+    ),
+    addOnMaterials: trialActive
+      ? yup.array()
+      : yup.array().of(
+          yup
+            .object({
+              name_ar: yup.string(),
+              name_en: yup.string(),
+              desc_ar: yup.string(),
+              desc_en: yup.string(),
+              price: yup.string(),
+            })
+            .test('complete-or-empty', requiredMsg, (row) => {
+              const nameAr = row?.name_ar?.trim() ?? '';
+              const nameEn = row?.name_en?.trim() ?? '';
+              const price = row?.price?.trim() ?? '';
+              const anyFilled = Boolean(
+                nameAr || nameEn || price || row?.desc_ar?.trim() || row?.desc_en?.trim()
+              );
+              if (!anyFilled) return true;
+              return Boolean(nameAr && nameEn && price && !Number.isNaN(Number(price)));
+            })
+        ),
+  });
+};
+
+const buildStep3Schema = (
+  bookingType: BookingType,
+  flexibleModels?: Record<string, any>
+) => {
+  const trialActive = isTrialBookingActive(bookingType, flexibleModels);
+
+  if (trialActive) {
+    return yup.object({
+      enableDiscount: yup.boolean(),
+    });
+  }
+
+  return yup.object({
+    enableDiscount: yup.boolean(),
+    discount_type: yup.string(),
+    discount_amount: yup.string().when(['enableDiscount', 'discount_type'], {
+      is: (enableDiscount: boolean, discount_type: string) =>
+        enableDiscount && discount_type === 'total',
+      then: (schema) => schema.required(requiredMsg),
+      otherwise: (schema) => schema,
+    }),
+    discount: yup.array().when(['enableDiscount', 'discount_type'], {
+      is: (enableDiscount: boolean, discount_type: string) =>
+        enableDiscount && discount_type === 'specific',
+      then: (schema) =>
+        schema.of(
+          yup.object({
+            title_ar: yup.string().required(requiredMsg),
+            title_en: yup.string().required(requiredMsg),
+            discounts: yup
+              .array()
+              .min(1)
+              .of(
+                yup.object({
+                  no_of_kids: numberField(),
+                  discount: numberField(),
+                })
+              ),
+          })
+        ),
+      otherwise: (schema) => schema,
+    }),
+  });
+};
 
 export const getStepSchema = (
   step: ProgramStep,
@@ -276,9 +301,9 @@ export const getStepSchema = (
         ? buildFlexibleStep1Schema(flexibleModels || {})
         : fixedStep1Schema;
     case 2:
-      return step2Schema;
+      return buildStep2Schema(bookingType, flexibleModels);
     case 3:
-      return step3Schema;
+      return buildStep3Schema(bookingType, flexibleModels);
     default:
       return yup.object();
   }
