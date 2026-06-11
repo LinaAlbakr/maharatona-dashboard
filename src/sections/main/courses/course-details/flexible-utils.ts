@@ -3,9 +3,7 @@ import type { TFunction } from 'i18next';
 import { FLEXIBLE_BOOKING_MODELS } from 'src/sections/main/centers/add-program/constants';
 import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-program/types';
 
-import { formatGroupedDatesByMonthText } from 'src/sections/main/centers/add-program/utils/custom-dates';
-
-import { formatAgeYears, formatProgramTime, getLocalizedText } from './utils';
+import { formatAgeYears, formatProgramDate, formatProgramTime, getLocalizedText } from './utils';
 
 export const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
   trial: 'trialSlots',
@@ -34,6 +32,16 @@ const ABBREV_TO_DAY: Record<string, (typeof DAY_ORDER)[number]> = {
   Thu: 'Thursday',
   Fri: 'Friday',
   Sat: 'Saturday',
+};
+
+const DAY_TO_ABBREV: Record<(typeof DAY_ORDER)[number], string> = {
+  Sunday: 'Sun',
+  Monday: 'Mon',
+  Tuesday: 'Tue',
+  Wednesday: 'Wed',
+  Thursday: 'Thu',
+  Friday: 'Fri',
+  Saturday: 'Sat',
 };
 
 const DAY_LABEL_KEYS: Record<string, string> = {
@@ -96,7 +104,15 @@ export const getEnabledFlexibleModels = (course: any): FlexibleBookingModelKey[]
     (model) => model.key
   );
 
+export const isFreeTrialOnlyProgram = (course: any): boolean => {
+  if (!modelHasDataOnCourse(course, 'trial')) return false;
+
+  return !FLEXIBLE_TAB_MODELS.some((model) => modelHasDataOnCourse(course, model.key));
+};
+
 export const getFirstModelWithData = (course: any): FlexibleBookingModelKey => {
+  if (isFreeTrialOnlyProgram(course)) return 'trial';
+
   const filled = FLEXIBLE_TAB_MODELS.find((model) => modelHasDataOnCourse(course, model.key));
   return filled?.key ?? 'minutes';
 };
@@ -131,31 +147,34 @@ export const formatSlotDays = (slot: any, t: TFunction) => {
   return formatDaysList(days, t);
 };
 
+const formatDaysOffAbbrevList = (days: string[]) =>
+  [...days]
+    .sort((a, b) => daySortIndex(a) - daySortIndex(b))
+    .map((day) => {
+      const normalized = normalizeDayName(day) as (typeof DAY_ORDER)[number];
+      return DAY_TO_ABBREV[normalized] ?? normalized.slice(0, 3);
+    });
+
 export const formatDaysOff = (course: any, t: TFunction) => {
+  const parts: string[] = [];
+
   const recurring = course?.daysOffList;
   if (Array.isArray(recurring) && recurring.length > 0) {
-    return formatDaysList(recurring, t);
+    parts.push(...formatDaysOffAbbrevList(recurring));
   }
 
   const customDates = course?.datesOffList;
   if (Array.isArray(customDates) && customDates.length > 0) {
-    const parsedDates = customDates
-      .map((date: string | Date) => {
-        try {
-          const parsed = date instanceof Date ? date : new Date(String(date));
-          return Number.isNaN(parsed.getTime()) ? null : parsed;
-        } catch {
-          return null;
-        }
-      })
-      .filter((date): date is Date => date instanceof Date);
-
-    if (parsedDates.length > 0) {
-      return formatGroupedDatesByMonthText(parsedDates);
-    }
+    customDates.forEach((date: string | Date) => {
+      const formatted = formatProgramDate(date instanceof Date ? date : String(date));
+      if (formatted !== '-') {
+        parts.push(formatted);
+      }
+    });
   }
 
-  return '-';
+  if (!parts.length) return '-';
+  return parts.join(', ');
 };
 
 export const getGenderLabel = (gender: string | undefined, t: TFunction) => {

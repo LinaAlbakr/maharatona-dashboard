@@ -8,7 +8,7 @@ import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-prog
 
 import { RiyalIcon, SlotIcon } from 'src/sections/main/centers/add-program/components/course-icons';
 
-import { detailCardSx, detailGridSx, detailValueSx } from '../styles';
+import { detailCardSx, detailGridSx, detailValueSx, freeTrialSlotCardSx } from '../styles';
 import { getSlotDetailFields, getSlotTitle } from '../flexible-utils';
 import DetailField from './detail-field';
 
@@ -27,15 +27,23 @@ type Props = {
   slot: any;
   index: number;
   isArabic: boolean;
+  variant?: 'default' | 'trial';
 };
 
-export default function FlexibleSlotDetailCard({ modelKey, slot, index, isArabic }: Props) {
+export default function FlexibleSlotDetailCard({
+  modelKey,
+  slot,
+  index,
+  isArabic,
+  variant = 'default',
+}: Props) {
   const { t } = useTranslate();
   const title = getSlotTitle(slot, isArabic, t, index);
   const fields = getSlotDetailFields(modelKey, slot, t, isArabic);
+  const cardSx = variant === 'trial' ? freeTrialSlotCardSx : { ...detailCardSx, mb: 2 };
 
   return (
-    <Box sx={{ ...detailCardSx, mb: 2 }}>
+    <Box sx={cardSx}>
       <Box
         sx={{
           display: 'inline-flex',

@@ -25,6 +25,8 @@ import ProgramDetailHeader from './components/program-detail-header';
 import {
   detailGridSx,
   detailLabelSx,
+  detailSubsectionTitleSx,
+  freeTrialBadgeSx,
   questionsSubsectionTitleSx,
 } from './styles';
 import {
@@ -33,6 +35,7 @@ import {
   getFirstModelWithData,
   getPackagesForModel,
   getSlotsForModel,
+  isFreeTrialOnlyProgram,
   modelHasDataOnCourse,
 } from './flexible-utils';
 import { formatProgramDate, getCourseImageUrls, getLocalizedText } from './utils';
@@ -49,20 +52,27 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
   const isArabic = i18n.language === 'ar';
   const courseId = String(course?.id ?? course?._id ?? '');
 
+  const isFreeTrial = useMemo(() => isFreeTrialOnlyProgram(course), [course]);
   const filledModels = useMemo(() => getEnabledFlexibleModels(course), [course]);
   const [activeModel, setActiveModel] = useState<FlexibleBookingModelKey>(() =>
     getFirstModelWithData(course)
   );
 
   useEffect(() => {
+    if (isFreeTrial) {
+      setActiveModel('trial');
+      return;
+    }
+
     if (!modelHasDataOnCourse(course, activeModel)) {
       setActiveModel(getFirstModelWithData(course));
     }
-  }, [course, activeModel]);
+  }, [course, activeModel, isFreeTrial]);
 
   const images = getCourseImageUrls(course?.course_images);
-  const packages = getPackagesForModel(course, activeModel);
-  const slots = getSlotsForModel(course, activeModel);
+  const sessionModel: FlexibleBookingModelKey = isFreeTrial ? 'trial' : activeModel;
+  const packages = isFreeTrial ? [] : getPackagesForModel(course, activeModel);
+  const slots = getSlotsForModel(course, sessionModel);
 
   const questions = (course?.additional_questions || []).filter(
     (item: any) => item?.question_ar?.trim() || item?.question_en?.trim()
@@ -148,17 +158,21 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
       </DetailSectionCard>
 
       <DetailSectionCard title={t('PROGRAM_DETAILS.SESSION_SECTION')}>
-        <BookingModelTabsReadonly
-          activeModel={activeModel}
-          filledModels={filledModels}
-          onChange={setActiveModel}
-        />
+        {isFreeTrial ? (
+          <Box sx={freeTrialBadgeSx}>{t('ADD_PROGRAM.FREE')}</Box>
+        ) : (
+          <BookingModelTabsReadonly
+            activeModel={activeModel}
+            filledModels={filledModels}
+            onChange={setActiveModel}
+          />
+        )}
 
-        {modelHasDataOnCourse(course, activeModel) ? (
+        {modelHasDataOnCourse(course, sessionModel) ? (
           <>
             {packages.length > 0 && (
               <Box sx={{ mb: 3 }}>
-                <Typography sx={{ ...questionsSubsectionTitleSx, color: '#DE0E75', fontWeight: 700 }}>
+                <Typography sx={questionsSubsectionTitleSx}>
                   {t('PROGRAM_DETAILS.PACKAGES')}
                 </Typography>
                 <FlexiblePackagesTable packages={packages} isArabic={isArabic} />
@@ -167,16 +181,17 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
 
             {slots.length > 0 && (
               <Box>
-                <Typography sx={{ ...questionsSubsectionTitleSx, color: '#DE0E75', fontWeight: 700 }}>
+                <Typography sx={isFreeTrial ? detailSubsectionTitleSx : questionsSubsectionTitleSx}>
                   {t('PROGRAM_DETAILS.SLOTS')}
                 </Typography>
                 {slots.map((slot: any, index: number) => (
                   <FlexibleSlotDetailCard
                     key={index}
-                    modelKey={activeModel}
+                    modelKey={sessionModel}
                     slot={slot}
                     index={index}
                     isArabic={isArabic}
+                    variant={isFreeTrial ? 'trial' : 'default'}
                   />
                 ))}
               </Box>
@@ -193,9 +208,10 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
         questions={questions}
         materials={materials}
         isArabic={isArabic}
+        hideMaterials={isFreeTrial}
       />
 
-      <DiscountDetailsSection course={course} isArabic={isArabic} />
+      {!isFreeTrial ? <DiscountDetailsSection course={course} isArabic={isArabic} /> : null}
     </Container>
   );
 }

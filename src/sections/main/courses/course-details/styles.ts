@@ -28,6 +28,30 @@ export const detailSubsectionTitleSx = {
   lineHeight: 1.3,
 };
 
+export const freeTrialBadgeSx = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 110,
+  height: 30,
+  borderRadius: '15px',
+  bgcolor: FREE_BOOKING_COLOR,
+  color: 'common.white',
+  fontSize: 16,
+  fontWeight: 600,
+  lineHeight: 1,
+  mb: 2,
+};
+
+export const freeTrialSlotCardSx = {
+  bgcolor: 'background.paper',
+  borderRadius: '16px',
+  border: '1px solid',
+  borderColor: 'grey.300',
+  p: { xs: 2.5, md: 3 },
+  mb: 2,
+};
+
 export const questionsSubsectionTitleSx = {
   color: '#DE0E75',
   fontWeight: 700,

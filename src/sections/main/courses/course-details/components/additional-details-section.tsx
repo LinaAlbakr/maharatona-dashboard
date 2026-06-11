@@ -87,17 +87,24 @@ type Props = {
   questions: any[];
   materials: any[];
   isArabic: boolean;
+  hideMaterials?: boolean;
 };
 
-export default function AdditionalDetailsSection({ questions, materials, isArabic }: Props) {
+export default function AdditionalDetailsSection({
+  questions,
+  materials,
+  isArabic,
+  hideMaterials = false,
+}: Props) {
   const { t } = useTranslate();
+  const visibleMaterials = hideMaterials ? [] : materials;
 
-  if (!questions.length && !materials.length) return null;
+  if (!questions.length && !visibleMaterials.length) return null;
 
   return (
     <DetailSectionCard title={t('PROGRAM_DETAILS.ADDITIONAL_SECTION')}>
       {questions.length > 0 && (
-        <Box sx={{ mb: materials.length > 0 ? 3 : 0 }}>
+        <Box sx={{ mb: visibleMaterials.length > 0 ? 3 : 0 }}>
           <Typography sx={questionsSubsectionTitleSx}>{t('ADD_PROGRAM.QUESTIONS')}</Typography>
           {questions.map((question: any, index: number) => (
             <QuestionRow
@@ -111,7 +118,7 @@ export default function AdditionalDetailsSection({ questions, materials, isArabi
         </Box>
       )}
 
-      {materials.map((material: any, index: number) => (
+      {visibleMaterials.map((material: any, index: number) => (
         <Box key={index} sx={{ mt: index > 0 ? 3 : 0 }}>
           <Typography sx={addonsMaterialsSubsectionTitleSx}>
             {t('ADD_PROGRAM.ADDONS_MATERIALS')}
