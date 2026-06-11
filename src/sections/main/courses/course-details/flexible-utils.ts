@@ -3,7 +3,13 @@ import type { TFunction } from 'i18next';
 import { FLEXIBLE_BOOKING_MODELS } from 'src/sections/main/centers/add-program/constants';
 import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-program/types';
 
-import { formatAgeYears, formatProgramDate, formatProgramTime, getLocalizedText } from './utils';
+import {
+  formatAgeYears,
+  formatProgramDate,
+  formatProgramDateRange,
+  formatProgramTime,
+  getLocalizedText,
+} from './utils';
 
 export const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
   trial: 'trialSlots',
@@ -139,10 +145,15 @@ export const formatDaysList = (days: string[] | undefined, t: TFunction) => {
 };
 
 export const formatSlotDays = (slot: any, t: TFunction) => {
-  const days = slot?.selected_days?.length
-    ? slot.selected_days
-    : slot?.recuringDays?.length
-      ? slot.recuringDays
+  const recurringDates = slot?.recuringDate;
+  if (Array.isArray(recurringDates) && recurringDates.length > 0) {
+    return formatProgramDateRange(recurringDates);
+  }
+
+  const days = slot?.recuringDays?.length
+    ? slot.recuringDays
+    : slot?.selected_days?.length
+      ? slot.selected_days
       : [];
   return formatDaysList(days, t);
 };

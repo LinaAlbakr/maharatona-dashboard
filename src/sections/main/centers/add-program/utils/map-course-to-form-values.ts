@@ -117,14 +117,16 @@ function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBooki
     girls_age_to: '',
     age_from: ageFrom,
     age_to: ageTo,
-    selected_days: selectedDays,
+    selected_days: customDates.length > 0 ? [] : selectedDays,
     start_time: parseApiTime(slot.start_time),
     end_time: parseApiTime(slot.end_time),
     seat_capacity: str(slot.seat_capacity ?? ''),
     price: str(slot.price ?? ''),
     class_time: str(slot.class_time ?? ''),
     recurring_days:
-      recurringDays.length > 0 || (selectedDays.length > 0 && customDates.length === 0),
+      customDates.length > 0
+        ? false
+        : recurringDays.length > 0 || selectedDays.length > 0,
     fixed_start_date: modelKey === 'monthly' ? Boolean(slot.fixed_start_date) : false,
     custom_dates: customDates,
   };

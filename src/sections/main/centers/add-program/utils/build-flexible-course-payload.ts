@@ -84,7 +84,7 @@ function mapRecurringSlot(slot: FlexibleSlot) {
     gender: normalizeGender(slot.gender),
     age_from: slot.age_from,
     age_to: slot.age_to,
-    selected_days: recurringDays,
+    selected_days: weekDays ? recurringDays : [],
     start_time: formatTimeForApi(slot.start_time),
     end_time: formatTimeForApi(slot.end_time),
     seat_capacity: slot.seat_capacity,

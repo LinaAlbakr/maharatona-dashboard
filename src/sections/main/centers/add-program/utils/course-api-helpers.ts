@@ -51,6 +51,7 @@ export function usesWeekDays(
   recurringDays: string[],
   recurringDates: Date[]
 ): boolean {
+  if (!isRecurring) return false;
   if (recurringDays.length > 0) return true;
   if (recurringDates.length > 0) return false;
   return isRecurring;

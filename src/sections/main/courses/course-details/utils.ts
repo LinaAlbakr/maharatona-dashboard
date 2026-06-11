@@ -33,6 +33,28 @@ export const formatProgramDate = (date: string | Date | null | undefined) => {
   return `\u200E${formatted}`;
 };
 
+export const formatProgramDateRange = (dates: (string | Date | null | undefined)[]) => {
+  const parsed = dates
+    .map((date) => toValidProgramDate(date))
+    .filter((date): date is Date => date !== null)
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  if (!parsed.length) return '-';
+
+  const pattern = (date: Date, sameYear: boolean) =>
+    format(date, sameYear ? 'd MMM' : 'd MMM yyyy', { locale: enUS });
+
+  if (parsed.length === 1) {
+    return `\u200E${pattern(parsed[0], true)}`;
+  }
+
+  const start = parsed[0];
+  const end = parsed[parsed.length - 1];
+  const sameYear = start.getFullYear() === end.getFullYear();
+
+  return `\u200E${pattern(start, sameYear)} – ${pattern(end, sameYear)}`;
+};
+
 export const formatProgramTime = (value: string | undefined) => {
   if (!value) return '-';
   return /am|pm/i.test(value) ? value : convertTime24to12(value);
