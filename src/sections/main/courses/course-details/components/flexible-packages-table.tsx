@@ -5,8 +5,6 @@ import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
 
-import { RiyalIcon } from 'src/sections/main/centers/add-program/components/course-icons';
-
 import {
   detailValueSx,
   specificDiscountCardSx,
@@ -15,6 +13,7 @@ import {
   specificDiscountTableRowSx,
 } from '../styles';
 import { getLocalizedText } from '../utils';
+import PriceValue from './price-value';
 
 type PackageRow = {
   title_ar?: string;
@@ -61,23 +60,8 @@ export default function FlexiblePackagesTable({ packages, isArabic }: Props) {
           <Typography sx={{ ...detailValueSx, textAlign: 'center' }}>
             {pkg.number_of_classes ?? '-'}
           </Typography>
-          <Box
-            sx={{
-              ...detailValueSx,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              gap: 0.75,
-            }}
-          >
-            {pkg.price != null && pkg.price !== '' ? (
-              <>
-                <RiyalIcon />
-                <span>{Math.floor(Number(pkg.price))}</span>
-              </>
-            ) : (
-              '-'
-            )}
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <PriceValue amount={pkg.price} />
           </Box>
         </Box>
       ))}

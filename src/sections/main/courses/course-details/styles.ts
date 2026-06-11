@@ -127,6 +127,14 @@ export const detailValueSx = {
   lineHeight: 1.6,
 };
 
+export const priceValueSx = {
+  ...detailValueSx,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 0.75,
+  direction: 'ltr',
+};
+
 export const detailGridSx = {
   display: 'grid',
   gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },

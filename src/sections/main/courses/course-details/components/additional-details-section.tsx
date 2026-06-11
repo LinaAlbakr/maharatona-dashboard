@@ -7,8 +7,6 @@ import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
 
-import { RiyalIcon } from 'src/sections/main/centers/add-program/components/course-icons';
-
 import {
   addonsMaterialsSubsectionTitleSx,
   detailGridSx,
@@ -22,16 +20,7 @@ import {
 import { getLocalizedText } from '../utils';
 import DetailField from './detail-field';
 import DetailSectionCard from './detail-section-card';
-
-function PriceValue({ amount }: { amount: number | string | null | undefined }) {
-  if (amount === null || amount === undefined || amount === '') return <>-</>;
-  return (
-    <Box sx={{ ...detailValueSx, display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
-      <RiyalIcon />
-      <Box component="span">{Math.floor(Number(amount))}</Box>
-    </Box>
-  );
-}
+import PriceValue from './price-value';
 
 function QuestionRow({
   index,

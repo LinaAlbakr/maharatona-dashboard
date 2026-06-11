@@ -13,10 +13,10 @@ import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
 import { paths } from 'src/routes/paths';
 
-import { RiyalIcon } from 'src/sections/main/centers/add-program/components/course-icons';
 import { useSettingsContext } from 'src/components/settings';
 
 import DetailField from './components/detail-field';
+import PriceValue from './components/price-value';
 import DetailSectionCard from './components/detail-section-card';
 import ProgramDetailHeader from './components/program-detail-header';
 import {
@@ -58,16 +58,6 @@ const detailGridSx = {
   gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
   gap: { xs: 2, md: 3 },
 };
-
-function PriceValue({ amount }: { amount: number | string | null | undefined }) {
-  if (amount === null || amount === undefined || amount === '') return <>-</>;
-  return (
-    <Box sx={{ ...detailValueSx, display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
-      <RiyalIcon />
-      <Box component="span">{Math.floor(Number(amount))}</Box>
-    </Box>
-  );
-}
 
 function QuestionRow({
   index,

@@ -6,21 +6,12 @@ import { useTranslate } from 'src/locales';
 
 import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-program/types';
 
-import { RiyalIcon, SlotIcon } from 'src/sections/main/centers/add-program/components/course-icons';
+import { SlotIcon } from 'src/sections/main/centers/add-program/components/course-icons';
 
-import { detailCardSx, detailGridSx, detailValueSx, freeTrialSlotCardSx } from '../styles';
+import { detailCardSx, detailGridSx, freeTrialSlotCardSx } from '../styles';
 import { getSlotDetailFields, getSlotTitle } from '../flexible-utils';
 import DetailField from './detail-field';
-
-function PriceValue({ amount }: { amount: number | string | null | undefined }) {
-  if (amount === null || amount === undefined || amount === '') return <>-</>;
-  return (
-    <Box sx={{ ...detailValueSx, display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
-      <RiyalIcon />
-      <Box component="span">{Math.floor(Number(amount))}</Box>
-    </Box>
-  );
-}
+import PriceValue from './price-value';
 
 type Props = {
   modelKey: FlexibleBookingModelKey;
