@@ -16,6 +16,7 @@ import MultiDateCalendarPopover from './multi-date-calendar-popover';
 import RequiredLabel from './required-label';
 import SelectedDateGroupTag from './selected-date-group-tag';
 import { ADD_BOX_TEXT_COLOR, PROGRAM_TEAL } from '../constants';
+import { programRadioControlLabelSx } from '../styles';
 import type { ProgramFormValues } from '../types';
 import {
   groupDatesByWeekAndMonth,
@@ -77,6 +78,7 @@ export default function DaysOffSection() {
                 />
               }
               label={t('ADD_PROGRAM.RECURRING_DAYS')}
+              sx={programRadioControlLabelSx}
             />
           )}
         />
@@ -100,6 +102,7 @@ export default function DaysOffSection() {
                 />
               }
               label={t('ADD_PROGRAM.CUSTOM_DATES')}
+              sx={programRadioControlLabelSx}
             />
           )}
         />

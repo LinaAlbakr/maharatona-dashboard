@@ -129,7 +129,6 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
     end_date: formatDateForApi(values.end_date),
     start_time: formatTimeForApi(values.start_time),
     end_time: formatTimeForApi(values.end_time),
-    price: values.price,
     field_id: values.field_id,
     course_type: 'flexible',
     files: [],

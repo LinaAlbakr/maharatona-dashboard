@@ -6,14 +6,12 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import { DatePicker } from '@mui/x-date-pickers';
 
 import { useTranslate } from 'src/locales';
 import { useTranslation } from 'react-i18next';
 
-import { CalendarIcon, RiyalIcon } from '../components/course-icons';
-import PriceVatLabel from '../components/price-vat-label';
+import { CalendarIcon } from '../components/course-icons';
 import DaysOffSection from '../components/days-off-section';
 import ProgramImagesUpload from '../components/program-images-upload';
 import RequiredLabel from '../components/required-label';
@@ -145,31 +143,6 @@ export default function StepFlexibleProgram({ categories }: Props) {
                 slots={{
                   openPickerIcon: CalendarIcon,
                 }}
-              />
-            )}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6}>
-          <PriceVatLabel required labelKey="ADD_PROGRAM.PRICE_VAT" />
-          <Controller
-            name="price"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.ENTER_PRICE')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <RiyalIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={programFieldSx}
               />
             )}
           />

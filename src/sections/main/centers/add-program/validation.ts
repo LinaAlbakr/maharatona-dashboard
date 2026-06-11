@@ -100,7 +100,6 @@ const flexibleStep0Schema = yup.object({
   courseImages: yup.array().min(1, requiredMsg),
   name_ar: yup.string().required(requiredMsg),
   name_en: yup.string().required(requiredMsg),
-  price: numberField(),
   field_id: yup.string().required(requiredMsg),
   start_date: yup.date().nullable().required(requiredMsg),
   end_date: yup

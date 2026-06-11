@@ -76,7 +76,11 @@ export default function MultiDateCalendarPopover({ open, anchorEl, onClose, onCo
     });
   };
 
-  const handleConfirm = () => {
+  const handleCancel = () => {
+    onClose();
+  };
+
+  const handleDone = () => {
     if (pendingDates.length > 0) {
       onConfirm(pendingDates);
     }
@@ -105,18 +109,45 @@ export default function MultiDateCalendarPopover({ open, anchorEl, onClose, onCo
         }}
       />
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', px: 1, pb: 0.5 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: 1,
+          px: 1,
+          pb: 0.5,
+        }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={handleCancel}
+          sx={{
+            borderRadius: '20px',
+            px: 2,
+            borderColor: PROGRAM_TEAL,
+            color: PROGRAM_TEAL,
+            '&:hover': {
+              borderColor: PROGRAM_TEAL,
+              bgcolor: 'rgba(58, 176, 173, 0.04)',
+            },
+          }}
+        >
+          {t('BUTTON.CANCEL')}
+        </Button>
         <Button
           size="small"
           variant="contained"
-          onClick={handleConfirm}
+          onClick={handleDone}
           disabled={pendingDates.length === 0}
           sx={{
+            borderRadius: '20px',
+            px: 2,
             bgcolor: PROGRAM_TEAL,
             '&:hover': { bgcolor: PROGRAM_TEAL },
           }}
         >
-          {t('ADD_PROGRAM.ADD_DATES')}
+          {t('ADD_PROGRAM.DONE')}
         </Button>
       </Box>
     </Popover>
