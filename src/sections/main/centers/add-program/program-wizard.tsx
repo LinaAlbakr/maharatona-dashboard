@@ -98,6 +98,15 @@ export default function ProgramWizard({
         enqueueSnackbar(t('ADD_PROGRAM.TRIAL_CANNOT_COMBINE'), { variant: 'error' });
       }
 
+      if (
+        validationErrors.some(
+          (item: any) => item.message === 'ADD_PROGRAM.errorAddAtLeastOneSlot'
+        ) ||
+        error?.message === 'ADD_PROGRAM.errorAddAtLeastOneSlot'
+      ) {
+        enqueueSnackbar(t('ADD_PROGRAM.errorAddAtLeastOneSlot'), { variant: 'error' });
+      }
+
       if (error?.inner?.length) {
         error.inner.forEach((item: any, index: number) => {
           if (item.path) {

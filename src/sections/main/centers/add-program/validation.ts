@@ -190,7 +190,7 @@ const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
     return yup.object({
       flexibleModels: yup
         .mixed()
-        .test('models', 'ADD_PROGRAM.SELECT_AT_LEAST_ONE_MODEL', () => false),
+        .test('models', 'ADD_PROGRAM.errorAddAtLeastOneSlot', () => false),
     });
   }
 

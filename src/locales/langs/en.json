@@ -581,7 +581,8 @@
     "SLOT_TITLE_PLACEHOLDER_AR": "فترة مسائية",
     "SLOT_TITLE_PLACEHOLDER_EN": "Evening group",
     "errorMinClassTime60": "Enter a duration of at least 60 minutes",
-    "errorTimeIncrement15": "Choose a duration in 15-minute increments"
+    "errorTimeIncrement15": "Choose a duration in 15-minute increments",
+    "errorAddAtLeastOneSlot": "Add at least one slot"
   },
   "PROGRAM_DETAILS": {
     "TITLE": "Program Details",
