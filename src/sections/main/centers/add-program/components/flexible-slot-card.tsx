@@ -181,7 +181,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               <TextField
                 {...field}
                 fullWidth
-                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER')}
+                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER_AR')}
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}
@@ -198,7 +198,7 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               <TextField
                 {...field}
                 fullWidth
-                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER')}
+                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER_EN')}
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}

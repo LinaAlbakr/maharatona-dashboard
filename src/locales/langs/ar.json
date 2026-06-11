@@ -579,7 +579,8 @@
     "SELECT_AT_LEAST_ONE_MODEL": "يرجى اختيار نموذج حجز واحد على الاقل",
     "TRIAL_CANNOT_COMBINE": "لا تدمج الحصص التجريبية",
     "MULTI_MODEL_HINT": "يمكنك اختيار أكثر من نموذج حجز قبل المتابعة.",
-    "SLOT_TITLE_PLACEHOLDER": "فترة مسائية"
+    "SLOT_TITLE_PLACEHOLDER_AR": "فترة مسائية",
+    "SLOT_TITLE_PLACEHOLDER_EN": "Evening group"
   },
   "PROGRAM_DETAILS": {
     "TITLE": "تفاصيل البرنامج",
