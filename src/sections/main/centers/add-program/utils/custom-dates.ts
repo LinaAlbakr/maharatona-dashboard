@@ -8,8 +8,42 @@ export type DateWeekGroup = {
   dates: Date[];
 };
 
+export type DateMonthGroup = {
+  key: string;
+  month: number;
+  year: number;
+  dates: Date[];
+};
+
+export type DateDisplayGroup = DateWeekGroup | DateMonthGroup;
+
 export function getWeekOfMonth(date: Date): number {
   return Math.ceil(date.getDate() / 7);
+}
+
+export function groupDatesByMonth(dates: Date[]): DateMonthGroup[] {
+  const groups = new Map<string, DateMonthGroup>();
+
+  dates.forEach((date) => {
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const key = `${year}-${month}`;
+
+    if (!groups.has(key)) {
+      groups.set(key, { key, month, year, dates: [] });
+    }
+    groups.get(key)!.dates.push(new Date(date));
+  });
+
+  return Array.from(groups.values())
+    .map((group) => ({
+      ...group,
+      dates: group.dates.sort((a, b) => a.getTime() - b.getTime()),
+    }))
+    .sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.month - b.month;
+    });
 }
 
 export function groupDatesByWeekAndMonth(dates: Date[]): DateWeekGroup[] {
@@ -51,13 +85,23 @@ export function mergeUniqueDates(existing: Date[], added: Date[]): Date[] {
   return merged.sort((a, b) => a.getTime() - b.getTime());
 }
 
-export function removeDateGroup(allDates: Date[], group: DateWeekGroup): Date[] {
+export function removeDateGroup(allDates: Date[], group: { dates: Date[] }): Date[] {
   const groupSet = new Set(group.dates.map((date) => date.toDateString()));
   return allDates.filter((date) => !groupSet.has(date.toDateString()));
 }
 
+export function getDateDisplayGroups(dates: Date[], groupByWeek: boolean): DateDisplayGroup[] {
+  return groupByWeek ? groupDatesByWeekAndMonth(dates) : groupDatesByMonth(dates);
+}
+
+export function formatDateMonthGroupText(group: DateMonthGroup): string {
+  const dayNumbers = group.dates.map((date) => format(date, 'dd')).join(' ');
+  const monthYear = format(group.dates[0], 'MMM, yyyy');
+  return `${dayNumbers} ${monthYear}`;
+}
+
 export function formatDateWeekGroupText(group: DateWeekGroup, weekLabel: string): string {
-  const dayNumbers = group.dates.map((date) => format(date, 'dd')).join(', ');
+  const dayNumbers = group.dates.map((date) => format(date, 'dd')).join(' ');
   const monthYear = format(group.dates[0], 'MMMM, yyyy');
   return `${weekLabel}: ${dayNumbers} ${monthYear}`;
 }
@@ -68,4 +112,10 @@ export function formatGroupedDatesText(dates: Date[], weekLabelFor: (weekNumber:
   return groupDatesByWeekAndMonth(dates)
     .map((group) => formatDateWeekGroupText(group, weekLabelFor(group.weekNumber)))
     .join(' | ');
+}
+
+export function formatGroupedDatesByMonthText(dates: Date[]): string {
+  if (!dates.length) return '';
+
+  return groupDatesByMonth(dates).map((group) => formatDateMonthGroupText(group)).join(' | ');
 }

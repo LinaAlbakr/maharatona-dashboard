@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -19,7 +19,7 @@ import { ADD_BOX_TEXT_COLOR, PROGRAM_TEAL } from '../constants';
 import { programRadioControlLabelSx } from '../styles';
 import type { ProgramFormValues } from '../types';
 import {
-  groupDatesByWeekAndMonth,
+  groupDatesByMonth,
   mergeUniqueDates,
   removeDateGroup,
 } from '../utils/custom-dates';
@@ -34,21 +34,8 @@ export default function DaysOffSection() {
 
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const calendarAnchorRef = useRef<HTMLButtonElement>(null);
-  const prevCustomRef = useRef(daysOffCustom);
 
-  const weekGroups = groupDatesByWeekAndMonth(datesOffList);
-  const weekLabelFor = (weekNumber: number) =>
-    t('ADD_PROGRAM.WEEK_NUMBER', { number: weekNumber });
-
-  useEffect(() => {
-    if (daysOffCustom && !prevCustomRef.current) {
-      setDatePickerOpen(true);
-    }
-    if (!daysOffCustom) {
-      setDatePickerOpen(false);
-    }
-    prevCustomRef.current = daysOffCustom;
-  }, [daysOffCustom]);
+  const monthGroups = groupDatesByMonth(datesOffList);
 
   const handleConfirmDates = (dates: Date[]) => {
     setValue('datesOffList', mergeUniqueDates(datesOffList, dates), { shouldValidate: true });
@@ -96,6 +83,7 @@ export default function DaysOffSection() {
                     field.onChange(checked);
                     if (!checked) {
                       setValue('datesOffList', [], { shouldValidate: true });
+                      setDatePickerOpen(false);
                     }
                   }}
                   sx={{ color: PROGRAM_TEAL, '&.Mui-checked': { color: PROGRAM_TEAL } }}
@@ -126,11 +114,10 @@ export default function DaysOffSection() {
               mb: 1.5,
             }}
           >
-            {weekGroups.map((group) => (
+            {monthGroups.map((group) => (
               <SelectedDateGroupTag
                 key={group.key}
                 group={group}
-                weekLabel={weekLabelFor(group.weekNumber)}
                 onRemove={() =>
                   setValue('datesOffList', removeDateGroup(datesOffList, group), {
                     shouldValidate: true,

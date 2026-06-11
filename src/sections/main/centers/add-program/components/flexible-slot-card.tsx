@@ -38,7 +38,7 @@ import {
 import { innerCardSx, programFieldSx, programRadioLabelSx } from '../styles';
 import type { FlexibleBookingModelKey, ProgramFormValues, TimeSlotType } from '../types';
 import {
-  groupDatesByWeekAndMonth,
+  getDateDisplayGroups,
   mergeUniqueDates,
   removeDateGroup,
 } from '../utils/custom-dates';
@@ -132,7 +132,8 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
   const slotDates = customDates
     .map((entry) => entry.date)
     .filter((date): date is Date => date instanceof Date);
-  const weekGroups = groupDatesByWeekAndMonth(slotDates);
+  const isWeeklyModel = modelKey === 'weekly';
+  const dateGroups = getDateDisplayGroups(slotDates, isWeeklyModel);
   const weekLabelFor = (weekNumber: number) =>
     t('ADD_PROGRAM.WEEK_NUMBER', { number: weekNumber });
 
@@ -370,11 +371,15 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
           <Grid xs={12} data-field={`${basePath}.custom_dates`}>
             <RequiredLabel required>{t('ADD_PROGRAM.SELECT_DATES')}</RequiredLabel>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
-              {weekGroups.map((group) => (
+              {dateGroups.map((group) => (
                 <SelectedDateGroupTag
                   key={group.key}
                   group={group}
-                  weekLabel={weekLabelFor(group.weekNumber)}
+                  weekLabel={
+                    isWeeklyModel && 'weekNumber' in group
+                      ? weekLabelFor(group.weekNumber)
+                      : undefined
+                  }
                   onRemove={() => setSlotDates(removeDateGroup(slotDates, group))}
                 />
               ))}

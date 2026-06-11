@@ -5,16 +5,16 @@ import Typography from '@mui/material/Typography';
 import { format } from 'date-fns';
 
 import { FIELD_LABEL_COLOR } from '../constants';
-import type { DateWeekGroup } from '../utils/custom-dates';
+import type { DateDisplayGroup } from '../utils/custom-dates';
 
 type Props = {
-  group: DateWeekGroup;
-  weekLabel: string;
+  group: DateDisplayGroup;
+  weekLabel?: string;
   onRemove: () => void;
 };
 
 export default function SelectedDateGroupTag({ group, weekLabel, onRemove }: Props) {
-  const monthYear = format(group.dates[0], 'MMMM, yyyy');
+  const monthYear = format(group.dates[0], weekLabel ? 'MMMM, yyyy' : 'MMM, yyyy');
 
   return (
     <Box
@@ -30,16 +30,18 @@ export default function SelectedDateGroupTag({ group, weekLabel, onRemove }: Pro
         flexWrap: 'wrap',
       }}
     >
-      <Typography
-        sx={{
-          fontSize: 14,
-          fontWeight: 600,
-          color: FIELD_LABEL_COLOR,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {weekLabel}:
-      </Typography>
+      {weekLabel ? (
+        <Typography
+          sx={{
+            fontSize: 14,
+            fontWeight: 600,
+            color: FIELD_LABEL_COLOR,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {weekLabel}:
+        </Typography>
+      ) : null}
 
       {group.dates.map((date) => (
         <Box

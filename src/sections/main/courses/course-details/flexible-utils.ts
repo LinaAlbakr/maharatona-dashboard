@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next';
 import { FLEXIBLE_BOOKING_MODELS } from 'src/sections/main/centers/add-program/constants';
 import type { FlexibleBookingModelKey } from 'src/sections/main/centers/add-program/types';
 
-import { formatGroupedDatesText } from 'src/sections/main/centers/add-program/utils/custom-dates';
+import { formatGroupedDatesByMonthText } from 'src/sections/main/centers/add-program/utils/custom-dates';
 
 import { formatAgeYears, formatProgramTime, getLocalizedText } from './utils';
 
@@ -151,9 +151,7 @@ export const formatDaysOff = (course: any, t: TFunction) => {
       .filter((date): date is Date => date instanceof Date);
 
     if (parsedDates.length > 0) {
-      return formatGroupedDatesText(parsedDates, (weekNumber) =>
-        t('ADD_PROGRAM.WEEK_NUMBER', { number: weekNumber })
-      );
+      return formatGroupedDatesByMonthText(parsedDates);
     }
   }
 
