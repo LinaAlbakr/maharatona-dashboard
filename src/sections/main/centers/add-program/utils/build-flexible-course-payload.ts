@@ -11,6 +11,8 @@ import {
   formatDateForApi,
   formatRecurringDate,
   formatTimeForApi,
+  isAddOnMaterialConfigured,
+  isAdditionalQuestionConfigured,
   normalizeGender,
   usesWeekDays,
 } from './course-api-helpers';
@@ -136,23 +138,27 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
     field_id: values.field_id,
     course_type: 'flexible',
     files: [],
-    additional_questions: values.additional_questions.map((option) => ({
-      question_ar: option.question_ar,
-      question_en: option.question_en,
-      isFill: option.isFill,
-      isYesNo: option.isYesNo,
-      required: option.required,
-    })),
+    additional_questions: values.additional_questions
+      .filter(isAdditionalQuestionConfigured)
+      .map((option) => ({
+        question_ar: option.question_ar,
+        question_en: option.question_en,
+        isFill: option.isFill,
+        isYesNo: option.isYesNo,
+        required: option.required,
+      })),
     addOnMaterials: isTrialBookingActive(values.bookingType, values.flexibleModels)
       ? []
-      : values.addOnMaterials.map((material) => ({
-          name_ar: material.name_ar,
-          name_en: material.name_en,
-          desc_ar: material.desc_ar,
-          desc_en: material.desc_en,
-          price: material.price,
-          required: material.required,
-        })),
+      : values.addOnMaterials
+          .filter(isAddOnMaterialConfigured)
+          .map((material) => ({
+            name_ar: material.name_ar,
+            name_en: material.name_en,
+            desc_ar: material.desc_ar,
+            desc_en: material.desc_en,
+            price: material.price,
+            required: material.required,
+          })),
     package: buildPackages(values),
   };
 

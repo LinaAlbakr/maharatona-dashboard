@@ -1,5 +1,21 @@
 import { format } from 'date-fns';
 
+import type { AdditionalQuestion, AddOnMaterial } from '../types';
+
+export function isAdditionalQuestionConfigured(question: AdditionalQuestion): boolean {
+  return Boolean(question.question_ar?.trim() || question.question_en?.trim());
+}
+
+export function isAddOnMaterialConfigured(material: AddOnMaterial): boolean {
+  return Boolean(
+    material.name_ar?.trim() ||
+      material.name_en?.trim() ||
+      material.desc_ar?.trim() ||
+      material.desc_en?.trim() ||
+      String(material.price ?? '').trim()
+  );
+}
+
 export function parseFormBoolean(value: unknown): boolean {
   if (value === true || value === 'true') return true;
   if (value === false || value === 'false' || value === '' || value == null) return false;

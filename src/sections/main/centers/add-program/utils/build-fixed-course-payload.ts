@@ -4,28 +4,34 @@ import {
   cleanFormData,
   formatDateForApi,
   formatTimeForApi,
+  isAddOnMaterialConfigured,
+  isAdditionalQuestionConfigured,
   normalizeGender,
 } from './course-api-helpers';
 
 function buildAdditionalQuestions(values: ProgramFormValues) {
-  return values.additional_questions.map((option) => ({
-    question_ar: option.question_ar,
-    question_en: option.question_en,
-    isFill: option.isFill,
-    isYesNo: option.isYesNo,
-    required: option.required,
-  }));
+  return values.additional_questions
+    .filter(isAdditionalQuestionConfigured)
+    .map((option) => ({
+      question_ar: option.question_ar,
+      question_en: option.question_en,
+      isFill: option.isFill,
+      isYesNo: option.isYesNo,
+      required: option.required,
+    }));
 }
 
 function buildAddOnMaterials(values: ProgramFormValues) {
-  return values.addOnMaterials.map((material) => ({
-    name_ar: material.name_ar,
-    name_en: material.name_en,
-    desc_ar: material.desc_ar,
-    desc_en: material.desc_en,
-    price: Number.parseFloat(material.price) || 0,
-    required: material.required,
-  }));
+  return values.addOnMaterials
+    .filter(isAddOnMaterialConfigured)
+    .map((material) => ({
+      name_ar: material.name_ar,
+      name_en: material.name_en,
+      desc_ar: material.desc_ar,
+      desc_en: material.desc_en,
+      price: Number.parseFloat(material.price) || 0,
+      required: material.required,
+    }));
 }
 
 export function buildFixedCourseFormMap(values: ProgramFormValues): Record<string, unknown> {
