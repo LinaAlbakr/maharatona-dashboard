@@ -30,6 +30,11 @@ const ageToMustBeGreaterMsg = 'ADD_PROGRAM.AGE_TO_MUST_BE_GREATER_THAN_AGE_FROM'
 
 const timeField = () => yup.date().nullable().required(requiredMsg);
 
+const timeOfDayMinutes = (value: Date | null | undefined): number | null => {
+  if (!value || !(value instanceof Date) || Number.isNaN(value.getTime())) return null;
+  return value.getHours() * 60 + value.getMinutes();
+};
+
 const ageToField = (fromField: string) =>
   numberField().test('age-order', ageToMustBeGreaterMsg, function validateAgeTo(to) {
     const from = (this.parent as Record<string, string | undefined>)[fromField];
@@ -40,8 +45,10 @@ const ageToField = (fromField: string) =>
 const endTimeAfterStartTime = () =>
   timeField().test('after-start', endTimeAfterStartMsg, function validateEndTime(endTime) {
     const { start_time: startTime } = this.parent as { start_time?: Date | null };
-    if (!startTime || !endTime) return true;
-    return endTime.getTime() > startTime.getTime();
+    const startMinutes = timeOfDayMinutes(startTime);
+    const endMinutes = timeOfDayMinutes(endTime);
+    if (startMinutes === null || endMinutes === null) return true;
+    return endMinutes > startMinutes;
   });
 
 const hourlyClassTimeField = () =>
