@@ -478,6 +478,7 @@
     "VAT_IF_APPLICABLE": "(including VAT if applicable)",
     "ENTER_PRICE": "Enter the program price",
     "CHOOSE_CATEGORY": "Choose the Program category",
+    "ACTIVE_CATEGORIES": "Active Categories",
     "START_DATE_PLACEHOLDER": "Start date",
     "END_DATE_PLACEHOLDER": "End date",
     "START_TIME": "Start Time",

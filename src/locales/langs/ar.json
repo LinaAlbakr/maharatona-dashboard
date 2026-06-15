@@ -479,6 +479,7 @@
     "VAT_IF_APPLICABLE": "شامل الضريبة (إن وجدت)",
     "ENTER_PRICE": "ادخل سعر البرنامج",
     "CHOOSE_CATEGORY": "التصنيفات",
+    "ACTIVE_CATEGORIES": "التصنيفات النشطة",
     "START_DATE_PLACEHOLDER": "من تاريخ",
     "END_DATE_PLACEHOLDER": "إلى تاريخ",
     "START_TIME": "من الساعة",

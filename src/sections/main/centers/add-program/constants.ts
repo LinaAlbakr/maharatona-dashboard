@@ -45,7 +45,7 @@ export const EMPTY_MATERIAL = {
   desc_ar: '',
   desc_en: '',
   price: '',
-  required: true,
+  required: false,
 };
 
 export const EMPTY_DISCOUNT_ROW = {

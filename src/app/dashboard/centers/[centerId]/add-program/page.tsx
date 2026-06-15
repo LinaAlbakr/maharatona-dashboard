@@ -19,6 +19,7 @@ const Page = async ({ params }: IProps) => {
     name: category.name || category.name_en || category.name_ar || '',
     name_ar: category.name_ar,
     name_en: category.name_en,
+    is_active: category.is_active !== false,
   }));
 
   return (

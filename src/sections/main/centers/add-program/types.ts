@@ -125,4 +125,5 @@ export type CategoryOption = {
   name: string;
   name_ar?: string;
   name_en?: string;
+  is_active?: boolean;
 };
