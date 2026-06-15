@@ -1,5 +1,3 @@
-import { isValid } from 'date-fns';
-
 import {
   createDefaultFlexibleModels,
   EMPTY_DISCOUNT_GROUP,
@@ -9,7 +7,7 @@ import {
   FLEXIBLE_BOOKING_MODELS,
 } from '../constants';
 import { getProgramDefaultValues } from '../default-values';
-import { parseFormBoolean, toFormTimeString } from './course-api-helpers';
+import { parseApiDateToFormDate, parseFormBoolean, toFormTimeString } from './course-api-helpers';
 import type {
   FlexibleBookingModelKey,
   FlexibleModelConfig,
@@ -43,9 +41,7 @@ function str(value: unknown): string {
 }
 
 function parseApiDate(value: unknown): Date | null {
-  if (!value) return null;
-  const date = value instanceof Date ? value : new Date(String(value));
-  return isValid(date) ? date : null;
+  return parseApiDateToFormDate(value);
 }
 
 function convertAbbrevDaysToFull(days: string[]): string[] {

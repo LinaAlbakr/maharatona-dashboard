@@ -165,12 +165,19 @@ export const editProgramButtonSx = {
 export const discountValueBoxSx = {
   border: '1px solid',
   borderColor: 'grey.300',
-  borderRadius: '12px',
-  px: 2.5,
-  py: 1.5,
+  borderRadius: '8px',
+  px: 1.25,
+  py: 0.5,
   display: 'inline-flex',
   alignItems: 'center',
-  minWidth: 80,
+  width: 'fit-content',
+};
+
+export const discountPercentValueSx = {
+  ...detailValueSx,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 0.5,
 };
 
 export const specificDiscountTitleSx = {

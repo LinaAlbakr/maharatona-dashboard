@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography';
 import { useTranslate } from 'src/locales';
 
 import {
-  detailValueSx,
   discountValueBoxSx,
+  discountPercentValueSx,
   specificDiscountCardSx,
   specificDiscountCardTitleSx,
   specificDiscountTableContainerSx,
@@ -87,7 +87,10 @@ export default function DiscountDetailsSection({ course, isArabic }: Props) {
         <Box sx={{ mb: specificDiscounts.length > 0 ? 3 : 0 }}>
           <Typography sx={specificDiscountTitleSx}>{t('ADD_PROGRAM.TOTAL_DISCOUNT')}</Typography>
           <Box sx={discountValueBoxSx}>
-            <Typography sx={detailValueSx}>{course.discount_amount}%</Typography>
+            <Typography sx={discountPercentValueSx} component="span">
+              <span>{course.discount_amount}</span>
+              <span>%</span>
+            </Typography>
           </Box>
         </Box>
       )}

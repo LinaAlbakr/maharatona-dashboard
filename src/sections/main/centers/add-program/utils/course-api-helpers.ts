@@ -103,7 +103,15 @@ export function formatTimeForApi(value: Date | string | null | undefined): strin
 
 export function formatDateForApi(value: Date | null): string {
   if (!value) return '';
-  return value.toISOString();
+  return format(value, 'yyyy-MM-dd');
+}
+
+/** Map API date values to a local calendar date for date pickers (avoids timezone drift on edit). */
+export function parseApiDateToFormDate(value: unknown): Date | null {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(String(value));
+  if (!isValid(date)) return null;
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
 export function formatRecurringDate(value: Date | null): string {
