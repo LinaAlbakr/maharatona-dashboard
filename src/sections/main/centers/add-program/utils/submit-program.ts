@@ -17,12 +17,27 @@ function getCreatedCourseId(course: unknown): string | null {
   return String(rawId);
 }
 
-function appendImages(formData: FormData, images: (File | string)[]) {
+function appendImages(
+  formData: FormData,
+  images: (File | string)[],
+  options: { isEdit?: boolean } = {}
+) {
+  const keptUrls: string[] = [];
+
   images.forEach((image) => {
     if (image instanceof File) {
       formData.append('images', image);
+      return;
+    }
+
+    if (typeof image === 'string' && image.trim()) {
+      keptUrls.push(image.trim());
     }
   });
+
+  if (options.isEdit) {
+    formData.append('existing_course_images', JSON.stringify(keptUrls));
+  }
 }
 
 type SubmitProgramOptions = {
@@ -43,7 +58,7 @@ export async function submitProgram(
 
   const formData = new FormData();
   appendFormDataFields(formData, formMap);
-  appendImages(formData, values.courseImages);
+  appendImages(formData, values.courseImages, { isEdit });
 
   const url = isEdit
     ? endpoints.centers.updateCourse(centerId, options.courseId!)

@@ -1,4 +1,5 @@
-import { format } from 'date-fns';
+import { format, isValid, parse, startOfToday } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 
 import type { AdditionalQuestion, AddOnMaterial } from '../types';
 
@@ -47,9 +48,57 @@ export function normalizeGender(gender: string): string {
   return trimmed;
 }
 
-export function formatTimeForApi(value: Date | null): string {
-  if (!value) return '';
-  return format(value, 'h:mm a');
+export function toFormTimeString(value: unknown): string {
+  if (value == null) return '';
+  if (value instanceof Date) {
+    return isValid(value) ? format(value, 'h:mm a', { locale: enUS }) : '';
+  }
+  return String(value).trim();
+}
+
+export function parseApiTime(value: unknown): Date | null {
+  if (value == null) return null;
+  if (value instanceof Date) return isValid(value) ? value : null;
+
+  const raw = String(value).trim();
+  if (!raw) return null;
+
+  const reference = startOfToday();
+  const patterns = ['h:mm a', 'hh:mm a', 'H:mm', 'HH:mm', 'H:mm:ss', 'HH:mm:ss'] as const;
+
+  for (const pattern of patterns) {
+    const parsed = parse(raw, pattern, reference, { locale: enUS });
+    if (isValid(parsed)) return parsed;
+  }
+
+  const timeOnly = raw.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+  if (timeOnly) {
+    const hours = Number(timeOnly[1]);
+    const minutes = Number(timeOnly[2]);
+    if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
+      const parsed = new Date(reference);
+      parsed.setHours(hours, minutes, 0, 0);
+      return isValid(parsed) ? parsed : null;
+    }
+  }
+
+  return null;
+}
+
+export function formatTimeForApi(value: Date | string | null | undefined): string {
+  if (value == null) return '';
+
+  if (value instanceof Date) {
+    return isValid(value) ? format(value, 'h:mm a', { locale: enUS }) : '';
+  }
+
+  const raw = String(value).trim();
+  if (!raw) return '';
+
+  if (/am|pm/i.test(raw)) return raw;
+
+  const parsed = parseApiTime(raw);
+  return parsed ? format(parsed, 'h:mm a', { locale: enUS }) : raw;
 }
 
 export function formatDateForApi(value: Date | null): string {

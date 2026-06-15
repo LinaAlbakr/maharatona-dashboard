@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 import { useSettingsContext } from 'src/components/settings';
 
 import ProgramWizard from './program-wizard';
-import type { CategoryOption, ProgramFormValues } from './types';
+import type { CategoryOption } from './types';
 
 type Props = {
   mode?: 'create' | 'edit';
@@ -13,7 +13,7 @@ type Props = {
   centerId: string;
   centerName: string;
   categories: CategoryOption[];
-  initialValues?: ProgramFormValues;
+  initialCourse?: Record<string, unknown>;
 };
 
 const AddProgramView = ({
@@ -22,7 +22,7 @@ const AddProgramView = ({
   centerId,
   centerName,
   categories,
-  initialValues,
+  initialCourse,
 }: Props) => {
   const settings = useSettingsContext();
 
@@ -37,7 +37,7 @@ const AddProgramView = ({
         centerId={centerId}
         centerName={centerName}
         categories={categories}
-        initialValues={initialValues}
+        initialCourse={initialCourse}
       />
     </Container>
   );

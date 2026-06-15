@@ -4,7 +4,6 @@ import { fetchCategories } from 'src/actions/categories';
 import { fetchCenterInfo } from 'src/actions/centers';
 import { fetchCourseInfo } from 'src/actions/courses';
 import AddProgramView from 'src/sections/main/centers/add-program/view';
-import { mapCourseToProgramFormValues } from 'src/sections/main/centers/add-program/utils/map-course-to-form-values';
 
 export const metadata = {
   title: 'Edit Program',
@@ -42,8 +41,6 @@ const Page = async ({ params }: IProps) => {
     is_active: category.is_active !== false,
   }));
 
-  const initialValues = mapCourseToProgramFormValues(course);
-
   return (
     <AddProgramView
       mode="edit"
@@ -57,7 +54,7 @@ const Page = async ({ params }: IProps) => {
         ''
       }
       categories={categories}
-      initialValues={initialValues}
+      initialCourse={course}
     />
   );
 };

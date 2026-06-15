@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
@@ -29,6 +29,7 @@ import { SKIP_PROGRAM_STEP_VALIDATION } from './constants';
 import { programCardSx } from './styles';
 import type { CategoryOption, ProgramFormValues, ProgramStep } from './types';
 import { submitProgram } from './utils/submit-program';
+import { mapCourseToProgramFormValues } from './utils/map-course-to-form-values';
 import { getStepSchema } from './validation';
 
 type Props = {
@@ -37,7 +38,7 @@ type Props = {
   centerId: string;
   centerName: string;
   categories: CategoryOption[];
-  initialValues?: ProgramFormValues;
+  initialCourse?: Record<string, unknown>;
 };
 
 export default function ProgramWizard({
@@ -46,7 +47,7 @@ export default function ProgramWizard({
   centerId,
   centerName,
   categories,
-  initialValues,
+  initialCourse,
 }: Props) {
   const { t } = useTranslate();
   const router = useRouter();
@@ -55,8 +56,8 @@ export default function ProgramWizard({
   const [isPublishing, setIsPublishing] = useState(false);
 
   const defaultValues = useMemo(
-    () => initialValues ?? getProgramDefaultValues(),
-    [initialValues]
+    () => (initialCourse ? mapCourseToProgramFormValues(initialCourse) : getProgramDefaultValues()),
+    [initialCourse]
   );
   const isEditMode = mode === 'edit';
 
@@ -65,7 +66,12 @@ export default function ProgramWizard({
     mode: 'onChange',
   });
 
-  const { handleSubmit, watch, setError, clearErrors, setValue } = methods;
+  const { handleSubmit, watch, setError, clearErrors, setValue, reset } = methods;
+
+  useEffect(() => {
+    if (!initialCourse) return;
+    reset(mapCourseToProgramFormValues(initialCourse));
+  }, [initialCourse, reset]);
   const bookingType = watch('bookingType');
 
   const pageTitle = centerName

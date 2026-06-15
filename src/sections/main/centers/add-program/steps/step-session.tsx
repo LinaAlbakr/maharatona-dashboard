@@ -9,12 +9,11 @@ import TextField from '@mui/material/TextField';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { TimePicker } from '@mui/x-date-pickers';
 
 import { useTranslate } from 'src/locales';
 
-import { ClockIcon } from '../components/course-icons';
 import NumericTextField from '../components/numeric-text-field';
+import ProgramTimePicker from '../components/program-time-picker';
 import RequiredLabel from '../components/required-label';
 import { GENDER_OPTIONS, PROGRAM_TEAL } from '../constants';
 import { programFieldSx, programRadioLabelSx } from '../styles';
@@ -104,23 +103,11 @@ export default function StepSession() {
             name="start_time"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TimePicker
+              <ProgramTimePicker
                 value={field.value}
-                onChange={(value) => field.onChange(value)}
-                ampm={false}
-                format="HH:mm"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    placeholder: '00:00',
-                    error: !!error,
-                    helperText: error ? t(String(error.message)) : undefined,
-                    sx: programFieldSx,
-                  },
-                }}
-                slots={{
-                  openPickerIcon: ClockIcon,
-                }}
+                onChange={field.onChange}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
               />
             )}
           />
@@ -132,23 +119,11 @@ export default function StepSession() {
             name="end_time"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TimePicker
+              <ProgramTimePicker
                 value={field.value}
-                onChange={(value) => field.onChange(value)}
-                ampm={false}
-                format="HH:mm"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    placeholder: '00:00',
-                    error: !!error,
-                    helperText: error ? t(String(error.message)) : undefined,
-                    sx: programFieldSx,
-                  },
-                }}
-                slots={{
-                  openPickerIcon: ClockIcon,
-                }}
+                onChange={field.onChange}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
               />
             )}
           />

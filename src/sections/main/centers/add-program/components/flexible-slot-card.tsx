@@ -14,17 +14,17 @@ import Typography from '@mui/material/Typography';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import InputAdornment from '@mui/material/InputAdornment';
-import { TimePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 
 import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 
-import { CalendarIcon, ClockIcon, DeleteIcon, RiyalIcon } from './course-icons';
+import { CalendarIcon, DeleteIcon, RiyalIcon } from './course-icons';
 import DaySelector from './day-selector';
 import PriceVatLabel from './price-vat-label';
 import NumericTextField from './numeric-text-field';
+import ProgramTimePicker from './program-time-picker';
 import RequiredLabel from './required-label';
 import MultiDateCalendarPopover from './multi-date-calendar-popover';
 import SelectedDateGroupTag from './selected-date-group-tag';
@@ -573,23 +573,11 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
             name={`${basePath}.start_time`}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TimePicker
+              <ProgramTimePicker
                 value={field.value}
-                onChange={(value) => field.onChange(value)}
-                ampm={false}
-                format="HH:mm"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    placeholder: '00:00',
-                    error: !!error,
-                    helperText: error ? t(String(error.message)) : undefined,
-                    sx: programFieldSx,
-                  },
-                }}
-                slots={{
-                  openPickerIcon: ClockIcon,
-                }}
+                onChange={field.onChange}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
               />
             )}
           />
@@ -601,23 +589,11 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
             name={`${basePath}.end_time`}
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <TimePicker
+              <ProgramTimePicker
                 value={field.value}
-                onChange={(value) => field.onChange(value)}
-                ampm={false}
-                format="HH:mm"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    placeholder: '00:00',
-                    error: !!error,
-                    helperText: error ? t(String(error.message)) : undefined,
-                    sx: programFieldSx,
-                  },
-                }}
-                slots={{
-                  openPickerIcon: ClockIcon,
-                }}
+                onChange={field.onChange}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
               />
             )}
           />

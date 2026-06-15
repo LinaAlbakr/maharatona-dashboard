@@ -67,8 +67,8 @@ export type FlexibleSlot = {
   age_from: string;
   age_to: string;
   selected_days: string[];
-  start_time: Date | null;
-  end_time: Date | null;
+  start_time: string | null;
+  end_time: string | null;
   seat_capacity: string;
   price: string;
   class_time: string;
@@ -99,8 +99,8 @@ export type ProgramFormValues = {
   daysOffCustom: boolean;
   daysOffList: string[];
   datesOffList: Date[];
-  start_time: Date | null;
-  end_time: Date | null;
+  start_time: string | null;
+  end_time: string | null;
   gender: string;
   same_age_range: boolean;
   boys_age_from: string;

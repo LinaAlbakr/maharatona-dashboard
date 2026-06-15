@@ -1,4 +1,4 @@
-import { isValid, parse } from 'date-fns';
+import { isValid } from 'date-fns';
 
 import {
   createDefaultFlexibleModels,
@@ -9,7 +9,7 @@ import {
   FLEXIBLE_BOOKING_MODELS,
 } from '../constants';
 import { getProgramDefaultValues } from '../default-values';
-import { parseFormBoolean } from './course-api-helpers';
+import { parseFormBoolean, toFormTimeString } from './course-api-helpers';
 import type {
   FlexibleBookingModelKey,
   FlexibleModelConfig,
@@ -46,20 +46,6 @@ function parseApiDate(value: unknown): Date | null {
   if (!value) return null;
   const date = value instanceof Date ? value : new Date(String(value));
   return isValid(date) ? date : null;
-}
-
-function parseApiTime(value: unknown): Date | null {
-  if (!value) return null;
-  const raw = String(value).trim();
-  if (!raw) return null;
-
-  const patterns = ['h:mm a', 'hh:mm a', 'H:mm', 'HH:mm'];
-  for (const pattern of patterns) {
-    const parsed = parse(raw, pattern, new Date());
-    if (isValid(parsed)) return parsed;
-  }
-
-  return null;
 }
 
 function convertAbbrevDaysToFull(days: string[]): string[] {
@@ -118,8 +104,8 @@ function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBooki
     age_from: ageFrom,
     age_to: ageTo,
     selected_days: customDates.length > 0 ? [] : selectedDays,
-    start_time: parseApiTime(slot.start_time),
-    end_time: parseApiTime(slot.end_time),
+    start_time: toFormTimeString(slot.start_time),
+    end_time: toFormTimeString(slot.end_time),
     seat_capacity: str(slot.seat_capacity ?? ''),
     price: str(slot.price ?? ''),
     class_time: str(slot.class_time ?? ''),
@@ -204,8 +190,8 @@ function mapFixedSessionFields(course: Record<string, unknown>) {
     girls_age_from,
     girls_age_to,
     seats: str(course.seat_capacity ?? course.seats ?? ''),
-    start_time: parseApiTime(course.start_time),
-    end_time: parseApiTime(course.end_time),
+    start_time: toFormTimeString(course.start_time),
+    end_time: toFormTimeString(course.end_time),
   };
 }
 
