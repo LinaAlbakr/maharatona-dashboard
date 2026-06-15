@@ -53,13 +53,20 @@ const pickLocalizedText = (data: any, kind: 'title' | 'message') => {
   return fromRaw || fromTop || data?.[kind] || '-';
 };
 
+const normalizeProgramTerminology = (text: string) =>
+  text
+    .replace(/Course Name:/gi, 'Program Name:')
+    .replace(/\bhas created a new course\s*:/gi, 'has created a new program:')
+    .replace(/اسم الدورة:/g, 'اسم البرنامج:')
+    .replace(/تم إنشاء دورة جديدة/g, 'تم إنشاء برنامج جديد');
+
 /** Course booking (new order) — Figma fixed vs flexible; everything else unchanged. */
 const isAdminNewBooking = (data: any) => data?.notification_type === 'ADMIN_NEW_BOOKING';
 const isAdminNewCenter = (data: any) => data?.notification_type === 'ADMIN_NEW_CENTER';
 const isAdminNewCourse = (data: any) => data?.notification_type === 'ADMIN_NEW_COURSE';
 const isCenterCreatedCourse = (data: any) => {
   const msg = String(data?.message ?? data?.raw?.message_en ?? '').trim();
-  return /\bhas created a new course\s*:/i.test(msg);
+  return /\bhas created a new (course|program)\s*:/i.test(msg);
 };
 const isSimpleLineNotification = (data: any) =>
   isAdminNewCenter(data) || isAdminNewCourse(data) || isCenterCreatedCourse(data);
@@ -87,8 +94,8 @@ export default function NotificationCard({ data }: Readonly<Props>) {
   const actualType = readActualType(data);
   const courseName = readCourseName(data);
   const centerName = readCenterName(data);
-  const localizedTitle = pickLocalizedText(data, 'title');
-  const localizedMessage = pickLocalizedText(data, 'message');
+  const localizedTitle = normalizeProgramTerminology(pickLocalizedText(data, 'title'));
+  const localizedMessage = normalizeProgramTerminology(pickLocalizedText(data, 'message'));
 
   return (
     <Paper
@@ -168,7 +175,7 @@ export default function NotificationCard({ data }: Readonly<Props>) {
               </Paper>
               <Paper variant="outlined" sx={{ px: 1, py: 0.75, borderRadius: 1.5 }}>
                 <Typography variant="caption" color="text.secondary">
-                  Course
+                  Program
                 </Typography>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   {courseName || '-'}

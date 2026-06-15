@@ -11,7 +11,7 @@ import { isSameDay } from 'date-fns';
 
 import { useTranslate } from 'src/locales';
 
-import { PROGRAM_TEAL } from '../constants';
+import { CALENDAR_SELECTED_COLOR, PROGRAM_TEAL } from '../constants';
 import { programDatePickerDaySlotProps } from '../styles';
 import {
   type DaysOffRestrictions,
@@ -63,7 +63,7 @@ function MultiSelectDay(
           : {}),
         ...(selected && !isDisabled
           ? {
-              bgcolor: `${PROGRAM_TEAL} !important`,
+              bgcolor: `${CALENDAR_SELECTED_COLOR} !important`,
               color: 'common.white !important',
             }
           : {}),
