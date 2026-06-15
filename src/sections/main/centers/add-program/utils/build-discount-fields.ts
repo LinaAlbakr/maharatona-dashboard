@@ -18,8 +18,24 @@ export type DiscountFields = {
   discount: ReturnType<typeof buildSpecificDiscounts>;
 };
 
+export function hasDiscountConfigured(
+  values: Pick<ProgramFormValues, 'discount_type' | 'discount_amount' | 'discount'>
+): boolean {
+  if (values.discount_type === 'total') {
+    return Boolean(values.discount_amount?.trim());
+  }
+
+  return (values.discount ?? []).some((group) => {
+    const anyTitle = Boolean(group.title_ar?.trim() || group.title_en?.trim());
+    const anyRow = (group.discounts ?? []).some(
+      (row) => Boolean(row.no_of_kids?.trim() || row.discount?.trim())
+    );
+    return anyTitle || anyRow;
+  });
+}
+
 export function buildDiscountFields(values: ProgramFormValues): DiscountFields {
-  if (!values.enableDiscount || isTrialBookingActive(values.bookingType, values.flexibleModels)) {
+  if (!hasDiscountConfigured(values) || isTrialBookingActive(values.bookingType, values.flexibleModels)) {
     return {
       discount_type: 'total',
       discount_amount: '0',

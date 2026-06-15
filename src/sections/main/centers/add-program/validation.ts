@@ -1,12 +1,13 @@
 import * as yup from 'yup';
 
 import { FLEXIBLE_BOOKING_MODELS } from './constants';
-import type { BookingType, FlexibleBookingModelKey, ProgramStep } from './types';
+import type { BookingType, FlexibleBookingModelKey, ProgramFormValues, ProgramStep } from './types';
 import {
   getConfiguredFlexibleModelKeys,
   hasTrialAndMainModelConflict,
   isTrialBookingActive,
 } from './utils/flexible-model-config';
+import { hasDiscountConfigured } from './utils/build-discount-fields';
 
 const requiredMsg = 'LABEL.THIS_FIELD_IS_REQUIRED';
 
@@ -278,6 +279,38 @@ const buildStep2Schema = (
   });
 };
 
+const discountGroupSchema = yup
+  .object({
+    title_ar: yup.string(),
+    title_en: yup.string(),
+    discounts: yup.array().of(
+      yup.object({
+        no_of_kids: yup.string(),
+        discount: yup.string(),
+      })
+    ),
+  })
+  .test('complete-or-empty', requiredMsg, (group) => {
+    const titleAr = group?.title_ar?.trim() ?? '';
+    const titleEn = group?.title_en?.trim() ?? '';
+    const rows = group?.discounts ?? [];
+    const anyTitle = Boolean(titleAr || titleEn);
+    const anyRow = rows.some(
+      (row) => Boolean(row?.no_of_kids?.trim() || row?.discount?.trim())
+    );
+
+    if (!anyTitle && !anyRow) return true;
+    if (!titleAr || !titleEn) return false;
+
+    return rows.every((row) => {
+      const kids = row?.no_of_kids?.trim() ?? '';
+      const discount = row?.discount?.trim() ?? '';
+      const anyFilled = Boolean(kids || discount);
+      if (!anyFilled) return true;
+      return Boolean(kids && discount && !Number.isNaN(Number(kids)) && !Number.isNaN(Number(discount)));
+    });
+  });
+
 const buildStep3Schema = (
   bookingType: BookingType,
   flexibleModels?: Record<string, any>
@@ -285,39 +318,53 @@ const buildStep3Schema = (
   const trialActive = isTrialBookingActive(bookingType, flexibleModels);
 
   if (trialActive) {
-    return yup.object({
-      enableDiscount: yup.boolean(),
-    });
+    return yup.object({});
   }
 
   return yup.object({
-    enableDiscount: yup.boolean(),
     discount_type: yup.string(),
-    discount_amount: yup.string().when(['enableDiscount', 'discount_type'], {
-      is: (enableDiscount: boolean, discount_type: string) =>
-        enableDiscount && discount_type === 'total',
-      then: (schema) => schema.required(requiredMsg),
-      otherwise: (schema) => schema,
+    discount_amount: yup.string().test('total-discount', requiredMsg, function validateTotalDiscount(value) {
+      const parent = this.parent as {
+        discount_type?: string;
+        discount_amount?: string;
+        discount?: ProgramFormValues['discount'];
+      };
+
+      if (!hasDiscountConfigured({
+        discount_type: (parent.discount_type as ProgramFormValues['discount_type']) ?? 'total',
+        discount_amount: parent.discount_amount ?? '',
+        discount: parent.discount ?? [],
+      })) {
+        return true;
+      }
+
+      if (parent.discount_type !== 'total') return true;
+
+      const amount = value?.trim() ?? '';
+      return Boolean(amount) && !Number.isNaN(Number(amount));
     }),
-    discount: yup.array().when(['enableDiscount', 'discount_type'], {
-      is: (enableDiscount: boolean, discount_type: string) =>
-        enableDiscount && discount_type === 'specific',
+    discount: yup.array().when('discount_type', {
+      is: 'specific',
       then: (schema) =>
-        schema.of(
-          yup.object({
-            title_ar: yup.string().required(requiredMsg),
-            title_en: yup.string().required(requiredMsg),
-            discounts: yup
-              .array()
-              .min(1)
-              .of(
-                yup.object({
-                  no_of_kids: numberField(),
-                  discount: numberField(),
-                })
-              ),
-          })
-        ),
+        schema.test('specific-discount', requiredMsg, function validateSpecificDiscount(groups) {
+          const parent = this.parent as {
+            discount_type?: string;
+            discount_amount?: string;
+            discount?: ProgramFormValues['discount'];
+          };
+
+          if (!hasDiscountConfigured({
+            discount_type: 'specific',
+            discount_amount: parent.discount_amount ?? '',
+            discount: (groups as ProgramFormValues['discount']) ?? [],
+          })) {
+            return true;
+          }
+
+          return (groups ?? []).every((group, index) =>
+            discountGroupSchema.isValidSync(group, { context: { index } })
+          );
+        }),
       otherwise: (schema) => schema,
     }),
   });

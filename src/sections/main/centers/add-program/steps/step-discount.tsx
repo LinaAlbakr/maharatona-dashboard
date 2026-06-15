@@ -8,7 +8,6 @@ import Card from '@mui/material/Card';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import Radio from '@mui/material/Radio';
-import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -36,7 +35,6 @@ import {
   programItemCardSx,
   programRadioControlLabelSx,
   programStepHeadingSx,
-  programSwitchSx,
 } from '../styles';
 import type { ProgramFormValues } from '../types';
 import { isTrialBookingActive } from '../utils/flexible-model-config';
@@ -48,7 +46,6 @@ export default function StepDiscount() {
   const bookingType = watch('bookingType');
   const flexibleModels = watch('flexibleModels');
   const isTrialActive = isTrialBookingActive(bookingType, flexibleModels);
-  const enableDiscount = watch('enableDiscount');
   const discountType = watch('discount_type');
 
   useEffect(() => {
@@ -63,39 +60,16 @@ export default function StepDiscount() {
 
   return (
     <Box sx={isTrialActive ? disabledProgramSectionSx : undefined}>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-        <Typography
-          sx={{
-            ...programStepHeadingSx,
-            mb: 0,
-            ...(isTrialActive ? { color: STEP_INACTIVE_COLOR } : {}),
-          }}
-        >
-          {t('ADD_PROGRAM.ENABLE_DISCOUNT')}
-        </Typography>
-        <Controller
-          name="enableDiscount"
-          control={control}
-          render={({ field }) => (
-            <Switch
-              checked={field.value}
-              disabled={isTrialActive}
-              onChange={(event) => {
-                const checked = event.target.checked;
-                field.onChange(checked);
-                if (!checked) {
-                  setValue('discount_amount', '');
-                  setValue('discount', [{ ...EMPTY_DISCOUNT_GROUP }]);
-                }
-              }}
-              sx={programSwitchSx}
-            />
-          )}
-        />
-      </Box>
+      <Typography
+        sx={{
+          ...programStepHeadingSx,
+          ...(isTrialActive ? { color: STEP_INACTIVE_COLOR } : {}),
+        }}
+      >
+        {t('ADD_PROGRAM.ENABLE_DISCOUNT')}
+      </Typography>
 
-      {enableDiscount && !isTrialActive ? (
-        <Box>
+      {!isTrialActive ? (
           <Controller
             name="discount_type"
             control={control}
@@ -218,7 +192,6 @@ export default function StepDiscount() {
               </>
             )}
           />
-        </Box>
       ) : null}
     </Box>
   );

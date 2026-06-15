@@ -33,7 +33,7 @@ export const getProgramDefaultValues = (): ProgramFormValues => ({
   flexibleModels: createDefaultFlexibleModels(),
   additional_questions: [{ ...EMPTY_QUESTION }],
   addOnMaterials: [{ ...EMPTY_MATERIAL }],
-  enableDiscount: true,
+  enableDiscount: false,
   discount_type: 'total',
   discount_amount: '',
   discount: [{ ...EMPTY_DISCOUNT_GROUP }],
