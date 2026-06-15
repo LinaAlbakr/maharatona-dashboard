@@ -1,5 +1,6 @@
 import {
   FREE_BOOKING_COLOR,
+  PROGRAM_SECTION_HEADING_COLOR,
   PROGRAM_TEAL,
   PROGRAM_TEAL_DARK,
 } from 'src/sections/main/centers/add-program/constants';
@@ -137,6 +138,35 @@ export const priceValueSx = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: 0.75,
+  direction: 'ltr',
+};
+
+export const priceWithDiscountRowSx = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 1,
+  flexWrap: 'wrap',
+  direction: 'ltr',
+};
+
+export const originalPriceStrikethroughSx = {
+  ...priceValueSx,
+  color: '#6B7FA8',
+  textDecoration: 'line-through',
+};
+
+export const discountedPriceBadgeSx = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 0.5,
+  bgcolor: PROGRAM_SECTION_HEADING_COLOR,
+  color: 'common.white',
+  borderRadius: '8px',
+  px: 1,
+  py: 0.5,
+  fontSize: 14,
+  fontWeight: 600,
+  lineHeight: 1.4,
   direction: 'ltr',
 };
 

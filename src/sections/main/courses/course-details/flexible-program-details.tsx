@@ -177,7 +177,7 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
                 >
                   {t('PROGRAM_DETAILS.PACKAGES')}
                 </Typography>
-                <FlexiblePackagesTable packages={packages} isArabic={isArabic} />
+                <FlexiblePackagesTable packages={packages} isArabic={isArabic} course={course} />
               </Box>
             )}
 
@@ -196,6 +196,7 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
                     index={index}
                     isArabic={isArabic}
                     variant={isFreeTrial ? 'trial' : 'default'}
+                    course={course}
                   />
                 ))}
               </Box>

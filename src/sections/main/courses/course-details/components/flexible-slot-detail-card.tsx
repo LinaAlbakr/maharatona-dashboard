@@ -11,7 +11,7 @@ import { SlotIcon } from 'src/sections/main/centers/add-program/components/cours
 import { detailGridSx, freeTrialSlotCardSx, sessionNestedCardSx } from '../styles';
 import { getSlotDetailFields, getSlotTitle } from '../flexible-utils';
 import DetailField from './detail-field';
-import PriceValue from './price-value';
+import PriceWithDiscountValue from './price-with-discount-value';
 
 type Props = {
   modelKey: FlexibleBookingModelKey;
@@ -19,6 +19,7 @@ type Props = {
   index: number;
   isArabic: boolean;
   variant?: 'default' | 'trial';
+  course?: any;
 };
 
 export default function FlexibleSlotDetailCard({
@@ -27,6 +28,7 @@ export default function FlexibleSlotDetailCard({
   index,
   isArabic,
   variant = 'default',
+  course,
 }: Props) {
   const { t } = useTranslate();
   const title = getSlotTitle(slot, isArabic);
@@ -62,7 +64,7 @@ export default function FlexibleSlotDetailCard({
             label={field.label}
             value={
               field.label.toLowerCase().includes('price') ? (
-                <PriceValue amount={field.value as number | string} />
+                <PriceWithDiscountValue amount={field.value as number | string} course={course} />
               ) : (
                 field.value
               )

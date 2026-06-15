@@ -3,19 +3,34 @@ import { enUS } from 'date-fns/locale';
 
 import { convertTime24to12 } from 'src/utils/format-time';
 
-export const getDiscountedPrice = (course: any): number | null => {
-  const basePrice = Number(course?.price ?? 0);
+export const getDiscountedAmount = (
+  basePrice: number | string | null | undefined,
+  course: any
+): number | null => {
+  const price = Number(basePrice ?? 0);
   const discountAmount = Number(course?.discount_amount ?? 0);
   const discountType = String(course?.discount_type ?? '').toLowerCase();
 
-  if (!Number.isFinite(basePrice) || basePrice <= 0) return null;
+  if (!Number.isFinite(price) || price <= 0) return null;
   if (!Number.isFinite(discountAmount) || discountAmount <= 0) return null;
   if (discountType !== 'total') return null;
 
-  const discounted = basePrice - (basePrice * discountAmount) / 100;
+  const discounted = price - (price * discountAmount) / 100;
   if (!Number.isFinite(discounted)) return null;
 
   return Math.max(0, Math.round(discounted * 100) / 100);
+};
+
+export const getDiscountedPrice = (course: any): number | null =>
+  getDiscountedAmount(course?.price, course);
+
+export const formatPriceDisplay = (amount: number | string | null | undefined): string => {
+  const value = Number(amount);
+  if (!Number.isFinite(value)) return '-';
+  if (Number.isInteger(value) || value % 1 === 0) {
+    return String(Math.round(value));
+  }
+  return String(Math.round(value * 10) / 10);
 };
 
 const toValidProgramDate = (date: string | Date | null | undefined): Date | null => {

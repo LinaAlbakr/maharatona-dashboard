@@ -13,7 +13,7 @@ import {
   specificDiscountTableRowSx,
 } from '../styles';
 import { getLocalizedText } from '../utils';
-import PriceValue from './price-value';
+import PriceWithDiscountValue from './price-with-discount-value';
 
 type PackageRow = {
   title_ar?: string;
@@ -25,9 +25,10 @@ type PackageRow = {
 type Props = {
   packages: PackageRow[];
   isArabic: boolean;
+  course?: any;
 };
 
-export default function FlexiblePackagesTable({ packages, isArabic }: Props) {
+export default function FlexiblePackagesTable({ packages, isArabic, course }: Props) {
   const { t } = useTranslate();
 
   if (!packages.length) return null;
@@ -62,7 +63,7 @@ export default function FlexiblePackagesTable({ packages, isArabic }: Props) {
             {getLocalizedText(isArabic, pkg.title_ar, pkg.title_en)}
           </Typography>
           <Typography sx={detailValueSx}>{pkg.number_of_classes ?? '-'}</Typography>
-          <PriceValue amount={pkg.price} />
+          <PriceWithDiscountValue amount={pkg.price} course={course} />
         </Box>
       ))}
     </Box>

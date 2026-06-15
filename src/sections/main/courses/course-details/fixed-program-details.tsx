@@ -16,6 +16,7 @@ import { paths } from 'src/routes/paths';
 import { useSettingsContext } from 'src/components/settings';
 
 import DetailField from './components/detail-field';
+import PriceWithDiscountValue from './components/price-with-discount-value';
 import PriceValue from './components/price-value';
 import DetailSectionCard from './components/detail-section-card';
 import ProgramDetailHeader from './components/program-detail-header';
@@ -45,7 +46,6 @@ import {
   formatProgramDate,
   formatProgramTime,
   getCourseImageUrls,
-  getDiscountedPrice,
   getLocalizedText,
   getSessionAgeDisplay,
 } from './utils';
@@ -186,7 +186,6 @@ export default function FixedProgramDetailsView({ course }: Props) {
   const { t } = useTranslate();
   const isArabic = i18n.language === 'ar';
   const courseId = String(course?.id ?? course?._id ?? '');
-  const discountedPrice = getDiscountedPrice(course);
   const sessionAges = getSessionAgeDisplay(course);
 
   const images = getCourseImageUrls(course?.course_images);
@@ -289,10 +288,9 @@ export default function FixedProgramDetailsView({ course }: Props) {
           />
           <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
           <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
-          <DetailField label={t('LABEL.PRICE')} value={<PriceValue amount={course?.price} />} />
           <DetailField
-            label={t('LABEL.DISCOUNTED_PRICE')}
-            value={<PriceValue amount={discountedPrice ?? course?.price} />}
+            label={t('LABEL.PRICE')}
+            value={<PriceWithDiscountValue amount={course?.price} course={course} />}
           />
         </Box>
       </DetailSectionCard>
