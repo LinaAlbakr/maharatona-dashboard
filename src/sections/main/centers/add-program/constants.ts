@@ -95,7 +95,7 @@ export const EMPTY_FLEXIBLE_PACKAGE = {
 export const EMPTY_FLEXIBLE_SLOT = {
   title_ar: '',
   title_en: '',
-  gender: 'Boys',
+  gender: 'Mixed',
   same_age_range: false,
   boys_age_from: '',
   boys_age_to: '',

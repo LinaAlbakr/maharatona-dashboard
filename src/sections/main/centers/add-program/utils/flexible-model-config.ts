@@ -80,6 +80,8 @@ export const MAIN_FLEXIBLE_MODEL_KEYS: FlexibleBookingModelKey[] = [
   'monthly',
 ];
 
+export const DEFAULT_FLEXIBLE_BOOKING_MODEL: FlexibleBookingModelKey = 'daily';
+
 export function hasFlexibleTrialSlotData(model: FlexibleModelConfig | undefined): boolean {
   if (!model) return false;
   return (model.slots ?? []).some((slot) => isFlexibleSlotConfigured(slot));
@@ -122,5 +124,5 @@ export function getDefaultFlexibleSessionModel(
     }
   }
 
-  return 'minutes';
+  return DEFAULT_FLEXIBLE_BOOKING_MODEL;
 }

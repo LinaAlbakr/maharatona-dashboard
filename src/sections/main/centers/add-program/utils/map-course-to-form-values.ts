@@ -88,7 +88,7 @@ function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBooki
     label: String(dateValue),
   }));
 
-  const gender = str(slot.gender || 'Boys');
+  const gender = str(slot.gender || 'Mixed');
   const ageFrom = str(slot.age_from ?? slot.boys_age_from ?? '');
   const ageTo = str(slot.age_to ?? slot.boys_age_to ?? '');
 
@@ -159,7 +159,7 @@ function mapFlexibleModels(course: Record<string, unknown>): Record<FlexibleBook
 function mapFixedSessionFields(course: Record<string, unknown>) {
   const gender = str(course.gender || 'Mixed');
   const isMixed = gender === 'Mixed';
-  const sameAgeRange = parseFormBoolean(course.same_age_range);
+  const sameAgeRange = isMixed ? parseFormBoolean(course.same_age_range ?? true) : false;
 
   let boys_age_from = '';
   let boys_age_to = '';

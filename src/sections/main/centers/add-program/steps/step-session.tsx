@@ -145,7 +145,9 @@ export default function StepSession() {
                 onChange={(event) => {
                   const nextGender = event.target.value;
                   field.onChange(nextGender);
-                  if (nextGender !== 'Mixed') {
+                  if (nextGender === 'Mixed') {
+                    setValue('same_age_range', true);
+                  } else {
                     setValue('same_age_range', false);
                   }
                 }}

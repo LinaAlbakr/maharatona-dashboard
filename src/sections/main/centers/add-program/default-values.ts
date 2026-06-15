@@ -24,7 +24,7 @@ export const getProgramDefaultValues = (): ProgramFormValues => ({
   start_time: '',
   end_time: '',
   gender: 'Mixed',
-  same_age_range: false,
+  same_age_range: true,
   boys_age_from: '',
   boys_age_to: '',
   girls_age_from: '',
