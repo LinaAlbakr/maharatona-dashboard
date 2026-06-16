@@ -18,6 +18,10 @@ import RequiredLabel from '../components/required-label';
 import WordCountTextarea from '../components/word-count-textarea';
 import { programDatePickerDaySlotProps, programFieldSx } from '../styles';
 import type { CategoryOption, ProgramFormValues } from '../types';
+import {
+  getProgramEndDateMin,
+  getProgramMinSelectableDate,
+} from '../utils/course-api-helpers';
 
 type Props = {
   categories: CategoryOption[];
@@ -25,7 +29,10 @@ type Props = {
 
 export default function StepProgram({ categories }: Props) {
   const { t } = useTranslate();
-  const { control } = useFormContext<ProgramFormValues>();
+  const { control, watch } = useFormContext<ProgramFormValues>();
+  const startDate = watch('start_date');
+  const minSelectableDate = getProgramMinSelectableDate();
+  const endDateMin = getProgramEndDateMin(startDate);
 
   return (
     <Box>
@@ -94,6 +101,8 @@ export default function StepProgram({ categories }: Props) {
                 value={field.value}
                 onChange={(value) => field.onChange(value)}
                 format="dd-MM-yyyy"
+                minDate={minSelectableDate}
+                disablePast
                 slotProps={{
                   day: programDatePickerDaySlotProps,
                   textField: {
@@ -122,6 +131,8 @@ export default function StepProgram({ categories }: Props) {
                 value={field.value}
                 onChange={(value) => field.onChange(value)}
                 format="dd-MM-yyyy"
+                minDate={endDateMin}
+                disablePast
                 slotProps={{
                   day: programDatePickerDaySlotProps,
                   textField: {

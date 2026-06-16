@@ -1,4 +1,4 @@
-import { format, isValid, parse, startOfToday } from 'date-fns';
+import { format, isValid, max, parse, startOfToday } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 
 import type { AdditionalQuestion, AddOnMaterial } from '../types';
@@ -104,6 +104,21 @@ export function formatTimeForApi(value: Date | string | null | undefined): strin
 export function formatDateForApi(value: Date | null): string {
   if (!value) return '';
   return format(value, 'yyyy-MM-dd');
+}
+
+export function getProgramMinSelectableDate(): Date {
+  return startOfToday();
+}
+
+export function getProgramEndDateMin(startDate: Date | null | undefined): Date {
+  if (startDate instanceof Date && isValid(startDate)) {
+    return max([startOfToday(), startDate]);
+  }
+  return startOfToday();
+}
+
+export function isDateBeforeToday(date: Date): boolean {
+  return date < startOfToday();
 }
 
 /** Map API date values to a local calendar date for date pickers (avoids timezone drift on edit). */

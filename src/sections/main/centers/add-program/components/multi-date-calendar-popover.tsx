@@ -13,6 +13,7 @@ import { useTranslate } from 'src/locales';
 
 import { CALENDAR_SELECTED_COLOR, PROGRAM_TEAL } from '../constants';
 import { programDatePickerDaySlotProps } from '../styles';
+import { isDateBeforeToday, getProgramMinSelectableDate } from '../utils/course-api-helpers';
 import {
   type DaysOffRestrictions,
   isDateDisabledByDaysOff,
@@ -37,7 +38,8 @@ function MultiSelectDay(
   const selected = selectedDates.some((date) => isSameDay(date, day));
   const blockedByDaysOff =
     daysOffRestrictions && isDateDisabledByDaysOff(day, daysOffRestrictions);
-  const isDisabled = Boolean(other.disabled || blockedByDaysOff);
+  const isPastDate = isDateBeforeToday(day);
+  const isDisabled = Boolean(other.disabled || blockedByDaysOff || isPastDate);
 
   return (
     <PickersDay
@@ -120,6 +122,8 @@ export default function MultiDateCalendarPopover({
     >
       <DateCalendar<Date>
         onChange={() => undefined}
+        minDate={getProgramMinSelectableDate()}
+        disablePast
         slots={{
           day: (dayProps: PickersDayProps<Date>) => (
             <MultiSelectDay

@@ -350,7 +350,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             ),
             walletBalance: (item: any) => (
               <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
-                {item?.walletBalance ?? 0}
+                {Number(item?.walletBalance ?? 0).toFixed(2)}
               </Box>
             ),
           }}
