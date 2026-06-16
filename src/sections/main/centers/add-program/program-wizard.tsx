@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
@@ -54,6 +54,7 @@ export default function ProgramWizard({
   const { enqueueSnackbar } = useSnackbar();
   const [activeStep, setActiveStep] = useState<ProgramStep>(0);
   const [isPublishing, setIsPublishing] = useState(false);
+  const wizardTopRef = useRef<HTMLDivElement | null>(null);
 
   const defaultValues = useMemo(
     () => (initialCourse ? mapCourseToProgramFormValues(initialCourse) : getProgramDefaultValues()),
@@ -72,6 +73,14 @@ export default function ProgramWizard({
     if (!initialCourse) return;
     reset(mapCourseToProgramFormValues(initialCourse));
   }, [initialCourse, reset]);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      wizardTopRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' });
+    });
+  }, [activeStep]);
+
   const bookingType = watch('bookingType');
 
   const pageTitle = centerName
@@ -229,6 +238,7 @@ export default function ProgramWizard({
   return (
     <FormProvider methods={methods}>
       <Typography
+        ref={wizardTopRef}
         sx={{
           fontSize: 24,
           fontWeight: 700,
