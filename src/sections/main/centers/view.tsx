@@ -27,6 +27,7 @@ import { ICenter } from 'src/types/centers';
 import SendNotification from './center-details/components/send-notification';
 import { useTranslation } from 'react-i18next';
 import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
+import { fAmount } from 'src/utils/format-number';
 
 type props = {
   centers: ICenter[];
@@ -350,7 +351,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             ),
             walletBalance: (item: any) => (
               <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
-                {Number(item?.walletBalance ?? 0).toFixed(2)}
+                {fAmount(item?.walletBalance ?? 0)}
               </Box>
             ),
           }}
