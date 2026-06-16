@@ -308,7 +308,7 @@ export default function FixedProgramDetailsView({ course }: Props) {
           <DetailField label={t('ADD_PROGRAM.GENDER')} value={getGenderLabel(course?.gender)} />
           <DetailField
             label={t('ADD_PROGRAM.SEAT_CAPACITY')}
-            value={course?.seat_capacity ?? course?.seats ?? '-'}
+            value={course?.fixed_total_seats ?? course?.seat_capacity ?? course?.seats ?? '-'}
           />
 
           {sessionAges.mode === 'single' ? (

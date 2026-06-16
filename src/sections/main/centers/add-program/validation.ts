@@ -19,6 +19,7 @@ const numberField = () =>
     .test('is-number', requiredMsg, (value) => value !== '' && !Number.isNaN(Number(value)));
 
 const seatsMustBePositiveMsg = 'ADD_PROGRAM.SEATS_MUST_BE_GREATER_THAN_ZERO';
+const seatCapacityLessThanBookingsMsg = 'ADD_PROGRAM.SEAT_CAPACITY_LESS_THAN_BOOKINGS';
 
 const positiveNumberField = () =>
   numberField().test(
@@ -190,7 +191,17 @@ const fixedStep1Schema = yup.object({
     then: () => ageToField('girls_age_from'),
     otherwise: (schema) => schema,
   }),
-  seats: positiveNumberField(),
+  seats: positiveNumberField().test(
+    'min-bookings',
+    seatCapacityLessThanBookingsMsg,
+    function validateSeatsAgainstBookings(value) {
+      const bookingCount = Number(
+        (this.parent as ProgramFormValues).fixed_bookings_count ?? 0
+      );
+      if (!value?.trim() || bookingCount <= 0) return true;
+      return Number(value) >= bookingCount;
+    }
+  ),
 });
 
 const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {

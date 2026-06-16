@@ -108,6 +108,7 @@ export type ProgramFormValues = {
   girls_age_from: string;
   girls_age_to: string;
   seats: string;
+  fixed_bookings_count: number;
   flexibleModels: Record<FlexibleBookingModelKey, FlexibleModelConfig>;
   additional_questions: AdditionalQuestion[];
   addOnMaterials: AddOnMaterial[];

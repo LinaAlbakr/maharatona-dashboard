@@ -91,10 +91,12 @@ export const fetchCourseInfo = async (courseId: string): Promise<any> => {
         description_en: c.description_en || c.desc_en || c.descEN,
         students: c.clients || c.students || [],
         number_of_users: Array.isArray(c.clients) ? c.clients.length : (c.number_of_users || 0),
-        seat_capacity: c.seat_capacity ?? c.seats,
+        fixed_bookings_count: c.fixed_bookings_count ?? 0,
+        seat_capacity: c.fixed_total_seats ?? c.seat_capacity ?? c.seats,
         seats_remaining:
-          c.seats_left !== undefined && c.seats_left !== null ? c.seats_left : c.seats,
-        seats: c.seat_capacity ?? c.seats,
+          c.fixed_remaining_seats ??
+          (c.seats_left !== undefined && c.seats_left !== null ? c.seats_left : c.seats),
+        seats: c.fixed_total_seats ?? c.seat_capacity ?? c.seats,
         field: c.field || c.field_id || {},
         course_type: c.course_type || 'fixed',
         gender: c.gender,

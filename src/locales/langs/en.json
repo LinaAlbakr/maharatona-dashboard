@@ -500,6 +500,7 @@
     "MAXIMUM": "Maximum",
     "SEAT_CAPACITY": "Seat Capacity",
     "SEATS_MUST_BE_GREATER_THAN_ZERO": "Seat capacity must be greater than 0",
+    "SEAT_CAPACITY_LESS_THAN_BOOKINGS": "Seat capacity cannot be less than the current number of bookings.",
     "ENTER_SEATS": "Enter the number of available seats",
     "QUESTIONS": "Questions",
     "QUESTION_AR": "Question (Arabic)",

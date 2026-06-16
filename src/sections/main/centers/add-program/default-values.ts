@@ -30,6 +30,7 @@ export const getProgramDefaultValues = (): ProgramFormValues => ({
   girls_age_from: '',
   girls_age_to: '',
   seats: '',
+  fixed_bookings_count: 0,
   flexibleModels: createDefaultFlexibleModels(),
   additional_questions: [{ ...EMPTY_QUESTION }],
   addOnMaterials: [{ ...EMPTY_MATERIAL }],

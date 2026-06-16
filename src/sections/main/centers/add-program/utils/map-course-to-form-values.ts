@@ -185,7 +185,7 @@ function mapFixedSessionFields(course: Record<string, unknown>) {
     boys_age_to,
     girls_age_from,
     girls_age_to,
-    seats: str(course.seat_capacity ?? course.seats ?? ''),
+    seats: str(course.fixed_total_seats ?? course.seat_capacity ?? course.seats ?? ''),
     start_time: toFormTimeString(course.start_time),
     end_time: toFormTimeString(course.end_time),
   };
@@ -280,6 +280,7 @@ export function mapCourseToProgramFormValues(course: Record<string, unknown>): P
     daysOffList,
     datesOffList,
     ...(bookingType === 'fixed' ? mapFixedSessionFields(course) : {}),
+    fixed_bookings_count: Number(course.fixed_bookings_count ?? 0),
     flexibleModels:
       bookingType === 'flexible' ? mapFlexibleModels(course) : defaults.flexibleModels,
     additional_questions: questions.length

@@ -501,6 +501,7 @@
     "MAXIMUM": "الأقصى",
     "SEAT_CAPACITY": "عدد المقاعد",
     "SEATS_MUST_BE_GREATER_THAN_ZERO": "يجب أن يكون عدد المقاعد أكبر من 0",
+    "SEAT_CAPACITY_LESS_THAN_BOOKINGS": "لا يمكن أن تكون سعة المقاعد أقل من عدد الحجوزات الحالية.",
     "ENTER_SEATS": "ادخل عدد المقاعد المتاحة",
     "QUESTIONS": "الاسئلة",
     "QUESTION_AR": "السؤال بالعربي",
