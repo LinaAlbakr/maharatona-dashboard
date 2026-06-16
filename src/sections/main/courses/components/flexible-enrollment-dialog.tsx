@@ -109,6 +109,10 @@ function isSlotModelFull(course: Record<string, unknown> | null, row: FlexModelR
     }
   }
 
+  if (row.key === 'minutes' || row.key === 'hourly' || row.key === 'trial') {
+    return slots.every((s: { is_full?: boolean }) => s?.is_full === true);
+  }
+
   return slots.every((s: any) => Number(s?.seat_capacity ?? 0) <= 0);
 }
 
