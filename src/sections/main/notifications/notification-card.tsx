@@ -68,8 +68,12 @@ const isCenterCreatedCourse = (data: any) => {
   const msg = String(data?.message ?? data?.raw?.message_en ?? '').trim();
   return /\bhas created a new (course|program)\s*:/i.test(msg);
 };
+const isCenterBuyPackage = (data: any) => data?.notification_type === 'CENTER_BUY_PACKAGE';
 const isSimpleLineNotification = (data: any) =>
-  isAdminNewCenter(data) || isAdminNewCourse(data) || isCenterCreatedCourse(data);
+  isAdminNewCenter(data) ||
+  isAdminNewCourse(data) ||
+  isCenterCreatedCourse(data) ||
+  isCenterBuyPackage(data);
 
 const formatEnglishTimeLtr = (value: any) => {
   const d = value ? new Date(value) : null;
