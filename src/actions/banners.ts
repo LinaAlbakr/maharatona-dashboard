@@ -140,7 +140,6 @@ export const newBanner = async (reqBody: FormData): Promise<any> => {
       advertisement_type: 'type',
       desc_ar: 'desc_ar',
       desc_en: 'desc_en',
-      advertisement_status: 'advertisement_status',
     };
     Object.entries(mappings).forEach(([from, to]) => {
       const value = reqBody.get(from);
@@ -148,10 +147,8 @@ export const newBanner = async (reqBody: FormData): Promise<any> => {
         payload.append(to, value as any);
       }
     });
-    // Default status to Active if not provided
-    if (!payload.get('advertisement_status')) {
-      payload.append('advertisement_status', 'Active');
-    }
+    // New packages are always created inactive
+    payload.set('advertisement_status', 'Blocked');
 
     await axiosInstance.post(endpoints.banners.newBanner, payload, {
       headers: {
