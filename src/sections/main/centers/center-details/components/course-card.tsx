@@ -1,13 +1,21 @@
 import { Avatar, Box, Card, ListItemText, Typography } from '@mui/material';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
+import { resolveCourseImageUrl } from 'src/sections/main/courses/course-details/utils';
 
 type props = {
   course: any;
 };
 
+const LABEL_BLUE = '#2065B2';
+const VALUE_PINK = '#CC3899';
+
 const CourseCard = ({ course }: props) => {
   const { t } = useTranslate();
+  const categoryName =
+    course?.field &&
+    (i18n.language === 'ar' ? course.field?.name_ar : course.field?.name_en);
+  const imageUrl = resolveCourseImageUrl(course.course_images?.[0]);
 
   return (
     <Card
@@ -23,7 +31,7 @@ const CourseCard = ({ course }: props) => {
     >
       <Avatar
         sx={{ width: 150, height: 150 }}
-        src={course.course_images?.[0]?.trim() || '/assets/images/centers/gray.jpeg'}
+        src={imageUrl || undefined}
       />
       <Typography variant="h4" color="info.dark">
         {i18n.language === 'ar' ? (course?.name_ar || course?.name) : (course?.name_en || course?.name)}
@@ -39,30 +47,27 @@ const CourseCard = ({ course }: props) => {
         <ListItemText
           sx={{
             gridColumn: 'span',
-            color: 'primary.main',
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
           }}
-          primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
-          secondary={course.enrolled_children || 0}
-          secondaryTypographyProps={{ color: 'info.dark', fontSize: '17px', fontWeight: 'bold' }}
-        />{' '}
-        <ListItemText
-          primary={t('LABEL.FIELD_NAME')}
-          secondary={
-            // eslint-disable-next-line no-nested-ternary
-            course?.field
-              ? i18n.language === 'ar'
-                ? course.field?.name_ar
-                : course.field?.name_en
-              : '-'
-          }
+          primary={t('LABEL.NO_OF_REGISTRANTS')}
+          secondary={course.enrolled_children ?? 0}
           primaryTypographyProps={{
-            sx: { color: 'info.dark', fontWeight: "700" },
+            sx: { color: LABEL_BLUE, fontSize: '16px', fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: 'primary.main', fontWeight: "700" },
+            sx: { color: VALUE_PINK, fontSize: '14px', fontWeight: 700 },
+          }}
+        />
+        <ListItemText
+          primary={t('LABEL.CATEGORY')}
+          secondary={categoryName || '-'}
+          primaryTypographyProps={{
+            sx: { color: LABEL_BLUE, fontWeight: 700 },
+          }}
+          secondaryTypographyProps={{
+            sx: { color: VALUE_PINK, fontWeight: 700 },
           }}
         />
       </Box>

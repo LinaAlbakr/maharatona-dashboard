@@ -215,7 +215,6 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
           actions={[
             {
               sx: { color: 'info.dark' },
-
               label: t('LABEL.SHOW_NEIGHBORHOODS'),
               icon: 'hugeicons:city-03',
               onClick: (item: any) => {
@@ -223,17 +222,7 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'mingcute:delete-fill',
-              onClick: (item) => {
-                setSelectedId(item._id || item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
-
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
               onClick: (item: any) => {
@@ -251,6 +240,16 @@ const CitiesView = ({ count, cities }: Readonly<props>) => {
                 confirmDeactivate.onTrue();
               },
               hide: (row) => row.is_active === false,
+            },
+            {
+              dividerBefore: true,
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item._id || item.id);
+                confirmDelete.onTrue();
+              },
             },
           ]}
           customRender={{

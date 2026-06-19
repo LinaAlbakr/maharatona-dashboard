@@ -1,21 +1,35 @@
 'use client';
 
 import Image from 'next/image';
-import { useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import { Box, Card, Grid, Container, Pagination, Typography } from '@mui/material';
 
 import { useTranslate } from 'src/locales';
+import i18n from 'src/locales/i18n';
+import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 
 import { useSettingsContext } from 'src/components/settings';
 
 import RateItem from '../components/rate-item';
 import CourseCardReport from '../components/course-card-report';
 
+const REVIEWS_PER_PAGE = 6;
+const PAYOUTS_PER_PAGE = 6;
+
 interface Props {
   CenterReports?: any;
 }
+
+type PayoutRow = {
+  id: string;
+  referenceNumber: string;
+  amount: number;
+  transferDate: string;
+  additionalNote?: string;
+};
+
 const Reports = ({ CenterReports }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
@@ -23,37 +37,86 @@ const Reports = ({ CenterReports }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  const count = (count: number) => {
-    if (count / 6 > 1) {
-      return Math.ceil(count / 6);
+  const pageCount = (count: number, perPage: number) => {
+    if (count / perPage > 1) {
+      return Math.ceil(count / perPage);
     }
     return 1;
   };
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    createQueryString(value);
+  const handleReviewsPageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(value));
+    router.push(`${pathname}?${params.toString()}`);
   };
-  const createQueryString = useCallback(
-    (value: number) => {
-      if (value) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('page', String(value));
-        router.push(`${pathname}?${params.toString()}`);
-      } else {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('page', String(1));
-        router.push(`${pathname}?${params.toString()}`);
-      }
+
+  const handlePayoutsPageChange = useCallback(
+    (_event: React.ChangeEvent<unknown>, value: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('payoutPage', String(value));
+      router.push(`${pathname}?${params.toString()}`);
     },
     [pathname, router, searchParams]
   );
+
+  const formatAmount = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 20,
+      }).format(value),
+    []
+  );
+
+  const formatDate = useCallback((value: string) => {
+    if (!value) return '-';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '-';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }, []);
+
+  const payouts: PayoutRow[] = useMemo(() => {
+    const list = CenterReports?.data?.payouts ?? [];
+    return list.map((p: any) => ({
+      id: p?.id ?? p?._id ?? '',
+      referenceNumber: p?.referenceNumber ?? '',
+      amount: Number(p?.amount) || 0,
+      transferDate: p?.transferDate ? new Date(p.transferDate).toISOString() : '',
+      additionalNote: p?.additionalNote ?? '',
+    }));
+  }, [CenterReports?.data?.payouts]);
+
+  const reviews = CenterReports?.data?.CenterReviews ?? [];
+  const reviewPage = Number(searchParams.get('page')) || 1;
+  const payoutPage = Number(searchParams.get('payoutPage')) || 1;
+
+  const paginatedReviews = reviews.slice(
+    (reviewPage - 1) * REVIEWS_PER_PAGE,
+    reviewPage * REVIEWS_PER_PAGE
+  );
+
+  const paginatedPayouts = payouts.slice(
+    (payoutPage - 1) * PAYOUTS_PER_PAGE,
+    payoutPage * PAYOUTS_PER_PAGE
+  );
+
+  const PAYOUT_TABLE_HEAD = [
+    { id: 'referenceNumber', label: 'LABEL.REFERENCE_NUMBER' },
+    { id: 'amount', label: 'LABEL.AMOUNT' },
+    { id: 'transferDate', label: 'LABEL.TRANSFER_DATE' },
+    { id: 'additionalNote', label: 'LABEL.ADDITIONAL_NOTE' },
+  ];
+
   return (
     <Container
       maxWidth={settings.themeStretch ? false : 'xl'}
       sx={{ margin: '0px !important', padding: { xs: '5px !important', sm: '0px !important' } }}
     >
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
+        {/* Top row: KPI cards + Payouts table */}
         <Grid
           item
           md={4}
@@ -135,14 +198,18 @@ const Reports = ({ CenterReports }: Props) => {
               <Typography variant="body1" color="#EF1844">
                 {t('LABEL.TOTAL_PROFIT')}
               </Typography>
-              <Typography variant="h3" color="#EF1844">
-                {CenterReports?.data?.totalProfit}{' '}
+              <Typography
+                variant="h3"
+                color="#EF1844"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+              >
                 <Image
                   src="/assets/images/red-sar-logo.svg"
                   alt="sar logo"
                   height={40}
                   width={40}
                 />
+                {CenterReports?.data?.totalProfit}
               </Typography>
             </Box>
             <Image src="/assets/images/centers/profit.svg" alt="image" width={50} height={50} />
@@ -172,6 +239,7 @@ const Reports = ({ CenterReports }: Props) => {
             <Image src="/assets/images/centers/views.svg" alt="image" width={50} height={50} />
           </Box>
         </Grid>
+
         <Grid item md={8} sm={12} xs={12}>
           <Card
             sx={{
@@ -183,30 +251,95 @@ const Reports = ({ CenterReports }: Props) => {
             }}
           >
             <Box>
-              <Typography variant="h5" color="secondary" sx={{ mb: 1 }}>
-                {t('LABEL.CUSTOMER_RATINGS')}
+              <Typography variant="h5" color="secondary" sx={{ mb: 2 }}>
+                {t('LABEL.PAYOUTS')}
               </Typography>
-              {CenterReports?.data?.CenterReviews?.map((item: any) => (
-                <RateItem key={item.id} rate={item} />
+              <SharedTable
+                count={payouts.length}
+                data={paginatedPayouts}
+                tableHead={PAYOUT_TABLE_HEAD}
+                disablePagination
+                headColor="secondary.main"
+                customRender={{
+                  amount: (row) => (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Typography
+                        component="span"
+                        aria-label="Riyal"
+                        sx={{
+                          color: '#2B509C',
+                          fontWeight: 700,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          lineHeight: 0,
+                        }}
+                      >
+                        <Box
+                          component="span"
+                          sx={{
+                            width: 17,
+                            height: 17,
+                            bgcolor: 'currentColor',
+                            mask: 'url(/assets/icons/rial.svg) no-repeat center / contain',
+                            WebkitMask: 'url(/assets/icons/rial.svg) no-repeat center / contain',
+                          }}
+                        />
+                      </Typography>
+                      {formatAmount(row.amount)}
+                    </Box>
+                  ),
+                  transferDate: (row) => formatDate(row.transferDate),
+                  additionalNote: (row) => row?.additionalNote || '-',
+                }}
+              />
+            </Box>
+            <Pagination
+              sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
+              count={pageCount(payouts.length, PAYOUTS_PER_PAGE)}
+              page={payoutPage}
+              color="secondary"
+              onChange={handlePayoutsPageChange}
+            />
+          </Card>
+        </Grid>
+
+        {/* Client Reviews - full width */}
+        <Grid item xs={12}>
+          <Card
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Box>
+              <Typography variant="h5" color="secondary" sx={{ mb: 2 }}>
+                {t('LABEL.CLIENT_REVIEWS')}
+              </Typography>
+              {paginatedReviews.map((item: any) => (
+                <RateItem key={item.id ?? item._id} rate={item} />
               ))}
-              {CenterReports?.data?.CenterReviews?.length === 0 && (
-                <Typography variant="h4" color="secondary" sx={{ textAlign: 'center' }}>
+              {reviews.length === 0 && (
+                <Typography variant="h6" color="secondary" sx={{ textAlign: 'center', py: 4 }}>
                   {t('LABEL.NO_DATA')}
                 </Typography>
               )}
             </Box>
             <Pagination
               sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}
-              count={count(CenterReports?.data?.CenterReviews?.length)}
-              page={Number(searchParams.get('page')) || 1}
+              count={pageCount(reviews.length, REVIEWS_PER_PAGE)}
+              page={reviewPage}
               color="secondary"
-              onChange={handleChange}
+              onChange={handleReviewsPageChange}
             />
           </Card>
         </Grid>
+
+        {/* Top Programs */}
         <Grid item xs={12}>
-          <Typography variant="h5" color="secondary" sx={{ my: 4 }}>
-            {t('LABEL.TOP_THREE_COURSES')}
+          <Typography variant="h5" color="secondary" sx={{ mb: 2 }}>
+            {t('LABEL.TOP_PROGRAMS')}
           </Typography>
           <Box
             sx={{
@@ -216,7 +349,7 @@ const Reports = ({ CenterReports }: Props) => {
             }}
           >
             {CenterReports?.data?.topCourses?.map((item: any) => (
-              <CourseCardReport key={item.id} course={item} />
+              <CourseCardReport key={item.id ?? item._id} course={item} />
             ))}
           </Box>
         </Grid>

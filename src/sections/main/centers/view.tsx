@@ -27,6 +27,7 @@ import { ICenter } from 'src/types/centers';
 import SendNotification from './center-details/components/send-notification';
 import { useTranslation } from 'react-i18next';
 import { useAdminEntityListsRealtimeRefresh } from 'src/hooks/use-admin-entity-lists-realtime';
+import { fAmount } from 'src/utils/format-number';
 
 type props = {
   centers: ICenter[];
@@ -72,7 +73,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
     { id: 'phone', label: 'LABEL.PHONE' },
     { id: 'number_of_courses', label: 'LABEL.NUMBER_OF_COURSES' },
     { id: 'number_of_registrants', label: 'LABEL.NUMBER_OF_REGISTRANTS' },
-    { id: 'walletBalance', label: 'LABEL.WALLET_BALANCE' },
+    { id: 'walletBalance', label: 'LABEL.NEXT_PAYOUT' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
 
@@ -248,6 +249,14 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             },
             {
               sx: { color: 'info.dark' },
+              label: t('LABEL.ADD_PROGRAM'),
+              icon: 'mingcute:add-line',
+              onClick: (item) => {
+                router.push(paths.dashboard.centerAddProgram(item.id));
+              },
+            },
+            {
+              sx: { color: 'info.dark' },
               label: t('LABEL.SEND_NOTIFICATION'),
               icon: 'mingcute:notification-fill',
               onClick: (item) => {
@@ -342,7 +351,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             ),
             walletBalance: (item: any) => (
               <Box sx={{ color: isCenterInactive(item) ? BLOCKED_CENTER_TEXT_COLOR : 'inherit' }}>
-                {item?.walletBalance ?? 0}
+                {fAmount(item?.walletBalance ?? 0)}
               </Box>
             ),
           }}

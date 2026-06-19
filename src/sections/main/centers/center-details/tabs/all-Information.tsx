@@ -17,6 +17,10 @@ const AllInformation = ({ CenterInfo }: Props) => {
   const { t } = useTranslate();
   const settings = useSettingsContext();
 
+  const notAvailable = t('LABEL.NOT_AVAILABLE');
+  const centerDescription =
+    (i18n.language === 'ar' ? CenterInfo?.desc_ar : CenterInfo?.desc_en)?.trim() || notAvailable;
+
   return (
     <Container
       maxWidth={settings.themeStretch ? false : 'xl'}
@@ -49,8 +53,8 @@ const AllInformation = ({ CenterInfo }: Props) => {
         >
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.DESCRIPTION')}
-            secondary={i18n.language === 'ar' ? CenterInfo?.desc_ar : CenterInfo?.desc_en || t('LABEL.NO_DESCRIPTION_AVAILABLE')} // ❌ description not in API → show placeholder or omit
+            primary={t('LABEL.CENTER_DESCRIPTION')}
+            secondary={centerDescription}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
@@ -62,7 +66,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
                   target="_blank" rel="noopener noreferrer">
                   {CenterInfo.website.trim()}
                 </a>
-              ) : t('LABEL.NOT_AVAILABLE')
+              ) : notAvailable
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
@@ -96,46 +100,53 @@ const AllInformation = ({ CenterInfo }: Props) => {
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.EMAIL')}
-            secondary={CenterInfo?.email || t('LABEL.NOT_AVAILABLE')}
+            secondary={CenterInfo?.email || notAvailable}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
 
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.COURSES_NUMBER')}
+            primary={t('LABEL.NO_OF_PROGRAMS')}
             secondary={CenterInfo?.total_courses ?? 0}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.LOCATION_DESCRIPTION')}
-            secondary={CenterInfo?.place_desc || t('LABEL.NOT_AVAILABLE')}
+            secondary={CenterInfo?.place_desc || notAvailable}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.FIELDS')}
+            primary={t('LABEL.CATEGORIES')}
             secondary={
               Array.isArray(CenterInfo?.fields)
                 ? CenterInfo.fields
                   .map((field: any) => (i18n.language === 'ar' ? field?.name_ar : field?.name_en))
                   .filter(Boolean)
-                  .join(', ')
-                : t('LABEL.NOT_AVAILABLE')
+                  .join(', ') || notAvailable
+                : notAvailable
             }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.CITY')}
-            secondary={i18n.language === 'ar' ? CenterInfo?.city.name_ar : CenterInfo?.city.name_en || t('LABEL.NOT_AVAILABLE')}
+            secondary={
+              (i18n.language === 'ar' ? CenterInfo?.city?.name_ar : CenterInfo?.city?.name_en) ||
+              notAvailable
+            }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
 
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
             primary={t('LABEL.NEIGHBORHOOD')}
-            secondary={i18n.language === 'ar' ? CenterInfo?.neighborhood.name_ar : CenterInfo?.neighborhood.name_en || t('LABEL.NOT_AVAILABLE')}
+            secondary={
+              (i18n.language === 'ar'
+                ? CenterInfo?.neighborhood?.name_ar
+                : CenterInfo?.neighborhood?.name_en) || notAvailable
+            }
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
@@ -146,13 +157,13 @@ const AllInformation = ({ CenterInfo }: Props) => {
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
-            secondary={CenterInfo?.total_registrants}
+            primary={t('LABEL.NO_OF_REGISTRANTS')}
+            secondary={CenterInfo?.total_registrants ?? notAvailable}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />
           <ListItemText
             sx={{ gridColumn: 'span', color: 'primary.main' }}
-            primary={t('LABEL.TOTAL_RATE')}
+            primary={t('LABEL.RATING')}
             secondary={<Rating value={CenterInfo?.avg_rate || 0} precision={0.5} readOnly />}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
           />

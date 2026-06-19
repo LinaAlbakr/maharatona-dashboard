@@ -163,6 +163,11 @@ export const endpoints = {
       `/admin/delete-center-review/${centerId}/${reviewId}`,
     clearWallet: (centerId: string) => `/admin-panel/clearing-the-center-wallet/${centerId}`,
     deleteCenter: (centerId: string) => `/admin/delete-center/${centerId}`,
+    createCourse: (centerId: string) => `/admin/center/${centerId}/create-course`,
+    createFlexibleCourse: (centerId: string) =>
+      `/admin/center/${centerId}/create-flexible-course`,
+    updateCourse: (centerId: string, courseId: string) =>
+      `/admin/center/${centerId}/update-course/${courseId}`,
   },
   courses: {
     fetch: '/admin/get-all-courses',
@@ -191,7 +196,7 @@ export const endpoints = {
     changePhone: `/admin/auth/change-phone-number`,
   },
   support: {
-    calls_reasons: {
+    contact_reasons: {
       fetch: '/admin/get-all-calls-reasons',
       delete_reason: (reasonId: string) => `/admin/delete-calls-reason/${reasonId}`,
       new: '/admin/add-calls-reason',

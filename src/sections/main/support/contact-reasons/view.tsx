@@ -22,7 +22,7 @@ type props = {
   count: number;
 };
 
-const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
+const ContactReasonsView = ({ count, reasons }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -114,7 +114,7 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           }}
         >
           <Typography variant="h3" color="white">
-            {t('LABEL.CALLS_REASONS')}
+            {t('LABEL.CONTACT_REASONS')}
           </Typography>
           <Grid
             sx={{
@@ -170,21 +170,22 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
           disablePagination
           actions={[
             {
-              sx: { color: 'error.main' },
-              label: t('LABEL.DELETE'),
-              icon: 'material-symbols:delete',
-              onClick: (item) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
               label: t('LABEL.EDIT'),
               icon: 'material-symbols:edit',
               onClick: (item) => {
                 setSelectedReason(item);
                 setIsFormDialogOpen(true);
+              },
+            },
+            {
+              dividerBefore: true,
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'material-symbols:delete',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
               },
             },
           ]}
@@ -263,4 +264,4 @@ const CallsReasonsView = ({ count, reasons }: Readonly<props>) => {
   );
 };
 
-export default CallsReasonsView;
+export default ContactReasonsView;

@@ -24,6 +24,19 @@ function getLocaleCode() {
 
 // ----------------------------------------------------------------------
 
+/** Rounds to 2 decimals; omits ".00" when there is no fractional part. */
+export function fAmount(inputValue: InputValue) {
+  if (inputValue == null || inputValue === '') return '0';
+
+  const number = Number(inputValue);
+  if (!Number.isFinite(number)) return '';
+
+  const fixed = number.toFixed(2);
+  return fixed.endsWith('.00') ? fixed.slice(0, -3) : fixed;
+}
+
+// ----------------------------------------------------------------------
+
 export function fNumber(inputValue: InputValue) {
   const { code } = getLocaleCode();
 

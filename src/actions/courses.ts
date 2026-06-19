@@ -91,11 +91,42 @@ export const fetchCourseInfo = async (courseId: string): Promise<any> => {
         description_en: c.description_en || c.desc_en || c.descEN,
         students: c.clients || c.students || [],
         number_of_users: Array.isArray(c.clients) ? c.clients.length : (c.number_of_users || 0),
-        seats: (c.seats_left !== undefined && c.seats_left !== null) ? c.seats_left : c.seats,
+        fixed_bookings_count: c.fixed_bookings_count ?? 0,
+        seat_capacity: c.fixed_total_seats ?? c.seat_capacity ?? c.seats,
+        seats_remaining:
+          c.fixed_remaining_seats ??
+          (c.seats_left !== undefined && c.seats_left !== null ? c.seats_left : c.seats),
+        seats: c.fixed_total_seats ?? c.seat_capacity ?? c.seats,
         field: c.field || c.field_id || {},
+        course_type: c.course_type || 'fixed',
+        gender: c.gender,
+        same_age_range: c.same_age_range,
+        age_from: c.age_from,
+        age_to: c.age_to,
+        boys_age_from: c.boys_age_from,
+        boys_age_to: c.boys_age_to,
+        girls_age_from: c.girls_age_from,
+        girls_age_to: c.girls_age_to,
+        additional_questions: Array.isArray(c.additional_questions) ? c.additional_questions : [],
+        addOnMaterials: Array.isArray(c.addOnMaterials) ? c.addOnMaterials : [],
+        discount: Array.isArray(c.discount) ? c.discount : [],
+        discount_type: c.discount_type,
+        discount_amount: c.discount_amount,
         course_images: Array.isArray(c.course_images)
           ? c.course_images.map((img: any) => (typeof img === 'string' ? { url: img } : img))
           : [],
+        package: c.package || {},
+        trialSlots: c.trialSlots || [],
+        minutesSlots: c.minutesSlots || [],
+        hourlySlots: c.hourlySlots || [],
+        dailySlots: c.dailySlots || [],
+        weeklySlots: c.weeklySlots || [],
+        monthlySlots: c.monthlySlots || [],
+        daysOffList: c.daysOffList || [],
+        datesOffList: c.datesOffList || [],
+        center_id: c.center_id?._id ?? c.center_id ?? '',
+        desc_ar: c.desc_ar || c.description_ar,
+        desc_en: c.desc_en || c.description_en,
       };
       return { data: normalized, message: responseData.message };
     }
@@ -118,6 +149,18 @@ export const editPercentage = async (data: any): Promise<any> => {
   } catch (error) {
     throw new Error(error);
   }
+};
+
+export const revalidateAfterCourseCreate = async (
+  courseId: string | undefined,
+  centerId: string
+): Promise<void> => {
+  revalidatePath('/dashboard/courses');
+  if (courseId) {
+    revalidatePath(`/dashboard/courses/${courseId}`);
+  }
+  revalidatePath(`/dashboard/centers/${centerId}`);
+  revalidatePath('/dashboard/centers');
 };
 
 export const deleteCousre = async (courseId: string): Promise<any> => {

@@ -11,7 +11,7 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push(paths.dashboard.supportGroup.calls_reasons);
+    router.push(paths.dashboard.supportGroup.contact_reasons);
   }, [router]);
 
   return null;

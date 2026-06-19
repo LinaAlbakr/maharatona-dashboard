@@ -1,6 +1,10 @@
 import { Avatar, Box, Card, ListItemText, Typography } from '@mui/material';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
+import { resolveCourseImageUrl } from 'src/sections/main/courses/course-details/utils';
+
+const LABEL_BLUE = '#2065B2';
+const VALUE_PINK = '#CC3899';
 
 type props = {
   course: any;
@@ -8,6 +12,7 @@ type props = {
 
 const CourseCardReport = ({ course }: props) => {
   const { t } = useTranslate();
+  const imageUrl = resolveCourseImageUrl(course.course_images?.[0]);
 
   return (
     <Card
@@ -23,7 +28,7 @@ const CourseCardReport = ({ course }: props) => {
     >
       <Avatar
         sx={{ width: 150, height: 150 }}
-        src={course.course_images?.[0]?.trim() || '/assets/images/centers/gray.jpeg'}
+        src={imageUrl || undefined}
       />
       <Typography variant="h4" color="info.dark">
         {i18n.language === 'ar' ? (course?.name_ar || course?.name) : (course?.name_en || course?.name)}
@@ -38,20 +43,22 @@ const CourseCardReport = ({ course }: props) => {
       >
         <ListItemText
           sx={{
-            gridColumn: 'span',
-            color: 'primary.main',
             display: 'flex',
             alignItems: 'center',
             flexDirection: 'column',
           }}
-          primary={t('LABEL.NUMBER_OF_REGISTRANTS')}
+          primary={t('LABEL.NO_OF_REGISTRANTS')}
           secondary={course.registrants}
-          secondaryTypographyProps={{ color: 'info.dark', fontSize: '17px', fontWeight: 'bold' }}
-        />{' '}
+          primaryTypographyProps={{
+            sx: { color: LABEL_BLUE, fontWeight: 700 },
+          }}
+          secondaryTypographyProps={{
+            sx: { color: VALUE_PINK, fontSize: '17px', fontWeight: 'bold' },
+          }}
+        />
         <ListItemText
-          primary={t('LABEL.FIELD_NAME')}
+          primary={t('LABEL.CATEGORY')}
           secondary={
-            // eslint-disable-next-line no-nested-ternary
             course?.feild
               ? i18n.language === 'ar'
                 ? course.feild?.name_ar
@@ -59,10 +66,10 @@ const CourseCardReport = ({ course }: props) => {
               : '-'
           }
           primaryTypographyProps={{
-            sx: { color: 'info.dark', fontWeight: "700" },
+            sx: { color: LABEL_BLUE, fontWeight: 700 },
           }}
           secondaryTypographyProps={{
-            sx: { color: 'primary.main', fontWeight: "700" },
+            sx: { color: VALUE_PINK, fontWeight: 700 },
           }}
         />
       </Box>

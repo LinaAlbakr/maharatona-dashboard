@@ -40,6 +40,7 @@ import { Banner } from 'src/types/banners';
 
 import FileManagerNewFolderDialog from './add-banner';
 import { NewEditBannerDialog } from './new-edit-banner-dialog';
+import { getPackageAdTypeLabel } from './package-ad-type';
 
 type props = {
   banners: Banner[];
@@ -251,17 +252,7 @@ const BannersView = ({ banners, count, fieldsName }: Readonly<props>) => {
               },
             },
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'mingcute:delete-fill',
-              onClick: (item) => {
-                setSelectedId(item.id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
-
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
               onClick: (item: any) => {
@@ -280,12 +271,20 @@ const BannersView = ({ banners, count, fieldsName }: Readonly<props>) => {
               },
               hide: (row) => row.advertisement_status === 'Blocked',
             },
+            {
+              dividerBefore: true,
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id);
+                confirmDelete.onTrue();
+              },
+            },
           ]}
           customRender={{
             advertisementType: (item) =>
-              item.advertisementType === 'FIELD'
-                ? t(`LABEL.${item.advertisementType}S`)
-                : t(`LABEL.${item.advertisementType}`),
+              getPackageAdTypeLabel(item.advertisementType, t),
             price: (item) => (
               <>
                 {Math.floor(+item.price)}{' '}

@@ -214,17 +214,7 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
           disablePagination
           actions={[
             {
-              sx: { color: 'error.dark' },
-              label: t('LABEL.DELETE'),
-              icon: 'mingcute:delete-fill',
-              onClick: (item) => {
-                setSelectedId(item.id || item._id);
-                confirmDelete.onTrue();
-              },
-            },
-            {
               sx: { color: 'info.dark' },
-
               label: t('LABEL.ACTIVATE'),
               icon: 'uim:process',
               onClick: (item: any) => {
@@ -242,6 +232,16 @@ const NeighborhoodsView = ({ count, neighborhoods, cityId }: Readonly<props>) =>
                 confirmDeactivate.onTrue();
               },
               hide: (row) => row.is_active === false,
+            },
+            {
+              dividerBefore: true,
+              sx: { color: 'error.dark' },
+              label: t('LABEL.DELETE'),
+              icon: 'mingcute:delete-fill',
+              onClick: (item) => {
+                setSelectedId(item.id || item._id);
+                confirmDelete.onTrue();
+              },
             },
           ]}
           customRender={{

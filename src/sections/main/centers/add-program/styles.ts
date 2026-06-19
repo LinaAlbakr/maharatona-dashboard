@@ -1,0 +1,212 @@
+import {
+  ADD_BOX_BG_COLOR,
+  ADD_BOX_TEXT_COLOR,
+  CALENDAR_SELECTED_COLOR,
+  FIELD_BORDER_COLOR,
+  FIELD_LABEL_COLOR,
+  FIELD_PLACEHOLDER_COLOR,
+  PROGRAM_FIELD_HEIGHT,
+  PROGRAM_SECTION_HEADING_COLOR,
+  PROGRAM_TEAL,
+  PROGRAM_TEAL_DARK,
+} from './constants';
+
+export const programCardSx = {
+  bgcolor: 'background.paper',
+  borderRadius: '16px',
+  boxShadow: '0px 4px 24px rgba(145, 158, 171, 0.12)',
+  p: { xs: 2.5, md: 4 },
+};
+
+export const programFieldSx = {
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '12px',
+    bgcolor: 'background.paper',
+    fontSize: 14,
+    '&:not(.MuiInputBase-multiline)': {
+      height: PROGRAM_FIELD_HEIGHT,
+      alignItems: 'center',
+    },
+    '& fieldset': {
+      borderColor: FIELD_BORDER_COLOR,
+    },
+    '&:hover fieldset': {
+      borderColor: FIELD_BORDER_COLOR,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: FIELD_BORDER_COLOR,
+      borderWidth: '1px',
+    },
+  },
+  '& .MuiOutlinedInput-input': {
+    fontSize: 14,
+    color: FIELD_LABEL_COLOR,
+    '&::placeholder': {
+      color: FIELD_PLACEHOLDER_COLOR,
+      opacity: 1,
+      fontSize: 14,
+    },
+  },
+  '& .MuiSelect-select': {
+    display: 'flex',
+    alignItems: 'center',
+    py: 0,
+    minHeight: 'unset !important',
+    height: '100%',
+    boxSizing: 'border-box',
+    color: FIELD_LABEL_COLOR,
+    fontSize: 14,
+  },
+  '& input.MuiOutlinedInput-input': {
+    py: 0,
+    height: '100%',
+    boxSizing: 'border-box',
+  },
+  '& .MuiOutlinedInput-root:not(.MuiInputBase-multiline) .MuiInputAdornment-root': {
+    height: '100%',
+    maxHeight: 'none',
+    alignItems: 'center',
+  },
+  '& .MuiInputLabel-root': {
+    display: 'none',
+  },
+};
+
+export const programPlaceholderTextSx = {
+  color: FIELD_PLACEHOLDER_COLOR,
+  fontSize: 14,
+  fontWeight: 400,
+};
+
+export const programDatePickerDaySlotProps = {
+  sx: {
+    '&.Mui-selected': {
+      backgroundColor: CALENDAR_SELECTED_COLOR,
+      color: 'common.white',
+      '&:hover': {
+        backgroundColor: CALENDAR_SELECTED_COLOR,
+      },
+      '&:focus': {
+        backgroundColor: CALENDAR_SELECTED_COLOR,
+      },
+    },
+  },
+};
+
+export const programTitleSx = {
+  color: PROGRAM_TEAL_DARK,
+  fontWeight: 700,
+  mb: 3,
+};
+
+export const programSectionTitleSx = {
+  color: FIELD_LABEL_COLOR,
+  fontWeight: 600,
+  fontSize: 16,
+  mb: 2,
+};
+
+export const programStepHeadingSx = {
+  color: PROGRAM_SECTION_HEADING_COLOR,
+  fontWeight: 700,
+  fontSize: 22,
+  mb: 2,
+  lineHeight: 1.3,
+};
+
+export const disabledProgramSectionSx = {
+  opacity: 0.38,
+  pointerEvents: 'none',
+  userSelect: 'none',
+};
+
+export const dashedAddButtonSx = {
+  borderStyle: 'dashed',
+  borderColor: ADD_BOX_TEXT_COLOR,
+  borderRadius: '12px',
+  bgcolor: ADD_BOX_BG_COLOR,
+  color: ADD_BOX_TEXT_COLOR,
+  py: 1.75,
+  fontWeight: 600,
+  '& .MuiButton-startIcon': {
+    color: ADD_BOX_TEXT_COLOR,
+  },
+  '&:hover': {
+    borderStyle: 'dashed',
+    borderColor: ADD_BOX_TEXT_COLOR,
+    bgcolor: ADD_BOX_BG_COLOR,
+    color: ADD_BOX_TEXT_COLOR,
+  },
+};
+
+export const programPrimaryButtonSx = {
+  borderRadius: '40px',
+  py: 1.5,
+  px: 4,
+  fontWeight: 600,
+  fontSize: '1rem',
+  bgcolor: PROGRAM_TEAL,
+  color: 'common.white',
+  boxShadow: 'none',
+  '&:hover': {
+    bgcolor: PROGRAM_TEAL_DARK,
+    boxShadow: 'none',
+  },
+};
+
+export const programOutlinedButtonSx = {
+  borderRadius: '40px',
+  py: 1.5,
+  px: 4,
+  fontWeight: 600,
+  fontSize: '1rem',
+  borderColor: PROGRAM_TEAL,
+  color: PROGRAM_TEAL,
+  '&:hover': {
+    borderColor: PROGRAM_TEAL_DARK,
+    bgcolor: 'rgba(58, 176, 173, 0.04)',
+  },
+};
+
+export const programRadioLabelSx = {
+  '& .MuiFormControlLabel-label': {
+    color: FIELD_LABEL_COLOR,
+  },
+};
+
+export const programRadioControlLabelSx = {
+  alignItems: 'center',
+  margin: 0,
+  '& .MuiFormControlLabel-label': {
+    color: FIELD_LABEL_COLOR,
+    fontSize: 16,
+    fontWeight: 500,
+    lineHeight: 1.4,
+  },
+};
+
+export const programSwitchSx = {
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: '#ffffff',
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: PROGRAM_TEAL,
+    opacity: 1,
+  },
+};
+
+export const innerCardSx = {
+  border: '1px solid',
+  borderColor: 'grey.200',
+  borderRadius: '12px',
+  p: { xs: 2, md: 3 },
+  mb: 2,
+};
+
+export const programItemCardSx = {
+  bgcolor: 'background.paper',
+  borderRadius: '16px',
+  boxShadow: '0px 4px 24px rgba(145, 158, 171, 0.12)',
+  p: { xs: 2.5, md: 3 },
+  mb: 2,
+};

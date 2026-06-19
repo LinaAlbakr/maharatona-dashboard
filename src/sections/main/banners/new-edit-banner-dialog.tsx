@@ -33,7 +33,7 @@ import { RHFSelect, RHFTextarea, RHFUploadAvatar } from 'src/components/hook-for
 
 import { Banner } from 'src/types/banners';
 
-const OPTIONS = ['MAIN', 'FIELD', 'BOTH'];
+import { getPackageAdTypeLabel, PACKAGE_AD_TYPE_OPTIONS } from './package-ad-type';
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -188,9 +188,9 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
               <RHFSelect name="advertisement_type" label={`${t('LABEL.TYPE')}`}>
                 {/*     <MenuItem value="">None</MenuItem>
                 <Divider sx={{ borderStyle: 'dashed' }} /> */}
-                {OPTIONS.map((option: string, index: number) => (
-                  <MenuItem key={index} value={option}>
-                    {t(`LABEL.${option}`)}
+                {PACKAGE_AD_TYPE_OPTIONS.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {getPackageAdTypeLabel(option, t)}
                   </MenuItem>
                 ))}
               </RHFSelect>

@@ -8,15 +8,22 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 type Props = {
   CenterCourses: any;
 };
+const PAGE_SIZE = 6;
+
 const Courses = ({ CenterCourses }: Props) => {
   const settings = useSettingsContext();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const count = (count: number) => {
-    if (count / 6 > 1) {
-      return Math.ceil(count / 6);
-    } else return 1;
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const allCourses = CenterCourses?.data ?? [];
+  const paginatedCourses = allCourses.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+  const pageCount = (total: number) => {
+    if (total <= 0) return 1;
+    return Math.max(1, Math.ceil(total / PAGE_SIZE));
   };
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     createQueryString(value);
@@ -52,14 +59,14 @@ const Courses = ({ CenterCourses }: Props) => {
           gap: 4,
         }}
       >
-        {CenterCourses.data.map((course: any) => (
-          <CourseCard key={course.id} course={course} />
+        {paginatedCourses.map((course: any) => (
+          <CourseCard key={course._id ?? course.id} course={course} />
         ))}
       </Stack>
       <Pagination
         sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}
-        count={count(CenterCourses.meta.itemCount)}
-        page={Number(searchParams.get('page')) || 1}
+        count={pageCount(CenterCourses?.meta?.itemCount ?? allCourses.length)}
+        page={currentPage}
         color="secondary"
         onChange={handleChange}
       />

@@ -1,0 +1,416 @@
+import * as yup from 'yup';
+
+import { FLEXIBLE_BOOKING_MODELS } from './constants';
+import type { BookingType, FlexibleBookingModelKey, ProgramFormValues, ProgramStep } from './types';
+import {
+  getConfiguredFlexibleModelKeys,
+  hasTrialAndMainModelConflict,
+  isTrialBookingActive,
+} from './utils/flexible-model-config';
+import { hasDiscountConfigured } from './utils/build-discount-fields';
+import { parseApiTime } from './utils/course-api-helpers';
+
+const requiredMsg = 'LABEL.THIS_FIELD_IS_REQUIRED';
+
+const numberField = () =>
+  yup
+    .string()
+    .required(requiredMsg)
+    .test('is-number', requiredMsg, (value) => value !== '' && !Number.isNaN(Number(value)));
+
+const seatsMustBePositiveMsg = 'ADD_PROGRAM.SEATS_MUST_BE_GREATER_THAN_ZERO';
+const seatCapacityLessThanBookingsMsg = 'ADD_PROGRAM.SEAT_CAPACITY_LESS_THAN_BOOKINGS';
+
+const positiveNumberField = () =>
+  numberField().test(
+    'positive',
+    seatsMustBePositiveMsg,
+    (value) => value !== '' && Number(value) > 0
+  );
+
+const endTimeAfterStartMsg = 'ADD_PROGRAM.END_TIME_MUST_BE_AFTER_START_TIME';
+const ageToMustBeGreaterMsg = 'ADD_PROGRAM.AGE_TO_MUST_BE_GREATER_THAN_AGE_FROM';
+
+const timeField = () =>
+  yup
+    .string()
+    .required(requiredMsg)
+    .test('is-time', requiredMsg, (value) => Boolean(parseApiTime(value)));
+
+const timeOfDayMinutes = (value: unknown): number | null => {
+  const parsed = parseApiTime(value);
+  if (!parsed) return null;
+  return parsed.getHours() * 60 + parsed.getMinutes();
+};
+
+const endTimeAfterStartTime = () =>
+  yup
+    .string()
+    .required(requiredMsg)
+    .test('is-time', requiredMsg, (value) => Boolean(parseApiTime(value)))
+    .test('after-start', endTimeAfterStartMsg, function validateEndTime(endTime) {
+      const { start_time: startTime } = this.parent as { start_time?: string | null };
+      const startMinutes = timeOfDayMinutes(startTime);
+      const endMinutes = timeOfDayMinutes(endTime);
+      if (startMinutes === null || endMinutes === null) return true;
+      return endMinutes > startMinutes;
+    });
+
+const ageToField = (fromField: string) =>
+  numberField().test('age-order', ageToMustBeGreaterMsg, function validateAgeTo(to) {
+    const from = (this.parent as Record<string, string | undefined>)[fromField];
+    if (!from?.trim() || !to?.trim()) return true;
+    return Number(to) >= Number(from);
+  });
+
+const hourlyClassTimeField = () =>
+  numberField()
+    .test('min-60', 'ADD_PROGRAM.errorMinClassTime60', (value) => {
+      if (!value?.trim()) return true;
+      return Number(value) >= 60;
+    })
+    .test('increment-15', 'ADD_PROGRAM.errorTimeIncrement15', (value) => {
+      if (!value?.trim()) return true;
+      return Number(value) % 15 === 0;
+    });
+
+const slotSchema = (opts: {
+  modelKey?: FlexibleBookingModelKey;
+  hasPrice: boolean;
+  hasTimeType?: boolean;
+  timeType?: string;
+  hasRecurring?: boolean;
+}) =>
+  yup.object({
+    title_ar: yup.string(),
+    title_en: yup.string(),
+    gender: yup.string().required(requiredMsg),
+    same_age_range: yup.boolean(),
+    boys_age_from: yup.string(),
+    boys_age_to: yup.string(),
+    girls_age_from: yup.string(),
+    girls_age_to: yup.string(),
+    age_from: numberField(),
+    age_to: ageToField('age_from'),
+    selected_days: yup.array().when(['recurring_days'], {
+      is: (recurring_days: boolean) => opts.hasRecurring ? recurring_days !== false : true,
+      then: (schema) => schema.min(1, requiredMsg),
+      otherwise: (schema) => schema,
+    }),
+    start_time: timeField(),
+    end_time: endTimeAfterStartTime(),
+    seat_capacity: positiveNumberField(),
+    price: opts.hasPrice ? numberField() : yup.string(),
+    class_time:
+      opts.hasTimeType && opts.timeType === 'fixed'
+        ? opts.modelKey === 'hourly'
+          ? hourlyClassTimeField()
+          : numberField()
+        : yup.string(),
+    custom_dates: yup.array().when(['recurring_days'], {
+      is: (recurring_days: boolean) => opts.hasRecurring && recurring_days === false,
+      then: (schema) => schema.min(1, requiredMsg),
+      otherwise: (schema) => schema,
+    }),
+  });
+
+const packageSchema = yup
+  .object({
+    title_ar: yup.string(),
+    title_en: yup.string(),
+    number_of_classes: yup.string(),
+    price: yup.string(),
+  })
+  .test('complete-or-empty', requiredMsg, (row) => {
+    const titleAr = row?.title_ar?.trim() ?? '';
+    const titleEn = row?.title_en?.trim() ?? '';
+    const sessions = row?.number_of_classes?.trim() ?? '';
+    const price = row?.price?.trim() ?? '';
+    const anyFilled = Boolean(titleAr || titleEn || sessions || price);
+    if (!anyFilled) return true;
+    if (!titleAr || !titleEn || !sessions || !price) return false;
+    return !Number.isNaN(Number(sessions)) && !Number.isNaN(Number(price));
+  });
+
+const fixedStep0Schema = yup.object({
+  courseImages: yup.array().min(1, requiredMsg),
+  name_ar: yup.string().required(requiredMsg),
+  name_en: yup.string().required(requiredMsg),
+  price: numberField(),
+  field_id: yup.string().required(requiredMsg),
+  start_date: yup.date().nullable().required(requiredMsg),
+  end_date: yup
+    .date()
+    .nullable()
+    .required(requiredMsg)
+    .min(yup.ref('start_date'), 'LABEL.END_DATE_MUST_BE_AFTER_START_DATE'),
+});
+
+const flexibleStep0Schema = yup.object({
+  courseImages: yup.array().min(1, requiredMsg),
+  name_ar: yup.string().required(requiredMsg),
+  name_en: yup.string().required(requiredMsg),
+  field_id: yup.string().required(requiredMsg),
+  start_date: yup.date().nullable().required(requiredMsg),
+  end_date: yup
+    .date()
+    .nullable()
+    .required(requiredMsg)
+    .min(yup.ref('start_date'), 'LABEL.END_DATE_MUST_BE_AFTER_START_DATE'),
+});
+
+const fixedStep1Schema = yup.object({
+  start_time: timeField(),
+  end_time: endTimeAfterStartTime(),
+  gender: yup.string().required(requiredMsg),
+  same_age_range: yup.boolean().when('gender', {
+    is: 'Mixed',
+    then: (schema) => schema.required(requiredMsg),
+    otherwise: (schema) => schema,
+  }),
+  boys_age_from: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Boys' || gender === 'Mixed',
+    then: () => numberField(),
+    otherwise: (schema) => schema,
+  }),
+  boys_age_to: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string) => gender === 'Boys' || gender === 'Mixed',
+    then: () => ageToField('boys_age_from'),
+    otherwise: (schema) => schema,
+  }),
+  girls_age_from: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
+    then: () => numberField(),
+    otherwise: (schema) => schema,
+  }),
+  girls_age_to: yup.string().when(['gender', 'same_age_range'], {
+    is: (gender: string, same_age_range: boolean) =>
+      gender === 'Girls' || (gender === 'Mixed' && !same_age_range),
+    then: () => ageToField('girls_age_from'),
+    otherwise: (schema) => schema,
+  }),
+  seats: positiveNumberField().test(
+    'min-bookings',
+    seatCapacityLessThanBookingsMsg,
+    function validateSeatsAgainstBookings(value) {
+      const bookingCount = Number(
+        (this.parent as ProgramFormValues).fixed_bookings_count ?? 0
+      );
+      if (!value?.trim() || bookingCount <= 0) return true;
+      return Number(value) >= bookingCount;
+    }
+  ),
+});
+
+const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
+  if (hasTrialAndMainModelConflict(flexibleModels)) {
+    return yup.object({
+      flexibleModels: yup
+        .mixed()
+        .test('trial-combine', 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE', () => false),
+    });
+  }
+
+  const enabledKeys = getConfiguredFlexibleModelKeys(flexibleModels);
+
+  if (enabledKeys.length === 0) {
+    return yup.object({
+      flexibleModels: yup
+        .mixed()
+        .test('models', 'ADD_PROGRAM.errorAddAtLeastOneSlot', () => false),
+    });
+  }
+
+  return yup.object({
+    flexibleModels: yup.object().shape(
+      Object.fromEntries(
+        enabledKeys.map((key) => [
+          key,
+          yup.object({
+            packages: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasPackages
+              ? yup.array().of(packageSchema)
+              : yup.array(),
+            slots: yup
+              .array()
+              .of(
+                slotSchema({
+                  modelKey: key as FlexibleBookingModelKey,
+                  hasPrice: key !== 'trial',
+                  hasTimeType: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasTimeType,
+                  timeType: flexibleModels[key]?.timeType,
+                  hasRecurring: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasRecurring,
+                })
+              )
+              .min(1),
+          }),
+        ])
+      )
+    ),
+  });
+};
+
+const optionalRowComplete = (fields: (string | undefined)[]) => {
+  const values = fields.map((value) => value?.trim() ?? '');
+  const anyFilled = values.some(Boolean);
+  if (!anyFilled) return true;
+  return values.every(Boolean);
+};
+
+const buildStep2Schema = (
+  bookingType: BookingType,
+  flexibleModels?: Record<string, any>
+) => {
+  const trialActive = isTrialBookingActive(bookingType, flexibleModels);
+
+  return yup.object({
+    additional_questions: yup.array().of(
+      yup
+        .object({
+          question_ar: yup.string(),
+          question_en: yup.string(),
+        })
+        .test('complete-or-empty', requiredMsg, (row) =>
+          optionalRowComplete([row?.question_ar, row?.question_en])
+        )
+    ),
+    addOnMaterials: trialActive
+      ? yup.array()
+      : yup.array().of(
+          yup
+            .object({
+              name_ar: yup.string(),
+              name_en: yup.string(),
+              desc_ar: yup.string(),
+              desc_en: yup.string(),
+              price: yup.string(),
+            })
+            .test('complete-or-empty', requiredMsg, (row) => {
+              const nameAr = row?.name_ar?.trim() ?? '';
+              const nameEn = row?.name_en?.trim() ?? '';
+              const price = row?.price?.trim() ?? '';
+              const anyFilled = Boolean(
+                nameAr || nameEn || price || row?.desc_ar?.trim() || row?.desc_en?.trim()
+              );
+              if (!anyFilled) return true;
+              return Boolean(nameAr && nameEn && price && !Number.isNaN(Number(price)));
+            })
+        ),
+  });
+};
+
+const discountGroupSchema = yup
+  .object({
+    title_ar: yup.string(),
+    title_en: yup.string(),
+    discounts: yup.array().of(
+      yup.object({
+        no_of_kids: yup.string(),
+        discount: yup.string(),
+      })
+    ),
+  })
+  .test('complete-or-empty', requiredMsg, (group) => {
+    const titleAr = group?.title_ar?.trim() ?? '';
+    const titleEn = group?.title_en?.trim() ?? '';
+    const rows = group?.discounts ?? [];
+    const anyTitle = Boolean(titleAr || titleEn);
+    const anyRow = rows.some(
+      (row) => Boolean(row?.no_of_kids?.trim() || row?.discount?.trim())
+    );
+
+    if (!anyTitle && !anyRow) return true;
+    if (!titleAr || !titleEn) return false;
+
+    return rows.every((row) => {
+      const kids = row?.no_of_kids?.trim() ?? '';
+      const discount = row?.discount?.trim() ?? '';
+      const anyFilled = Boolean(kids || discount);
+      if (!anyFilled) return true;
+      return Boolean(kids && discount && !Number.isNaN(Number(kids)) && !Number.isNaN(Number(discount)));
+    });
+  });
+
+const buildStep3Schema = (
+  bookingType: BookingType,
+  flexibleModels?: Record<string, any>
+) => {
+  const trialActive = isTrialBookingActive(bookingType, flexibleModels);
+
+  if (trialActive) {
+    return yup.object({});
+  }
+
+  return yup.object({
+    discount_type: yup.string(),
+    discount_amount: yup.string().test('total-discount', requiredMsg, function validateTotalDiscount(value) {
+      const parent = this.parent as {
+        discount_type?: string;
+        discount_amount?: string;
+        discount?: ProgramFormValues['discount'];
+      };
+
+      if (!hasDiscountConfigured({
+        discount_type: (parent.discount_type as ProgramFormValues['discount_type']) ?? 'total',
+        discount_amount: parent.discount_amount ?? '',
+        discount: parent.discount ?? [],
+      })) {
+        return true;
+      }
+
+      if (parent.discount_type !== 'total') return true;
+
+      const amount = value?.trim() ?? '';
+      return Boolean(amount) && !Number.isNaN(Number(amount));
+    }),
+    discount: yup.array().when('discount_type', {
+      is: 'specific',
+      then: (schema) =>
+        schema.test('specific-discount', requiredMsg, function validateSpecificDiscount(groups) {
+          const parent = this.parent as {
+            discount_type?: string;
+            discount_amount?: string;
+            discount?: ProgramFormValues['discount'];
+          };
+
+          if (!hasDiscountConfigured({
+            discount_type: 'specific',
+            discount_amount: parent.discount_amount ?? '',
+            discount: (groups as ProgramFormValues['discount']) ?? [],
+          })) {
+            return true;
+          }
+
+          return (groups ?? []).every((group, index) =>
+            discountGroupSchema.isValidSync(group, { context: { index } })
+          );
+        }),
+      otherwise: (schema) => schema,
+    }),
+  });
+};
+
+export const getStepSchema = (
+  step: ProgramStep,
+  bookingType: BookingType,
+  flexibleModels?: Record<string, any>
+) => {
+  switch (step) {
+    case 0:
+      return bookingType === 'flexible' ? flexibleStep0Schema : fixedStep0Schema;
+    case 1:
+      return bookingType === 'flexible'
+        ? buildFlexibleStep1Schema(flexibleModels || {})
+        : fixedStep1Schema;
+    case 2:
+      return buildStep2Schema(bookingType, flexibleModels);
+    case 3:
+      return buildStep3Schema(bookingType, flexibleModels);
+    default:
+      return yup.object();
+  }
+};
+
+export const countWords = (text: string) =>
+  text.trim() ? text.trim().split(/\s+/).filter(Boolean).length : 0;
