@@ -9,6 +9,8 @@ import MainPage from 'src/sections/main/view';
 
 // ----------------------------------------------------------------------
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Dashboard | Main',
 };

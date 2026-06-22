@@ -2,6 +2,7 @@
 
 import Container from '@mui/material/Container';
 import { useSettingsContext } from 'src/components/settings';
+import { useAdminBookingRealtimeRefresh } from 'src/hooks/use-admin-booking-realtime';
 import Statistics from './home/statistics';
 import TopCoursesTableView from './home/top-corses';
 import NotificationView from './home/notifications';
@@ -23,6 +24,8 @@ export default function MainPage({
   priceProfit,
 }: Readonly<props>) {
   const settings = useSettingsContext();
+  useAdminBookingRealtimeRefresh();
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Statistics statistics={statistics} priceProfit={priceProfit} />

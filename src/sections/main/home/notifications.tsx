@@ -14,7 +14,6 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 import { NOTIFICATION_TYPES } from '../notifications/constants';
 import { groupAdminNewBookingNotifications } from '../notifications/group-admin-booking-notifications';
-import { useAdminBookingRealtimeRefresh } from 'src/hooks/use-admin-booking-realtime';
 type Props = {
   notifications: any;
 };
@@ -25,7 +24,6 @@ const NotificationView = ({ notifications }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslate();
-  useAdminBookingRealtimeRefresh();
 
   const formDefaultValues = {
     name: '',
