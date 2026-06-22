@@ -22,9 +22,9 @@ import DiscountDetailsSection from './components/discount-details-section';
 import FlexiblePackagesTable from './components/flexible-packages-table';
 import FlexibleSlotDetailCard from './components/flexible-slot-detail-card';
 import ProgramDetailHeader from './components/program-detail-header';
+import ProgramPicturesGallery from './components/program-pictures-gallery';
 import {
   detailGridSx,
-  detailLabelSx,
   detailSubsectionTitleSx,
   freeTrialBadgeSx,
   questionsSubsectionTitleSx,
@@ -99,31 +99,10 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
       />
 
       <DetailSectionCard title={t('PROGRAM_DETAILS.PROGRAM_SECTION')}>
-        {images.length > 0 ? (
-          <Box sx={{ mb: 3 }}>
-            <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>
-              {t('ADD_PROGRAM.PROGRAM_PICTURES')}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-              {images.slice(0, 3).map((src, index) => (
-                <Box
-                  key={index}
-                  component="img"
-                  src={src}
-                  alt=""
-                  sx={{
-                    width: 156,
-                    height: 90,
-                    borderRadius: '12px',
-                    objectFit: 'cover',
-                    bgcolor: 'grey.100',
-                    flexShrink: 0,
-                  }}
-                />
-              ))}
-            </Box>
-          </Box>
-        ) : null}
+        <ProgramPicturesGallery
+          images={images}
+          title={t('ADD_PROGRAM.PROGRAM_PICTURES')}
+        />
 
         <Box sx={detailGridSx}>
           <DetailField
