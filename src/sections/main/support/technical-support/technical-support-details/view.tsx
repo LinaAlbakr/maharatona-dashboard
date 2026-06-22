@@ -5,7 +5,7 @@ import React from 'react';
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
-import { arabicDate, englishDate } from 'src/utils/format-time';
+import { arabicDateTime, englishDateTime } from 'src/utils/format-time';
 
 const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
   const settings = useSettingsContext();
@@ -48,7 +48,7 @@ const TechnicalSupportDetailsView = ({ ItemInfo }: any) => {
             secondary={(() => {
               const dateValue = ItemInfo?.createdAt ?? ItemInfo?.date;
               if (!dateValue) return '';
-              return i18n.language === 'ar' ? arabicDate(dateValue) : englishDate(dateValue);
+              return i18n.language === 'ar' ? arabicDateTime(dateValue) : englishDateTime(dateValue);
             })()}
             primaryTypographyProps={{ fontWeight: '700' }}
             secondaryTypographyProps={{ color: 'info.dark', fontSize: '14px' }}

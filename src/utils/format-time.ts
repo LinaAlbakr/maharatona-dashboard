@@ -99,3 +99,31 @@ export const arabicDate = (date: InputValue, fallback = '-') => {
   if (!parsed) return fallback;
   return new Intl.DateTimeFormat('ar-EG', { day: 'numeric', month: 'long' }).format(parsed);
 };
+
+export const englishDateTime = (date: InputValue, fallback = '-') => {
+  const parsed = toValidDate(date);
+  if (!parsed) return fallback;
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  }).format(parsed);
+};
+
+export const arabicDateTime = (date: InputValue, fallback = '-') => {
+  const parsed = toValidDate(date);
+  if (!parsed) return fallback;
+  return new Intl.DateTimeFormat('ar-EG', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  }).format(parsed);
+};
