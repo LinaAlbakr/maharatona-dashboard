@@ -48,30 +48,58 @@ export function normalizeGender(gender: string): string {
   return trimmed;
 }
 
-export function toFormTimeString(value: unknown): string {
+/** Strip bidi marks and normalize mobile/API time strings for form pickers. */
+export function normalizeApiTimeString(value: unknown): string {
   if (value == null) return '';
   if (value instanceof Date) {
     return isValid(value) ? format(value, 'h:mm a', { locale: enUS }) : '';
   }
-  return String(value).trim();
+
+  let raw = String(value)
+    .replace(/[\u200E\u200F\u202A-\u202E]/g, '')
+    .trim();
+  if (!raw) return '';
+
+  if (raw.includes('T')) {
+    const iso = new Date(raw);
+    if (isValid(iso)) {
+      return format(iso, 'h:mm a', { locale: enUS });
+    }
+  }
+
+  raw = raw.replace(
+    /^(\d{1,2}:\d{2}(?::\d{2})?)\s*(am|pm)$/i,
+    (_, timePart, period) => `${timePart} ${period.toUpperCase()}`
+  );
+  raw = raw.replace(/\b(am|pm)\b/gi, (match) => match.toUpperCase());
+
+  return raw;
+}
+
+export function toFormTimeString(value: unknown): string {
+  const normalized = normalizeApiTimeString(value);
+  if (!normalized) return '';
+
+  const parsed = parseApiTime(normalized);
+  return parsed ? format(parsed, 'h:mm a', { locale: enUS }) : normalized;
 }
 
 export function parseApiTime(value: unknown): Date | null {
   if (value == null) return null;
   if (value instanceof Date) return isValid(value) ? value : null;
 
-  const raw = String(value).trim();
-  if (!raw) return null;
+  const normalized = normalizeApiTimeString(value);
+  if (!normalized) return null;
 
   const reference = startOfToday();
   const patterns = ['h:mm a', 'hh:mm a', 'H:mm', 'HH:mm', 'H:mm:ss', 'HH:mm:ss'] as const;
 
   for (const pattern of patterns) {
-    const parsed = parse(raw, pattern, reference, { locale: enUS });
+    const parsed = parse(normalized, pattern, reference, { locale: enUS });
     if (isValid(parsed)) return parsed;
   }
 
-  const timeOnly = raw.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+  const timeOnly = normalized.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
   if (timeOnly) {
     const hours = Number(timeOnly[1]);
     const minutes = Number(timeOnly[2]);

@@ -35,6 +35,28 @@ const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
   monthly: 'monthlySlots',
 };
 
+const FLEXIBLE_BOOKING_MODEL_KEYS: Record<FlexibleBookingModelKey, string> = {
+  trial: 'trialBookingModel',
+  minutes: 'minutesBookingModel',
+  hourly: 'hourlyBookingModel',
+  daily: 'dailyBookingModel',
+  weekly: 'weeklyBookingModel',
+  monthly: 'monthlyBookingModel',
+};
+
+function resolveFlexibleSlotsFromCourse(
+  course: Record<string, unknown>,
+  key: FlexibleBookingModelKey
+): unknown[] {
+  const slotsKey = FLEXIBLE_SLOT_KEYS[key];
+  const bookingModelKey = FLEXIBLE_BOOKING_MODEL_KEYS[key];
+  const fromSlots = course[slotsKey];
+  if (Array.isArray(fromSlots) && fromSlots.length > 0) return fromSlots;
+  const fromBookingModel = course[bookingModelKey];
+  if (Array.isArray(fromBookingModel) && fromBookingModel.length > 0) return fromBookingModel;
+  return [];
+}
+
 function str(value: unknown): string {
   if (value == null) return '';
   return String(value);
@@ -72,6 +94,13 @@ function inferTimeType(slots: unknown[]): 'open' | 'fixed' {
     : 'open';
 }
 
+function resolveSlotTime(slot: Record<string, unknown>, kind: 'start' | 'end'): unknown {
+  if (kind === 'start') {
+    return slot.start_time ?? slot.startTime;
+  }
+  return slot.end_time ?? slot.endTime;
+}
+
 function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBookingModelKey): FlexibleSlot {
   const recurringDays = Array.isArray(slot.recuringDays) ? slot.recuringDays : [];
   const recurringDates = Array.isArray(slot.recuringDate) ? slot.recuringDate : [];
@@ -100,8 +129,8 @@ function mapApiSlotToForm(slot: Record<string, unknown>, modelKey: FlexibleBooki
     age_from: ageFrom,
     age_to: ageTo,
     selected_days: customDates.length > 0 ? [] : selectedDays,
-    start_time: toFormTimeString(slot.start_time),
-    end_time: toFormTimeString(slot.end_time),
+    start_time: toFormTimeString(resolveSlotTime(slot, 'start')),
+    end_time: toFormTimeString(resolveSlotTime(slot, 'end')),
     seat_capacity: str(slot.seat_capacity ?? ''),
     price: str(slot.price ?? ''),
     class_time: str(slot.class_time ?? ''),
@@ -119,9 +148,9 @@ function mapFlexibleModels(course: Record<string, unknown>): Record<FlexibleBook
   const packageGroup = resolvePackageGroup(course);
 
   FLEXIBLE_BOOKING_MODELS.forEach(({ key, hasTimeType }) => {
-    const apiSlots = course[FLEXIBLE_SLOT_KEYS[key]];
+    const apiSlots = resolveFlexibleSlotsFromCourse(course, key);
     const apiPackages = packageGroup[key];
-    const slots = Array.isArray(apiSlots) ? apiSlots : [];
+    const slots = apiSlots;
     const packages = Array.isArray(apiPackages) ? apiPackages : [];
     const hasData = slots.length > 0 || packages.length > 0;
 
@@ -186,8 +215,8 @@ function mapFixedSessionFields(course: Record<string, unknown>) {
     girls_age_from,
     girls_age_to,
     seats: str(course.fixed_total_seats ?? course.seat_capacity ?? course.seats ?? ''),
-    start_time: toFormTimeString(course.start_time),
-    end_time: toFormTimeString(course.end_time),
+    start_time: toFormTimeString(course.start_time ?? course.startTime),
+    end_time: toFormTimeString(course.end_time ?? course.endTime),
   };
 }
 
