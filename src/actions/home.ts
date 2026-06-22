@@ -4,6 +4,7 @@
 
 import { cookies } from 'next/headers';
 import { getCookie } from 'cookies-next';
+import { unstable_noStore as noStore } from 'next/cache';
 
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
@@ -129,6 +130,7 @@ export const fetchTopCourses = async ({ page = 1, limit = 50 }: IParams): Promis
 
 // src/actions/home.ts (or wherever this lives)
 export const fetchStatistics = async (): Promise<any> => {
+  noStore();
   const accessToken = cookies().get('access_token')?.value;
 
   const fallback = {
