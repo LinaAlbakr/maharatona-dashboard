@@ -11,10 +11,11 @@ import { detailLabelSx } from '../styles';
 
 type Props = {
   images: string[];
-  title: string;
+  title?: string;
+  hideTitle?: boolean;
 };
 
-export default function ProgramPicturesGallery({ images, title }: Props) {
+export default function ProgramPicturesGallery({ images, title, hideTitle = false }: Props) {
   const slides = useMemo(() => images.map((src) => ({ src })), [images]);
   const lightbox = useLightBox(slides);
 
@@ -22,8 +23,10 @@ export default function ProgramPicturesGallery({ images, title }: Props) {
 
   return (
     <>
-      <Box sx={{ mb: 3 }}>
-        <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>{title}</Typography>
+      <Box sx={{ mb: hideTitle ? 0 : 3 }}>
+        {!hideTitle && title ? (
+          <Typography sx={{ ...detailLabelSx, mb: 1.5 }}>{title}</Typography>
+        ) : null}
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           {images.map((src, index) => (
             <Box
