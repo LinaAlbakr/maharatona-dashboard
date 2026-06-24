@@ -110,7 +110,7 @@ export function RHFMultiSelect({
 
     if (chip) {
       return (
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, width: '100%' }}>
           {selectedItems.map((item) => (
             <Chip key={item.value} size="small" label={item.label} />
           ))}
@@ -126,17 +126,25 @@ export function RHFMultiSelect({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl error={!!error} {...other}>
+        <FormControl error={!!error} fullWidth {...other}>
           {label && <InputLabel id={name}> {label} </InputLabel>}
 
           <Select
             {...field}
             multiple
+            fullWidth
             displayEmpty={!!placeholder}
             id={`multiple-${name}`}
             labelId={name}
             label={label}
             renderValue={renderValues}
+            sx={{
+              width: '100%',
+              '& .MuiSelect-select': {
+                width: '100%',
+                boxSizing: 'border-box',
+              },
+            }}
           >
             {options.map((option) => {
               const selected = (field.value ?? []).includes(option.value);
