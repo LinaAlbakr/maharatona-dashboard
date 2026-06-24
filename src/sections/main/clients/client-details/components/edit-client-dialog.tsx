@@ -2,7 +2,7 @@
 
 import * as yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useForm, useFieldArray, Controller, type Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -96,6 +96,8 @@ function buildDefaultValues(clientInfo: any) {
   };
 }
 
+type ClientFormValues = ReturnType<typeof buildDefaultValues>;
+
 export default function EditClientDialog({
   open,
   onClose,
@@ -123,7 +125,7 @@ export default function EditClientDialog({
     [fields, i18n.language]
   );
 
-  const methods = useForm({
+  const methods = useForm<ClientFormValues>({
     resolver: yupResolver(
       yup.object().shape({
         username: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
@@ -145,7 +147,7 @@ export default function EditClientDialog({
           })
         ),
       })
-    ),
+    ) as Resolver<ClientFormValues>,
     defaultValues: buildDefaultValues(clientInfo),
     mode: 'onChange',
     reValidateMode: 'onChange',

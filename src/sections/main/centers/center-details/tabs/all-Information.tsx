@@ -230,22 +230,13 @@ const AllInformation = ({ CenterInfo }: Props) => {
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: 1,
-                height: 'fit-content',
-              }}
-            >
-              <Image
-                src={CenterInfo?.center_image?.trim() || '/assets/images/centers/gray.jpeg'}
-                width={250}
-                height={250}
-                alt="Center"
-                style={{ borderRadius: '10px' }}
-              />
-            </Box>
+            <Image
+              src={CenterInfo?.center_image?.trim() || '/assets/images/centers/gray.jpeg'}
+              width={250}
+              height={250}
+              alt="Center"
+              style={{ borderRadius: '10px' }}
+            />
             <Typography variant="body1" sx={profileDetailImageLabelSx}>
               {t('LABEL.CENTER_IMAGES')}
             </Typography>

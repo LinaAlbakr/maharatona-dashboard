@@ -2,7 +2,7 @@
 
 import * as yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -107,6 +107,8 @@ function buildDefaultValues(centerInfo: any) {
   };
 }
 
+type CenterFormValues = ReturnType<typeof buildDefaultValues>;
+
 function parseCenterLocation(value: string): { latitude?: string; longitude?: string } {
   const parts = value
     .split(',')
@@ -154,7 +156,7 @@ export default function EditCenterDialog({
     [fields, i18n.language]
   );
 
-  const methods = useForm({
+  const methods = useForm<CenterFormValues>({
     resolver: yupResolver(
       yup.object().shape({
         name: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
@@ -181,8 +183,10 @@ export default function EditCenterDialog({
         bank_image: yup.mixed().nullable(),
         commercial_register_image: yup.mixed().nullable(),
       })
-    ),
+    ) as Resolver<CenterFormValues>,
     defaultValues: buildDefaultValues(centerInfo),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
 
   const {
@@ -202,7 +206,7 @@ export default function EditCenterDialog({
       return;
     }
     if (prevCityRef.current && prevCityRef.current !== selectedCity) {
-      setValue('neighborhood', '', { shouldValidate: true });
+      setValue('neighborhood', '', { shouldValidate: false });
     }
     prevCityRef.current = selectedCity;
   }, [open, selectedCity, setValue]);
@@ -338,24 +342,24 @@ export default function EditCenterDialog({
               <RequiredLabel required sx={FIELD_LABEL_SX}>
                 {t('LABEL.CENTER_NAME')}
               </RequiredLabel>
-              <RHFTextField name="name" fullWidth value={watch('name')} sx={programFieldSx} />
+              <RHFTextField name="name" fullWidth sx={programFieldSx} />
             </Grid>
             <Grid item xs={12} md={6}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>
                 {t('LABEL.PHONE_NUMBER')}
               </RequiredLabel>
-              <RHFTextField name="phone" fullWidth value={watch('phone')} sx={programFieldSx} />
+              <RHFTextField name="phone" fullWidth sx={programFieldSx} />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>
                 {t('LABEL.EMAIL')}
               </RequiredLabel>
-              <RHFTextField name="email" fullWidth value={watch('email')} sx={programFieldSx} />
+              <RHFTextField name="email" fullWidth sx={programFieldSx} />
             </Grid>
             <Grid item xs={12} md={6}>
               <RequiredLabel sx={FIELD_LABEL_SX}>{t('LABEL.WEBSITE')}</RequiredLabel>
-              <RHFTextField name="website" fullWidth value={watch('website')} sx={programFieldSx} />
+              <RHFTextField name="website" fullWidth sx={programFieldSx} />
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -391,7 +395,6 @@ export default function EditCenterDialog({
               <RHFTextField
                 name="bank_account_number"
                 fullWidth
-                value={watch('bank_account_number')}
                 sx={programFieldSx}
               />
             </Grid>
@@ -403,7 +406,6 @@ export default function EditCenterDialog({
               <RHFSelect
                 name="city"
                 label=""
-                value={watch('city')}
                 sx={programFieldSx}
               >
                 {cities.map((city) => (
@@ -420,7 +422,6 @@ export default function EditCenterDialog({
               <RHFSelect
                 name="neighborhood"
                 label=""
-                value={watch('neighborhood')}
                 disabled={!selectedCity || loadingNeighborhoods}
                 sx={programFieldSx}
               >
@@ -441,7 +442,6 @@ export default function EditCenterDialog({
                 fullWidth
                 multiline
                 minRows={4}
-                value={watch('center_location')}
                 sx={programFieldSx}
               />
             </Grid>
@@ -454,7 +454,6 @@ export default function EditCenterDialog({
                 fullWidth
                 multiline
                 minRows={4}
-                value={watch('place_desc')}
                 sx={programFieldSx}
               />
             </Grid>

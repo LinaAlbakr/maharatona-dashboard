@@ -1,7 +1,7 @@
-import { fetchCities, fetchClientInfo } from 'src/actions/clients';
+import { fetchClientInfo } from 'src/actions/clients';
+import { fetchCities } from 'src/actions/centers';
 import { fetchCategories } from 'src/actions/categories';
 import ClientDetailsView from 'src/sections/main/clients/client-details/view';
-import { cookies } from 'next/headers';
 
 type IProps = {
   params: {
@@ -12,18 +12,12 @@ type IProps = {
 
 const Page = async ({ params, searchParams }: IProps) => {
   const tab = typeof searchParams.tab === 'string' ? searchParams.tab : undefined;
-  const lang = cookies().get('Language')?.value;
 
-  const [ClientInfo, citiesData, categoriesRes] = await Promise.all([
+  const [ClientInfo, cities, categoriesRes] = await Promise.all([
     fetchClientInfo(params.clientId),
     fetchCities(),
     fetchCategories({ limit: 200 }),
   ]);
-
-  const cities = (Array.isArray(citiesData) ? citiesData : []).map((city: any) => ({
-    id: String(city._id ?? city.id ?? ''),
-    name: lang === 'ar' ? city.name_ar : city.name_en,
-  }));
 
   const fields = (categoriesRes?.data ?? []).map((field: any) => ({
     id: String(field._id ?? field.id ?? ''),

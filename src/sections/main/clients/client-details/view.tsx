@@ -103,13 +103,13 @@ const ClientDetailsView = ({
               onClick={() => setEditOpen(true)}
               sx={{
                 bgcolor: 'common.white',
-                color: '#CC3899',
+                color: '#CC38A6',
                 borderRadius: '999px',
                 px: 4,
                 py: 1,
-                fontWeight: 600,
+                fontWeight: 700,
                 textTransform: 'none',
-                fontSize: 16,
+                fontSize: 14,
                 '&:hover': {
                   bgcolor: 'grey.100',
                 },
