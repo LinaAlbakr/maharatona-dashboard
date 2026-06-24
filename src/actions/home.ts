@@ -136,6 +136,7 @@ export const fetchStatistics = async (): Promise<any> => {
   const fallback = {
     clients: 0,
     clientsAndCourses: 0,
+    totalBookings: 0,
     centers: 0,
   };
 
@@ -145,7 +146,7 @@ export const fetchStatistics = async (): Promise<any> => {
   }
 
   try {
-    const [clientsRes, centersRes, enrolledClientsRes] = await Promise.all([
+    const [clientsRes, centersRes, enrolledClientsRes, totalBookingsRes] = await Promise.all([
       axiosInstance.get(endpoints.home.totalClients, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
@@ -155,15 +156,20 @@ export const fetchStatistics = async (): Promise<any> => {
       axiosInstance.get(endpoints.home.enrolledClientsCount, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
+      axiosInstance.get(endpoints.home.totalBookingsCount, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
     ]);
 
     const clientsTotal = clientsRes?.data?.data?.total ?? 0;
     const centersTotal = centersRes?.data?.data?.total ?? 0;
     const enrolledClientsTotal = enrolledClientsRes?.data?.data?.total ?? 0;
+    const totalBookings = totalBookingsRes?.data?.data?.total ?? 0;
 
     return {
       clients: clientsTotal,
       clientsAndCourses: enrolledClientsTotal,
+      totalBookings,
       centers: centersTotal,
     };
   } catch (error: any) {

@@ -46,7 +46,11 @@ const Statistics = ({ statistics, priceProfit }: Readonly<props>) => {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 1fr 1fr' },
+          gridTemplateColumns: {
+            xs: '1fr',
+            sm: '1fr 1fr',
+            md: 'repeat(4, 1fr)',
+          },
           paddingInline: 4,
           gap: 2,
           mb: 4,
@@ -91,6 +95,26 @@ const Statistics = ({ statistics, priceProfit }: Readonly<props>) => {
             </Typography>
           </Box>
           <Image src="/assets/images/home/booked.svg" alt="image" width={50} height={50} />
+        </Box>
+        <Box
+          sx={{
+            display: 'flex ',
+            borderRadius: '10px',
+            bgcolor: '#D6E8FF',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            p: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant="body1" color="#003A8C">
+              {t('LABEL.TOTAL_BOOKINGS')}
+            </Typography>
+            <Typography variant="h4" color="#003A8C" sx={{ textOverflow: 'truncate' }}>
+              {statistics?.totalBookings}
+            </Typography>
+          </Box>
+          <Image src="/assets/images/home/notification.svg" alt="image" width={50} height={50} />
         </Box>
         <Box
           sx={{

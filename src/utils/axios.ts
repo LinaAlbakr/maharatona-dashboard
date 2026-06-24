@@ -148,6 +148,7 @@ export const endpoints = {
     totalClients: '/admin/get-total-clients',
     totalCenters: '/admin/get-total-centers',
     enrolledClientsCount: '/admin/get-enrolled-clients-count',
+    totalBookingsCount: '/admin/get-total-bookings-count',
   },
   centers: {
     fetch: '/admin/get-all-centers',
