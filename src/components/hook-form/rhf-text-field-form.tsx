@@ -21,7 +21,8 @@ export default function RHFTextField({
 }: Props) {
   const { control, setValue } = useFormContext();
   useEffect(() => {
-    setValue(name, value);
+    if (value === undefined) return;
+    setValue(name, value, { shouldValidate: true });
   }, [setValue, name, value]);
   return (
     <Controller

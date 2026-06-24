@@ -1,7 +1,7 @@
 'use client';
 
-import { Box, Card, Container, Tab, Tabs, Typography } from '@mui/material';
-import React, { useMemo } from 'react';
+import { Box, Button, Card, Container, Tab, Tabs, Typography } from '@mui/material';
+import React, { useMemo, useState } from 'react';
 import { useSettingsContext } from 'src/components/settings';
 import { useQueryString } from 'src/hooks/use-queryString';
 
@@ -16,10 +16,12 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
 import i18n from 'src/locales/i18n';
+import { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 
 import Courses from './tabs/courses';
 import Reports from './tabs/reports';
 import AllInformation from './tabs/all-Information';
+import EditCenterDialog from './components/edit-center-dialog';
 
 
 
@@ -40,6 +42,8 @@ interface Props {
   CenterInfo?: any;
   CenterCourses?: any;
   CenterReports?: any;
+  cities?: ITems[];
+  fields?: Array<{ id: string; name_en?: string; name_ar?: string; name?: string }>;
   // ORIGINAL: CenterReports?: any;
   // ORIGINAL: CenterReviews?: any;
 }
@@ -49,6 +53,8 @@ const CenterDetailsView = ({
   CenterInfo,
   CenterCourses,
   CenterReports,
+  cities = [],
+  fields = [],
   // ORIGINAL: CenterReports,
   // ORIGINAL: CenterReviews,
 }: Props) => {
@@ -56,6 +62,7 @@ const CenterDetailsView = ({
   const settings = useSettingsContext();
   const pathname = usePathname();
   const router = useRouter();
+  const [editOpen, setEditOpen] = useState(false);
 
   const currentTab = useMemo(
     () =>
@@ -85,6 +92,44 @@ const CenterDetailsView = ({
             position: 'relative',
           }}
         >
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              zIndex: 2,
+            }}
+          >
+            <Typography
+              variant="h3"
+              sx={{ color: 'common.white', fontWeight: 700, textAlign: 'center' }}
+            >
+              {`${t('LABEL.CENTER')} ${t('LABEL.DETAILS')}`}
+            </Typography>
+            <Button
+              onClick={() => setEditOpen(true)}
+              sx={{
+                bgcolor: 'common.white',
+                color: '#CC3899',
+                borderRadius: '999px',
+                px: 4,
+                py: 1,
+                fontWeight: 600,
+                textTransform: 'none',
+                fontSize: 16,
+                '&:hover': {
+                  bgcolor: 'grey.100',
+                },
+              }}
+            >
+              {`${t('BUTTON.EDIT')} ${t('LABEL.CENTER')}`}
+            </Button>
+          </Box>
           <Box>
             <Image
               src={CenterInfo.center_image || '/assets/images/centers/gray.jpeg'} // ✅
@@ -131,6 +176,14 @@ const CenterDetailsView = ({
          )}
         
       </Box>
+
+      <EditCenterDialog
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        centerInfo={CenterInfo}
+        cities={cities}
+        fields={fields}
+      />
     </Container>
   );
 };

@@ -46,7 +46,8 @@
     "DELETE_PAYOUT": "Delete Payout",
     "FLEXIBLE_ENROLLMENT": "Enrollment by booking model",
     "MANAGE": "Manage",
-    "MANAGE_ENROLLMENT": "Manage Enrollment"
+    "MANAGE_ENROLLMENT": "Manage Enrollment",
+    "EDIT_CENTER_DETAILS": "Edit Center Details"
   },
   "LABEL": {
     "FLEXIBLE_COURSE": "Flexible",
@@ -58,6 +59,14 @@
     "MAHARATONA": "Maharatona",
     "New_PHONE": "New phone",
     "CENTER_NAME": "Center Name",
+    "CENTER_DETAILS": "Center Details",
+    "EDIT_CENTER": "Edit Center",
+    "EDIT_CENTER_DETAILS": "Edit Center Details",
+    "CENTER_DESCRIPTION_ARABIC": "Center Description Arabic",
+    "CENTER_DESCRIPTION_ENGLISH": "Center Description English",
+    "ADDRESS_DETAILS": "Address Details",
+    "IBAN": "IBAN",
+    "CENTER_LOGO": "Center Logo",
     "ARABIC": "Arabic",
     "ENGLISH": "English",
     "APPLY": "Apply",
@@ -306,6 +315,7 @@
     "DELETE": "Delete",
     "EDIT": "Edit",
     "ADD_FIELD": "Add Field",
+    "ADD_CHILD": "Add Child",
     "ADD_REASON": "Add Reason",
     "SAVE": "Save",
     "ACTIVATE": "Activate",

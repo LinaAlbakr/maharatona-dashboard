@@ -268,3 +268,85 @@ export const deleteCenter = async (id: string): Promise<any> => {
   }
   revalidatePath(`/dashboard/centers/`);
 };
+
+function appendCenterImageIfFile(payload: FormData, key: string, value: FormDataEntryValue | null) {
+  if (!value || typeof value === 'string') return;
+  payload.append(key, value);
+}
+
+function appendCenterImageValue(payload: FormData, key: string, value: FormDataEntryValue | null) {
+  if (value === null || value === undefined) return;
+  if (typeof value === 'string' && value.trim()) {
+    payload.append(key, value);
+  }
+}
+
+export const updateCenterDetails = async (
+  centerId: string,
+  reqBody: FormData
+): Promise<{ error?: string }> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const payload = new FormData();
+
+    const textFields = [
+      'name',
+      'phone',
+      'email',
+      'website',
+      'desc_ar',
+      'desc_en',
+      'bank_account_number',
+      'place_desc',
+      'city',
+      'neighborhood',
+      'latitude',
+      'longitude',
+    ] as const;
+
+    textFields.forEach((field) => {
+      const value = reqBody.get(field);
+      if (value !== null && value !== undefined && value !== '') {
+        payload.append(field, value as string);
+      }
+    });
+
+    const fieldsValue = reqBody.get('fields');
+    if (fieldsValue) {
+      payload.append('fields', fieldsValue as string);
+    }
+
+    appendCenterImageIfFile(payload, 'center_image', reqBody.get('center_image'));
+    appendCenterImageIfFile(payload, 'bank_image', reqBody.get('bank_image'));
+    appendCenterImageIfFile(
+      payload,
+      'commercial_register_image',
+      reqBody.get('commercial_register_image')
+    );
+    appendCenterImageValue(payload, 'center_image', reqBody.get('center_image'));
+    appendCenterImageValue(payload, 'bank_image', reqBody.get('bank_image'));
+    appendCenterImageValue(
+      payload,
+      'commercial_register_image',
+      reqBody.get('commercial_register_image')
+    );
+
+    await axiosInstance.put(endpoints.centers.updateCenter(centerId), payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    revalidatePath(paths.dashboard.centerDetails(centerId));
+    revalidatePath(paths.dashboard.centers);
+    return {};
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+};

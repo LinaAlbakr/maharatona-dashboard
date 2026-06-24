@@ -4,6 +4,13 @@ import { Box, Card, Container, Divider, ListItemText, Typography } from '@mui/ma
 import { useSettingsContext } from 'src/components/settings';
 import { useTranslate } from 'src/locales';
 import i18n from 'src/locales/i18n';
+import {
+  profileDetailFieldSx,
+  profileDetailSectionTitleSx,
+  profileDetailValueTypographyProps,
+  profileDetailValueTypographyPropsLtr,
+} from 'src/sections/main/profile-details-styles';
+
 type Props = {
   ClientInfo: any;
 };
@@ -38,7 +45,7 @@ const AllInformation = ({ ClientInfo }: Props) => {
           py: 2,
         }}
       >
-        <Typography variant="h5" color="secondary" sx={{ px: 4 }}>
+        <Typography variant="h5" sx={profileDetailSectionTitleSx}>
           {t('LABEL.ABOUT_CLIENT')}
         </Typography>
 
@@ -46,42 +53,32 @@ const AllInformation = ({ ClientInfo }: Props) => {
 
         <Box sx={{ display: 'grid', gridTemplateColumns: '1.2fr  repeat(2, 1fr)', gap: 4, px: 2 }}>
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.EMAIL')}
             secondary={ClientInfo?.email}
-            secondaryTypographyProps={{
-              color: 'info.dark',
-              fontSize: '12px',
-              dir: 'ltr',
-              textAlign: 'left',
-            }}
+            secondaryTypographyProps={profileDetailValueTypographyPropsLtr}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.PHONE')}
             secondary={ClientInfo?.phone}
-            secondaryTypographyProps={{
-              color: 'info.dark',
-              fontSize: '12px',
-              dir: 'ltr',
-              textAlign: 'left',
-            }}
+            secondaryTypographyProps={profileDetailValueTypographyPropsLtr}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.NUMBER_OF_CHILDREN')}
             secondary={ClientInfo?.total_children || ClientInfo?.child?.length || 0}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
 
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.INTERESTS')}
             secondary={interestsText || '-'}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.CITY')}
             secondary={
               typeof ClientInfo?.city === 'string'
@@ -90,10 +87,10 @@ const AllInformation = ({ ClientInfo }: Props) => {
                   ? ClientInfo?.city?.name_ar
                   : ClientInfo?.city?.name_en || '-'
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.NEIGHBORHOOD')}
             secondary={
               typeof ClientInfo?.neighborhood === 'string'
@@ -102,7 +99,7 @@ const AllInformation = ({ ClientInfo }: Props) => {
                   ? ClientInfo?.neighborhood?.name_ar
                   : ClientInfo?.neighborhood?.name_en || '-'
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
         </Box>
       </Card>

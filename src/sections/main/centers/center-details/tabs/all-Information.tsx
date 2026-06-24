@@ -9,6 +9,14 @@ import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
+import {
+  profileDetailFieldSx,
+  profileDetailImageLabelSx,
+  profileDetailSectionTitleSx,
+  profileDetailValueTypographyProps,
+  profileDetailValueTypographyPropsLtr,
+} from 'src/sections/main/profile-details-styles';
+import { FIELD_CONTENT_COLOR } from 'src/sections/main/centers/add-program/constants';
 
 type Props = {
   CenterInfo: any;
@@ -33,7 +41,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
           py: 2,
         }}
       >
-        <Typography variant="h5" color="secondary" sx={{ px: 4 }}>
+        <Typography variant="h5" sx={profileDetailSectionTitleSx}>
           {t('LABEL.ABOUT_CENTER')}
         </Typography>
 
@@ -52,120 +60,128 @@ const AllInformation = ({ CenterInfo }: Props) => {
           }}
         >
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.CENTER_DESCRIPTION')}
             secondary={centerDescription}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.WEBSITE')}
             secondary={
               CenterInfo?.website ? (
-                <a href={CenterInfo.website.startsWith('http') ? CenterInfo.website : `https://${CenterInfo.website.trim()}`}
-                  target="_blank" rel="noopener noreferrer">
+                <a
+                  href={
+                    CenterInfo.website.startsWith('http')
+                      ? CenterInfo.website
+                      : `https://${CenterInfo.website.trim()}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: FIELD_CONTENT_COLOR }}
+                >
                   {CenterInfo.website.trim()}
                 </a>
-              ) : notAvailable
+              ) : (
+                notAvailable
+              )
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
 
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.LOCATION')}
             secondary={
               <a
                 href={`https://www.google.com/maps?q=${CenterInfo.latitude},${CenterInfo.longitude}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                style={{ color: FIELD_CONTENT_COLOR }}
               >
                 {t('LABEL.CENTER_LOCATION')}{' '}
-                <Iconify width={12} icon="pajamas:earth" color="info.dark" />
+                <Iconify width={12} icon="pajamas:earth" color={FIELD_CONTENT_COLOR} />
               </a>
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.PHONE')}
             secondary={CenterInfo?.phone}
-            secondaryTypographyProps={{
-              color: 'info.dark',
-              fontSize: '12px',
-              dir: 'ltr',
-              textAlign: 'left',
-            }}
+            secondaryTypographyProps={profileDetailValueTypographyPropsLtr}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.EMAIL')}
             secondary={CenterInfo?.email || notAvailable}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
 
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.NO_OF_PROGRAMS')}
             secondary={CenterInfo?.total_courses ?? 0}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.LOCATION_DESCRIPTION')}
             secondary={CenterInfo?.place_desc || notAvailable}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.CATEGORIES')}
             secondary={
               Array.isArray(CenterInfo?.fields)
                 ? CenterInfo.fields
-                  .map((field: any) => (i18n.language === 'ar' ? field?.name_ar : field?.name_en))
-                  .filter(Boolean)
-                  .join(', ') || notAvailable
+                    .map((field: any) =>
+                      i18n.language === 'ar' ? field?.name_ar : field?.name_en
+                    )
+                    .filter(Boolean)
+                    .join(', ') || notAvailable
                 : notAvailable
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.CITY')}
             secondary={
               (i18n.language === 'ar' ? CenterInfo?.city?.name_ar : CenterInfo?.city?.name_en) ||
               notAvailable
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
 
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.NEIGHBORHOOD')}
             secondary={
               (i18n.language === 'ar'
                 ? CenterInfo?.neighborhood?.name_ar
                 : CenterInfo?.neighborhood?.name_en) || notAvailable
             }
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.BANK_ACCOUNT')}
             secondary={CenterInfo?.bank_account_number}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.NO_OF_REGISTRANTS')}
             secondary={CenterInfo?.total_registrants ?? notAvailable}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
           <ListItemText
-            sx={{ gridColumn: 'span', color: 'primary.main' }}
+            sx={profileDetailFieldSx}
             primary={t('LABEL.RATING')}
             secondary={<Rating value={CenterInfo?.avg_rate || 0} precision={0.5} readOnly />}
-            secondaryTypographyProps={{ color: 'info.dark', fontSize: '12px' }}
+            secondaryTypographyProps={profileDetailValueTypographyProps}
           />
         </Box>
       </Card>
@@ -177,7 +193,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
           px: 0,
         }}
       >
-        <Typography variant="h5" color="secondary" sx={{ px: 4 }}>
+        <Typography variant="h5" sx={profileDetailSectionTitleSx}>
           {t('LABEL.IMAGES')}
         </Typography>
         <Divider sx={{ my: 3 }} />
@@ -196,7 +212,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
               alt="Commercial Register"
               style={{ borderRadius: '10px' }}
             />
-            <Typography variant="body1" color="info.dark">
+            <Typography variant="body1" sx={profileDetailImageLabelSx}>
               {t('LABEL.COMMERIAL_REGISTER')}
             </Typography>
           </Box>
@@ -209,7 +225,7 @@ const AllInformation = ({ CenterInfo }: Props) => {
               alt="Bank Account"
               style={{ borderRadius: '10px' }}
             />
-            <Typography variant="body1" color="info.dark">
+            <Typography variant="body1" sx={profileDetailImageLabelSx}>
               {t('LABEL.BANK_ACCOUNT_IMAGE')}
             </Typography>
           </Box>
@@ -229,44 +245,8 @@ const AllInformation = ({ CenterInfo }: Props) => {
                 alt="Center"
                 style={{ borderRadius: '10px' }}
               />
-              {/* <Image
-                src={CenterInfo?.center_images[0].url || '/assets/images/centers/gray.jpeg'}
-                width={120}
-                height={120}
-                alt="image"
-                style={{
-                  borderRadius: '10px',
-                }}
-              />{' '}
-              <Image
-                src={CenterInfo?.center_images[1]?.url || '/assets/images/centers/gray.jpeg'}
-                width={120}
-                height={120}
-                alt="image"
-                style={{
-                  borderRadius: '10px',
-                }}
-              />{' '}
-              <Image
-                src={CenterInfo?.center_images[2]?.url || '/assets/images/centers/gray.jpeg'}
-                width={120}
-                height={120}
-                alt="image"
-                style={{
-                  borderRadius: '10px',
-                }}
-              />{' '}
-              <Image
-                src={CenterInfo?.center_images[3]?.url || '/assets/images/centers/gray.jpeg'}
-                width={120}
-                height={120}
-                alt="image"
-                style={{
-                  borderRadius: '10px',
-                }}
-              /> */}
             </Box>
-            <Typography variant="body1" color="info.dark">
+            <Typography variant="body1" sx={profileDetailImageLabelSx}>
               {t('LABEL.CENTER_IMAGES')}
             </Typography>
           </Box>

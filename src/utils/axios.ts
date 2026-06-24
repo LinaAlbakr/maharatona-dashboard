@@ -164,6 +164,7 @@ export const endpoints = {
       `/admin/delete-center-review/${centerId}/${reviewId}`,
     clearWallet: (centerId: string) => `/admin-panel/clearing-the-center-wallet/${centerId}`,
     deleteCenter: (centerId: string) => `/admin/delete-center/${centerId}`,
+    updateCenter: (centerId: string) => `/admin/update-center/${centerId}`,
     createCourse: (centerId: string) => `/admin/center/${centerId}/create-course`,
     createFlexibleCourse: (centerId: string) =>
       `/admin/center/${centerId}/create-flexible-course`,
@@ -187,6 +188,7 @@ export const endpoints = {
     courses: (clientId: string) => `/admin-panel/client/${clientId}/courses`,
     children: (clientId: string) => `/admin-panel/client/${clientId}/children`,
     delete: (clientId: string) => `/admin/delete-client/${clientId}`,
+    updateClient: (clientId: string) => `/admin/update-client/${clientId}`,
   },
   notifications: {
     send: '/notification/send-to-users',

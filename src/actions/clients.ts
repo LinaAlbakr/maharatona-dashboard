@@ -7,6 +7,8 @@
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 
+import { paths } from 'src/routes/paths';
+
 import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 
 interface IParams {
@@ -73,16 +75,15 @@ export const fetchfields = async (): Promise<any> => {
   const lang = cookies().get('Language')?.value;
 
   try {
-    const res = await axiosInstance.get(endpoints.clients.fetchfields, {
+    const res = await axiosInstance.get(endpoints.categories.fetch, {
       params: {
-        page: 1,
-        limit: 100,
+        limit: 200,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
-    return res?.data.data;
+    return Array.isArray(res?.data) ? res.data : res?.data?.data ?? [];
   } catch (error) {
-    throw new Error(error);
+    throw new Error(getErrorMessage(error));
   }
 };
 
@@ -170,4 +171,29 @@ export const deleteClient = async (id: string): Promise<any> => {
     };
   }
   revalidatePath(`/dashboard/clients/`);
+};
+
+export const updateClientDetails = async (
+  clientId: string,
+  payload: Record<string, unknown>
+): Promise<{ error?: string }> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    await axiosInstance.put(endpoints.clients.updateClient(clientId), payload, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Accept-Language': lang,
+      },
+    });
+
+    revalidatePath(paths.dashboard.clientDetails(clientId));
+    revalidatePath(paths.dashboard.clients);
+    return {};
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
 };

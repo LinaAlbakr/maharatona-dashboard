@@ -31,7 +31,7 @@ export function RHFSelect({
   children,
   PaperPropsSx,
   rules,
-  value,
+  value: _ignoredValue,
   ...other
 }: RHFSelectProps) {
   const { control } = useFormContext();
@@ -39,14 +39,16 @@ export function RHFSelect({
   return (
     <Controller
       name={name}
-      defaultValue={value}
-      rules={rules}
       control={control}
+      rules={rules}
       render={({ field, fieldState: { error } }) => (
         <TextField
           {...field}
           select
           fullWidth
+          onChange={(event) => {
+            field.onChange(event.target.value);
+          }}
           SelectProps={{
             native,
             MenuProps: {
@@ -137,7 +139,7 @@ export function RHFMultiSelect({
             renderValue={renderValues}
           >
             {options.map((option) => {
-              const selected = field.value.includes(option.value);
+              const selected = (field.value ?? []).includes(option.value);
 
               return (
                 <MenuItem key={option.value} value={option.value}>

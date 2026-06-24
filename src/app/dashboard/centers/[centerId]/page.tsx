@@ -1,4 +1,5 @@
-import { fetchCenterInfo, fetchCenterReports } from 'src/actions/centers';
+import { fetchCenterInfo, fetchCenterReports, fetchCities } from 'src/actions/centers';
+import { fetchCategories } from 'src/actions/categories';
 import CenterDetailsView from 'src/sections/main/centers/center-details/view';
 
 type IProps = {
@@ -9,8 +10,18 @@ type IProps = {
 };
 const Page = async ({ params, searchParams }: IProps) => {
   const tab = typeof searchParams.tab === 'string' ? searchParams.tab : undefined;
-  const CenterInfo = await fetchCenterInfo(params.centerId);
-  const CenterReports = await fetchCenterReports(params.centerId);
+  const [CenterInfo, CenterReports, cities, categoriesRes] = await Promise.all([
+    fetchCenterInfo(params.centerId),
+    fetchCenterReports(params.centerId),
+    fetchCities(),
+    fetchCategories({ limit: 200 }),
+  ]);
+  const fields = (categoriesRes?.data ?? []).map((category: any) => ({
+    id: String(category.id || category._id || ''),
+    name_en: category.name_en,
+    name_ar: category.name_ar,
+    name: category.name,
+  }));
   // Derive courses from CenterInfo per new API
   const CenterCourses = {
     data: CenterInfo?.courses || [],
@@ -18,7 +29,14 @@ const Page = async ({ params, searchParams }: IProps) => {
   };
 
   return (
-    <CenterDetailsView tab={tab} CenterInfo={CenterInfo} CenterCourses={CenterCourses} CenterReports={CenterReports} />
+    <CenterDetailsView
+      tab={tab}
+      CenterInfo={CenterInfo}
+      CenterCourses={CenterCourses}
+      CenterReports={CenterReports}
+      cities={cities}
+      fields={fields}
+    />
   );
 };
 

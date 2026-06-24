@@ -18,9 +18,16 @@ type Props = {
   label: string;
   required?: boolean;
   placeholder?: string;
+  labelSx?: object;
 };
 
-export default function WordCountTextarea({ name, label, required = false, placeholder }: Props) {
+export default function WordCountTextarea({
+  name,
+  label,
+  required = false,
+  placeholder,
+  labelSx,
+}: Props) {
   const { t } = useTranslate();
   const { control, watch } = useFormContext();
   const value = watch(name) || '';
@@ -29,7 +36,9 @@ export default function WordCountTextarea({ name, label, required = false, place
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <RequiredLabel required={required}>{label}</RequiredLabel>
+        <RequiredLabel required={required} sx={labelSx}>
+          {label}
+        </RequiredLabel>
         <Typography variant="caption" color="text.secondary">
           {t('ADD_PROGRAM.MAX_WORDS', { count: MAX_DESCRIPTION_WORDS })}
         </Typography>

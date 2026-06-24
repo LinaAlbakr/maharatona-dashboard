@@ -48,7 +48,8 @@
     "DELETE_PAYOUT": "حذف الدفعة",
     "FLEXIBLE_ENROLLMENT": "التسجيل حسب نموذج الحجز",
     "MANAGE": "إدارة",
-    "MANAGE_ENROLLMENT": "إدارة التسجيل"
+    "MANAGE_ENROLLMENT": "إدارة التسجيل",
+    "EDIT_CENTER_DETAILS": "تعديل تفاصيل المركز"
   },
   "LABEL": {
     "FLEXIBLE_COURSE": "مرنة",
@@ -61,6 +62,14 @@
     "SEARCH_BY_CLIENT": "ابحث عن العميل",
     "MAHARATONA": "مهاراتنا",
     "CENTER_NAME": "إسم المركز",
+    "CENTER_DETAILS": "تفاصيل المركز",
+    "EDIT_CENTER": "تعديل المركز",
+    "EDIT_CENTER_DETAILS": "تعديل تفاصيل المركز",
+    "CENTER_DESCRIPTION_ARABIC": "وصف المركز بالعربية",
+    "CENTER_DESCRIPTION_ENGLISH": "وصف المركز بالإنجليزية",
+    "ADDRESS_DETAILS": "تفاصيل العنوان",
+    "IBAN": "رقم الآيبان",
+    "CENTER_LOGO": "شعار المركز",
     "ARABIC": "العربية",
     "ENGLISH": "الإنجليزية",
     "CITY": "المدينة",
@@ -312,6 +321,7 @@
     "DELETE": "حذف",
     "EDIT": "تعديل",
     "ADD_FIELD": "اضافة مجال",
+    "ADD_CHILD": "إضافة طفل",
     "ADD_REASON": "اضافه سبب",
     "SAVE": "حفظ",
     "ACTIVATE": "تفعيل",
