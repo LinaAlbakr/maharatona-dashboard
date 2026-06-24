@@ -228,12 +228,12 @@ const SingleBannerView = ({ data,  banner }: Readonly<props>) => {
                 ),
                 created_at: (item: IBannerCenter) => (
                   <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
-                    {fDate(item?.subscription_date)}
+                    {fDate(item?.subscription_date, 'dd-MM-yyyy') || '- - - -'}
                   </Typography>
                 ),
                 expires_at: (item: IBannerCenter) => (
                   <Typography variant="body2" sx={{ color: item.is_active ? 'info.dark' : 'red' }}>
-                    {fDate(item?.expires_at)}
+                    {fDate(item?.expires_at, 'dd-MM-yyyy') || '- - - -'}
                   </Typography>
                 ),
               } as any
