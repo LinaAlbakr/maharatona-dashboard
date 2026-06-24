@@ -114,7 +114,7 @@ const Statistics = ({ statistics, priceProfit }: Readonly<props>) => {
               {statistics?.totalBookings}
             </Typography>
           </Box>
-          <Image src="/assets/images/home/notification.svg" alt="image" width={50} height={50} />
+          <Image src="/assets/images/home/bookings.svg" alt="" width={50} height={50} />
         </Box>
         <Box
           sx={{
@@ -147,24 +147,36 @@ const Statistics = ({ statistics, priceProfit }: Readonly<props>) => {
             alignItems: 'center',
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'stretch' }}>
-            <RHFTextField
-              fullWidth
-              name="price_profit"
-              label={t('LABEL.PERCENTAGE_OF_PROFITS')}
-              inputMode="search"
-              InputProps={{ sx: { borderBottomRightRadius: 0, borderTopRightRadius: 0 } }}
-              type="number"
-            />
-            <LoadingButton
-              color="secondary"
-              sx={{ borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
-              type="submit"
-              variant="contained"
-              loading={isSubmitting}
-            >
-              {t('LABEL.APPLY')}
-            </LoadingButton>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              width: '100%',
+              maxWidth: 520,
+            }}
+          >
+            <Typography variant="subtitle2" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+              {t('LABEL.PERCENTAGE_OF_PROFITS')}
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'stretch' }}>
+              <RHFTextField
+                fullWidth
+                name="price_profit"
+                inputMode="search"
+                InputProps={{ sx: { borderBottomRightRadius: 0, borderTopRightRadius: 0 } }}
+                type="number"
+              />
+              <LoadingButton
+                color="secondary"
+                sx={{ borderBottomLeftRadius: 0, borderTopLeftRadius: 0, flexShrink: 0 }}
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+              >
+                {t('LABEL.APPLY')}
+              </LoadingButton>
+            </Box>
           </Box>
         </Box>
       </FormProvider>

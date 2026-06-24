@@ -26,8 +26,10 @@ export const paths = {
     root: ROOTS.DASHBOARD,
     notifications: `${ROOTS.DASHBOARD}/notifications`,
     centers: `${ROOTS.DASHBOARD}/centers`,
+    centerDetails: (centerId: string) => `${ROOTS.DASHBOARD}/centers/${centerId}`,
     centerAddProgram: (centerId: string) => `${ROOTS.DASHBOARD}/centers/${centerId}/add-program`,
     clients: `${ROOTS.DASHBOARD}/clients`,
+    clientDetails: (clientId: string) => `${ROOTS.DASHBOARD}/clients/${clientId}`,
     payouts: `${ROOTS.DASHBOARD}/payouts`,
     invoices: `${ROOTS.DASHBOARD}/invoices`,
     courses: `${ROOTS.DASHBOARD}/courses`,
@@ -37,6 +39,8 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/support`,
       contact_reasons: `${ROOTS.DASHBOARD}/support/contact-reasons`,
       technical_support: `${ROOTS.DASHBOARD}/support/technical-support`,
+      technicalSupportDetails: (id: string) =>
+        `${ROOTS.DASHBOARD}/support/technical-support/${id}`,
     },
     categories: `${ROOTS.DASHBOARD}/categories`,
     coupons: `${ROOTS.DASHBOARD}/coupons`,
@@ -49,7 +53,12 @@ export const paths = {
       contractPage: `${ROOTS.DASHBOARD}/pages/contract-page`,
     },
     faq: `${ROOTS.DASHBOARD}/faq`,
+    faqCategory: (categoryId: string) => `${ROOTS.DASHBOARD}/faq/${categoryId}`,
     citiesAndNeighborhoods: `${ROOTS.DASHBOARD}/cities-and-neighborhoods`,
+    cityNeighborhoods: (cityId: string) =>
+      `${ROOTS.DASHBOARD}/cities-and-neighborhoods/${cityId}`,
     banners: `${ROOTS.DASHBOARD}/banners`,
+    bannerDetails: (bannerId: string) => `${ROOTS.DASHBOARD}/banners/${bannerId}`,
+    changePhone: `${ROOTS.DASHBOARD}/change-phone`,
   },
 };

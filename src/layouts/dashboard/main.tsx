@@ -1,3 +1,5 @@
+'use client';
+
 import Box, { BoxProps } from '@mui/material/Box';
 
 import { useResponsive } from 'src/hooks/use-responsive';
@@ -5,6 +7,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { useSettingsContext } from 'src/components/settings';
 
 import { NAV, HEADER } from '../config-layout';
+import DashboardInnerBackNav from './dashboard-inner-back-nav';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +38,7 @@ export default function Main({ children, sx, ...other }: BoxProps) {
           }),
         }}
       >
+        <DashboardInnerBackNav />
         {children}
       </Box>
     );
@@ -61,6 +65,7 @@ export default function Main({ children, sx, ...other }: BoxProps) {
       }}
       {...other}
     >
+      <DashboardInnerBackNav />
       {children}
     </Box>
   );
