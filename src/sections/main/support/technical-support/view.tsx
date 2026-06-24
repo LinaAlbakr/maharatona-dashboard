@@ -12,7 +12,7 @@ import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
 import Iconify from 'src/components/iconify';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
 import i18n from 'src/locales/i18n';
-import { arabicDate, englishDate } from 'src/utils/format-time';
+import { arabicTime, englishTime, fDate } from 'src/utils/format-time';
 
 type props = {
   items: any[];
@@ -40,6 +40,7 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
     { id: 'name', label: 'LABEL.NAME' },
     { id: 'email', label: 'LABEL.EMAIL' },
     { id: 'createdAt', label: 'LABEL.DATE' },
+    { id: 'createdAtTime', label: 'LABEL.TIME' },
     { id: 'type', label: 'LABEL.TYPE' },
     { id: '', label: 'LABEL.SETTINGS' },
   ];
@@ -185,8 +186,11 @@ const TechnicalSupportView = ({ count, items }: Readonly<props>) => {
           ]}
           customRender={{
             type: (item) => item?.type ?? '',
-            createdAt: (item) =>
-              i18n.language === 'ar' ? arabicDate(item?.createdAt) : englishDate(item?.createdAt),
+            createdAt: (item) => fDate(item?.createdAt, 'dd-MM-yyyy') || '-',
+            createdAtTime: (item) =>
+              i18n.language === 'ar'
+                ? arabicTime(item?.createdAt)
+                : englishTime(item?.createdAt),
           }}
         />
         <Box

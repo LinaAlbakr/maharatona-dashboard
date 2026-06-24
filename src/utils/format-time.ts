@@ -127,3 +127,25 @@ export const arabicDateTime = (date: InputValue, fallback = '-') => {
     hour12: true,
   }).format(parsed);
 };
+
+export const englishTime = (date: InputValue, fallback = '-') => {
+  const parsed = toValidDate(date);
+  if (!parsed) return fallback;
+  return new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  }).format(parsed);
+};
+
+export const arabicTime = (date: InputValue, fallback = '-') => {
+  const parsed = toValidDate(date);
+  if (!parsed) return fallback;
+  return new Intl.DateTimeFormat('ar-EG', {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  }).format(parsed);
+};
