@@ -238,7 +238,11 @@ export default function EditClientDialog({
         return;
       }
 
-      enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
+      enqueueSnackbar(
+        i18n.language === 'ar'
+          ? 'تم تحديث بيانات العميل بنجاح.'
+          : 'Client updated successfully.'
+      );
       onClose();
       router.refresh();
     } catch (error) {
@@ -258,7 +262,21 @@ export default function EditClientDialog({
       </Box>
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Box sx={{ px: 3, pb: 3 }}>
+        <Box
+          sx={{
+            px: 3,
+            pb: 3,
+            '& .MuiInputBase-input': { color: '#2B509C' },
+            '& .MuiSelect-select': { color: '#2B509C' },
+            '& .MuiOutlinedInput-root:not(.Mui-error):hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#D9D9D9',
+            },
+            '& .MuiOutlinedInput-root:not(.Mui-error).Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#D9D9D9',
+              borderWidth: '1px',
+            },
+          }}
+        >
           <Grid container spacing={2.5}>
             <Grid item xs={12} md={6}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>
@@ -281,7 +299,21 @@ export default function EditClientDialog({
             </Grid>
             <Grid item xs={12} md={6}>
               <RequiredLabel sx={FIELD_LABEL_SX}>{t('LABEL.INTERESTS')}</RequiredLabel>
-              <RHFMultiSelect name="field" options={fieldOptions} chip sx={programFieldSx} />
+              <RHFMultiSelect
+                name="field"
+                options={fieldOptions}
+                chip
+                sx={{
+                  ...programFieldSx,
+                  '& .MuiChip-root': {
+                    bgcolor: '#3CB8BB',
+                    color: '#FFFFFF',
+                  },
+                  '& .MuiChip-root .MuiChip-deleteIcon': {
+                    color: '#FFFFFF',
+                  },
+                }}
+              />
             </Grid>
 
             <Grid item xs={12} md={6}>

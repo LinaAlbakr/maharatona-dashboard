@@ -316,7 +316,11 @@ export default function EditCenterDialog({
         return;
       }
 
-      enqueueSnackbar(t('MESSAGE.UPDATED_SUCCESSFULLY'));
+      enqueueSnackbar(
+        i18n.language === 'ar'
+          ? 'تم تحديث بيانات المركز بنجاح.'
+          : 'Center updated successfully.'
+      );
       onClose();
       router.refresh();
     } catch (error) {
@@ -336,7 +340,21 @@ export default function EditCenterDialog({
       </Box>
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Box sx={{ px: 3, pb: 3 }}>
+        <Box
+          sx={{
+            px: 3,
+            pb: 3,
+            '& .MuiInputBase-input': { color: '#2B509C' },
+            '& .MuiSelect-select': { color: '#2B509C' },
+            '& .MuiOutlinedInput-root:not(.Mui-error):hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#D9D9D9',
+            },
+            '& .MuiOutlinedInput-root:not(.Mui-error).Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#D9D9D9',
+              borderWidth: '1px',
+            },
+          }}
+        >
           <Grid container spacing={2.5}>
             <Grid item xs={12} md={6}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>
@@ -385,7 +403,16 @@ export default function EditCenterDialog({
                 name="fields"
                 options={fieldOptions}
                 chip
-                sx={programFieldSx}
+                sx={{
+                  ...programFieldSx,
+                  '& .MuiChip-root': {
+                    bgcolor: '#3CB8BB',
+                    color: '#FFFFFF',
+                  },
+                  '& .MuiChip-root .MuiChip-deleteIcon': {
+                    color: '#FFFFFF',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6}>

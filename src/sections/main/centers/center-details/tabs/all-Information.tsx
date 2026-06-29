@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import Image from 'next/image';
 
 import { Box, Card, Rating, Divider, Container, Typography, ListItemText } from '@mui/material';
@@ -8,6 +9,7 @@ import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
+import Lightbox, { useLightBox } from 'src/components/lightbox';
 import { useSettingsContext } from 'src/components/settings';
 import {
   profileDetailFieldSx,
@@ -28,6 +30,18 @@ const AllInformation = ({ CenterInfo }: Props) => {
   const notAvailable = t('LABEL.NOT_AVAILABLE');
   const centerDescription =
     (i18n.language === 'ar' ? CenterInfo?.desc_ar : CenterInfo?.desc_en)?.trim() || notAvailable;
+
+  const placeholderImage = '/assets/images/centers/gray.jpeg';
+  const commercialRegisterImage =
+    CenterInfo?.commercial_register_image?.trim() || placeholderImage;
+  const bankImage = CenterInfo?.bank_image?.trim() || placeholderImage;
+  const centerImage = CenterInfo?.center_image?.trim() || placeholderImage;
+
+  const slides = useMemo(
+    () => [centerImage, commercialRegisterImage, bankImage].map((src) => ({ src })),
+    [centerImage, commercialRegisterImage, bankImage]
+  );
+  const lightbox = useLightBox(slides);
 
   return (
     <Container
@@ -205,46 +219,77 @@ const AllInformation = ({ CenterInfo }: Props) => {
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Image
-              src={CenterInfo?.commercial_register_image?.trim() || '/assets/images/centers/gray.jpeg'}
-              width={250}
-              height={250}
-              alt="Commercial Register"
-              style={{ borderRadius: '10px' }}
-            />
-            <Typography variant="body1" sx={profileDetailImageLabelSx}>
-              {t('LABEL.COMMERIAL_REGISTER')}
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Image
-              src={CenterInfo?.bank_image?.trim() || '/assets/images/centers/gray.jpeg'}
-              width={250}
-              height={250}
-              alt="Bank Account"
-              style={{ borderRadius: '10px' }}
-            />
-            <Typography variant="body1" sx={profileDetailImageLabelSx}>
-              {t('LABEL.BANK_ACCOUNT_IMAGE')}
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Image
-              src={CenterInfo?.center_image?.trim() || '/assets/images/centers/gray.jpeg'}
-              width={250}
-              height={250}
-              alt="Center"
-              style={{ borderRadius: '10px' }}
-            />
+            <Box onClick={() => lightbox.onOpen(centerImage)} sx={imageWrapperSx}>
+              <Image
+                src={centerImage}
+                width={250}
+                height={250}
+                alt="Center"
+                style={{ borderRadius: '10px', objectFit: 'cover' }}
+              />
+            </Box>
             <Typography variant="body1" sx={profileDetailImageLabelSx}>
               {t('LABEL.CENTER_IMAGES')}
             </Typography>
           </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box
+              onClick={() => lightbox.onOpen(commercialRegisterImage)}
+              sx={imageWrapperSx}
+            >
+              <Image
+                src={commercialRegisterImage}
+                width={250}
+                height={250}
+                alt="Commercial Register"
+                style={{ borderRadius: '10px', objectFit: 'cover' }}
+              />
+            </Box>
+            <Typography variant="body1" sx={profileDetailImageLabelSx}>
+              {t('LABEL.COMMERCIAL_REGISTER_IMAGE')}
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box onClick={() => lightbox.onOpen(bankImage)} sx={imageWrapperSx}>
+              <Image
+                src={bankImage}
+                width={250}
+                height={250}
+                alt="Bank Account"
+                style={{ borderRadius: '10px', objectFit: 'cover' }}
+              />
+            </Box>
+            <Typography variant="body1" sx={profileDetailImageLabelSx}>
+              {t('LABEL.BANK_IBAN_IMAGE')}
+            </Typography>
+          </Box>
         </Box>
       </Card>
+
+      <Lightbox
+        index={lightbox.selected}
+        slides={slides}
+        open={lightbox.open}
+        close={lightbox.onClose}
+        disabledVideo
+        disabledCaptions
+        disabledSlideshow
+      />
     </Container>
   );
+};
+
+const imageWrapperSx = {
+  cursor: 'pointer',
+  borderRadius: '10px',
+  lineHeight: 0,
+  transition: (theme: any) => theme.transitions.create(['opacity', 'box-shadow']),
+  '&:hover': {
+    opacity: 0.9,
+    boxShadow: (theme: any) => theme.shadows[4],
+  },
 };
 
 export default AllInformation;
