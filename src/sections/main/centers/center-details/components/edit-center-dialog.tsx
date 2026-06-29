@@ -139,6 +139,7 @@ export default function EditCenterDialog({
   cities,
   fields,
 }: Props) {
+  console.log('NEXT_PUBLIC_GOOGLE_MAP_API_KEY:', process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY);
   const { t, i18n } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
