@@ -24,9 +24,12 @@ import { fetchCityNeighborhoods, updateCenterDetails } from 'src/actions/centers
 import { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 
 import Iconify from 'src/components/iconify';
+import { GoogleMap } from 'src/components/map';
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFTextField from 'src/components/hook-form/rhf-text-field-form';
 import { RHFMultiSelect, RHFSelect, RHFUploadAvatar } from 'src/components/hook-form';
+
+import type { Position } from 'src/@types/map';
 
 import RequiredLabel from '../../add-program/components/required-label';
 import WordCountTextarea from '../../add-program/components/word-count-textarea';
@@ -198,7 +201,25 @@ export default function EditCenterDialog({
   } = methods;
 
   const selectedCity = watch('city');
+  const centerLocationValue = watch('center_location');
   const prevCityRef = useRef<string | null>(null);
+
+  const mapPosition = useMemo<Position | undefined>(() => {
+    const coords = parseCenterLocation(centerLocationValue || '');
+    if (coords.latitude && coords.longitude) {
+      return { lat: Number(coords.latitude), lng: Number(coords.longitude) };
+    }
+    return undefined;
+  }, [centerLocationValue]);
+
+  const handleMapChange = useCallback(
+    (newPosition: Position) => {
+      setValue('center_location', `${newPosition.lat}, ${newPosition.lng}`, {
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
 
   useEffect(() => {
     if (!open) {
@@ -464,13 +485,21 @@ export default function EditCenterDialog({
               <RequiredLabel required sx={FIELD_LABEL_SX}>
                 {t('LABEL.CENTER_LOCATION')}
               </RequiredLabel>
-              <RHFTextField
-                name="center_location"
-                fullWidth
-                multiline
-                minRows={4}
-                sx={programFieldSx}
-              />
+              <Box
+                sx={{
+                  height: 220,
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  border: '1px solid #D9D9D9',
+                  '& .gm-style': { borderRadius: '12px' },
+                }}
+              >
+                <GoogleMap
+                  defaultPosition={mapPosition}
+                  defaultZoom={mapPosition ? 17 : 12}
+                  setCurrentPosition={handleMapChange}
+                />
+              </Box>
             </Grid>
             <Grid item xs={12} md={6}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>

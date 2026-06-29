@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Map, Pin, APIProvider, AdvancedMarker } from '@vis.gl/react-google-maps';
+import { Map, Marker, APIProvider } from '@vis.gl/react-google-maps';
 
 import Box from '@mui/material/Box';
 import { Position } from 'src/@types/map';
@@ -30,7 +30,6 @@ export function GoogleMap({
           defaultCenter={defaultPosition || ComponentDefaultPosition}
           defaultZoom={defaultZoom ?? 17}
           disableDefaultUI
-          mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
           onClick={(e) => {
             setPosition((prev) => {
               const newPosition: Position | undefined = e.detail.latLng
@@ -41,11 +40,7 @@ export function GoogleMap({
             });
           }}
         >
-          {position ? (
-            <AdvancedMarker position={position}>
-              <Pin /* background={"gray"} borderColor={"green"} glyphColor={"purple"} */ />
-            </AdvancedMarker>
-          ) : null}
+          {position ? <Marker position={position} /> : null}
         </Map>
       </Box>
     </APIProvider>
