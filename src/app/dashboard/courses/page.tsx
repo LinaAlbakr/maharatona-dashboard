@@ -1,6 +1,5 @@
 import { fetchCourses } from 'src/actions/courses';
 import CoursesView from 'src/sections/main/courses/view';
-import { cookies } from 'next/headers';
 
 export const metadata = {
   title: 'Programs',
@@ -20,20 +19,23 @@ const Page = async ({ searchParams }: Readonly<props>) => {
   });
 
   const coursesData = Array.isArray(courses?.data) ? courses.data : [];
-  const lang = cookies().get('Language')?.value || 'en';
-  
-  // Apply client-side filtering as fallback if backend doesn't filter
+  const searchTerm = course_name.trim().toLowerCase();
+
+  // Match program name (ar/en) OR center name — independent of UI language cookie,
+  // so English program names are findable even when Language cookie is ar.
   const filteredProducts = coursesData.filter((course: any) => {
-    if (!course_name) return true;
-    
-    const searchTerm = course_name.toLowerCase();
-    const courseName = course?.name || 
-      (lang === 'ar' ? course?.name_ar : course?.name_en) || 
-      course?.name_ar || 
-      course?.name_en || 
-      '';
-    
-    return courseName.toLowerCase().includes(searchTerm);
+    if (!searchTerm) return true;
+
+    const haystacks = [
+      course?.name,
+      course?.name_ar,
+      course?.name_en,
+      course?.center?.name,
+    ]
+      .filter((value) => value != null && String(value).trim() !== '')
+      .map((value) => String(value).toLowerCase());
+
+    return haystacks.some((value) => value.includes(searchTerm));
   });
 
   return <CoursesView courses={filteredProducts} count={filteredProducts.length} />;

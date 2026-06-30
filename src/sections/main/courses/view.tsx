@@ -303,7 +303,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                       </InputAdornment>
                     ),
                   }}
-                  placeholder={t('LABEL.COURSE_NAME')}
+                  placeholder={t('LABEL.SEARCH_PROGRAM_OR_CENTER')}
                   type="search"
                   onChange={(e) => createQueryString('search', e.target.value)}
                 />
