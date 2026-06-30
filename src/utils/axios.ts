@@ -194,6 +194,8 @@ export const endpoints = {
     send: '/notification/send-to-users',
     sendToCenter: '/admin/send-notification-center',
     sendToClient: '/admin/send-notification-client',
+    sendToAllCenters: '/admin/send-notification-all-centers',
+    sendToAllClients: '/admin/send-notification-all-clients',
   },
   profile: {
     changePhone: `/admin/auth/change-phone-number`,

@@ -64,6 +64,36 @@ export async function sendMessageToClient(reqBody: any): Promise<any> {
   }
 }
 
+export async function sendMessageToAllCenters(reqBody: any): Promise<any> {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(`${endpoints.notifications.sendToAllCenters}`, reqBody, {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+}
+
+export async function sendMessageToAllClients(reqBody: any): Promise<any> {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+  try {
+    const res = await axiosInstance.post(`${endpoints.notifications.sendToAllClients}`, reqBody, {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    return res.data;
+  } catch (error) {
+    return {
+      error: getErrorMessage(error),
+    };
+  }
+}
+
 export async function fetchBookingNotificationExpand(notificationId: string): Promise<any | null> {
   const accessToken = getCookie('access_token', { cookies }) as string | undefined;
   const lang = (getCookie('Language', { cookies }) as string | undefined) ?? 'en';
