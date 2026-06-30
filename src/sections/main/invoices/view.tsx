@@ -30,9 +30,13 @@ import InvoiceHidden from './invoice-hidden';
 // ----------------------------------
 // Types
 // ----------------------------------
+type BuyerType = 'center' | 'client';
+
 type InvoiceRow = {
   id: string;
   merchentId: string;
+  buyerType: BuyerType;
+  buyerName: string;
   totalAmount: number;
   noOfCourses: number;
 };
@@ -62,6 +66,8 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
   // ----------------------------------
   const TABLE_HEAD = [
     { id: 'merchentId', label: 'LABEL.MERCHENT_ID' },
+    { id: 'buyerType', label: 'LABEL.BUYER_TYPE' },
+    { id: 'buyerName', label: 'LABEL.BUYER_NAME' },
     { id: 'totalAmount', label: 'LABEL.TOTAL_AMOUNT' },
     { id: 'noOfCourses', label: 'LABEL.NO_OF_COURSES' },
     // Special id used by SharedTable to render actions column
@@ -83,20 +89,30 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
         const list = res?.data?.data || [];
 
         const mapped: InvoiceRow[] = Array.isArray(list)
-          ? list.map((inv: any) => ({
-            id: inv?._id,
-            merchentId: inv?.merchant_id ?? '-',
-            totalAmount: Number(inv?.total_price) || 0,
-            noOfCourses:
-            // eslint-disable-next-line no-nested-ternary
-            inv?.type === "package"
-              ? Array.isArray(inv?.packages)
-                ? inv.packages.length
-                : 0
-              : Array.isArray(inv?.course)
-              ? inv.course.length
-              : 0,
-          }))
+          ? list.map((inv: any) => {
+            // Package invoices are purchased by a Center; everything else by a Client (Parent).
+            const isCenterBuyer = inv?.type === 'package';
+            const buyerName = isCenterBuyer
+              ? inv?.center_id?.name
+              : inv?.client_id?.username;
+
+            return {
+              id: inv?._id,
+              merchentId: inv?.merchant_id ?? '-',
+              buyerType: (isCenterBuyer ? 'center' : 'client') as BuyerType,
+              buyerName: buyerName?.trim() ? buyerName : '-',
+              totalAmount: Number(inv?.total_price) || 0,
+              noOfCourses:
+              // eslint-disable-next-line no-nested-ternary
+              inv?.type === "package"
+                ? Array.isArray(inv?.packages)
+                  ? inv.packages.length
+                  : 0
+                : Array.isArray(inv?.course)
+                ? inv.course.length
+                : 0,
+            };
+          })
           : [];
 
         if (active) {
@@ -137,7 +153,12 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     return invoices.filter((inv) => {
       const merch = inv.merchentId?.toLowerCase() || '';
       const total = formatAmount(inv.totalAmount).toLowerCase();
-      return merch.includes(currentSearch) || total.includes(currentSearch);
+      const buyer = inv.buyerName?.toLowerCase() || '';
+      return (
+        merch.includes(currentSearch) ||
+        total.includes(currentSearch) ||
+        buyer.includes(currentSearch)
+      );
     });
   }, [invoices, currentSearch, formatAmount]);
 
@@ -285,6 +306,10 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
         ]}
         disablePagination
         customRender={{
+          buyerType: (row) => (
+            <Box>{row.buyerType === 'center' ? t('LABEL.CENTER') : t('LABEL.CLIENT_PARENT')}</Box>
+          ),
+          buyerName: (row) => <Box>{row.buyerName || '-'}</Box>,
           totalAmount: (row) => (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Box
