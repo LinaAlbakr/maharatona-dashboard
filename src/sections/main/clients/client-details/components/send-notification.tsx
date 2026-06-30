@@ -18,15 +18,17 @@ import { Grid } from '@mui/material';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { ICenter } from 'src/types/centers';
-import { sendMessageToClient } from 'src/actions/notifications';
+import { sendMessageToClient, sendMessageToAllClients } from 'src/actions/notifications';
 
 type Props = {
   open: boolean;
   onClose: VoidFunction;
   selectedCenter: ICenter | undefined;
+  /** When true, broadcasts to every active client instead of a single recipient. */
+  sendToAll?: boolean;
 };
 
-export default function SendNotification({ open, onClose, selectedCenter }: Props) {
+export default function SendNotification({ open, onClose, selectedCenter, sendToAll = false }: Props) {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
 
@@ -44,9 +46,11 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
       message_en: '',
       title_ar: "مهاراتنا",
       title_en: "Maharatona",
-      sendTo: (selectedCenter?.name || (selectedCenter as any)?.username || '') as string,
+      sendTo: (sendToAll
+        ? t('LABEL.ALL_CLIENTS')
+        : selectedCenter?.name || (selectedCenter as any)?.username || '') as string,
     }),
-    [selectedCenter]
+    [selectedCenter, sendToAll, t]
   );
 
   const methods = useForm({
@@ -63,10 +67,12 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
   } = methods;
 
   useEffect(() => {
-    if (selectedCenter) {
+    if (sendToAll) {
+      setValue('sendTo', t('LABEL.ALL_CLIENTS'));
+    } else if (selectedCenter) {
       setValue('sendTo', selectedCenter?.name || (selectedCenter as any)?.username || '');
     }
-  }, [selectedCenter, setValue]);
+  }, [selectedCenter, setValue, sendToAll, t]);
 
   const values = watch();
   const onSubmit = handleSubmit(async (data) => {
@@ -75,14 +81,22 @@ export default function SendNotification({ open, onClose, selectedCenter }: Prop
       title_en: "Maharatona",
       message_ar: data.message_ar,
       message_en: data.message_en,
-      user_id: selectedCenter?.id || (selectedCenter as any)?._id || selectedCenter?.user_id,
+      ...(sendToAll
+        ? {}
+        : {
+            user_id:
+              selectedCenter?.id || (selectedCenter as any)?._id || selectedCenter?.user_id,
+          }),
     };
 
-    const res = await sendMessageToClient(newMessage);
+    const res = sendToAll
+      ? await sendMessageToAllClients(newMessage)
+      : await sendMessageToClient(newMessage);
     if (res?.error) {
       enqueueSnackbar(`${res.error}`, { variant: 'error' });
     } else {
       enqueueSnackbar(t('MESSAGE.SEND_SUCCESSFULLY'), { variant: 'success' });
+      reset();
       onClose();
     }
   });
