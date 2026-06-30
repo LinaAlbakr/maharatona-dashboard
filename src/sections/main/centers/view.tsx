@@ -54,6 +54,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const confirmClearWallet = useBoolean();
   const [selectedId, setSelectedId] = useState<string>('');
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
+  const [showSendToAll, setShowSendToAll] = useState<boolean>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
   const { i18n } = useTranslation();
@@ -175,6 +176,13 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
           <Typography variant="h3" color="white">
             {t('LABEL.EDUCATIONAL_CENTERS')}
           </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="mingcute:notification-fill" />}
+            onClick={() => setShowSendToAll(true)}
+          >
+            {t('BUTTON.SEND_TO_ALL_CENTERS')}
+          </Button>
           <Grid
             sx={{
               width: '100%',
@@ -469,6 +477,14 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
             // setSelectedEmail(undefined);
           }}
           selectedCenter={selectedCenter}
+        />
+      )}
+      {showSendToAll && (
+        <SendNotification
+          open={showSendToAll}
+          onClose={() => setShowSendToAll(false)}
+          selectedCenter={undefined}
+          sendToAll
         />
       )}
     </>

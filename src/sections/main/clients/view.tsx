@@ -50,6 +50,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const selectedIdRef = useRef<string>('');
   const [statusActionLoading, setStatusActionLoading] = useState(false);
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
+  const [showSendToAll, setShowSendToAll] = useState<boolean>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
   const pathname = usePathname();
   useAdminEntityListsRealtimeRefresh();
@@ -186,6 +187,13 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
           <Typography variant="h3" color="white">
             {t('LABEL.CLIENTS')}
           </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="mingcute:notification-fill" />}
+            onClick={() => setShowSendToAll(true)}
+          >
+            {t('BUTTON.SEND_TO_ALL_CLIENTS')}
+          </Button>
           <Grid
             sx={{
               width: '100%',
@@ -461,6 +469,14 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             // setSelectedEmail(undefined);
           }}
           selectedCenter={selectedCenter}
+        />
+      )}
+      {showSendToAll && (
+        <SendNotification
+          open={showSendToAll}
+          onClose={() => setShowSendToAll(false)}
+          selectedCenter={undefined}
+          sendToAll
         />
       )}
     </>
