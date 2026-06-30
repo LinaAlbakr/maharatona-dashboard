@@ -386,9 +386,10 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             ),
             seats: (item: any) => {
               const seatsNum = Number(item?.seats);
+              const isFlexible = item?.course_type !== 'fixed';
               return (
                 <Box sx={{ color: courseTextColor(item) }}>
-                  {Number.isFinite(seatsNum) ? seatsNum : '-'}
+                  {isFlexible || !Number.isFinite(seatsNum) ? '-' : seatsNum}
                 </Box>
               );
             },
@@ -495,6 +496,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
             },
 
             price: (item: any) => {
+              if (item?.course_type !== 'fixed') {
+                return <Box sx={{ color: courseTextColor(item) }}>-</Box>;
+              }
               const discountedPrice = getDiscountedPrice(item);
               const basePrice = Math.round(item?.price ?? 0);
               const sarIcon = item?.is_active

@@ -39,8 +39,10 @@ type InvoiceRow = {
   buyerName: string;
   totalAmount: number;
   noOfCourses: number;
-  /** ISO timestamp of invoice creation, used by the date-range filter. */
+  /** ISO timestamp of invoice creation, used by the date filter. */
   createdAt: string | null;
+  /** Formatted invoice date for the table column (DD-MM-YYYY). */
+  date: string;
 };
 
 // ----------------------------------
@@ -120,6 +122,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
               buyerName: buyerName?.trim() ? buyerName : '-',
               totalAmount: Number(inv?.total_price) || 0,
               createdAt: inv?.createdAt ?? null,
+              date: formatInvoiceDate(inv?.createdAt ?? null),
               noOfCourses:
               // eslint-disable-next-line no-nested-ternary
               inv?.type === "package"
@@ -356,7 +359,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
             <Box>{row.buyerType === 'center' ? t('LABEL.CENTER') : t('LABEL.CLIENT_PARENT')}</Box>
           ),
           buyerName: (row) => <Box>{row.buyerName || '-'}</Box>,
-          date: (row) => <Box>{formatInvoiceDate(row.createdAt)}</Box>,
+          date: (row) => <Box>{row.date}</Box>,
           totalAmount: (row) => (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Box
