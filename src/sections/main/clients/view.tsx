@@ -191,6 +191,16 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
             variant="contained"
             startIcon={<Iconify icon="mingcute:notification-fill" />}
             onClick={() => setShowSendToAll(true)}
+            sx={{
+              bgcolor: 'white',
+              color: '#CC38A6',
+              px: 3,
+              boxShadow: '0 10px 24px rgba(0,0,0,0.12)',
+              '&:hover': {
+                bgcolor: '#f7e8f3',
+                color: '#b62f92',
+              },
+            }}
           >
             {t('BUTTON.SEND_TO_ALL_CLIENTS')}
           </Button>
