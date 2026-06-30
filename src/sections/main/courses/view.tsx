@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -33,12 +33,11 @@ import { paths } from 'src/routes/paths';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { arabicDate, englishDate } from 'src/utils/format-time';
-
 import i18n from 'src/locales/i18n';
 import { useTranslate } from 'src/locales';
 import { deleteCousre, editCourseStatus, updateCourseEnrollmentStatus } from 'src/actions/courses';
 import SharedTable from 'src/CustomSharedComponents/SharedTable/SharedTable';
+import { cellAlignment } from 'src/CustomSharedComponents/SharedTable/types';
 
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
@@ -84,6 +83,57 @@ const getDiscountedPrice = (course: any): number | null => {
   return Math.max(0, Math.round(discounted * 100) / 100);
 };
 
+/** Gray text used only for programs whose end date is in the past. */
+const PAST_COURSE_COLOR = 'text.disabled';
+
+/** A program is "past" when its end date is strictly before today (date-only compare). */
+const isPastCourse = (course: any): boolean => {
+  const end = course?.end_date;
+  if (!end) return false;
+  const endDate = new Date(end);
+  if (Number.isNaN(endDate.getTime())) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+  return endDate.getTime() < today.getTime();
+};
+
+/**
+ * Cell text color:
+ * - inactive programs stay red (original behavior, unchanged)
+ * - active-but-ended/past programs are gray
+ * - otherwise normal
+ */
+const courseTextColor = (course: any): string => {
+  if (course?.is_active === false) return 'red';
+  if (isPastCourse(course)) return PAST_COURSE_COLOR;
+  return 'inherit';
+};
+
+/**
+ * Sort rank for the programs list: active programs first ordered
+ * Open (0) → Full (1) → Closed (2), then inactive/past programs at the bottom (3).
+ */
+const getCourseStatusRank = (course: any): number => {
+  if (isPastCourse(course) || course?.is_active === false) return 3;
+  if (course?.enrollmentStatus === 'closed') return 2;
+  const seatsNum = Number(course?.seats);
+  const isFull =
+    course?.course_type === 'fixed' && Number.isFinite(seatsNum) && seatsNum === 0;
+  if (isFull) return 1;
+  return 0;
+};
+
+/** Numeric date in DD-MM-YYYY (e.g. 03-03-2026), language-independent. */
+const numericDate = (value: any): string => {
+  if (!value) return '-';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${day}-${month}-${date.getFullYear()}`;
+};
+
 const CoursesView = ({ count, courses }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { t } = useTranslate();
@@ -116,17 +166,25 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   }, [pathname, router]);
   const currentLimit = Number(searchParams?.get('limit')) || 20;
 
+  // Active first (Open, Full, Closed), inactive/past at the bottom. Stable sort
+  // preserves the backend's createdAt-desc order within each status group.
+  const sortedCourses = useMemo(() => {
+    const list = Array.isArray(courses) ? [...courses] : [];
+    return list.sort((a, b) => getCourseStatusRank(a) - getCourseStatusRank(b));
+  }, [courses]);
+
   const TABLE_HEAD = [
-    { id: 'name', label: 'LABEL.COURSE_NAME' },
-    { id: 'field', label: 'LABEL.FIELD' },
-    { id: 'price', label: 'LABEL.PRICE' },
-    { id: 'students', label: 'LABEL.NUMBER_OF_SUBSCRIBERS' },
-    { id: 'seats', label: 'LABEL.NUMBER_OF_REMAINING_SEATS' },
-    { id: 'start_date', label: 'LABEL.START_DATE' },
-    { id: 'end_date', label: 'LABEL.END_DATE' },
-    { id: 'average_rate', label: 'LABEL.TOTAL_RATE' },
-    { id: 'enrollment_status', label: 'LABEL.ENROLLMENT' },
-    { id: '', label: 'LABEL.SETTINGS' },
+    { id: 'name', label: 'LABEL.PROGRAM', align: cellAlignment.left },
+    { id: 'center', label: 'LABEL.CENTER', align: cellAlignment.center },
+    { id: 'field', label: 'LABEL.CATEGORY', align: cellAlignment.center },
+    { id: 'price', label: 'LABEL.PRICE', align: cellAlignment.center },
+    { id: 'type', label: 'LABEL.TYPE', align: cellAlignment.center },
+    { id: 'students', label: 'LABEL.BOOKED', align: cellAlignment.center },
+    { id: 'seats', label: 'LABEL.SEATS_LEFT', align: cellAlignment.center },
+    { id: 'start_date', label: 'LABEL.START', align: cellAlignment.center },
+    { id: 'end_date', label: 'LABEL.END', align: cellAlignment.center },
+    { id: 'enrollment_status', label: 'LABEL.ENROLLMENT', align: cellAlignment.center },
+    { id: '', label: 'LABEL.SETTINGS', align: cellAlignment.center },
   ];
 
   const formDefaultValues = {
@@ -256,7 +314,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
 
         <SharedTable
           count={count}
-          data={courses}
+          data={sortedCourses}
           tableHead={TABLE_HEAD}
           disablePagination
           actions={[
@@ -312,7 +370,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
           ]}
           customRender={{
             name: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
+              <Box sx={{ color: courseTextColor(item) }}>
                 {(i18n.language === 'ar'
                   ? item?.name_ar || item?.name_en
                   : item?.name_en || item?.name_ar) ||
@@ -320,43 +378,37 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                   '-'}
               </Box>
             ),
-            students: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {`${item?.students?.length || 0} `}
-                {t('LABEL.STUDENT')}
-              </Box>
+            center: (item: any) => (
+              <Box sx={{ color: courseTextColor(item) }}>{item?.center?.name || '-'}</Box>
             ),
-            seats: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {item?.course_type === 'fixed'
-                  ? `${item?.seats ?? ''} ${t('LABEL.SEAT')}`
-                  : t('LABEL.FLEXIBLE_COURSE')}
+            students: (item: any) => (
+              <Box sx={{ color: courseTextColor(item) }}>{item?.students?.length || 0}</Box>
+            ),
+            seats: (item: any) => {
+              const seatsNum = Number(item?.seats);
+              return (
+                <Box sx={{ color: courseTextColor(item) }}>
+                  {Number.isFinite(seatsNum) ? seatsNum : '-'}
+                </Box>
+              );
+            },
+            type: (item: any) => (
+              <Box sx={{ color: courseTextColor(item) }}>
+                {item?.course_type === 'fixed' ? t('LABEL.FIXED') : t('LABEL.FLEXIBLE')}
               </Box>
             ),
             field: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {' '}
+              <Box sx={{ color: courseTextColor(item) }}>
                 {i18n.language === 'ar'
                   ? (item?.field?.name_ar || item?.field?.name || '-')
                   : (item?.field?.name_en || item?.field?.name || '-')}
               </Box>
             ),
-            average_rate: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {item?.average_rate ? String(item.average_rate).slice(0, 3) : '-'}
-              </Box>
-            ),
             start_date: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {i18n.language === 'ar'
-                  ? arabicDate(item?.start_date)
-                  : englishDate(item?.start_date)}
-              </Box>
+              <Box sx={{ color: courseTextColor(item) }}>{numericDate(item?.start_date)}</Box>
             ),
             end_date: (item: any) => (
-              <Box sx={{ color: item?.is_active ? 'inherit' : 'red' }}>
-                {i18n.language === 'ar' ? arabicDate(item?.end_date) : englishDate(item?.end_date)}{' '}
-              </Box>
+              <Box sx={{ color: courseTextColor(item) }}>{numericDate(item?.end_date)}</Box>
             ),
             enrollment_status: (item: any) => {
               const isFixed = item?.course_type === 'fixed';
@@ -398,7 +450,14 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               const keepStatusInlineForIpad = isFixed && isIpadViewport;
 
               return (
-                <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" sx={{ py: 0.5 }}>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="center"
+                  spacing={1}
+                  flexWrap="wrap"
+                  sx={{ py: 0.5 }}
+                >
                   <Box
                     sx={{
                       display: 'inline-flex',
@@ -444,9 +503,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               return (
                 <Stack
                   direction="column"
-                  alignItems="flex-start"
+                  alignItems="center"
                   spacing={0.5}
-                  sx={{ color: item?.is_active ? 'inherit' : 'red' }}
+                  sx={{ color: courseTextColor(item) }}
                 >
                   <Stack direction="row" alignItems="center" spacing={0.75}>
                     <Image src={sarIcon} alt="sar logo" height={20} width={20} />
