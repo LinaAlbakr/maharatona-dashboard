@@ -318,7 +318,7 @@
     "ACTION": "العملية",
     "THIS_FIELD_IS_REQUIRED": "هذا الحقل مطلوب",
     "SEARCH_BY_CENTER_OR_REFERENCE_NUMBER":"ابحث حسب المركز او رقم المرجع",
-    "SEARCH_BY_MERCHANT_ID":"ابحث حسب معرف التاجر",
+    "SEARCH_BY_MERCHANT_ID":"ابحث حسب معرف التاجر أو اسم المشتري",
     "EDUCATIONAL_COURSES":"البرامج"
   },
   "BUTTON": {

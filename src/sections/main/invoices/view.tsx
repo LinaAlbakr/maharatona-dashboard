@@ -39,6 +39,21 @@ type InvoiceRow = {
   buyerName: string;
   totalAmount: number;
   noOfCourses: number;
+  /** ISO timestamp of invoice creation, used by the date-range filter. */
+  createdAt: string | null;
+};
+
+// ----------------------------------
+// Helpers
+// ----------------------------------
+/** Invoice creation date as DD-MM-YYYY (e.g. 03-03-2026). */
+const formatInvoiceDate = (value: string | null): string => {
+  if (!value) return '-';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${day}-${month}-${date.getFullYear()}`;
 };
 
 // ----------------------------------
@@ -59,6 +74,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
   const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
   const currentLimit = Number(searchParams?.get('limit')) || 20;
   const currentSearch = (searchParams?.get('search') || '').toLowerCase().trim();
+  const selectedDate = searchParams?.get('date') || '';
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [shouldDownload, setShouldDownload] = useState(false);
   // ----------------------------------
@@ -70,6 +86,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     { id: 'buyerName', label: 'LABEL.BUYER_NAME' },
     { id: 'totalAmount', label: 'LABEL.TOTAL_AMOUNT' },
     { id: 'noOfCourses', label: 'LABEL.NO_OF_COURSES' },
+    { id: 'date', label: 'LABEL.DATE' },
     // Special id used by SharedTable to render actions column
     { id: 'rowsActions', label: 'LABEL.ACTION' },
   ];
@@ -102,6 +119,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
               buyerType: (isCenterBuyer ? 'center' : 'client') as BuyerType,
               buyerName: buyerName?.trim() ? buyerName : '-',
               totalAmount: Number(inv?.total_price) || 0,
+              createdAt: inv?.createdAt ?? null,
               noOfCourses:
               // eslint-disable-next-line no-nested-ternary
               inv?.type === "package"
@@ -149,22 +167,48 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
   // Filtered data
   // ----------------------------------
   const filteredInvoices = useMemo(() => {
-    if (!currentSearch) return invoices;
     return invoices.filter((inv) => {
-      const merch = inv.merchentId?.toLowerCase() || '';
-      const total = formatAmount(inv.totalAmount).toLowerCase();
-      const buyer = inv.buyerName?.toLowerCase() || '';
-      return (
-        merch.includes(currentSearch) ||
-        total.includes(currentSearch) ||
-        buyer.includes(currentSearch)
-      );
+      if (currentSearch) {
+        const merch = inv.merchentId?.toLowerCase() || '';
+        const total = formatAmount(inv.totalAmount).toLowerCase();
+        const buyer = inv.buyerName?.toLowerCase() || '';
+        const matchesSearch =
+          merch.includes(currentSearch) ||
+          total.includes(currentSearch) ||
+          buyer.includes(currentSearch);
+        if (!matchesSearch) return false;
+      }
+
+      // Keep only invoices created on the selected calendar day (local time).
+      if (selectedDate) {
+        if (!inv.createdAt) return false;
+        const created = new Date(inv.createdAt);
+        if (Number.isNaN(created.getTime())) return false;
+        const y = created.getFullYear();
+        const m = String(created.getMonth() + 1).padStart(2, '0');
+        const d = String(created.getDate()).padStart(2, '0');
+        if (`${y}-${m}-${d}` !== selectedDate) return false;
+      }
+
+      return true;
     });
-  }, [invoices, currentSearch, formatAmount]);
+  }, [invoices, currentSearch, selectedDate, formatAmount]);
 
   // ----------------------------------
   // Handlers
   // ----------------------------------
+  const updateParam = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        params.set(name, value);
+      } else {
+        params.delete(name);
+      }
+      router.push(`${pathname}?${params.toString()}`);
+    },
+    [pathname, router, searchParams]
+  );
 
   const handleDownloadInvoice = async (row: InvoiceRow): Promise<void> => {
     try {
@@ -259,23 +303,16 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            width: '50%',
+            flexWrap: 'wrap',
+            gap: 2,
+            width: { xs: '90%', md: '70%' },
           }}
         >
           <TextField
-            sx={{ maxWidth: 550, width: '100%' }}
+            sx={{ flex: '1 1 260px', minWidth: 220 }}
             size="small"
             value={searchParams?.get('search') || ''}
-            onChange={(e) => {
-              const value = e.target.value;
-              const params = new URLSearchParams(searchParams.toString());
-              if (value) {
-                params.set('search', value);
-              } else {
-                params.delete('search');
-              }
-              router.push(`${pathname}?${params.toString()}`);
-            }}
+            onChange={(e) => updateParam('search', e.target.value)}
             placeholder={t('LABEL.SEARCH_BY_MERCHANT_ID')}
             InputProps={{
               startAdornment: (
@@ -284,6 +321,15 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
                 </InputAdornment>
               ),
             }}
+          />
+          <TextField
+            sx={{ flex: '0 1 190px', minWidth: 160 }}
+            size="small"
+            type="date"
+            label={t('LABEL.DATE')}
+            value={selectedDate}
+            onChange={(e) => updateParam('date', e.target.value)}
+            InputLabelProps={{ shrink: true }}
           />
         </Box>
 
@@ -310,6 +356,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
             <Box>{row.buyerType === 'center' ? t('LABEL.CENTER') : t('LABEL.CLIENT_PARENT')}</Box>
           ),
           buyerName: (row) => <Box>{row.buyerName || '-'}</Box>,
+          date: (row) => <Box>{formatInvoiceDate(row.createdAt)}</Box>,
           totalAmount: (row) => (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Box

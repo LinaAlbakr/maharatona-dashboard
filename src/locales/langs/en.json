@@ -312,7 +312,7 @@
     "ACTION": "Action",
     "THIS_FIELD_IS_REQUIRED": "This field is required",
     "SEARCH_BY_CENTER_OR_REFERENCE_NUMBER":"Search by center or reference number",
-    "SEARCH_BY_MERCHANT_ID":"Search by merchant id",
+    "SEARCH_BY_MERCHANT_ID":"Search by merchant id or buyer name",
     "EDUCATIONAL_COURSES":"Programs"
   },
   "BUTTON": {
