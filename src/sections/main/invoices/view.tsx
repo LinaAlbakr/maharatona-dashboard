@@ -43,7 +43,7 @@ type InvoiceRow = {
   createdAt: string | null;
   /** Formatted invoice date for the table column (DD-MM-YYYY). */
   date: string;
-  /** Formatted invoice time for the table column (HH:mm). */
+  /** Formatted invoice time for the table column (e.g. 1:00 PM). */
   time: string;
 };
 
@@ -60,14 +60,17 @@ const formatInvoiceDate = (value: string | null): string => {
   return `${day}-${month}-${date.getFullYear()}`;
 };
 
-/** Invoice creation time as HH:mm (local). */
-const formatInvoiceTime = (value: string | null): string => {
+/** Invoice creation time in 12-hour format with AM/PM (local). */
+const formatInvoiceTime = (value: string | null, language: string): string => {
   if (!value) return '-';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '-';
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${hours}:${minutes}`;
+  const locale = language === 'ar' ? 'ar-EG' : 'en-US';
+  return new Intl.DateTimeFormat(locale, {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).format(date);
 };
 
 // ----------------------------------
@@ -130,7 +133,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
                 totalAmount: Number(inv?.total_price) || 0,
                 createdAt,
                 date: formatInvoiceDate(createdAt),
-                time: formatInvoiceTime(createdAt),
+                time: formatInvoiceTime(createdAt, i18n.language),
                 noOfCourses:
                   inv?.type === 'package'
                     ? Array.isArray(inv?.packages)
@@ -160,7 +163,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     return () => {
       active = false;
     };
-  }, [currentLimit, enqueueSnackbar, t]);
+  }, [currentLimit, enqueueSnackbar, t, i18n.language]);
 
   const formatAmount = useCallback(
     (value: number) =>
@@ -343,7 +346,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
           ),
           buyerName: (row) => <Box>{row.buyerName || '-'}</Box>,
           date: (row) => <Box>{row.date}</Box>,
-          time: (row) => <Box>{row.time}</Box>,
+          time: (row) => <Box>{formatInvoiceTime(row.createdAt, i18n.language)}</Box>,
           totalAmount: (row) => (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Box

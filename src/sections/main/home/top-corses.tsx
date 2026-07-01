@@ -17,7 +17,7 @@ const TopCoursesTableView = ({ count, courses }: Readonly<props>) => {
   const TABLE_HEAD = [
     { id: 'logo_url', label: 'LABEL.IMAGE' },
     { id: 'name', label: 'LABEL.COURSE_NAME' },
-    { id: 'field', label: 'LABEL.FIELD' },
+    { id: 'field', label: 'LABEL.CATEGORY' },
     { id: 'number_of_users', label: 'LABEL.NUMBER_OF_USERS' },
   ];
 
