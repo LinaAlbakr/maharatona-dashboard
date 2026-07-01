@@ -1,6 +1,4 @@
 /* eslint-disable no-plusplus */
-import { useState } from 'react';
-
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -9,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 
 import * as yup from 'yup';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import FormProvider, { RHFSelect } from 'src/components/hook-form';
 import { useTranslate } from 'src/locales';
@@ -120,34 +118,34 @@ export default function FileManagerNewFolderDialog({
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
 
+  const bannerSchema = yup.object().shape({
+    media_ar: yup
+      .mixed<File>()
+      .nullable()
+      .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+      .test('media-ar-type', 'Only JPG, PNG, or MP4 files are allowed.', (value) =>
+        validateMediaFile(value) === true
+      ),
+    media_en: yup
+      .mixed<File>()
+      .nullable()
+      .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+      .test('media-en-type', 'Only JPG, PNG, or MP4 files are allowed.', (value) =>
+        validateMediaFile(value) === true
+      ),
+    field: yup
+      .string()
+      .nullable()
+      .when([], () => {
+        if (!isMain) {
+          return yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED'));
+        }
+        return yup.string().nullable();
+      }),
+  });
+
   const methods = useForm<FormValues>({
-    resolver: yupResolver(
-      yup.object().shape({
-        media_ar: yup
-          .mixed<File>()
-          .nullable()
-          .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
-          .test('media-ar-type', 'Only JPG, PNG, or MP4 files are allowed.', (value) =>
-            validateMediaFile(value) === true
-          ),
-        media_en: yup
-          .mixed<File>()
-          .nullable()
-          .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
-          .test('media-en-type', 'Only JPG, PNG, or MP4 files are allowed.', (value) =>
-            validateMediaFile(value) === true
-          ),
-        field: yup
-          .string()
-          .nullable()
-          .when([], () => {
-            if (!isMain) {
-              return yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED'));
-            }
-            return yup.string().nullable();
-          }),
-      })
-    ),
+    resolver: yupResolver(bannerSchema) as Resolver<FormValues>,
     defaultValues: {
       media_ar: null,
       media_en: null,
