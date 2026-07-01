@@ -83,6 +83,12 @@ export default function ProgramWizard({
 
   const bookingType = watch('bookingType');
 
+  const handleBookingTypeChange = (next: ProgramFormValues['bookingType']) => {
+    if (next === bookingType) return;
+    setValue('bookingType', next, { shouldDirty: true });
+    clearErrors();
+  };
+
   const pageTitle = centerName
     ? `${t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM')} - ${centerName}`
     : t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM');
@@ -265,11 +271,8 @@ export default function ProgramWizard({
         <ProgramStepper activeStep={activeStep} />
       </Card>
 
-      {activeStep === 0 && !isEditMode ? (
-        <BookingTypeToggle
-          value={bookingType}
-          onChange={(value) => setValue('bookingType', value)}
-        />
+      {activeStep === 0 ? (
+        <BookingTypeToggle value={bookingType} onChange={handleBookingTypeChange} />
       ) : null}
 
       {activeStep === 2 || activeStep === 3 ? (

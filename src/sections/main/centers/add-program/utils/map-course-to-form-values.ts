@@ -308,10 +308,9 @@ export function mapCourseToProgramFormValues(course: Record<string, unknown>): P
     daysOffCustom: datesOffList.length > 0,
     daysOffList,
     datesOffList,
-    ...(bookingType === 'fixed' ? mapFixedSessionFields(course) : {}),
+    ...mapFixedSessionFields(course),
     fixed_bookings_count: Number(course.fixed_bookings_count ?? 0),
-    flexibleModels:
-      bookingType === 'flexible' ? mapFlexibleModels(course) : defaults.flexibleModels,
+    flexibleModels: mapFlexibleModels(course),
     additional_questions: questions.length
       ? questions.map((question) => {
           const record = question as Record<string, unknown>;
