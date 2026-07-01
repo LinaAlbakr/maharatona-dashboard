@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
+import Player from 'next-video/player';
 
 import Container from '@mui/material/Container';
 import { Box, Card, Stack, Button, Divider, Typography } from '@mui/material';
@@ -21,6 +22,10 @@ import { IBanner, IBannerCenter } from 'src/types/banners';
 
 import { BannerCenterDialog } from './banner-center-dialog';
 import { getPackageAdTypeLabel } from '../package-ad-type';
+import {
+  pickBannerLocaleMedia,
+  pickLocalizedText,
+} from '../utils/pick-banner-locale-media';
 
 type props = {
   banners?: IBannerCenter[];
@@ -29,9 +34,9 @@ type props = {
   data?: any;
 };
 
-const SingleBannerView = ({ data,  banner }: Readonly<props>) => {
+const SingleBannerView = ({ data, banner }: Readonly<props>) => {
   const settings = useSettingsContext();
-  const { t } = useTranslate();
+  const { t, i18n } = useTranslate();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
   const confirmDelete = useBoolean();
@@ -49,6 +54,24 @@ const SingleBannerView = ({ data,  banner }: Readonly<props>) => {
     { id: '', label: 'LABEL.SETTINGS' },
   ];
   const { enqueueSnackbar } = useSnackbar();
+
+  const packageName = pickLocalizedText(
+    i18n.language,
+    banner?.name_ar,
+    banner?.name_en,
+    banner?.name
+  );
+  const packageDescription = pickLocalizedText(
+    i18n.language,
+    banner?.description_ar,
+    banner?.description_en,
+    banner?.description
+  );
+
+  const adminBanner = (data?.banners as IBannerCenter[] | undefined)?.find(
+    (item) => item?.advertisementCenterType === 'Admin'
+  );
+  const featuredBannerMedia = pickBannerLocaleMedia(adminBanner, i18n.language);
 
   const handleConfirmActivate = async () => {
     const res = await editCenterMediaStatus(selectedCenter);
@@ -108,7 +131,7 @@ const SingleBannerView = ({ data,  banner }: Readonly<props>) => {
               <Typography fontWeight="bold" color="primary.dark" variant="subtitle2" sx={{ mb: 1 }}>
                 {t('LABEL.NAME')}
               </Typography>
-              {banner?.name || '- - - -'}
+              {packageName || '- - - -'}
             </Stack>
 
             <Stack sx={{ typography: 'body2', color: 'info.dark' }}>
@@ -143,24 +166,47 @@ const SingleBannerView = ({ data,  banner }: Readonly<props>) => {
               <Typography fontWeight="bold" color="primary.dark" variant="subtitle2" sx={{ mb: 1 }}>
                 {t('LABEL.CENTER_DESCRIPTION')}
               </Typography>
-              {banner?.description || '- - - -'}
+              {packageDescription || '- - - -'}
             </Stack>
             <Stack sx={{ typography: 'body2', color: 'info.dark' }}>
               <Typography fontWeight="bold" color="primary.dark" variant="subtitle2" sx={{ mb: 1 }}>
-                {t('LABEL.CENTER_IMAGE')}
+                {t('LABEL.BANNER_MEDIA')}
               </Typography>
 
-              <Box
-                component="img"
-                alt="image"
-                src={banner?.image_cover || '/assets/images/centers/gray.jpeg'}
-                sx={{
-                  height: 100,
-                  width: 200,
-                  objectFit: 'cover',
-                  borderRadius: 1,
-                }}
-              />
+              {adminBanner ? (
+                featuredBannerMedia.mediaType === 'VIDEO' ? (
+                  <Box sx={{ maxWidth: 320, width: '100%' }}>
+                    <Player
+                      style={{ height: 180, width: '100%', borderRadius: 8 }}
+                      src={featuredBannerMedia.path}
+                    />
+                  </Box>
+                ) : (
+                  <Box
+                    component="img"
+                    alt="banner"
+                    src={featuredBannerMedia.path || '/assets/images/centers/gray.jpeg'}
+                    sx={{
+                      height: 100,
+                      width: 200,
+                      objectFit: 'cover',
+                      borderRadius: 1,
+                    }}
+                  />
+                )
+              ) : (
+                <Box
+                  component="img"
+                  alt="image"
+                  src={banner?.image_cover || '/assets/images/centers/gray.jpeg'}
+                  sx={{
+                    height: 100,
+                    width: 200,
+                    objectFit: 'cover',
+                    borderRadius: 1,
+                  }}
+                />
+              )}
             </Stack>
           </Box>
         </Card>

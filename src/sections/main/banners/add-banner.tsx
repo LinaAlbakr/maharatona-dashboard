@@ -1,25 +1,21 @@
 /* eslint-disable no-plusplus */
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 
 import * as yup from 'yup';
-import Iconify from 'src/components/iconify';
-import { Upload } from 'src/components/upload';
 import { Controller, useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
-import FormProvider, { RHFSelect, RHFUploadAvatar } from 'src/components/hook-form';
+import FormProvider, { RHFSelect } from 'src/components/hook-form';
 import { useTranslate } from 'src/locales';
 import { toFormData } from 'axios';
 import { useSnackbar } from 'notistack';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Field } from 'src/types/banners';
 import { Alert, Box, MenuItem, Typography } from '@mui/material';
 import { addBanner } from 'src/actions/banners';
 import i18n from 'src/locales/i18n';
@@ -35,24 +31,112 @@ interface Props extends DialogProps {
 }
 
 type FormValues = {
-  media: FileList;
+  media_ar: File | null;
+  media_en: File | null;
+  field: string;
 };
-export default function FileManagerNewFolderDialog({ open, onClose, fieldsName, id, isMain }: Props) {
+
+const VALID_MEDIA_TYPES = ['image/jpeg', 'image/png', 'video/mp4'];
+
+function resolveMediaType(file: File): 'IMAGE' | 'VIDEO' {
+  return file.type === 'video/mp4' ? 'VIDEO' : 'IMAGE';
+}
+
+function validateMediaFile(file: File | null | undefined): string | true {
+  if (!file) return 'File is required.';
+  if (!VALID_MEDIA_TYPES.includes(file.type)) {
+    return 'Only JPG, PNG, or MP4 files are allowed.';
+  }
+  return true;
+}
+
+type LocaleUploadProps = {
+  label: string;
+  value: File | null;
+  fileName?: string;
+  error?: string;
+  onChange: (file: File | null) => void;
+};
+
+function LocaleMediaUpload({ label, value, fileName, error, onChange }: LocaleUploadProps) {
+  const { t } = useTranslate();
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1.5,
+        p: 2,
+        borderRadius: 1,
+        border: '1px solid',
+        borderColor: error ? 'error.main' : 'divider',
+      }}
+    >
+      <Typography variant="subtitle2" color="secondary.main">
+        {label}
+      </Typography>
+      <Button
+        variant="contained"
+        component="label"
+        sx={{
+          backgroundColor: '#007BFF',
+          px: 2,
+          py: 1.4,
+          color: '#fff',
+          alignSelf: 'flex-start',
+          '&:hover': { backgroundColor: '#0056b3' },
+        }}
+      >
+        {t('LABEL.UPLOAD_FILE')}
+        <input
+          type="file"
+          accept="image/jpeg,image/png,video/mp4"
+          hidden
+          onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+        />
+      </Button>
+      {(fileName || value?.name) && (
+        <Typography variant="body2" color="text.secondary">
+          {fileName || value?.name}
+        </Typography>
+      )}
+      {error ? (
+        <Typography color="error" variant="body2">
+          {error}
+        </Typography>
+      ) : null}
+    </Box>
+  );
+}
+
+export default function FileManagerNewFolderDialog({
+  open,
+  onClose,
+  fieldsName,
+  id,
+  isMain,
+}: Props) {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const handleFileChange = (files: FileList | null, onChange: (files: FileList) => void) => {
-    if (files) {
-      const fileArray = Array.from(files);
-      setSelectedFiles(fileArray);
-      onChange(files); // Update the field value in the form
-    }
-  };
-  const methods = useForm({
+  const methods = useForm<FormValues>({
     resolver: yupResolver(
       yup.object().shape({
-        media: yup.mixed<any>().nullable().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        media_ar: yup
+          .mixed<File>()
+          .nullable()
+          .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+          .test('media-ar-type', 'Only JPG, PNG, or MP4 files are allowed.', (value) =>
+            validateMediaFile(value) === true
+          ),
+        media_en: yup
+          .mixed<File>()
+          .nullable()
+          .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+          .test('media-en-type', 'Only JPG, PNG, or MP4 files are allowed.', (value) =>
+            validateMediaFile(value) === true
+          ),
         field: yup
           .string()
           .nullable()
@@ -65,25 +149,27 @@ export default function FileManagerNewFolderDialog({ open, onClose, fieldsName, 
       })
     ),
     defaultValues: {
-      media: null,
+      media_ar: null,
+      media_en: null,
       field: '',
     },
   });
+
   const {
-    setValue,
     handleSubmit,
-    watch,
     control,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     const reqBody = {
       advertisement_id: id,
       field_id: data.field,
-      media: data.media[0],
-      mediaType: data.media[0].type === 'video/mp4' ? 'VIDEO' : 'IMAGE',
+      media_ar: data.media_ar,
+      media_en: data.media_en,
+      mediaTypeAr: resolveMediaType(data.media_ar!),
+      mediaTypeEn: resolveMediaType(data.media_en!),
     };
     const formData = new FormData();
     toFormData(reqBody, formData);
@@ -94,7 +180,6 @@ export default function FileManagerNewFolderDialog({ open, onClose, fieldsName, 
       enqueueSnackbar(`${res?.error}`, { variant: 'error' });
     } else {
       enqueueSnackbar(t('MESSAGE.BANNER_ADDED_SUCCESSFULLY'));
-      setSelectedFiles([]);
       reset();
       onClose();
     }
@@ -104,101 +189,45 @@ export default function FileManagerNewFolderDialog({ open, onClose, fieldsName, 
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle sx={{ color: 'secondary.main' }}>{t('LABEL.ADD_BANNER')}</DialogTitle>
       <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
-        <Alert severity="info">Recommended dimensions of a picture are 2160 × 1080 px.</Alert>
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {t('LABEL.BANNER_IMAGE_DIMENSION_HINT')}
+        </Alert>
         <FormProvider methods={methods} onSubmit={onSubmit}>
-          <DialogContent>
-            <Stack
-              spacing={1}
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { sm: ' 1fr', md: ' 1fr 1fr' },
-                alignItems: 'center',
-              }}
-            >
+          <DialogContent sx={{ px: 0 }}>
+            <Stack spacing={2}>
               <Controller
-                name="media"
+                name="media_ar"
                 control={control}
-                rules={{
-                  required: 'Please upload a file.',
-                  validate: (value) => {
-                    if (!value || value.length === 0) return 'File is required.';
-                    const validTypes = ['image/jpeg', 'image/png', 'video/mp4'];
-                    for (let i = 0; i < value.length; i++) {
-                      if (!validTypes.includes(value[i].type)) {
-                        return 'Only JPG, PNG, or MP4 files are allowed.';
-                      }
-                    }
-                    return true;
-                  },
-                }}
-                render={({ field, fieldState }) => (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                      padding: '16px',
-
-                      borderRadius: '8px',
-                      maxWidth: '400px',
-                      width: '100%',
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      component="label"
-                      sx={{
-                        backgroundColor: '#007BFF',
-                        px: 2,
-                        py: 1.7,
-                        color: '#fff',
-                        '&:hover': {
-                          backgroundColor: '#0056b3',
-                        },
-                      }}
-                    >
-                      {t('LABEL.UPLOAD_FILE')}{' '}
-                      <input
-                        type="file"
-                        accept="image/*,video/*"
-                        multiple
-                        hidden
-                        onChange={(e) => handleFileChange(e.target.files, field.onChange)}
-                      />
-                    </Button>
-                    {fieldState.error && (
-                      <Typography color="error" variant="body2">
-                        {fieldState.error.message}
-                      </Typography>
-                    )}
-                    {selectedFiles.length > 0 && (
-                      <Box sx={{ position: 'absolute', bottom: '50px' }}>
-                        {selectedFiles.map((file, index) => (
-                          <Typography
-                            key={index}
-                            sx={{
-                              padding: '8px',
-                              border: '1px solid #ccc',
-                              borderRadius: '4px',
-                              backgroundColor: '#f9f9f9',
-                              fontSize: '14px',
-                            }}
-                          >
-                            {file.name}
-                          </Typography>
-                        ))}
-                      </Box>
-                    )}
-                  </Box>
+                render={({ field }) => (
+                  <LocaleMediaUpload
+                    label={t('LABEL.BANNER_IMAGE_AR')}
+                    value={field.value}
+                    error={errors.media_ar?.message}
+                    onChange={field.onChange}
+                  />
                 )}
               />
-              <RHFSelect name="field" label={`${t('LABEL.FIELD')}`}>
-                {fieldsName.map((field: any, index: number) => (
-                  <MenuItem key={index} value={field._id}>
-                    {i18n.language === 'ar' ? field.name_ar : field.name_en || ""}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
+              <Controller
+                name="media_en"
+                control={control}
+                render={({ field }) => (
+                  <LocaleMediaUpload
+                    label={t('LABEL.BANNER_IMAGE_EN')}
+                    value={field.value}
+                    error={errors.media_en?.message}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {!isMain ? (
+                <RHFSelect name="field" label={t('LABEL.FIELD')}>
+                  {fieldsName.map((field: any) => (
+                    <MenuItem key={field._id} value={field._id}>
+                      {i18n.language === 'ar' ? field.name_ar : field.name_en || ''}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+              ) : null}
             </Stack>
           </DialogContent>
 
@@ -215,7 +244,6 @@ export default function FileManagerNewFolderDialog({ open, onClose, fieldsName, 
                 },
               }}
               onClick={() => {
-                setSelectedFiles([]);
                 reset();
                 onClose();
               }}

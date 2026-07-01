@@ -17,7 +17,11 @@ export type Banner = {
 export type IBanner = {
   id: string;
   name: string;
+  name_ar?: string;
+  name_en?: string;
   description: string;
+  description_ar?: string;
+  description_en?: string;
   image_cover: string;
   created_at: string;
   duration: number;
@@ -31,7 +35,13 @@ export type IBannerCenter = {
   created_by: any;
   id: string;
   is_active: boolean;
+  path_ar: string;
+  path_en: string;
+  /** @deprecated Use path_ar / path_en */
   path: string;
+  mediaTypeAr: string;
+  mediaTypeEn: string;
+  /** @deprecated Use mediaTypeAr / mediaTypeEn */
   mediaType: string;
   advertisementCenterType: string;
   expires_at: string;

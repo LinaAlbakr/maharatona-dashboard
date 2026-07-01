@@ -13,9 +13,13 @@ import axiosInstance, { endpoints, getErrorMessage } from 'src/utils/axios';
 import { Banner } from 'src/types/banners';
 
 /** Server actions run in Node — avoid `instanceof File` (not always defined). */
-function appendFormUploadFile(payload: FormData, value: FormDataEntryValue | null) {
+function appendFormUploadFile(
+  payload: FormData,
+  value: FormDataEntryValue | null,
+  fieldName = 'file'
+) {
   if (!value || typeof value === 'string') return;
-  payload.append('file', value);
+  payload.append(fieldName, value);
 }
 
 interface IParams {
@@ -69,7 +73,11 @@ export const fetchSingleBannder = async (id: string): Promise<any> => {
     const mapped = {
       id: p?._id,
       name: p?.name_en ?? p?.name_ar ?? '',
+      name_ar: p?.name_ar ?? '',
+      name_en: p?.name_en ?? '',
       description: p?.desc_en ?? p?.desc_ar ?? '',
+      description_ar: p?.desc_ar ?? '',
+      description_en: p?.desc_en ?? '',
       image_cover: p?.imgae_cover ?? p?.image_cover ?? '',
       created_at: p?.createdAt ?? '',
       duration: Number(p?.duration ?? 0),
@@ -82,8 +90,12 @@ export const fetchSingleBannder = async (id: string): Promise<any> => {
       ? p.banners.map((b: any) => ({
         id: b?._id,
         is_active: Boolean(b?.is_active),
-        path: b?.image ?? '',
-        mediaType: b?.media_type ?? '',
+        path_ar: b?.image_ar ?? b?.image ?? '',
+        path_en: b?.image_en ?? b?.image ?? '',
+        path: b?.image_en ?? b?.image ?? '',
+        mediaTypeAr: b?.media_type_ar ?? b?.media_type ?? '',
+        mediaTypeEn: b?.media_type_en ?? b?.media_type ?? '',
+        mediaType: b?.media_type_en ?? b?.media_type ?? '',
         advertisementCenterType: b?.createdby_type ?? '',
         expires_at: b?.expires_at ?? '',
         subscription_date: b?.subscription_date ?? '',
@@ -266,10 +278,11 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
       };
     }
 
-    // Backend Multer is configured to accept the file field as "file" (not "media")
+    // Backend expects file_ar + file_en (separate Arabic / English media)
     const payload = new FormData();
 
-    appendFormUploadFile(payload, reqBody.get('media'));
+    appendFormUploadFile(payload, reqBody.get('media_ar'), 'file_ar');
+    appendFormUploadFile(payload, reqBody.get('media_en'), 'file_en');
 
     // Forward text fields exactly as backend expects in req.body
     const fieldId = reqBody.get('field_id');
@@ -277,11 +290,16 @@ export const addBanner = async (reqBody: FormData): Promise<any> => {
       payload.append('field_id', fieldId as any);
     }
 
-    // Send media type in both camelCase and snake_case to match backend model
-    const mediaType = reqBody.get('mediaType');
-    if (mediaType) {
-      payload.append('mediaType', mediaType as any);
-      payload.append('media_type', mediaType as any);
+    const mediaTypeAr = reqBody.get('mediaTypeAr');
+    if (mediaTypeAr) {
+      payload.append('mediaTypeAr', mediaTypeAr as any);
+      payload.append('media_type_ar', mediaTypeAr as any);
+    }
+
+    const mediaTypeEn = reqBody.get('mediaTypeEn');
+    if (mediaTypeEn) {
+      payload.append('mediaTypeEn', mediaTypeEn as any);
+      payload.append('media_type_en', mediaTypeEn as any);
     }
 
     await axiosInstance.post(endpoints.banners.addBanner(String(packageId)), payload, {
