@@ -256,23 +256,6 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
     <Box sx={innerCardSx}>
       <Grid container spacing={2.5}>
         <Grid xs={12} md={6}>
-          <RequiredLabel>{t('ADD_PROGRAM.TITLE_AR')}</RequiredLabel>
-          <Controller
-            name={`${basePath}.title_ar`}
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER_AR')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
-              />
-            )}
-          />
-        </Grid>
-        <Grid xs={12} md={6}>
           <RequiredLabel>{t('ADD_PROGRAM.TITLE_EN')}</RequiredLabel>
           <Controller
             name={`${basePath}.title_en`}
@@ -282,6 +265,23 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 {...field}
                 fullWidth
                 placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER_EN')}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
+          />
+        </Grid>
+        <Grid xs={12} md={6}>
+          <RequiredLabel>{t('ADD_PROGRAM.TITLE_AR')}</RequiredLabel>
+          <Controller
+            name={`${basePath}.title_ar`}
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                placeholder={t('ADD_PROGRAM.SLOT_TITLE_PLACEHOLDER_AR')}
                 error={!!error}
                 helperText={error ? t(String(error.message)) : undefined}
                 sx={programFieldSx}

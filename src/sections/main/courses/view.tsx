@@ -110,18 +110,37 @@ const courseTextColor = (course: any): string => {
   return 'inherit';
 };
 
+const parseDateMs = (value: unknown): number => {
+  if (!value) return Number.POSITIVE_INFINITY;
+  const date = new Date(value as string);
+  return Number.isNaN(date.getTime()) ? Number.POSITIVE_INFINITY : date.getTime();
+};
+
 /**
- * Sort rank for the programs list: active programs first ordered
- * Open (0) → Full (1) → Closed (2), then inactive/past programs at the bottom (3).
+ * List sort tier:
+ * 0 — active, not ended, enrollment open (includes full)
+ * 1 — active, not ended, enrollment closed
+ * 2 — ended (past end date, gray)
+ * 3 — inactive (red, bottom)
  */
-const getCourseStatusRank = (course: any): number => {
-  if (isPastCourse(course) || course?.is_active === false) return 3;
-  if (course?.enrollmentStatus === 'closed') return 2;
-  const seatsNum = Number(course?.seats);
-  const isFull =
-    course?.course_type === 'fixed' && Number.isFinite(seatsNum) && seatsNum === 0;
-  if (isFull) return 1;
+const getCourseSortTier = (course: any): number => {
+  if (course?.is_active === false) return 3;
+  if (isPastCourse(course)) return 2;
+  if (course?.enrollmentStatus === 'closed') return 1;
   return 0;
+};
+
+/** Active/open & closed: nearest start date first; ended: most recent end date first. */
+const compareCoursesForList = (a: any, b: any): number => {
+  const tierA = getCourseSortTier(a);
+  const tierB = getCourseSortTier(b);
+  if (tierA !== tierB) return tierA - tierB;
+
+  if (tierA === 2 || tierA === 3) {
+    return parseDateMs(b?.end_date) - parseDateMs(a?.end_date);
+  }
+
+  return parseDateMs(a?.start_date) - parseDateMs(b?.start_date);
 };
 
 /** Numeric date in DD-MM-YYYY (e.g. 03-03-2026), language-independent. */
@@ -166,11 +185,10 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   }, [pathname, router]);
   const currentLimit = Number(searchParams?.get('limit')) || 20;
 
-  // Active first (Open, Full, Closed), inactive/past at the bottom. Stable sort
-  // preserves the backend's createdAt-desc order within each status group.
+  // Open → closed → ended (gray) → inactive; start/end date ordering within each tier.
   const sortedCourses = useMemo(() => {
     const list = Array.isArray(courses) ? [...courses] : [];
-    return list.sort((a, b) => getCourseStatusRank(a) - getCourseStatusRank(b));
+    return list.sort(compareCoursesForList);
   }, [courses]);
 
   const TABLE_HEAD = [

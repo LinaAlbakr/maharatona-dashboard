@@ -22,14 +22,17 @@ export function dialog(theme: Theme) {
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          padding: theme.spacing(3),
+          paddingTop: theme.spacing(3),
+          paddingBottom: theme.spacing(2),
+          paddingLeft: theme.spacing(3),
+          paddingRight: theme.spacing(3),
         },
       },
     },
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          padding: theme.spacing(0, 3),
+          padding: theme.spacing(2, 3, 3),
         },
         dividers: {
           borderTop: 0,

@@ -17,7 +17,6 @@ export default function SharedTableRow<T extends { id: string }>({
   actions,
   customRender,
   headIds,
-  headAligns,
 }: SharedTableRowProps<T>) {
   let rowStyle: SxStyle = {};
 
@@ -31,11 +30,7 @@ export default function SharedTableRow<T extends { id: string }>({
     <>
       <TableRow hover sx={rowStyle}>
         {headIds.map((x, index) => (
-          <TableCell
-            key={index}
-            align={headAligns?.[x] || 'left'}
-            sx={{ whiteSpace: 'nowrap', color: 'info.dark' }}
-          >
+          <TableCell key={index} sx={{ whiteSpace: 'nowrap', color: 'info.dark' }}>
             {customRender && x in customRender ? customRender[x]!(row) : (row as any)[x]}
           </TableCell>
         ))}

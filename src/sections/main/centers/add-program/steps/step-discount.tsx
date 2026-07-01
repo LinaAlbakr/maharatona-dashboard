@@ -135,9 +135,9 @@ export default function StepDiscount() {
                           <Card sx={innerCardSx}>
                             <Grid container spacing={2.5}>
                               <Grid xs={12} md={6}>
-                                <RequiredLabel required>{t('ADD_PROGRAM.TITLE_AR')}</RequiredLabel>
+                                <RequiredLabel required>{t('ADD_PROGRAM.TITLE_EN')}</RequiredLabel>
                                 <Controller
-                                  name={`discount.${groupIndex}.title_ar`}
+                                  name={`discount.${groupIndex}.title_en`}
                                   control={control}
                                   render={({ field: titleField, fieldState: { error } }) => (
                                     <TextField
@@ -152,9 +152,9 @@ export default function StepDiscount() {
                                 />
                               </Grid>
                               <Grid xs={12} md={6}>
-                                <RequiredLabel required>{t('ADD_PROGRAM.TITLE_EN')}</RequiredLabel>
+                                <RequiredLabel required>{t('ADD_PROGRAM.TITLE_AR')}</RequiredLabel>
                                 <Controller
-                                  name={`discount.${groupIndex}.title_en`}
+                                  name={`discount.${groupIndex}.title_ar`}
                                   control={control}
                                   render={({ field: titleField, fieldState: { error } }) => (
                                     <TextField

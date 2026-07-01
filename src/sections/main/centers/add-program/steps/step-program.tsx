@@ -40,24 +40,6 @@ export default function StepProgram({ categories }: Props) {
 
       <Grid container spacing={2.5} sx={{ mt: 2.5 }}>
         <Grid xs={12} md={6}>
-          <RequiredLabel required>{t('ADD_PROGRAM.PROGRAM_NAME_AR')}</RequiredLabel>
-          <Controller
-            name="name_ar"
-            control={control}
-            render={({ field, fieldState: { error } }) => (
-              <TextField
-                {...field}
-                fullWidth
-                placeholder={t('ADD_PROGRAM.ENTER_NAME')}
-                error={!!error}
-                helperText={error ? t(String(error.message)) : undefined}
-                sx={programFieldSx}
-              />
-            )}
-          />
-        </Grid>
-
-        <Grid xs={12} md={6}>
           <RequiredLabel required>{t('ADD_PROGRAM.PROGRAM_NAME_EN')}</RequiredLabel>
           <Controller
             name="name_en"
@@ -75,11 +57,21 @@ export default function StepProgram({ categories }: Props) {
           />
         </Grid>
 
-        <Grid xs={12}>
-          <WordCountTextarea
-            name="desc_ar"
-            label={t('ADD_PROGRAM.PROGRAM_DESC_AR')}
-            placeholder={t('ADD_PROGRAM.ENTER_DESCRIPTION')}
+        <Grid xs={12} md={6}>
+          <RequiredLabel required>{t('ADD_PROGRAM.PROGRAM_NAME_AR')}</RequiredLabel>
+          <Controller
+            name="name_ar"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <TextField
+                {...field}
+                fullWidth
+                placeholder={t('ADD_PROGRAM.ENTER_NAME')}
+                error={!!error}
+                helperText={error ? t(String(error.message)) : undefined}
+                sx={programFieldSx}
+              />
+            )}
           />
         </Grid>
 
@@ -87,6 +79,14 @@ export default function StepProgram({ categories }: Props) {
           <WordCountTextarea
             name="desc_en"
             label={t('ADD_PROGRAM.PROGRAM_DESC_EN')}
+            placeholder={t('ADD_PROGRAM.ENTER_DESCRIPTION')}
+          />
+        </Grid>
+
+        <Grid xs={12}>
+          <WordCountTextarea
+            name="desc_ar"
+            label={t('ADD_PROGRAM.PROGRAM_DESC_AR')}
             placeholder={t('ADD_PROGRAM.ENTER_DESCRIPTION')}
           />
         </Grid>

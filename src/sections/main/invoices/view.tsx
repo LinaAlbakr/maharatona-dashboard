@@ -43,6 +43,8 @@ type InvoiceRow = {
   createdAt: string | null;
   /** Formatted invoice date for the table column (DD-MM-YYYY). */
   date: string;
+  /** Formatted invoice time for the table column (HH:mm). */
+  time: string;
 };
 
 // ----------------------------------
@@ -56,6 +58,16 @@ const formatInvoiceDate = (value: string | null): string => {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   return `${day}-${month}-${date.getFullYear()}`;
+};
+
+/** Invoice creation time as HH:mm (local). */
+const formatInvoiceTime = (value: string | null): string => {
+  if (!value) return '-';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
 };
 
 // ----------------------------------
@@ -79,9 +91,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
   const selectedDate = searchParams?.get('date') || '';
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [shouldDownload, setShouldDownload] = useState(false);
-  // ----------------------------------
-  // Table Head
-  // ----------------------------------
+
   const TABLE_HEAD = [
     { id: 'merchentId', label: 'LABEL.MERCHENT_ID' },
     { id: 'buyerType', label: 'LABEL.BUYER_TYPE' },
@@ -89,13 +99,10 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     { id: 'totalAmount', label: 'LABEL.TOTAL_AMOUNT' },
     { id: 'noOfCourses', label: 'LABEL.NO_OF_COURSES' },
     { id: 'date', label: 'LABEL.DATE' },
-    // Special id used by SharedTable to render actions column
+    { id: 'time', label: 'LABEL.TIME' },
     { id: 'rowsActions', label: 'LABEL.ACTION' },
   ];
 
-  // ----------------------------------
-  // Fetch invoices
-  // ----------------------------------
   useEffect(() => {
     let active = true;
 
@@ -109,31 +116,31 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
 
         const mapped: InvoiceRow[] = Array.isArray(list)
           ? list.map((inv: any) => {
-            // Package invoices are purchased by a Center; everything else by a Client (Parent).
-            const isCenterBuyer = inv?.type === 'package';
-            const buyerName = isCenterBuyer
-              ? inv?.center_id?.name
-              : inv?.client_id?.username;
+              const isCenterBuyer = inv?.type === 'package';
+              const buyerName = isCenterBuyer
+                ? inv?.center_id?.name
+                : inv?.client_id?.username;
+              const createdAt = inv?.createdAt ?? null;
 
-            return {
-              id: inv?._id,
-              merchentId: inv?.merchant_id ?? '-',
-              buyerType: (isCenterBuyer ? 'center' : 'client') as BuyerType,
-              buyerName: buyerName?.trim() ? buyerName : '-',
-              totalAmount: Number(inv?.total_price) || 0,
-              createdAt: inv?.createdAt ?? null,
-              date: formatInvoiceDate(inv?.createdAt ?? null),
-              noOfCourses:
-              // eslint-disable-next-line no-nested-ternary
-              inv?.type === "package"
-                ? Array.isArray(inv?.packages)
-                  ? inv.packages.length
-                  : 0
-                : Array.isArray(inv?.course)
-                ? inv.course.length
-                : 0,
-            };
-          })
+              return {
+                id: inv?._id,
+                merchentId: inv?.merchant_id ?? '-',
+                buyerType: (isCenterBuyer ? 'center' : 'client') as BuyerType,
+                buyerName: buyerName?.trim() ? buyerName : '-',
+                totalAmount: Number(inv?.total_price) || 0,
+                createdAt,
+                date: formatInvoiceDate(createdAt),
+                time: formatInvoiceTime(createdAt),
+                noOfCourses:
+                  inv?.type === 'package'
+                    ? Array.isArray(inv?.packages)
+                      ? inv.packages.length
+                      : 0
+                    : Array.isArray(inv?.course)
+                      ? inv.course.length
+                      : 0,
+              };
+            })
           : [];
 
         if (active) {
@@ -155,9 +162,6 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     };
   }, [currentLimit, enqueueSnackbar, t]);
 
-  // ----------------------------------
-  // Format amount (number only, currency via icon)
-  // ----------------------------------
   const formatAmount = useCallback(
     (value: number) =>
       new Intl.NumberFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
@@ -166,9 +170,6 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     [i18n.language]
   );
 
-  // ----------------------------------
-  // Filtered data
-  // ----------------------------------
   const filteredInvoices = useMemo(() => {
     return invoices.filter((inv) => {
       if (currentSearch) {
@@ -182,7 +183,6 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
         if (!matchesSearch) return false;
       }
 
-      // Keep only invoices created on the selected calendar day (local time).
       if (selectedDate) {
         if (!inv.createdAt) return false;
         const created = new Date(inv.createdAt);
@@ -197,9 +197,6 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     });
   }, [invoices, currentSearch, selectedDate, formatAmount]);
 
-  // ----------------------------------
-  // Handlers
-  // ----------------------------------
   const updateParam = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -215,16 +212,13 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
 
   const handleDownloadInvoice = async (row: InvoiceRow): Promise<void> => {
     try {
-      // 1️⃣ Fetch invoice JSON
       const res = await axiosInstance.get(`/client/download-invoice/${row.id}`);
       const invoice = res?.data;
 
       if (!invoice) throw new Error('Invoice not found');
 
-      // 2️⃣ Set hidden invoice data
       setSelectedInvoice(invoice);
       setShouldDownload(true);
-
     } catch (error) {
       console.error('Failed to download invoice', error);
       enqueueSnackbar(t('ERROR.FAILED_TO_DOWNLOAD_INVOICE'), {
@@ -258,23 +252,17 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
       .from(element)
       .outputPdf('bloburl')
       .then((pdfUrl) => {
-        window.open(pdfUrl, '_blank'); // 👀 preview
-  
-        // cleanup
+        window.open(pdfUrl, '_blank');
         setShouldDownload(false);
         setSelectedInvoice(null);
       });
   }, [shouldDownload, selectedInvoice]);
 
-  // ----------------------------------
-  // Render
-  // ----------------------------------
   return (
     <Container
       maxWidth={settings.themeStretch ? false : 'xl'}
       sx={{ margin: '0px !important', padding: '0px !important' }}
     >
-      {/* Header */}
       <Box
         sx={{
           backgroundImage: `url(/assets/images/invoices/invoices.png)`,
@@ -335,13 +323,8 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
             InputLabelProps={{ shrink: true }}
           />
         </Box>
-
       </Box>
 
-      {/* Search */}
-      {/*  */}
-
-      {/* Table */}
       <SharedTable
         count={filteredInvoices.length}
         data={filteredInvoices}
@@ -356,10 +339,11 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
         disablePagination
         customRender={{
           buyerType: (row) => (
-            <Box>{row.buyerType === 'center' ? t('LABEL.CENTER') : t('LABEL.CLIENT_PARENT')}</Box>
+            <Box>{row.buyerType === 'center' ? t('LABEL.CENTER') : t('LABEL.CLIENT')}</Box>
           ),
           buyerName: (row) => <Box>{row.buyerName || '-'}</Box>,
           date: (row) => <Box>{row.date}</Box>,
+          time: (row) => <Box>{row.time}</Box>,
           totalAmount: (row) => (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Box
@@ -373,7 +357,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
           ),
         }}
       />
-      {/* Rows per page (limit) */}
+
       <Box
         sx={{
           display: 'flex',
@@ -416,12 +400,13 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
           </FormControl>
         </Box>
       </Box>
+
       {selectedInvoice && (
         <div
           style={{
             position: 'fixed',
             top: 0,
-            left: '-10000px', // push far off screen
+            left: '-10000px',
             width: '800px',
             visibility: 'hidden',
             pointerEvents: 'none',

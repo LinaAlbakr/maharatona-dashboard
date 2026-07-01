@@ -125,7 +125,20 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
             <RHFUploadAvatar name="image" onDrop={handleDrop} sx={{ mb: 2 }} />
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
               <Box>
-                <Typography variant="h4" color="info.dark" marginBlock={1}>
+                <Typography variant="h4" sx={{ color: 'info.dark', mt: 2, mb: 1 }}>
+                  {t('LABEL.ENGLISH_CONTENT')}
+                </Typography>
+                <RHFEditor
+                  name="content_en"
+                  sx={{
+                    '& .ql-editor': {
+                      minHeight: '200px',
+                    },
+                  }}
+                />
+              </Box>
+              <Box>
+                <Typography variant="h4" sx={{ color: 'info.dark', mt: 2, mb: 1 }}>
                   {t('LABEL.ARABIC_CONTENT')}
                 </Typography>
                 <RHFEditor
@@ -138,19 +151,6 @@ const HomeScreenView = ({ HomeScreen }: IProps) => {
                     },
                   }}
                 />{' '}
-              </Box>
-              <Box>
-                <Typography variant="h4" color="info.dark" marginBlock={1}>
-                  {t('LABEL.ENGLISH_CONTENT')}
-                </Typography>
-                <RHFEditor
-                  name="content_en"
-                  sx={{
-                    '& .ql-editor': {
-                      minHeight: '200px',
-                    },
-                  }}
-                />
               </Box>
             </Box>
           </CardContent>

@@ -146,23 +146,16 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
               }}
             >
               <RHFTextField
-                name="name_ar"
-                label={t('LABEL.NAME_AR')}
-                fullWidth
-                value={watch('name_ar')}
-              />
-              <RHFTextField
                 name="name_en"
                 label={t('LABEL.NAME_EN')}
                 fullWidth
                 value={watch('name_en')}
               />
-              <RHFTextarea
-                minRows={10}
-                name="desc_ar"
-                label={t('LABEL.DESCRIPTION_IN_ARABIC')}
+              <RHFTextField
+                name="name_ar"
+                label={t('LABEL.NAME_AR')}
                 fullWidth
-                value={watch('desc_ar')}
+                value={watch('name_ar')}
               />
               <RHFTextarea
                 minRows={10}
@@ -170,6 +163,13 @@ export function NewEditBannerDialog({ open, onClose, banner }: Props) {
                 label={t('LABEL.DESCRIPTION_IN_ENGLISH')}
                 fullWidth
                 value={watch('desc_en')}
+              />
+              <RHFTextarea
+                minRows={10}
+                name="desc_ar"
+                label={t('LABEL.DESCRIPTION_IN_ARABIC')}
+                fullWidth
+                value={watch('desc_ar')}
               />
               <RHFTextField
                 name="price"

@@ -44,8 +44,8 @@ export default function SendNotification({ open, onClose, selectedCenter, sendTo
     () => ({
       message_ar: '',
       message_en: '',
-      title_ar: "مهاراتنا",
-      title_en: "Maharatona",
+      title_ar: 'مهاراتنا',
+      title_en: 'Maharatona',
       sendTo: (sendToAll
         ? t('LABEL.ALL_CLIENTS')
         : selectedCenter?.name || (selectedCenter as any)?.username || '') as string,
@@ -60,7 +60,6 @@ export default function SendNotification({ open, onClose, selectedCenter, sendTo
 
   const {
     reset,
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -74,11 +73,10 @@ export default function SendNotification({ open, onClose, selectedCenter, sendTo
     }
   }, [selectedCenter, setValue, sendToAll, t]);
 
-  const values = watch();
   const onSubmit = handleSubmit(async (data) => {
     const newMessage = {
-      title_ar: "مهاراتنا",
-      title_en: "Maharatona",
+      title_ar: 'مهاراتنا',
+      title_en: 'Maharatona',
       message_ar: data.message_ar,
       message_en: data.message_en,
       ...(sendToAll
@@ -113,21 +111,28 @@ export default function SendNotification({ open, onClose, selectedCenter, sendTo
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle>{t('TITLE.SEND_NOTIFICATON')}</DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <RHFTextField
-              name="sendTo"
-              label={t('LABEL.SEND_TO')}
-              type="text"
-              disabled
-            />
+        <DialogContent sx={{ pt: 3, overflow: 'visible' }}>
+          <Box sx={{ mb: 2 }}>
+            <RHFTextField name="sendTo" label={t('LABEL.SEND_TO')} type="text" disabled />
           </Box>
-          <Grid rowGap={2} mt={1} container columnSpacing={{ xs: 1, sm: 2 }}>
+          <Grid rowGap={2} container columnSpacing={{ xs: 1, sm: 2 }}>
             <Grid item sm={6} xs={12}>
-              <RHFTextField name="title_ar" defaultValue="مهاراتنا" label={t('LABEL.TITLE_AR')} type="text" disabled />
+              <RHFTextField
+                name="title_en"
+                defaultValue="Maharatona"
+                label={t('LABEL.TITLE_EN')}
+                type="text"
+                disabled
+              />
             </Grid>
             <Grid item sm={6} xs={12}>
-              <RHFTextField name="title_en" defaultValue="Maharatona" label={t('LABEL.TITLE_EN')} type="text" disabled />
+              <RHFTextField
+                name="title_ar"
+                defaultValue="مهاراتنا"
+                label={t('LABEL.TITLE_AR')}
+                type="text"
+                disabled
+              />
             </Grid>
 
             <Grid item sm={6} xs={12}>
@@ -136,8 +141,8 @@ export default function SendNotification({ open, onClose, selectedCenter, sendTo
                 rows={4}
                 maxRows={4}
                 type="text"
-                name="message_ar"
-                label={t('LABEL.CONTENT_AR')}
+                name="message_en"
+                label={t('LABEL.CONTENT_EN')}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -146,8 +151,8 @@ export default function SendNotification({ open, onClose, selectedCenter, sendTo
                 rows={4}
                 maxRows={4}
                 type="text"
-                name="message_en"
-                label={t('LABEL.CONTENT_EN')}
+                name="message_ar"
+                label={t('LABEL.CONTENT_AR')}
               />
             </Grid>
           </Grid>

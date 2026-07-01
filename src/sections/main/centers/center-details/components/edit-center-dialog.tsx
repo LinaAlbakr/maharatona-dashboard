@@ -404,15 +404,15 @@ export default function EditCenterDialog({
 
             <Grid item xs={12} md={6}>
               <WordCountTextarea
-                name="desc_ar"
-                label={`${t('LABEL.CENTER_DESCRIPTION')} ${t('LABEL.ARABIC')}`}
+                name="desc_en"
+                label={`${t('LABEL.CENTER_DESCRIPTION')} ${t('LABEL.ENGLISH')}`}
                 labelSx={FIELD_LABEL_SX}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <WordCountTextarea
-                name="desc_en"
-                label={`${t('LABEL.CENTER_DESCRIPTION')} ${t('LABEL.ENGLISH')}`}
+                name="desc_ar"
+                label={`${t('LABEL.CENTER_DESCRIPTION')} ${t('LABEL.ARABIC')}`}
                 labelSx={FIELD_LABEL_SX}
               />
             </Grid>

@@ -104,23 +104,16 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
             }}
           >
             <RHFTextField
-              name="question_ar"
-              label={t('LABEL.QUESTION_NAME_IN_ARABIC')}
-              fullWidth
-              value={watch('question_ar')}
-            />
-            <RHFTextField
               name="question_en"
               label={t('LABEL.QUESTION_NAME_IN_ENGLISH')}
               fullWidth
               value={watch('question_en')}
             />
-            <RHFTextarea
-              minRows={10}
-              name="answer_ar"
-              label={t('LABEL.QUESTION_ANSWER_IN_ARABIC')}
+            <RHFTextField
+              name="question_ar"
+              label={t('LABEL.QUESTION_NAME_IN_ARABIC')}
               fullWidth
-              value={watch('answer_ar')}
+              value={watch('question_ar')}
             />
             <RHFTextarea
               minRows={10}
@@ -128,6 +121,13 @@ export function NewEditQuestionDialog({ open, onClose, item, categoryId }: Props
               label={t('LABEL.QUESTION_ANSWER_IN_ENGLISH')}
               fullWidth
               value={watch('answer_en')}
+            />
+            <RHFTextarea
+              minRows={10}
+              name="answer_ar"
+              label={t('LABEL.QUESTION_ANSWER_IN_ARABIC')}
+              fullWidth
+              value={watch('answer_ar')}
             />
             <RHFTextField name="order" label={t('LABEL.ORDER')} fullWidth value={watch('order')} />
           </Stack>

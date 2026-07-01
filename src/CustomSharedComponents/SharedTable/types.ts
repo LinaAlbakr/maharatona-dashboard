@@ -38,8 +38,6 @@ export interface SharedTableRowProps<T> {
   actions?: Action<T>[];
   customRender?: Partial<Record<keyof T, (row: T) => ReactNode>>;
   headIds: (keyof T)[];
-  /** Per-column alignment lookup (by column id). Defaults to left when not provided. */
-  headAligns?: Partial<Record<keyof T, cellAlignment>>;
 }
 export type SxStyle = SxProps<Theme>;
 

@@ -85,13 +85,13 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle>{t('TITLE.SEND_NOTIFICATON')}</DialogTitle>
-        <DialogContent>
-          <Grid rowGap={2} mt={1} container columnSpacing={{ xs: 1, sm: 2 }}>
-            <Grid item sm={6} xs={12}>
-              <RHFTextField name="title_ar" defaultValue="مهاراتنا" label={t('LABEL.TITLE_AR')} type="text" disabled />
-            </Grid>
+        <DialogContent sx={{ pt: 3, overflow: 'visible' }}>
+          <Grid rowGap={2} container columnSpacing={{ xs: 1, sm: 2 }}>
             <Grid item sm={6} xs={12}>
               <RHFTextField name="title_en" defaultValue="Maharatona" label={t('LABEL.TITLE_EN')} type="text" disabled />
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <RHFTextField name="title_ar" defaultValue="مهاراتنا" label={t('LABEL.TITLE_AR')} type="text" disabled />
             </Grid>
 
             <Grid item sm={6} xs={12}>
@@ -100,8 +100,8 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
                 rows={4}
                 maxRows={4}
                 type="text"
-                name="message_ar"
-                label={t('LABEL.CONTENT_AR')}
+                name="message_en"
+                label={t('LABEL.CONTENT_EN')}
               />
             </Grid>
             <Grid item sm={6} xs={12}>
@@ -110,8 +110,8 @@ export default function SendNotification({ open, onClose, selectedSubscribers }:
                 rows={4}
                 maxRows={4}
                 type="text"
-                name="message_en"
-                label={t('LABEL.CONTENT_EN')}
+                name="message_ar"
+                label={t('LABEL.CONTENT_AR')}
               />
             </Grid>
           </Grid>

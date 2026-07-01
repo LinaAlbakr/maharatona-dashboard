@@ -74,9 +74,9 @@ export default function StepAdditional() {
         <Card key={field.id} sx={programItemCardSx}>
           <Grid container spacing={2.5}>
             <Grid xs={12}>
-              <RequiredLabel required>{t('ADD_PROGRAM.QUESTION_AR')}</RequiredLabel>
+              <RequiredLabel required>{t('ADD_PROGRAM.QUESTION_EN')}</RequiredLabel>
               <Controller
-                name={`additional_questions.${index}.question_ar`}
+                name={`additional_questions.${index}.question_en`}
                 control={control}
                 render={({ field: inputField, fieldState: { error } }) => (
                   <TextField
@@ -92,9 +92,9 @@ export default function StepAdditional() {
             </Grid>
 
             <Grid xs={12}>
-              <RequiredLabel required>{t('ADD_PROGRAM.QUESTION_EN')}</RequiredLabel>
+              <RequiredLabel required>{t('ADD_PROGRAM.QUESTION_AR')}</RequiredLabel>
               <Controller
-                name={`additional_questions.${index}.question_en`}
+                name={`additional_questions.${index}.question_ar`}
                 control={control}
                 render={({ field: inputField, fieldState: { error } }) => (
                   <TextField
@@ -204,24 +204,6 @@ export default function StepAdditional() {
         <Card key={field.id} sx={programItemCardSx}>
           <Grid container spacing={2.5}>
             <Grid xs={12} md={6}>
-              <RequiredLabel required>{t('ADD_PROGRAM.NAME_AR')}</RequiredLabel>
-              <Controller
-                name={`addOnMaterials.${index}.name_ar`}
-                control={control}
-                render={({ field: inputField, fieldState: { error } }) => (
-                  <TextField
-                    {...inputField}
-                    fullWidth
-                    placeholder={t('ADD_PROGRAM.TYPE_NAME')}
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid xs={12} md={6}>
               <RequiredLabel required>{t('ADD_PROGRAM.NAME_EN')}</RequiredLabel>
               <Controller
                 name={`addOnMaterials.${index}.name_en`}
@@ -239,11 +221,21 @@ export default function StepAdditional() {
               />
             </Grid>
 
-            <Grid xs={12}>
-              <WordCountTextarea
-                name={`addOnMaterials.${index}.desc_ar`}
-                label={t('ADD_PROGRAM.ARABIC_DESCRIPTION')}
-                placeholder={t('ADD_PROGRAM.ENTER_DESCRIPTION')}
+            <Grid xs={12} md={6}>
+              <RequiredLabel required>{t('ADD_PROGRAM.NAME_AR')}</RequiredLabel>
+              <Controller
+                name={`addOnMaterials.${index}.name_ar`}
+                control={control}
+                render={({ field: inputField, fieldState: { error } }) => (
+                  <TextField
+                    {...inputField}
+                    fullWidth
+                    placeholder={t('ADD_PROGRAM.TYPE_NAME')}
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
+                    sx={programFieldSx}
+                  />
+                )}
               />
             </Grid>
 
@@ -251,6 +243,14 @@ export default function StepAdditional() {
               <WordCountTextarea
                 name={`addOnMaterials.${index}.desc_en`}
                 label={t('ADD_PROGRAM.ENGLISH_DESCRIPTION')}
+                placeholder={t('ADD_PROGRAM.ENTER_DESCRIPTION')}
+              />
+            </Grid>
+
+            <Grid xs={12}>
+              <WordCountTextarea
+                name={`addOnMaterials.${index}.desc_ar`}
+                label={t('ADD_PROGRAM.ARABIC_DESCRIPTION')}
                 placeholder={t('ADD_PROGRAM.ENTER_DESCRIPTION')}
               />
             </Grid>

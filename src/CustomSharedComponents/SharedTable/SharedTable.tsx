@@ -36,14 +36,6 @@ export default function SharedTable<T extends { id: string }>({
 
   const page = hasPage ? Number(searchParams.get('page')) - 1 : 0;
   const limit = Number(searchParams.get('limit')) || 20;
-
-  const headAligns = tableHead.reduce((acc, cell) => {
-    if (cell.align) {
-      acc[cell.id as keyof T] = cell.align;
-    }
-    return acc;
-  }, {} as Partial<Record<keyof T, (typeof tableHead)[number]['align']>>);
-
   return (
     <Box>
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -58,7 +50,6 @@ export default function SharedTable<T extends { id: string }>({
                   row={row}
                   actions={actions}
                   customRender={customRender}
-                  headAligns={headAligns}
                   headIds={
                     tableHead
                       .map((x) => x.id)

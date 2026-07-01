@@ -76,16 +76,16 @@ export function NewNeighborhoodDialog({ open, onClose, cityId }: Props) {
             sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mt: 1 }}
           >
             <RHFTextField
-              name="name_ar"
-              label={t('LABEL.NAME_IN_ARABIC')}
-              fullWidth
-              value={watch('name_ar')}
-            />
-            <RHFTextField
               name="name_en"
               label={t('LABEL.NAME_IN_ENGLISH')}
               fullWidth
               value={watch('name_en')}
+            />
+            <RHFTextField
+              name="name_ar"
+              label={t('LABEL.NAME_IN_ARABIC')}
+              fullWidth
+              value={watch('name_ar')}
             />
           </Stack>
         </DialogContent>

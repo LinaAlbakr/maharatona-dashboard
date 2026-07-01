@@ -169,11 +169,11 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
         >
           <CardContent sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
             <Box>
-              <Typography variant="h4" color="info.dark" marginBlock={1}>
-                {t('LABEL.ARABIC_CONTENT')}
+              <Typography variant="h4" sx={{ color: 'info.dark', mt: 2, mb: 1 }}>
+                {t('LABEL.ENGLISH_CONTENT')}
               </Typography>
               <RHFEditor
-                name="content_ar"
+                name="content_en"
                 sx={{
                   '& .ql-editor': {
                     minHeight: '200px',
@@ -183,11 +183,11 @@ const TermsAndConditionsView = ({ termsAndConditionsStudent, termsAndConditionsC
             </Box>
 
             <Box>
-              <Typography variant="h4" color="info.dark" marginBlock={1}>
-                {t('LABEL.ENGLISH_CONTENT')}
+              <Typography variant="h4" sx={{ color: 'info.dark', mt: 2, mb: 1 }}>
+                {t('LABEL.ARABIC_CONTENT')}
               </Typography>
               <RHFEditor
-                name="content_en"
+                name="content_ar"
                 sx={{
                   '& .ql-editor': {
                     minHeight: '200px',

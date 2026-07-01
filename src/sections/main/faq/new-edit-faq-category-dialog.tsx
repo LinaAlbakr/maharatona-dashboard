@@ -121,18 +121,18 @@ export function NewEditFaqCategoryDialog({ open, onClose, item, value }: Props) 
             sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mt: 1 }}
           >
             <RHFTextField
-              name="name_ar"
-              label={t('LABEL.CATEGORY_NAME_IN_ARABIC')}
-              placeholder={t('PLACEHOLDER.CATEGORY_NAME_IN_ARABIC')}
-              fullWidth
-              value={watch('name_ar')}
-            />
-            <RHFTextField
               name="name_en"
               label={t('LABEL.CATEGORY_NAME_IN_ENGLISH')}
               placeholder={t('PLACEHOLDER.CATEGORY_NAME_IN_ENGLISH')}
               fullWidth
               value={watch('name_en')}
+            />
+            <RHFTextField
+              name="name_ar"
+              label={t('LABEL.CATEGORY_NAME_IN_ARABIC')}
+              placeholder={t('PLACEHOLDER.CATEGORY_NAME_IN_ARABIC')}
+              fullWidth
+              value={watch('name_ar')}
             />
             <RHFTextField
               name="order"

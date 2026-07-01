@@ -151,18 +151,18 @@ export function NewEditCategoryDialog({ open, onClose, category }: Props) {
             }}
           >
             <RHFTextField
-              name="name_ar"
-              label={t('LABEL.NAME_AR')}
-              placeholder={t('LABEL.NAME_AR')}
-              fullWidth
-              value={watch('name_ar')}
-            />
-            <RHFTextField
               name="name_en"
               label={t('LABEL.NAME_EN')}
               placeholder={t('LABEL.NAME_EN')}
               fullWidth
               value={watch('name_en')}
+            />
+            <RHFTextField
+              name="name_ar"
+              label={t('LABEL.NAME_AR')}
+              placeholder={t('LABEL.NAME_AR')}
+              fullWidth
+              value={watch('name_ar')}
             />
             <RHFTextField
               name="order"
