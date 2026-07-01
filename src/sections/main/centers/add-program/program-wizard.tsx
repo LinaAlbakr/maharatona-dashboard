@@ -7,11 +7,13 @@ import { useSnackbar } from 'notistack';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useTranslate } from 'src/locales';
 import { revalidateAfterCourseCreate } from 'src/actions/courses';
+import type { CourseBookingTypeEligibility } from 'src/actions/courses';
 
 import FormProvider from 'src/components/hook-form';
 
@@ -39,6 +41,7 @@ type Props = {
   centerName: string;
   categories: CategoryOption[];
   initialCourse?: Record<string, unknown>;
+  bookingTypeEligibility?: CourseBookingTypeEligibility;
 };
 
 export default function ProgramWizard({
@@ -48,6 +51,7 @@ export default function ProgramWizard({
   centerName,
   categories,
   initialCourse,
+  bookingTypeEligibility,
 }: Props) {
   const { t } = useTranslate();
   const router = useRouter();
@@ -61,6 +65,10 @@ export default function ProgramWizard({
     [initialCourse]
   );
   const isEditMode = mode === 'edit';
+  const canChangeBookingType = bookingTypeEligibility?.canChangeBookingType !== false;
+  const initialBookingTypeRef = useRef<ProgramFormValues['bookingType']>(
+    defaultValues.bookingType
+  );
 
   const methods = useForm<ProgramFormValues>({
     defaultValues,
@@ -71,7 +79,9 @@ export default function ProgramWizard({
 
   useEffect(() => {
     if (!initialCourse) return;
-    reset(mapCourseToProgramFormValues(initialCourse));
+    const mapped = mapCourseToProgramFormValues(initialCourse);
+    initialBookingTypeRef.current = mapped.bookingType;
+    reset(mapped);
   }, [initialCourse, reset]);
 
   useEffect(() => {
@@ -85,6 +95,10 @@ export default function ProgramWizard({
 
   const handleBookingTypeChange = (next: ProgramFormValues['bookingType']) => {
     if (next === bookingType) return;
+    if (isEditMode && !canChangeBookingType) {
+      enqueueSnackbar(t('ADD_PROGRAM.BOOKING_TYPE_LOCKED'), { variant: 'warning' });
+      return;
+    }
     setValue('bookingType', next, { shouldDirty: true });
     clearErrors();
   };
@@ -184,6 +198,15 @@ export default function ProgramWizard({
   };
 
   const onPublish = async (data: ProgramFormValues) => {
+    if (
+      isEditMode &&
+      !canChangeBookingType &&
+      data.bookingType !== initialBookingTypeRef.current
+    ) {
+      enqueueSnackbar(t('ADD_PROGRAM.BOOKING_TYPE_LOCKED'), { variant: 'error' });
+      return;
+    }
+
     setIsPublishing(true);
     try {
       const result = await submitProgram(centerId, data, {
@@ -272,7 +295,18 @@ export default function ProgramWizard({
       </Card>
 
       {activeStep === 0 ? (
-        <BookingTypeToggle value={bookingType} onChange={handleBookingTypeChange} />
+        <>
+          <BookingTypeToggle
+            value={bookingType}
+            onChange={handleBookingTypeChange}
+            disabled={isEditMode && !canChangeBookingType}
+          />
+          {isEditMode && !canChangeBookingType ? (
+            <Alert severity="info" sx={{ mb: 3 }}>
+              {t('ADD_PROGRAM.BOOKING_TYPE_LOCKED')}
+            </Alert>
+          ) : null}
+        </>
       ) : null}
 
       {activeStep === 2 || activeStep === 3 ? (

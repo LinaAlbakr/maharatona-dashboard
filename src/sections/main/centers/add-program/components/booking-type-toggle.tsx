@@ -16,9 +16,10 @@ const UNSELECTED_TEXT = '#878787';
 type Props = {
   value: BookingType;
   onChange: (value: BookingType) => void;
+  disabled?: boolean;
 };
 
-export default function BookingTypeToggle({ value, onChange }: Props) {
+export default function BookingTypeToggle({ value, onChange, disabled = false }: Props) {
   const { t } = useTranslate();
 
   const options: { key: BookingType; titleKey: string; subtitleKey: string }[] = [
@@ -46,6 +47,7 @@ export default function BookingTypeToggle({ value, onChange }: Props) {
         px: { xs: 2, md: 2.5 },
         mb: 3,
         width: '100%',
+        opacity: disabled ? 0.92 : 1,
       }}
     >
       <Box
@@ -59,15 +61,19 @@ export default function BookingTypeToggle({ value, onChange }: Props) {
         {options.map((option) => {
           const selected = value === option.key;
           const textColor = selected ? '#FFFFFF' : UNSELECTED_TEXT;
+          const isClickable = !disabled && !selected;
 
           return (
             <Box
               key={option.key}
-              onClick={() => onChange(option.key)}
+              onClick={() => {
+                if (!isClickable) return;
+                onChange(option.key);
+              }}
               sx={{
                 height: 77,
                 borderRadius: '38px',
-                cursor: 'pointer',
+                cursor: isClickable ? 'pointer' : 'default',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',

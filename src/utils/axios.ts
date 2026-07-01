@@ -175,6 +175,8 @@ export const endpoints = {
     fetch: '/admin/get-all-courses',
     percentage: () => `/admin-panel/update-price-profit`,
     info: (courseId: string) => `/admin/get-course-details/${courseId}`,
+    bookingTypeEligibility: (courseId: string) =>
+      `/admin/course/${courseId}/booking-type-change-eligibility`,
     deleteCourse: (courseId: string) => `/admin/delete-course/${courseId}`,
     editStatus: (courseId: string) => `/admin/toggle-course-status/${courseId}`,
     enrollmentStatus: (courseId: string) => `/admin/course-enrollment-status/${courseId}`,

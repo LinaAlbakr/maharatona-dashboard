@@ -563,6 +563,7 @@
     "PUBLISH_SUCCESS": "Program created successfully",
     "UPDATE": "Save Changes",
     "EDIT_PROGRAM": "Edit Program",
+    "BOOKING_TYPE_LOCKED": "Booking type cannot be changed because this program already has bookings.",
     "UPDATE_SUCCESS": "Program updated successfully",
     "FIX_STEP_ERRORS": "Please fix the highlighted fields before continuing",
     "DAYS_OFF": "Days Off",

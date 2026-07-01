@@ -137,6 +137,35 @@ export const fetchCourseInfo = async (courseId: string): Promise<any> => {
   }
 };
 
+export type CourseBookingTypeEligibility = {
+  hasBookings: boolean;
+  bookingCount: number;
+  paidOrderCount: number;
+  canChangeBookingType: boolean;
+};
+
+export const fetchCourseBookingTypeEligibility = async (
+  courseId: string
+): Promise<CourseBookingTypeEligibility> => {
+  const accessToken = cookies().get('access_token')?.value;
+  const lang = cookies().get('Language')?.value;
+
+  try {
+    const res = await axiosInstance.get(endpoints.courses.bookingTypeEligibility(courseId), {
+      headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
+    });
+    const data = res?.data?.data ?? res?.data;
+    return {
+      hasBookings: Boolean(data?.hasBookings),
+      bookingCount: Number(data?.bookingCount ?? 0),
+      paidOrderCount: Number(data?.paidOrderCount ?? 0),
+      canChangeBookingType: data?.canChangeBookingType !== false,
+    };
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+};
+
 export const editPercentage = async (data: any): Promise<any> => {
   const accessToken = cookies().get('access_token')?.value;
   const lang = cookies().get('Language')?.value;

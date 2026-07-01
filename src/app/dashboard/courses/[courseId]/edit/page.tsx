@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { fetchCategories } from 'src/actions/categories';
 import { fetchCenterInfo } from 'src/actions/centers';
-import { fetchCourseInfo } from 'src/actions/courses';
+import { fetchCourseInfo, fetchCourseBookingTypeEligibility } from 'src/actions/courses';
 import AddProgramView from 'src/sections/main/centers/add-program/view';
 
 export const metadata = {
@@ -16,7 +16,10 @@ type IProps = {
 };
 
 const Page = async ({ params }: IProps) => {
-  const courseRes = await fetchCourseInfo(params.courseId);
+  const [courseRes, bookingTypeEligibility] = await Promise.all([
+    fetchCourseInfo(params.courseId),
+    fetchCourseBookingTypeEligibility(params.courseId),
+  ]);
   const course = courseRes?.data ?? courseRes;
 
   if (!course?.id && !course?._id) {
@@ -55,6 +58,7 @@ const Page = async ({ params }: IProps) => {
       }
       categories={categories}
       initialCourse={course}
+      bookingTypeEligibility={bookingTypeEligibility}
     />
   );
 };

@@ -83,8 +83,8 @@ const getDiscountedPrice = (course: any): number | null => {
   return Math.max(0, Math.round(discounted * 100) / 100);
 };
 
-/** Gray text used only for programs whose end date is in the past. */
-const PAST_COURSE_COLOR = 'text.disabled';
+/** Programs whose end date is in the past use this color. */
+const PAST_COURSE_COLOR = '#6D6968';
 
 /** A program is "past" when its end date is strictly before today (date-only compare). */
 const isPastCourse = (course: any): boolean => {
