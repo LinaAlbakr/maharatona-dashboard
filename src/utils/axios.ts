@@ -232,6 +232,12 @@ export const endpoints = {
     create: '/admin/create-static-page',
     edit: (id: string) => `/admin/update-static-page/${id}`,
   },
+  contract: {
+    overview: (type: string) => `/admin/contract/${type}/overview`,
+    publish: (type: string) => `/admin/contract/${type}/publish`,
+    acceptedCenters: (versionId: string) =>
+      `/admin/contract/version/${versionId}/accepted-centers`,
+  },
   faq: {
     fetchFaqCategoriesStudent: '/admin/get-all-faq-categories',
     fetchFaqCategoriesCenter: '/admin/get-all-faq-categories',

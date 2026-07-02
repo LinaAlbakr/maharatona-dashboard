@@ -1,4 +1,4 @@
-import { fetchStaticPage } from 'src/actions/static-pages';
+import { fetchContractOverview } from 'src/actions/contract';
 import ContractPageView from 'src/sections/main/pages/contract-page/contarct-page';
 
 export const metadata = {
@@ -6,9 +6,9 @@ export const metadata = {
 };
 
 const Page = async () => {
-  const CONTRACT_PAGE_CENTER = await fetchStaticPage('CONTRACT_PAGE_CENTER');
+  const contractOverview = await fetchContractOverview('CONTRACT_PAGE_CENTER');
 
-  return <ContractPageView contractCenter={CONTRACT_PAGE_CENTER} />;
+  return <ContractPageView contractOverview={contractOverview} />;
 };
 
 export default Page;
