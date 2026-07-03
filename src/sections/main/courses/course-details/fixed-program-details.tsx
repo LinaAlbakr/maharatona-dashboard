@@ -245,8 +245,12 @@ export default function FixedProgramDetailsView({ course }: Props) {
 
         <Box sx={detailGridSx}>
           <DetailField
-            label={t('PROGRAM_DETAILS.PROGRAM_NAME')}
-            value={getLocalizedText(isArabic, course?.name_ar, course?.name_en)}
+            label={t('PROGRAM_DETAILS.PROGRAM_NAME_AR')}
+            value={course?.name_ar?.trim() || '-'}
+          />
+          <DetailField
+            label={t('PROGRAM_DETAILS.PROGRAM_NAME_EN')}
+            value={course?.name_en?.trim() || '-'}
           />
           <DetailField
             label={t('LABEL.CATEGORY')}
@@ -257,13 +261,14 @@ export default function FixedProgramDetailsView({ course }: Props) {
             )}
           />
           <DetailField
-            label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION')}
+            label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION_AR')}
             fullWidth
-            value={getLocalizedText(
-              isArabic,
-              course?.description_ar || course?.desc_ar,
-              course?.description_en || course?.desc_en
-            )}
+            value={(course?.description_ar || course?.desc_ar)?.trim() || '-'}
+          />
+          <DetailField
+            label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION_EN')}
+            fullWidth
+            value={(course?.description_en || course?.desc_en)?.trim() || '-'}
           />
           <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
           <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
