@@ -252,6 +252,12 @@ export default function FixedProgramDetailsView({ course }: Props) {
             label={t('PROGRAM_DETAILS.PROGRAM_NAME_EN')}
             value={course?.name_en?.trim() || '-'}
           />
+          <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
+          <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
+          <DetailField
+            label={t('LABEL.PRICE')}
+            value={<PriceWithDiscountValue amount={course?.price} course={course} />}
+          />
           <DetailField
             label={t('LABEL.CATEGORY')}
             value={getLocalizedText(
@@ -269,12 +275,6 @@ export default function FixedProgramDetailsView({ course }: Props) {
             label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION_EN')}
             fullWidth
             value={(course?.description_en || course?.desc_en)?.trim() || '-'}
-          />
-          <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
-          <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
-          <DetailField
-            label={t('LABEL.PRICE')}
-            value={<PriceWithDiscountValue amount={course?.price} course={course} />}
           />
         </Box>
       </DetailSectionCard>

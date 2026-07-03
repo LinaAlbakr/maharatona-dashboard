@@ -113,6 +113,8 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
             label={t('PROGRAM_DETAILS.PROGRAM_NAME_EN')}
             value={course?.name_en?.trim() || '-'}
           />
+          <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
+          <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
           <DetailField
             label={t('LABEL.CATEGORY')}
             value={getLocalizedText(
@@ -120,6 +122,11 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
               course?.field?.name_ar,
               course?.field?.name_en || course?.field?.name
             )}
+          />
+          <DetailField
+            label={t('ADD_PROGRAM.DAYS_OFF')}
+            fullWidth
+            value={formatDaysOff(course, t)}
           />
           <DetailField
             label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION_AR')}
@@ -130,13 +137,6 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
             label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION_EN')}
             fullWidth
             value={(course?.description_en || course?.desc_en)?.trim() || '-'}
-          />
-          <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
-          <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
-          <DetailField
-            label={t('ADD_PROGRAM.DAYS_OFF')}
-            fullWidth
-            value={formatDaysOff(course, t)}
           />
         </Box>
       </DetailSectionCard>
