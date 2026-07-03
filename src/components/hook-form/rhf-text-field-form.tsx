@@ -22,7 +22,10 @@ export default function RHFTextField({
   const { control, setValue } = useFormContext();
   useEffect(() => {
     if (value === undefined) return;
-    setValue(name, value, { shouldValidate: true });
+    // Sync the external `value` prop into RHF state WITHOUT triggering validation.
+    // Validating here fires on mount (every field passes value={watch(...)}), which
+    // showed "required"/number-cast errors before the user interacted with the form.
+    setValue(name, value);
   }, [setValue, name, value]);
   return (
     <Controller

@@ -49,6 +49,7 @@ const CONTRACT_TYPE = 'CONTRACT_PAGE_CENTER';
 
 interface IProps {
   overview: ContractOverview;
+  search?: string;
 }
 
 type PreviewState = {
@@ -119,7 +120,7 @@ const AcceptanceBar = ({ accepted, total }: { accepted: number; total: number })
   );
 };
 
-const ContractCenterView = ({ overview }: IProps) => {
+const ContractCenterView = ({ overview, search = '' }: IProps) => {
   const { t } = useTranslate();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
@@ -144,6 +145,25 @@ const ContractCenterView = ({ overview }: IProps) => {
   // Row menu
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [menuVersion, setMenuVersion] = useState<ContractVersion | null>(null);
+
+  // Version history search (by version number or agreement content) — driven by
+  // the banner search input in the parent page.
+  const filteredHistory = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return history;
+
+    const stripHtml = (html?: string) =>
+      (html || '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/&nbsp;/g, ' ')
+        .toLowerCase();
+
+    return history.filter((v) => {
+      const versionText = `${v.label} v${v.version} ${v.version}`.toLowerCase();
+      const content = `${stripHtml(v.content_en)} ${stripHtml(v.content_ar)}`;
+      return versionText.includes(q) || content.includes(q);
+    });
+  }, [history, search]);
 
   const defaultValues = useMemo(
     () => ({
@@ -251,7 +271,15 @@ const ContractCenterView = ({ overview }: IProps) => {
             />
             <SummaryItem
               label={t('LABEL.PUBLISHED_ON')}
-              value={current ? fDateTime(current.published_at, 'd-MM-yyyy, p') : '—'}
+              value={
+                current ? (
+                  <Box component="span" dir="ltr" sx={{ display: 'inline-block' }}>
+                    {fDateTime(current.published_at, 'd-MM-yyyy, p')}
+                  </Box>
+                ) : (
+                  '—'
+                )
+              }
             />
             <SummaryItem
               label={t('LABEL.ACCEPTANCE')}
@@ -370,19 +398,23 @@ const ContractCenterView = ({ overview }: IProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {history.length === 0 && (
+                {filteredHistory.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} align="center" sx={{ color: 'text.secondary' }}>
                       {t('LABEL.NO_DATA')}
                     </TableCell>
                   </TableRow>
                 )}
-                {history.map((v) => (
+                {filteredHistory.map((v) => (
                   <TableRow key={v._id}>
                     <TableCell>
                       <Chip label={v.label} color="secondary" size="small" />
                     </TableCell>
-                    <TableCell>{fDateTime(v.published_at, 'd-M-yyyy, p')}</TableCell>
+                    <TableCell>
+                      <Box component="span" dir="ltr" sx={{ display: 'inline-block' }}>
+                        {fDateTime(v.published_at, 'd-M-yyyy, p')}
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       {v.status === 'LATEST' ? (
                         <Chip
@@ -487,20 +519,26 @@ const ContractCenterView = ({ overview }: IProps) => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ color: 'secondary.main', fontSize: 20, fontWeight: 700 }}>
+        <DialogTitle sx={{ pb: 0.5, color: 'secondary.main', fontSize: 20, fontWeight: 700 }}>
           {t('LABEL.AGREEMENT_PREVIEW')}
           <DialogCloseButton onClose={() => setPreview(null)} />
         </DialogTitle>
-        <DialogContent dividers>
-          <Typography sx={{ mb: 2, color: '#767676', fontSize: 14 }}>
+        <DialogContent dividers sx={{ pt: 1 }}>
+          <Typography sx={{ color: '#767676', fontSize: 14 }}>
             {preview?.subtitle}
           </Typography>
-          <Chip
-            label={preview?.label}
-            color="secondary"
-            size="small"
-            sx={{ mb: 2, borderRadius: '12px' }}
-          />
+          <Divider sx={{ my: 2 }} />
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+            <Typography sx={{ color: '#2B509C', fontSize: 14 }}>
+              {t('LABEL.VERSION')}
+            </Typography>
+            <Chip
+              label={preview?.label}
+              color="secondary"
+              size="small"
+              sx={{ borderRadius: '12px' }}
+            />
+          </Stack>
           <Tabs
             value={previewTab}
             onChange={(_e, val) => setPreviewTab(val)}
@@ -595,7 +633,11 @@ const ContractCenterView = ({ overview }: IProps) => {
                   {acceptedData?.centers?.map((c) => (
                     <TableRow key={c.center_id}>
                       <TableCell>{c.center_name}</TableCell>
-                      <TableCell>{fDateTime(c.accepted_at, 'd-M-yyyy, p')}</TableCell>
+                      <TableCell>
+                        <Box component="span" dir="ltr" sx={{ display: 'inline-block' }}>
+                          {fDateTime(c.accepted_at, 'd-M-yyyy, p')}
+                        </Box>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
