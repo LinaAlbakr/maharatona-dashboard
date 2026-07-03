@@ -5,6 +5,7 @@ import html2pdf from 'html2pdf.js';
 import { useSnackbar } from 'notistack';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { format, isValid, parse } from 'date-fns';
 
 import Container from '@mui/material/Container';
 import {
@@ -13,9 +14,11 @@ import {
   MenuItem,
   TextField,
   Typography,
+  IconButton,
   FormControl,
   InputAdornment,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
 
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
@@ -96,6 +99,12 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
   // because each keystroke triggered an async router.push round-trip.
   const [searchInput, setSearchInput] = useState(searchParams?.get('search') || '');
   const activeSearch = useMemo(() => searchInput.toLowerCase().trim(), [searchInput]);
+  const [dateOpen, setDateOpen] = useState(false);
+  const selectedDateValue = useMemo(() => {
+    if (!selectedDate) return null;
+    const parsed = parse(selectedDate, 'yyyy-MM-dd', new Date());
+    return isValid(parsed) ? parsed : null;
+  }, [selectedDate]);
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [shouldDownload, setShouldDownload] = useState(false);
 
@@ -333,14 +342,56 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
               ),
             }}
           />
-          <TextField
-            sx={{ flex: '0 1 190px', minWidth: 160 }}
-            size="small"
-            type="date"
+          <DatePicker
             label={t('LABEL.DATE')}
-            value={selectedDate}
-            onChange={(e) => updateParam('date', e.target.value)}
-            InputLabelProps={{ shrink: true }}
+            format="dd-MM-yyyy"
+            value={selectedDateValue}
+            open={dateOpen}
+            onOpen={() => setDateOpen(true)}
+            onClose={() => setDateOpen(false)}
+            onChange={(newValue) => {
+              if (!newValue || !isValid(newValue)) {
+                updateParam('date', '');
+                return;
+              }
+              updateParam('date', format(newValue, 'yyyy-MM-dd'));
+            }}
+            slotProps={{
+              textField: {
+                size: 'small',
+                sx: { flex: '0 1 190px', minWidth: 160 },
+                onClick: () => setDateOpen(true),
+                inputProps: { readOnly: true, style: { cursor: 'pointer' } },
+                InputProps: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {selectedDateValue && (
+                        <IconButton
+                          size="small"
+                          aria-label={t('BUTTON.CLEAR')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateParam('date', '');
+                          }}
+                        >
+                          <Iconify icon="mingcute:close-line" width={18} />
+                        </IconButton>
+                      )}
+                      <IconButton
+                        size="small"
+                        aria-label={t('LABEL.DATE')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDateOpen(true);
+                        }}
+                      >
+                        <Iconify icon="solar:calendar-linear" width={20} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              },
+            }}
           />
         </Box>
       </Box>
