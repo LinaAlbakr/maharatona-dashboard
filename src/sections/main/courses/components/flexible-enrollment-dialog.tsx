@@ -430,20 +430,20 @@ export default function FlexibleEnrollmentDialog({
         </DialogContent>
         <DialogActions sx={enrollmentConfirmDialogActionsSx}>
           <Button
-            variant="contained"
-            disabled={!!savingKey}
-            onClick={handleConfirmPending}
-            sx={enrollmentConfirmButtonConfirmSx}
-          >
-            {t('BUTTON.CONFIRM')}
-          </Button>
-          <Button
             variant="outlined"
             disabled={!!savingKey}
             onClick={() => setPendingConfirm(null)}
             sx={enrollmentConfirmButtonCancelSx}
           >
             {t('BUTTON.CANCEL')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!!savingKey}
+            onClick={handleConfirmPending}
+            sx={enrollmentConfirmButtonConfirmSx}
+          >
+            {t('BUTTON.CONFIRM')}
           </Button>
         </DialogActions>
       </Dialog>

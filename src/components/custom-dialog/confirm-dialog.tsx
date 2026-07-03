@@ -28,8 +28,6 @@ export default function ConfirmDialog({
       )}
 
       <DialogActions>
-        {action}
-
         <Button
           variant="contained"
           sx={{
@@ -45,6 +43,8 @@ export default function ConfirmDialog({
         >
           {t('BUTTON.CANCEL')}
         </Button>
+
+        {action}
       </DialogActions>
     </Dialog>
   );

@@ -683,20 +683,20 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         </DialogContent>
         <DialogActions sx={enrollmentConfirmDialogActionsSx}>
           <Button
-            variant="contained"
-            disabled={!!enrollmentSavingId}
-            onClick={handleConfirmEnrollmentChange}
-            sx={enrollmentConfirmButtonConfirmSx}
-          >
-            {t('BUTTON.CONFIRM')}
-          </Button>
-          <Button
             variant="outlined"
             disabled={!!enrollmentSavingId}
             onClick={() => setEnrollmentConfirm(null)}
             sx={enrollmentConfirmButtonCancelSx}
           >
             {t('BUTTON.CANCEL')}
+          </Button>
+          <Button
+            variant="contained"
+            disabled={!!enrollmentSavingId}
+            onClick={handleConfirmEnrollmentChange}
+            sx={enrollmentConfirmButtonConfirmSx}
+          >
+            {t('BUTTON.CONFIRM')}
           </Button>
         </DialogActions>
       </Dialog>
