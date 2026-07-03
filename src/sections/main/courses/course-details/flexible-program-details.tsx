@@ -116,17 +116,16 @@ export default function FlexibleProgramDetailsView({ course }: Props) {
           <DetailField label={t('LABEL.START_DATE')} value={formatProgramDate(course?.start_date)} />
           <DetailField label={t('LABEL.END_DATE')} value={formatProgramDate(course?.end_date)} />
           <DetailField
+            label={t('ADD_PROGRAM.DAYS_OFF')}
+            value={formatDaysOff(course, t)}
+          />
+          <DetailField
             label={t('LABEL.CATEGORY')}
             value={getLocalizedText(
               isArabic,
               course?.field?.name_ar,
               course?.field?.name_en || course?.field?.name
             )}
-          />
-          <DetailField
-            label={t('ADD_PROGRAM.DAYS_OFF')}
-            fullWidth
-            value={formatDaysOff(course, t)}
           />
           <DetailField
             label={t('PROGRAM_DETAILS.PROGRAM_DESCRIPTION_AR')}
