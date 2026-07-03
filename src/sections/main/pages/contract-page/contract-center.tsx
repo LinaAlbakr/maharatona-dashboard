@@ -1,5 +1,6 @@
 'use client';
 
+import html2pdf from 'html2pdf.js';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
@@ -37,6 +38,7 @@ import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import RHFEditor from 'src/components/hook-form/rhf-editor';
 import { useTranslate } from 'src/locales';
+import { getErrorMessage } from 'src/utils/axios';
 import { fDateTime } from 'src/utils/format-time';
 import { fetchAcceptedCenters, publishContractVersion } from 'src/actions/contract';
 import {
@@ -228,27 +230,119 @@ const ContractCenterView = ({ overview, search = '' }: IProps) => {
     setAcceptedLoading(false);
   };
 
-  const downloadAgreement = (version: ContractVersion) => {
+  const downloadAgreement = async (version: ContractVersion) => {
     setMenuAnchor(null);
-    const html = `<!doctype html><html><head><meta charset="utf-8"><title>${version.label}</title></head>
-<body style="font-family:Arial,sans-serif;line-height:1.5;max-width:800px;margin:24px auto;padding:0 16px;">
-<h2>Center Agreement ${version.label}</h2>
-<hr/>
-<h3>English</h3>
-<div>${version.content_en || ''}</div>
-<hr/>
-<h3 dir="rtl">العربية</h3>
-<div dir="rtl">${version.content_ar || ''}</div>
-</body></html>`;
-    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `center-agreement-${version.label}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+
+    const escapeHtml = (value: string) =>
+      String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    try {
+      // Load the logo as a data URL so html2canvas can render it reliably.
+      let logoDataUrl = '';
+      try {
+        const resp = await fetch('/logo/logo.svg');
+        const svgText = await resp.text();
+        logoDataUrl = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgText)))}`;
+      } catch {
+        logoDataUrl = '';
+      }
+
+      // Fetch the accepted centers for this specific version.
+      const accepted = await fetchAcceptedCenters(version._id);
+      const centers = accepted?.centers ?? [];
+      const acceptedCount = accepted?.accepted_centers ?? version.accepted_centers ?? 0;
+      const totalCount = accepted?.total_centers ?? version.total_centers ?? 0;
+
+      const rows = centers.length
+        ? centers
+            .map(
+              (c, i) => `
+        <tr>
+          <td style="border:1px solid #E0E0E0;padding:8px;text-align:center;color:#2B509C;">${i + 1}</td>
+          <td style="border:1px solid #E0E0E0;padding:8px;color:#2B509C;">${escapeHtml(
+            c.center_name || '—'
+          )}</td>
+          <td style="border:1px solid #E0E0E0;padding:8px;color:#2B509C;" dir="ltr">${escapeHtml(
+            fDateTime(c.accepted_at, 'd-M-yyyy, p') || '—'
+          )}</td>
+        </tr>`
+            )
+            .join('')
+        : `<tr><td colspan="3" style="border:1px solid #E0E0E0;padding:12px;text-align:center;color:#767676;">${escapeHtml(
+            t('LABEL.NO_DATA')
+          )}</td></tr>`;
+
+      const container = document.createElement('div');
+      container.innerHTML = `
+      <div style="font-family:Arial,Helvetica,sans-serif;color:#333;padding:24px;">
+        ${
+          logoDataUrl
+            ? `<div style="text-align:center;margin-bottom:16px;">
+                 <img src="${logoDataUrl}" style="height:90px;object-fit:contain;" alt="logo" />
+               </div>`
+            : ''
+        }
+        <h1 style="text-align:center;font-size:22px;color:#2B509C;margin:0 0 4px 0;">
+          ${escapeHtml(t('LABEL.CONTRACT_PAGE'))} ${escapeHtml(version.label)}
+        </h1>
+        <p style="text-align:center;font-size:13px;color:#767676;margin:0 0 20px 0;" dir="ltr">
+          ${escapeHtml(t('LABEL.PUBLISHED_ON'))}: ${escapeHtml(
+        fDateTime(version.published_at, 'd-M-yyyy, p') || '—'
+      )}
+        </p>
+
+        <h2 style="font-size:16px;color:#3CB8BB;border-bottom:2px solid #3CB8BB;padding-bottom:4px;">
+          ${escapeHtml(t('LABEL.ENGLISH_CONTENT'))}
+        </h2>
+        <div style="font-size:13px;line-height:1.6;margin:8px 0 20px 0;">${
+          version.content_en || ''
+        }</div>
+
+        <h2 style="font-size:16px;color:#3CB8BB;border-bottom:2px solid #3CB8BB;padding-bottom:4px;" dir="rtl">
+          ${escapeHtml(t('LABEL.ARABIC_CONTENT'))}
+        </h2>
+        <div dir="rtl" style="font-size:13px;line-height:1.6;margin:8px 0 20px 0;text-align:right;">${
+          version.content_ar || ''
+        }</div>
+
+        <div class="pdf-keep" style="page-break-inside:avoid;break-inside:avoid;">
+          <h2 style="font-size:16px;color:#3CB8BB;border-bottom:2px solid #3CB8BB;padding-bottom:4px;margin:0 0 8px 0;">
+            ${escapeHtml(t('LABEL.ACCEPTED_CENTERS'))} (${acceptedCount}/${totalCount})
+          </h2>
+          <table style="width:100%;border-collapse:collapse;font-size:12px;">
+            <thead>
+              <tr style="background:#F4F6F8;">
+                <th style="border:1px solid #E0E0E0;padding:8px;text-align:center;color:#3CB8BB;width:40px;">#</th>
+                <th style="border:1px solid #E0E0E0;padding:8px;text-align:left;color:#3CB8BB;">${escapeHtml(
+                  t('LABEL.CENTER_NAME')
+                )}</th>
+                <th style="border:1px solid #E0E0E0;padding:8px;text-align:left;color:#3CB8BB;">${escapeHtml(
+                  t('LABEL.ACCEPTED_DATE_TIME')
+                )}</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+
+      await html2pdf()
+        .set({
+          margin: [10, 10, 10, 10],
+          filename: `center-agreement-${version.label}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['css', 'legacy'], avoid: ['tr', '.pdf-keep'] },
+        })
+        .from(container)
+        .save();
+    } catch (err) {
+      enqueueSnackbar(getErrorMessage(err), { variant: 'error' });
+    }
   };
 
   return (

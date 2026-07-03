@@ -282,7 +282,7 @@ export default function FileManagerNewFolderDialog({
                 )}
               />
               {!isMain ? (
-                <RHFSelect name="field" label={t('LABEL.FIELD')}>
+                <RHFSelect name="field" label={t('LABEL.CATEGORY')}>
                   {fieldsName.map((field: any) => (
                     <MenuItem key={field._id} value={field._id}>
                       {i18n.language === 'ar' ? field.name_ar : field.name_en || ''}
