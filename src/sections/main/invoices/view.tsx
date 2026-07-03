@@ -90,8 +90,12 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
 
   const [invoices, setInvoices] = useState<InvoiceRow[]>([]);
   const currentLimit = Number(searchParams?.get('limit')) || 20;
-  const currentSearch = (searchParams?.get('search') || '').toLowerCase().trim();
   const selectedDate = searchParams?.get('date') || '';
+  // Local input state drives the field instantly; the URL is updated debounced.
+  // Binding the field directly to the URL param made fast typing drop characters
+  // because each keystroke triggered an async router.push round-trip.
+  const [searchInput, setSearchInput] = useState(searchParams?.get('search') || '');
+  const activeSearch = useMemo(() => searchInput.toLowerCase().trim(), [searchInput]);
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
   const [shouldDownload, setShouldDownload] = useState(false);
 
@@ -175,14 +179,14 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
 
   const filteredInvoices = useMemo(() => {
     return invoices.filter((inv) => {
-      if (currentSearch) {
+      if (activeSearch) {
         const merch = inv.merchentId?.toLowerCase() || '';
         const total = formatAmount(inv.totalAmount).toLowerCase();
         const buyer = inv.buyerName?.toLowerCase() || '';
         const matchesSearch =
-          merch.includes(currentSearch) ||
-          total.includes(currentSearch) ||
-          buyer.includes(currentSearch);
+          merch.includes(activeSearch) ||
+          total.includes(activeSearch) ||
+          buyer.includes(activeSearch);
         if (!matchesSearch) return false;
       }
 
@@ -198,7 +202,7 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
 
       return true;
     });
-  }, [invoices, currentSearch, selectedDate, formatAmount]);
+  }, [invoices, activeSearch, selectedDate, formatAmount]);
 
   const updateParam = useCallback(
     (name: string, value: string) => {
@@ -212,6 +216,19 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
     },
     [pathname, router, searchParams]
   );
+
+  // Debounce syncing the search input to the URL (persistence only; filtering is
+  // instant via `activeSearch`). Skips when the value already matches the URL.
+  useEffect(() => {
+    const urlSearch = searchParams?.get('search') || '';
+    if (searchInput === urlSearch) return undefined;
+
+    const handle = setTimeout(() => {
+      updateParam('search', searchInput);
+    }, 400);
+
+    return () => clearTimeout(handle);
+  }, [searchInput, searchParams, updateParam]);
 
   const handleDownloadInvoice = async (row: InvoiceRow): Promise<void> => {
     try {
@@ -305,8 +322,8 @@ const InvoicesView = ({ searchQuery = '' }: Readonly<Props>) => {
           <TextField
             sx={{ flex: '1 1 260px', minWidth: 220 }}
             size="small"
-            value={searchParams?.get('search') || ''}
-            onChange={(e) => updateParam('search', e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             placeholder={t('LABEL.SEARCH_BY_MERCHANT_ID')}
             InputProps={{
               startAdornment: (
