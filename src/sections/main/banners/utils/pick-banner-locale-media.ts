@@ -1,6 +1,6 @@
 import type { IBannerCenter } from 'src/types/banners';
 
-type BannerMediaSource = Pick<
+export type BannerMediaSource = Pick<
   IBannerCenter,
   'path_ar' | 'path_en' | 'path' | 'mediaTypeAr' | 'mediaTypeEn' | 'mediaType'
 >;
@@ -26,6 +26,17 @@ export function pickBannerLocaleMedia(
   const mediaType = String(rawType ?? 'IMAGE').toUpperCase() === 'VIDEO' ? 'VIDEO' : 'IMAGE';
 
   return { path, mediaType };
+}
+
+/** Both locale assets for admin detail views (always show EN + AR). */
+export function getBannerLocaleMediaPair(banner: BannerMediaSource | undefined): {
+  ar: { path: string; mediaType: 'IMAGE' | 'VIDEO' };
+  en: { path: string; mediaType: 'IMAGE' | 'VIDEO' };
+} {
+  return {
+    ar: pickBannerLocaleMedia(banner, 'ar'),
+    en: pickBannerLocaleMedia(banner, 'en'),
+  };
 }
 
 export function pickLocalizedText(
