@@ -1,8 +1,7 @@
 'use client';
 
-import { Box, Card, FormControl, MenuItem, Select, Stack, Typography } from '@mui/material';
-import { useCallback, useMemo } from 'react';
-import { useSettingsContext } from 'src/components/settings';
+import { Box, Card, FormControl, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import NotificationItem from './notification-item';
@@ -19,22 +18,42 @@ type Props = {
 };
 
 const NotificationView = ({ notifications }: Props) => {
-  const settings = useSettingsContext();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslate();
 
-  const formDefaultValues = {
-    name: '',
-    date: '',
-  };
+  const notificationTypeParam = searchParams.get('notification_type');
+  const selectDateParam = searchParams.get('select_date');
+  const searchParam = searchParams.get('search') || '';
+
+  const selectedTypeOption = useMemo(
+    () => NOTIFICATION_TYPES.find((item) => item.value === notificationTypeParam) ?? null,
+    [notificationTypeParam]
+  );
 
   const methods = useForm({
-    defaultValues: formDefaultValues,
+    defaultValues: {
+      type: selectedTypeOption,
+      date: selectDateParam ?? '',
+      search: searchParam,
+    },
   });
 
-  const { control } = methods;
+  const { control, setValue } = methods;
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setValue('type', selectedTypeOption);
+  }, [selectedTypeOption, setValue]);
+
+  useEffect(() => {
+    setValue('date', selectDateParam ?? '');
+  }, [selectDateParam, setValue]);
+
+  useEffect(() => {
+    setValue('search', searchParam);
+  }, [searchParam, setValue]);
 
   const displayNotifications = useMemo(
     () => groupAdminNewBookingNotifications(notifications?.data ?? []),
@@ -56,7 +75,7 @@ const NotificationView = ({ notifications }: Props) => {
         params.delete(name);
       }
 
-      if (name === 'select_date' || name === 'notification_type') {
+      if (name === 'select_date' || name === 'notification_type' || name === 'search') {
         params.set('notifications_page', '1');
       }
 
@@ -83,19 +102,48 @@ const NotificationView = ({ notifications }: Props) => {
           columnGap={2}
           display="grid"
           gridTemplateColumns={{
-            xs: 'repeat(2 1fr)',
+            xs: '1fr',
             sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, minmax(0, 1fr))',
           }}
-          sx={{ width: '50%', mx: 'auto' }}
+          sx={{ width: { xs: '100%', md: '75%' }, mx: 'auto', mt: 2 }}
         >
           <CutomAutocompleteView
             items={NOTIFICATION_TYPES as any[]}
             label={t('LABEL.TYPE')}
             placeholder={t('LABEL.TYPE')}
             name="type"
+            value={selectedTypeOption}
             onCustomChange={(selectedType: any) =>
               createQueryString('notification_type', selectedType?.value ?? '')
             }
+          />
+          <Controller
+            name="search"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label={t('LABEL.SEARCH')}
+                placeholder={t('LABEL.SEARCH_PROGRAM_OR_CENTER')}
+                fullWidth
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(value);
+                  if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+                  searchDebounceRef.current = setTimeout(() => {
+                    createQueryString('search', String(value || '').trim());
+                  }, 350);
+                }}
+                onBlur={() => createQueryString('search', String(field.value || '').trim())}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    createQueryString('search', String(field.value || '').trim());
+                  }
+                }}
+              />
+            )}
           />
           <Controller
             name="date"
@@ -122,7 +170,7 @@ const NotificationView = ({ notifications }: Props) => {
           />
         </Box>
       </FormProvider>
-      {notifications.data.length === 0 ? (
+      {displayNotifications.length === 0 ? (
         <Typography sx={{ textAlign: 'center', mt: 4 }} color="secondary">
           {' '}
           {t('LABEL.NO_NOTIFICATIONS')}
@@ -144,7 +192,7 @@ const NotificationView = ({ notifications }: Props) => {
           })}
         </Stack>
       )}
-      {notifications.data.length > 0 && (
+      {displayNotifications.length > 0 && (
         <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1.25} sx={{ py: 1 }}>
           <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
             Rows per page:

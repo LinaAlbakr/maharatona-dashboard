@@ -33,6 +33,7 @@ export default async function Page({ searchParams }: Readonly<props>) {
     typeof searchParams?.notification_type === 'string' ? searchParams?.notification_type : null;
   const select_date =
     typeof searchParams?.select_date === 'string' ? searchParams?.select_date : null;
+  const search = typeof searchParams?.search === 'string' ? searchParams?.search : null;
 
   const profitPercentage = await fetchPriceProfit();
 
@@ -45,6 +46,7 @@ export default async function Page({ searchParams }: Readonly<props>) {
     notifications_limit,
     notification_type,
     select_date,
+    search,
   });
   const statistics = await fetchStatistics();
 
