@@ -47,6 +47,7 @@ export default async function Page({ searchParams }: Readonly<props>) {
     notification_type,
     select_date,
     search,
+    search_scope: 'program_center',
   });
   const statistics = await fetchStatistics();
 

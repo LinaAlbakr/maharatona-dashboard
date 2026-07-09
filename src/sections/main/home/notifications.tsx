@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Card, FormControl, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import NotificationItem from './notification-item';
@@ -10,9 +10,16 @@ import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocomplete
 import { useTranslate } from 'src/locales';
 import { Controller, useForm } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers';
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { NOTIFICATION_TYPES } from '../notifications/constants';
 import { groupAdminNewBookingNotifications } from '../notifications/group-admin-booking-notifications';
+
+const parseDateParam = (value: unknown) => {
+  if (!value) return null;
+  if (value instanceof Date) return isValid(value) ? value : null;
+  const parsed = parseISO(String(value));
+  return isValid(parsed) ? parsed : null;
+};
 type Props = {
   notifications: any;
 };
@@ -41,7 +48,6 @@ const NotificationView = ({ notifications }: Props) => {
   });
 
   const { control, setValue } = methods;
-  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setValue('type', selectedTypeOption);
@@ -79,7 +85,7 @@ const NotificationView = ({ notifications }: Props) => {
         params.set('notifications_page', '1');
       }
 
-      router.push(`${pathname}?${params.toString()}`);
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams]
   );
@@ -88,7 +94,11 @@ const NotificationView = ({ notifications }: Props) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('notifications_limit', String(nextLimit));
     params.set('notifications_page', '1');
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const applySearch = (value: string) => {
+    createQueryString('search', value.trim());
   };
 
   return (
@@ -127,19 +137,11 @@ const NotificationView = ({ notifications }: Props) => {
                 label={t('LABEL.SEARCH')}
                 placeholder={t('LABEL.SEARCH_PROGRAM_OR_CENTER')}
                 fullWidth
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value);
-                  if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
-                  searchDebounceRef.current = setTimeout(() => {
-                    createQueryString('search', String(value || '').trim());
-                  }, 350);
-                }}
-                onBlur={() => createQueryString('search', String(field.value || '').trim())}
+                onChange={(e) => field.onChange(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
-                    createQueryString('search', String(field.value || '').trim());
+                    applySearch(String(field.value || ''));
                   }
                 }}
               />
@@ -152,9 +154,11 @@ const NotificationView = ({ notifications }: Props) => {
               <DatePicker
                 label={t('LABEL.DATE')}
                 format="dd-MM-yyyy"
-                value={field.value ? new Date(field.value) : null}
+                value={parseDateParam(field.value)}
                 onChange={(newValue) => {
-                  field.onChange(newValue);
+                  const normalized =
+                    newValue && isValid(newValue) ? format(newValue, 'yyyy-MM-dd') : '';
+                  field.onChange(normalized);
                   createQueryString('select_date', newValue);
                 }}
                 slotProps={{
@@ -163,7 +167,7 @@ const NotificationView = ({ notifications }: Props) => {
                     error: !!error,
                     helperText: error?.message,
                   },
-                  /* actionBar: { actions: ['clear'] }, */
+                  actionBar: { actions: ['clear', 'today'] },
                 }}
               />
             )}
