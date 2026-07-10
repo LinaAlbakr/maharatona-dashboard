@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import Player from 'next-video/player';
 
 import Container from '@mui/material/Container';
 import { Box, Card, Stack, Button, Divider, Typography } from '@mui/material';
@@ -21,11 +20,9 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { IBanner, IBannerCenter } from 'src/types/banners';
 
 import { BannerCenterDialog } from './banner-center-dialog';
+import { BannerLocaleMediaDisplay } from './banner-locale-media-display';
 import { getPackageAdTypeLabel } from '../package-ad-type';
-import {
-  pickBannerLocaleMedia,
-  pickLocalizedText,
-} from '../utils/pick-banner-locale-media';
+import { pickLocalizedText } from '../utils/pick-banner-locale-media';
 
 type props = {
   banners?: IBannerCenter[];
@@ -71,7 +68,6 @@ const SingleBannerView = ({ data, banner }: Readonly<props>) => {
   const adminBanner = (data?.banners as IBannerCenter[] | undefined)?.find(
     (item) => item?.advertisementCenterType === 'Admin'
   );
-  const featuredBannerMedia = pickBannerLocaleMedia(adminBanner, i18n.language);
 
   const handleConfirmActivate = async () => {
     const res = await editCenterMediaStatus(selectedCenter);
@@ -168,32 +164,15 @@ const SingleBannerView = ({ data, banner }: Readonly<props>) => {
               </Typography>
               {packageDescription || '- - - -'}
             </Stack>
-            <Stack sx={{ typography: 'body2', color: 'info.dark' }}>
+            <Stack
+              sx={{ typography: 'body2', color: 'info.dark', gridColumn: { sm: '1 / -1' } }}
+            >
               <Typography fontWeight="bold" color="primary.dark" variant="subtitle2" sx={{ mb: 1 }}>
                 {t('LABEL.BANNER_MEDIA')}
               </Typography>
 
               {adminBanner ? (
-                featuredBannerMedia.mediaType === 'VIDEO' ? (
-                  <Box sx={{ maxWidth: 320, width: '100%' }}>
-                    <Player
-                      style={{ height: 180, width: '100%', borderRadius: 8 }}
-                      src={featuredBannerMedia.path}
-                    />
-                  </Box>
-                ) : (
-                  <Box
-                    component="img"
-                    alt="banner"
-                    src={featuredBannerMedia.path || '/assets/images/centers/gray.jpeg'}
-                    sx={{
-                      height: 100,
-                      width: 200,
-                      objectFit: 'cover',
-                      borderRadius: 1,
-                    }}
-                  />
-                )
+                <BannerLocaleMediaDisplay banner={adminBanner} />
               ) : (
                 <Box
                   component="img"

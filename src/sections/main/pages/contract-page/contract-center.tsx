@@ -1,7 +1,7 @@
 'use client';
 
 import html2pdf from 'html2pdf.js';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'notistack';
@@ -41,6 +41,7 @@ import { useTranslate } from 'src/locales';
 import { getErrorMessage } from 'src/utils/axios';
 import { fDateTime } from 'src/utils/format-time';
 import { fetchAcceptedCenters, publishContractVersion } from 'src/actions/contract';
+import { useAdminContractRealtimeRefresh } from 'src/hooks/use-admin-contract-realtime';
 import {
   AcceptedCentersResponse,
   ContractOverview,
@@ -143,6 +144,38 @@ const ContractCenterView = ({ overview, search = '' }: IProps) => {
   const [acceptedOpen, setAcceptedOpen] = useState(false);
   const [acceptedLoading, setAcceptedLoading] = useState(false);
   const [acceptedData, setAcceptedData] = useState<AcceptedCentersResponse | null>(null);
+  const acceptedOpenRef = useRef(false);
+  const acceptedVersionIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    acceptedOpenRef.current = acceptedOpen;
+  }, [acceptedOpen]);
+
+  useAdminContractRealtimeRefresh({
+    onAcceptance: async (payload) => {
+      const versionId = payload.versionId;
+      if (
+        !acceptedOpenRef.current ||
+        !versionId ||
+        acceptedVersionIdRef.current !== versionId
+      ) {
+        return;
+      }
+
+      setAcceptedLoading(true);
+      const data = await fetchAcceptedCenters(versionId);
+      setAcceptedData(
+        data || {
+          version: payload.version ?? 0,
+          label: payload.version ? `v${payload.version}.0` : '',
+          accepted_centers: payload.accepted_centers ?? 0,
+          total_centers: payload.total_centers ?? 0,
+          centers: [],
+        }
+      );
+      setAcceptedLoading(false);
+    },
+  });
 
   // Row menu
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
@@ -215,6 +248,7 @@ const ContractCenterView = ({ overview, search = '' }: IProps) => {
   const openAcceptedCenters = async (version: ContractVersion) => {
     setMenuAnchor(null);
     setAcceptedOpen(true);
+    acceptedVersionIdRef.current = version._id;
     setAcceptedLoading(true);
     setAcceptedData(null);
     const data = await fetchAcceptedCenters(version._id);
@@ -669,10 +703,23 @@ const ContractCenterView = ({ overview, search = '' }: IProps) => {
       </Dialog>
 
       {/* Accepted centers dialog */}
-      <Dialog open={acceptedOpen} onClose={() => setAcceptedOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={acceptedOpen}
+        onClose={() => {
+          setAcceptedOpen(false);
+          acceptedVersionIdRef.current = null;
+        }}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle sx={{ color: 'secondary.main', fontSize: 20, fontWeight: 700 }}>
           {t('LABEL.ACCEPTED_CENTERS')}
-          <DialogCloseButton onClose={() => setAcceptedOpen(false)} />
+          <DialogCloseButton
+            onClose={() => {
+              setAcceptedOpen(false);
+              acceptedVersionIdRef.current = null;
+            }}
+          />
         </DialogTitle>
         <DialogContent dividers>
           <Stack direction="row" spacing={3} sx={{ mb: 2 }}>
