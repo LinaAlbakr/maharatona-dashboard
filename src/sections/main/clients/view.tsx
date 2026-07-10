@@ -3,6 +3,7 @@
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useDebounce } from 'use-debounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -34,10 +35,9 @@ type props = {
   clients: any[];
   count: number;
   cities: ITems[];
-  fields?: ITems[];
 };
 
-const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
+const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslate();
@@ -55,12 +55,28 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const pathname = usePathname();
   useAdminEntityListsRealtimeRefresh();
 
-  useEffect(() => {
-    router.push(`${pathname}`);
-  }, [pathname, router]);
   const city = searchParams?.get('city');
-  const field = searchParams?.get('field');
   const currentLimit = Number(searchParams?.get('limit')) || 20;
+  const [searchInput, setSearchInput] = useState(searchParams?.get('search') || '');
+  const [debouncedSearch] = useDebounce(searchInput, 400);
+
+  useEffect(() => {
+    setSearchInput(searchParams?.get('search') || '');
+  }, [searchParams]);
+
+  useEffect(() => {
+    const current = searchParams?.get('search') || '';
+    if (debouncedSearch.trim() === current.trim()) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+    const next = debouncedSearch.trim();
+    if (next) {
+      params.set('search', next);
+    } else {
+      params.delete('search');
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  }, [debouncedSearch, pathname, router, searchParams]);
 
   const TABLE_HEAD = [
     { id: 'name', label: 'LABEL.CLIENT_NAME' },
@@ -75,13 +91,11 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
   const formDefaultValues = {
     name: '',
     city: { id: city },
-    field: { id: field },
   };
 
   const methods = useForm({
     defaultValues: formDefaultValues,
   });
-  const { setValue } = methods;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -94,13 +108,12 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
         params.delete(name);
       }
       if (name === 'city') {
-        setValue('field', { id: '' });
         localStorage.setItem('neighborhood', '');
         params?.delete('neighborhood');
       }
       router.push(`${pathname}?${params.toString()}`);
     },
-    [pathname, router, searchParams, setValue]
+    [pathname, router, searchParams]
   );
 
   const handleConfirmBlock = async () => {
@@ -221,11 +234,12 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{
-                    xs: 'repeat(3 1fr)',
-                    sm: 'repeat(3, 1fr)',
+                    xs: '1fr',
+                    sm: 'repeat(2, 1fr)',
                   }}
                 >
                   <TextField
+                    value={searchInput}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -235,17 +249,7 @@ const ClientsView = ({ cities, fields, count, clients }: Readonly<props>) => {
                     }}
                     placeholder={t('LABEL.SEARCH_BY_CLIENT')}
                     type="search"
-                    onChange={(e) => createQueryString('search', e.target.value)}
-                  />
-                  <CutomAutocompleteView
-                    items={fields as unknown as ITems[]}
-                    label={t('LABEL.FEILDS')}
-                    placeholder={t('LABEL.FEILDS')}
-                    name="fieldId"
-                    isDisabled={!fields || fields.length === 0}
-                    onCustomChange={(selectedCityId: any) =>
-                      createQueryString('field', selectedCityId?.id ?? '')
-                    }
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                   <CutomAutocompleteView
                     items={cities as ITems[]}

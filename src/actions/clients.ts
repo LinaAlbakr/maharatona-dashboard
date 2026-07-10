@@ -32,9 +32,9 @@ export const fetchClients = async ({
     const res = await axiosInstance.get(endpoints.clients.fetch, {
       params: {
         limit,
-        by_city_id: city_id,
-        by_client_field_ids: by_client_field_ids || null,
-        by_name,
+        search: by_name?.trim() || undefined,
+        city: city_id || undefined,
+        field: by_client_field_ids || undefined,
       },
       headers: { Authorization: `Bearer ${accessToken}`, 'Accept-Language': lang },
     });
