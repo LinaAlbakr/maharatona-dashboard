@@ -6,7 +6,8 @@ import { Map, Marker, APIProvider } from '@vis.gl/react-google-maps';
 import Box from '@mui/material/Box';
 import { Position } from 'src/@types/map';
 
-const ComponentDefaultPosition = { lat: 15.300955, lng: 44.188427 };
+/** Viewport only when the center has no lat/lng yet (Riyadh). Not a saved location. */
+const ComponentDefaultPosition = { lat: 24.7136, lng: 46.6753 };
 
 type Props = {
   staticPosition?: boolean;

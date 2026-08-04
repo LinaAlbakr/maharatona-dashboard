@@ -482,13 +482,14 @@ export default function EditCenterDialog({
               </RHFSelect>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>
                 {t('LABEL.CENTER_LOCATION')}
               </RequiredLabel>
               <Box
                 sx={{
-                  height: 220,
+                  position: 'relative',
+                  height: 280,
                   borderRadius: '12px',
                   overflow: 'hidden',
                   border: '1px solid #D9D9D9',
@@ -497,12 +498,37 @@ export default function EditCenterDialog({
               >
                 <GoogleMap
                   defaultPosition={mapPosition}
-                  defaultZoom={mapPosition ? 17 : 12}
+                  defaultZoom={mapPosition ? 17 : 11}
                   setCurrentPosition={handleMapChange}
                 />
+                {!mapPosition ? (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: 12,
+                      right: 12,
+                      bottom: 12,
+                      zIndex: 1,
+                      px: 2,
+                      py: 1.25,
+                      borderRadius: '10px',
+                      bgcolor: 'rgba(255, 255, 255, 0.94)',
+                      border: '1px solid #E5E7EB',
+                      boxShadow: '0 4px 14px rgba(0,0,0,0.08)',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{ color: '#475569', fontWeight: 600, textAlign: 'center' }}
+                    >
+                      {t('LABEL.NO_LOCATION_SET_CLICK_MAP')}
+                    </Typography>
+                  </Box>
+                ) : null}
               </Box>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <RequiredLabel required sx={FIELD_LABEL_SX}>
                 {t('LABEL.ADDRESS_DETAILS')}
               </RequiredLabel>
@@ -510,7 +536,7 @@ export default function EditCenterDialog({
                 name="place_desc"
                 fullWidth
                 multiline
-                minRows={4}
+                minRows={3}
                 sx={programFieldSx}
               />
             </Grid>
