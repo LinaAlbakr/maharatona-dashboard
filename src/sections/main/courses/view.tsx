@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { useState, useEffect, useCallback } from 'react';
+import { useDebounce } from 'use-debounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -46,9 +47,31 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
 
+  const searchFromUrl = searchParams.get('search') ?? '';
+  const [searchValue, setSearchValue] = useState(searchFromUrl);
+  const [debouncedSearch] = useDebounce(searchValue, 400);
+
   useEffect(() => {
-    router.push(`${pathname}`);
-  }, [pathname, router]);
+    setSearchValue(searchFromUrl);
+  }, [searchFromUrl]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currentSearch = params.get('search') ?? '';
+
+    if (debouncedSearch === currentSearch) {
+      return;
+    }
+
+    if (debouncedSearch.trim()) {
+      params.set('search', debouncedSearch.trim());
+    } else {
+      params.delete('search');
+    }
+    params.delete('page');
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [debouncedSearch, pathname, router, searchParams]);
 
   const TABLE_HEAD = [
     { id: 'name', label: 'LABEL.COURSE_NAME' },
@@ -70,21 +93,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     defaultValues: formDefaultValues,
   });
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-
-      if (value) {
-        params.set(name, value);
-        localStorage.setItem(name, value);
-      } else {
-        params.delete(name);
-      }
-
-      router.push(`${pathname}?${params.toString()}`);
-    },
-    [pathname, router, searchParams]
-  );
+  const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  }, []);
 
   const handleconfirmDelete = async () => {
     const res = await deleteCousre(selectedId);
@@ -156,6 +167,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               <FormProvider methods={methods}>
                 <TextField
                   sx={{ width: '100%' }}
+                  value={searchValue}
+                  autoComplete="off"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -164,8 +177,8 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
                     ),
                   }}
                   placeholder={t('LABEL.COURSE_NAME')}
-                  type="search"
-                  onChange={(e) => createQueryString('search', e.target.value)}
+                  type="text"
+                  onChange={handleSearchChange}
                 />
               </FormProvider>
             </Card>

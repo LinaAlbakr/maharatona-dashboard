@@ -17,14 +17,14 @@ type Props = {
 };
 
 const notification_types = [
-  { name_en: 'New Courses', name_ar: 'الدورات الجديدة', value: 'ADMIN_CENTER_NEW_COURSE' },
+  { name_en: 'New Courses', name_ar: 'الدورات الجديدة', value: 'ADMIN_NEW_COURSE' },
   {
     name_en: 'Packages purchased',
     name_ar: 'الباقات المشتراة',
-    value: 'ADMIN_CENTER_PACKAGE_PURCHASED',
+    value: 'CENTER_BUY_PACKAGE',
   },
-  { name_en: 'Registered centers', name_ar: 'المراكز المسجلة', value: 'ADMIN_CENTER_REGISTER' },
-  { name_en: 'Registered clients', name_ar: 'العملاء المسجلين', value: 'ADMIN_CLIENT_REGISTER' },
+  { name_en: 'Registered centers', name_ar: 'المراكز المسجلة', value: 'ADMIN_NEW_CENTER' },
+  { name_en: 'Registered clients', name_ar: 'العملاء المسجلين', value: 'ADMIN_NEW_CLIENT' },
   {
     name_en: 'Purchase course as a gift',
     name_ar: 'الدورات المرسلة ك هدية',
@@ -33,7 +33,7 @@ const notification_types = [
   {
     name_en: 'Courses purchased',
     name_ar: 'الدورات المشتراة',
-    value: 'ADMIN_CLIENT_COURSE_PURCHASED',
+    value: 'ADMIN_NEW_BOOKING',
   },
 ];
 const NotificationView = ({ notifications }: Props) => {
