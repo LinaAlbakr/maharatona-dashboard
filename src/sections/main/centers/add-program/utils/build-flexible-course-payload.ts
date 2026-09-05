@@ -165,12 +165,13 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
   applyDiscountFields(map, values, { stringifyDiscount: false });
 
   const daysOff = values.daysOffRecurring ? values.daysOffList : [];
+  // Always send arrays (including []) so edit can clear previously saved Days Off.
   map.daysOffList =
-    daysOff.length > 0 ? convertDaysListToEnglish(daysOff) : null;
+    daysOff.length > 0 ? convertDaysListToEnglish(daysOff) : [];
   map.datesOffList =
     values.daysOffCustom && values.datesOffList.length > 0
       ? values.datesOffList.map((date) => format(date, 'yyyy-MM-dd'))
-      : null;
+      : [];
 
   const models = values.flexibleModels;
   const configuredKeys = getConfiguredFlexibleModelKeys(models);
