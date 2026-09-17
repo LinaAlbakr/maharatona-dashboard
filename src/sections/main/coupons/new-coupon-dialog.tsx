@@ -41,6 +41,7 @@ type CourseOption = {
   id: string;
   name: string;
   centerId: string;
+  startDate: string | null;
 };
 
 export const types = [
@@ -129,6 +130,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
               c.name ||
               '-',
             centerId: String(c.center_id?._id || c.center_id || c.center?._id || c.center?.id || ''),
+            startDate: c.start_date ?? null,
           }))
         );
       } catch (error) {
@@ -151,8 +153,20 @@ export function NewCouponDialog({ open, onClose }: Props) {
 
   const programOptions = useMemo(() => {
     if (!selectedCenterId) return [];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     return courses
-      .filter((c) => c.centerId === selectedCenterId)
+      .filter((c) => {
+        if (c.centerId !== selectedCenterId) return false;
+        if (!c.startDate) return false;
+        const start = new Date(c.startDate);
+        if (Number.isNaN(start.getTime())) return false;
+        start.setHours(0, 0, 0, 0);
+        // Upcoming only: start date is strictly after today
+        return start.getTime() > today.getTime();
+      })
       .map((c) => ({ label: c.name, value: c.id }));
   }, [courses, selectedCenterId]);
 
@@ -314,6 +328,17 @@ export function NewCouponDialog({ open, onClose }: Props) {
                       : undefined
                 }
                 options={programOptions}
+                sx={{
+                  '& .MuiChip-root': {
+                    bgcolor: '#3CB8BB',
+                    color: '#FFFFFF',
+                  },
+                  '& .MuiChip-deleteIcon': {
+                    color: '#FFFFFF',
+                    opacity: 0.9,
+                    '&:hover': { color: '#FFFFFF', opacity: 1 },
+                  },
+                }}
               />
             </Stack>
           )}
