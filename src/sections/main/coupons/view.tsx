@@ -50,6 +50,8 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
 
   const TABLE_HEAD = [
     { id: 'code', label: 'LABEL.COUPON' },
+    { id: 'centerName', label: 'LABEL.CENTER_NAME' },
+    { id: 'applicableProgram', label: 'LABEL.PROGRAM_NAME' },
     { id: 'start_date', label: 'LABEL.START_DATE' },
     { id: 'end_date', label: 'LABEL.END_DATE' },
     { id: 'discount', label: 'LABEL.DISCOUNT_AMOUNT' },
@@ -200,6 +202,20 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
             },
           ]}
           customRender={{
+            centerName: (item: any) => item?.centerName?.trim() || '-',
+            applicableProgram: (item: any) => {
+              const courses = Array.isArray(item?.courses) ? item.courses : [];
+              if (!courses.length) return '-';
+              const isAr = i18n.language === 'ar';
+              const names = courses
+                .map((course: any) =>
+                  isAr
+                    ? course?.name_ar || course?.name_en || course?.name
+                    : course?.name_en || course?.name_ar || course?.name
+                )
+                .filter(Boolean);
+              return names.length ? names.join(', ') : '-';
+            },
             start_date: (item: any) => {
               if (!item?.start_date) return '-';
               return i18n.language === 'ar'

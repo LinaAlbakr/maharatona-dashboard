@@ -230,8 +230,28 @@ export function cleanFormData(
   return cleaned;
 }
 
+const CLEARABLE_JSON_LIST_KEYS = new Set(['daysOffList', 'datesOffList']);
+
 export function appendFormDataFields(formData: FormData, data: Record<string, unknown>) {
   Object.entries(data).forEach(([key, value]) => {
+    // daysOffList / datesOffList must always be sent so edits can clear existing values.
+    // Skipping null/[] left old Days Off in Mongo after a successful save.
+    if (CLEARABLE_JSON_LIST_KEYS.has(key)) {
+      if (value == null) {
+        formData.append(key, '[]');
+        return;
+      }
+      if (Array.isArray(value)) {
+        formData.append(
+          key,
+          JSON.stringify(
+            value.map((item) => (item instanceof Date ? item.toISOString() : item))
+          )
+        );
+        return;
+      }
+    }
+
     if (value == null) return;
 
     if (Array.isArray(value)) {

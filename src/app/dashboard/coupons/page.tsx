@@ -37,6 +37,8 @@ const Page = async ({ searchParams }: Readonly<props>) => {
     discountCreateType: c?.discount_create_type ?? c?.discountCreateType ?? '',
     times_Used: Number(c?.times_used ?? 0),
     is_active: Boolean(c?.is_active),
+    centerName: c?.center?.name ?? '',
+    courses: Array.isArray(c?.courses) ? c.courses : [],
   }));
 
   // Apply client-side filtering as fallback
