@@ -97,7 +97,9 @@ export function NewCouponDialog({ open, onClose }: Props) {
       startDate: new Date(),
       discountType: '',
       discount: 0,
-      scope: 'all' as 'all' | 'specific',
+      // Temporarily default to specific only — All programs toggle is commented out below
+      // scope: 'all' as 'all' | 'specific',
+      scope: 'specific' as 'all' | 'specific',
       centerId: '',
       courseIds: [] as string[],
     }),
@@ -333,6 +335,8 @@ export function NewCouponDialog({ open, onClose }: Props) {
                 fullWidth
                 type="number"
               />
+              {/* Temporarily hide coupon scope UI — form still defaults to specific programs */}
+              {false && (
               <FormControl
                 component="fieldset"
                 sx={{ gridColumn: '1 / -1', mt: 0.5 }}
@@ -368,6 +372,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
                     : t('LABEL.COUPON_SPECIFIC_PROGRAMS_HINT')}
                 </FormHelperText>
               </FormControl>
+              )}
               {scope === 'specific' && (
                 <>
                   <RHFSelect
