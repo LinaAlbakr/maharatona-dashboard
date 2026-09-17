@@ -4,8 +4,8 @@ import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
 
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import SvgColor from 'src/components/svg-color';
 // ----------------------------------------------------------------------
 
 const icon = (name: string) => (
@@ -15,6 +15,8 @@ const icon = (name: string) => (
   // https://icon-sets.iconify.design/solar/
   // https://www.streamlinehq.com/icons
 );
+
+const iconImg = (src: string) => <SvgColor src={src} sx={{ width: 1, height: 1 }} />;
 
 const ICONS = {
   home: icon('solar:home-bold'),
@@ -58,7 +60,7 @@ const ICONS = {
   promocodes: icon('mdi:coupon'),
   support: icon('token:chat'),
   building: icon('fa-solid:building'),
-  bag: icon('lets-icons:bag-fill'),
+  programs: iconImg('/assets/icons/course/program-icon.png'),
   cartegries: icon('fluent:playing-cards-20-filled'),
   coupon: icon('ri:coupon-3-fill'),
   pages: icon('iconoir:multiple-pages-empty'),
@@ -80,7 +82,7 @@ export function useNavData() {
             icon: ICONS.notifications,
           },
           { title: t('SIDEBAR.CENTERS'), path: paths.dashboard.centers, icon: ICONS.building },
-          { title: t('SIDEBAR.COURSES'), path: paths.dashboard.courses, icon: ICONS.bag },
+          { title: t('SIDEBAR.COURSES'), path: paths.dashboard.courses, icon: ICONS.programs },
           { title: t('SIDEBAR.CLIENTS'), path: paths.dashboard.clients, icon: ICONS.clients },
           { title: t('SIDEBAR.PAYOUTS'), path: paths.dashboard.payouts, icon: ICONS.paymentMethods },
           { title: t('SIDEBAR.INVOICES'), path: paths.dashboard.invoices, icon: ICONS.invoices },

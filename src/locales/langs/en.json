@@ -265,6 +265,7 @@
     "COUPON_SCOPE": "Apply coupon to",
     "ALL_PROGRAMS": "All programs",
     "SPECIFIC_PROGRAMS": "Specific programs",
+    "ALL": "All",
     "COUPON_ALL_PROGRAMS_HINT": "Coupon applies to all programs. No center or program selection needed.",
     "COUPON_SPECIFIC_PROGRAMS_HINT": "Select a center, then one or more upcoming programs.",
     "CENTER": "Center",

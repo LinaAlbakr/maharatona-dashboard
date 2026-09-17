@@ -341,6 +341,7 @@
     "COUPON_SCOPE": "تطبيق القسيمة على",
     "ALL_PROGRAMS": "جميع البرامج",
     "SPECIFIC_PROGRAMS": "برامج محددة",
+    "ALL": "الكل",
     "COUPON_ALL_PROGRAMS_HINT": "تُطبَّق القسيمة على جميع البرامج. لا حاجة لاختيار مركز أو برنامج.",
     "COUPON_SPECIFIC_PROGRAMS_HINT": "اختر مركزاً ثم برنامجاً واحداً أو أكثر من البرامج القادمة.",
     "ENTER_AMOUNT": "ادخل المبلغ",
