@@ -202,10 +202,10 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
             },
           ]}
           customRender={{
-            centerName: (item: any) => item?.centerName?.trim() || '-',
+            centerName: (item: any) => item?.centerName?.trim() || t('LABEL.ALL'),
             applicableProgram: (item: any) => {
               const courses = Array.isArray(item?.courses) ? item.courses : [];
-              if (!courses.length) return '-';
+              if (!courses.length) return t('LABEL.ALL');
               const isAr = i18n.language === 'ar';
               const names = courses
                 .map((course: any) =>
@@ -214,7 +214,7 @@ const CouponsView = ({ count, coupons }: Readonly<props>) => {
                     : course?.name_en || course?.name_ar || course?.name
                 )
                 .filter(Boolean);
-              return names.length ? names.join(', ') : '-';
+              return names.length ? names.join(', ') : t('LABEL.ALL');
             },
             start_date: (item: any) => {
               if (!item?.start_date) return '-';

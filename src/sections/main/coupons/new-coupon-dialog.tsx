@@ -17,6 +17,12 @@ import {
   DialogContent,
   MenuItem,
   CircularProgress,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from '@mui/material';
 
 import { useTranslate } from 'src/locales';
@@ -42,6 +48,7 @@ type CourseOption = {
   name: string;
   centerId: string;
   startDate: string | null;
+  endDate: string | null;
 };
 
 export const types = [
@@ -66,8 +73,21 @@ export function NewCouponDialog({ open, onClose }: Props) {
       .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
       .min(yup.ref('startDate'), t('LABEL.END_DATE_MUST_BE_AFTER_START_DATE')),
     timesUsed: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    centerId: yup.string().optional(),
-    courseIds: yup.array().of(yup.string()).optional(),
+    scope: yup
+      .string()
+      .oneOf(['all', 'specific'])
+      .required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+    centerId: yup.string().when('scope', {
+      is: 'specific',
+      then: (s) => s.required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+      otherwise: (s) => s.optional(),
+    }),
+    courseIds: yup.array().of(yup.string()).when('scope', {
+      is: 'specific',
+      then: (s) =>
+        s.min(1, t('LABEL.THIS_FIELD_IS_REQUIRED')).required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+      otherwise: (s) => s.optional(),
+    }),
   });
 
   const defaultValues = useMemo(
@@ -78,6 +98,9 @@ export function NewCouponDialog({ open, onClose }: Props) {
       startDate: new Date(),
       discountType: '',
       discount: 0,
+      // Temporarily default to specific only — All programs toggle is commented out below
+      // scope: 'all' as 'all' | 'specific',
+      scope: 'specific' as 'all' | 'specific',
       centerId: '',
       courseIds: [] as string[],
     }),
@@ -101,6 +124,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
   } = methods;
 
   const selectedCenterId = watch('centerId');
+  const scope = watch('scope');
 
   useEffect(() => {
     if (!open) return;
@@ -131,6 +155,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
               '-',
             centerId: String(c.center_id?._id || c.center_id || c.center?._id || c.center?.id || ''),
             startDate: c.start_date ?? null,
+            endDate: c.end_date ?? null,
           }))
         );
       } catch (error) {
@@ -145,6 +170,14 @@ export function NewCouponDialog({ open, onClose }: Props) {
       cancelled = true;
     };
   }, [open, enqueueSnackbar, t]);
+
+  // Clear center/program targeting when switching back to all programs
+  useEffect(() => {
+    if (scope === 'all') {
+      setValue('centerId', '');
+      setValue('courseIds', []);
+    }
+  }, [scope, setValue]);
 
   // Clear selected programs whenever the center changes
   useEffect(() => {
@@ -164,8 +197,16 @@ export function NewCouponDialog({ open, onClose }: Props) {
         const start = new Date(c.startDate);
         if (Number.isNaN(start.getTime())) return false;
         start.setHours(0, 0, 0, 0);
-        // Upcoming only: start date is strictly after today
-        return start.getTime() > today.getTime();
+
+        // Future programs: start date after today
+        if (start.getTime() > today.getTime()) return true;
+
+        // Current programs: already started, and not ended yet
+        if (!c.endDate) return true;
+        const end = new Date(c.endDate);
+        if (Number.isNaN(end.getTime())) return true;
+        end.setHours(0, 0, 0, 0);
+        return end.getTime() >= today.getTime();
       })
       .map((c) => ({ label: c.name, value: c.id }));
   }, [courses, selectedCenterId]);
@@ -176,8 +217,11 @@ export function NewCouponDialog({ open, onClose }: Props) {
     const end = new Date(data.endDate);
     end.setHours(23, 59, 59, 999);
 
-    const courseIds = (data.courseIds || []).filter(Boolean) as string[];
-    const centerId = data.centerId || '';
+    const isSpecific = data.scope === 'specific';
+    const courseIds = isSpecific
+      ? ((data.courseIds || []).filter(Boolean) as string[])
+      : [];
+    const centerId = isSpecific ? data.centerId || '' : '';
 
     const payload: Record<string, unknown> = {
       code: data.code,
@@ -189,10 +233,11 @@ export function NewCouponDialog({ open, onClose }: Props) {
       end_date: end.toISOString(),
     };
 
-    if (courseIds.length) {
+    // All-programs: omit course_id / center_id so the coupon applies globally
+    if (isSpecific && courseIds.length) {
       payload.course_id = courseIds;
     }
-    if (centerId) {
+    if (isSpecific && centerId) {
       payload.center_id = centerId;
     }
 
@@ -300,46 +345,88 @@ export function NewCouponDialog({ open, onClose }: Props) {
                 fullWidth
                 type="number"
               />
-              <RHFSelect
-                label={t('LABEL.CENTER')}
-                name="centerId"
-                InputLabelProps={{ shrink: true }}
-                sx={{ flexGrow: 1 }}
+              {/* Temporarily hide coupon scope UI — form still defaults to specific programs */}
+              {false && (
+              <FormControl
+                component="fieldset"
+                sx={{ gridColumn: '1 / -1', mt: 0.5 }}
               >
-                <MenuItem value="">
-                  <em>{t('LABEL.SELECT_CENTER')}</em>
-                </MenuItem>
-                {centers.map((center) => (
-                  <MenuItem key={center.id} value={center.id}>
-                    {center.name}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-              <RHFMultiSelect
-                name="courseIds"
-                label={t('LABEL.PROGRAM_NAME')}
-                chip
-                disabled={!selectedCenterId}
-                helperText={
-                  !selectedCenterId
-                    ? t('LABEL.SELECT_CENTER_FIRST')
-                    : programOptions.length === 0
-                      ? t('LABEL.NO_PROGRAMS_FOR_CENTER')
-                      : undefined
-                }
-                options={programOptions}
-                sx={{
-                  '& .MuiChip-root': {
-                    bgcolor: '#3CB8BB',
-                    color: '#FFFFFF',
-                  },
-                  '& .MuiChip-deleteIcon': {
-                    color: '#FFFFFF',
-                    opacity: 0.9,
-                    '&:hover': { color: '#FFFFFF', opacity: 1 },
-                  },
-                }}
-              />
+                <FormLabel component="legend" sx={{ mb: 0.5, typography: 'body2' }}>
+                  {t('LABEL.COUPON_SCOPE')}
+                </FormLabel>
+                <Controller
+                  name="scope"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      row
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    >
+                      <FormControlLabel
+                        value="all"
+                        control={<Radio size="small" />}
+                        label={t('LABEL.ALL_PROGRAMS')}
+                      />
+                      <FormControlLabel
+                        value="specific"
+                        control={<Radio size="small" />}
+                        label={t('LABEL.SPECIFIC_PROGRAMS')}
+                      />
+                    </RadioGroup>
+                  )}
+                />
+                <FormHelperText sx={{ mx: 0 }}>
+                  {scope === 'all'
+                    ? t('LABEL.COUPON_ALL_PROGRAMS_HINT')
+                    : t('LABEL.COUPON_SPECIFIC_PROGRAMS_HINT')}
+                </FormHelperText>
+              </FormControl>
+              )}
+              {scope === 'specific' && (
+                <>
+                  <RHFSelect
+                    label={t('LABEL.CENTER')}
+                    name="centerId"
+                    InputLabelProps={{ shrink: true }}
+                    sx={{ flexGrow: 1 }}
+                  >
+                    <MenuItem value="">
+                      <em>{t('LABEL.SELECT_CENTER')}</em>
+                    </MenuItem>
+                    {centers.map((center) => (
+                      <MenuItem key={center.id} value={center.id}>
+                        {center.name}
+                      </MenuItem>
+                    ))}
+                  </RHFSelect>
+                  <RHFMultiSelect
+                    name="courseIds"
+                    label={t('LABEL.PROGRAM_NAME')}
+                    chip
+                    disabled={!selectedCenterId}
+                    helperText={
+                      !selectedCenterId
+                        ? t('LABEL.SELECT_CENTER_FIRST')
+                        : programOptions.length === 0
+                          ? t('LABEL.NO_PROGRAMS_FOR_CENTER')
+                          : undefined
+                    }
+                    options={programOptions}
+                    sx={{
+                      '& .MuiChip-root': {
+                        bgcolor: '#3CB8BB',
+                        color: '#FFFFFF',
+                      },
+                      '& .MuiChip-deleteIcon': {
+                        color: '#FFFFFF',
+                        opacity: 0.9,
+                        '&:hover': { color: '#FFFFFF', opacity: 1 },
+                      },
+                    }}
+                  />
+                </>
+              )}
             </Stack>
           )}
         </DialogContent>
