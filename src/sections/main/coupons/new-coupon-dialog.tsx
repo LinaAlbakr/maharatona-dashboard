@@ -48,6 +48,7 @@ type CourseOption = {
   name: string;
   centerId: string;
   startDate: string | null;
+  endDate: string | null;
 };
 
 export const types = [
@@ -154,6 +155,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
               '-',
             centerId: String(c.center_id?._id || c.center_id || c.center?._id || c.center?.id || ''),
             startDate: c.start_date ?? null,
+            endDate: c.end_date ?? null,
           }))
         );
       } catch (error) {
@@ -195,8 +197,16 @@ export function NewCouponDialog({ open, onClose }: Props) {
         const start = new Date(c.startDate);
         if (Number.isNaN(start.getTime())) return false;
         start.setHours(0, 0, 0, 0);
-        // Upcoming only: start date is strictly after today
-        return start.getTime() > today.getTime();
+
+        // Future programs: start date after today
+        if (start.getTime() > today.getTime()) return true;
+
+        // Current programs: already started, and not ended yet
+        if (!c.endDate) return true;
+        const end = new Date(c.endDate);
+        if (Number.isNaN(end.getTime())) return true;
+        end.setHours(0, 0, 0, 0);
+        return end.getTime() >= today.getTime();
       })
       .map((c) => ({ label: c.name, value: c.id }));
   }, [courses, selectedCenterId]);
