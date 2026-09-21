@@ -2,6 +2,7 @@ import { useDropzone } from 'react-dropzone';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
@@ -19,6 +20,7 @@ export default function UploadAvatar({
   file,
   disabled,
   helperText,
+  onDelete,
   sx,
   ...other
 }: UploadProps) {
@@ -30,7 +32,7 @@ export default function UploadAvatar({
     },
     ...other,
   });
-  const {t} = useTranslate();
+  const { t } = useTranslate();
   const hasFile = !!file;
 
   const hasError = isDragReject || !!error;
@@ -107,41 +109,67 @@ export default function UploadAvatar({
 
   return (
     <>
-      <Box
-        {...getRootProps()}
-        sx={{
-          p: 1,
-          m: 'auto',
-          width: 144,
-          height: 144,
-          cursor: 'pointer',
-          overflow: 'hidden',
-          borderRadius: '50%',
-          border: (theme) => `1px dashed ${alpha(theme.palette.grey[500], 0.2)}`,
-          ...(isDragActive && {
-            opacity: 0.72,
-          }),
-          ...(disabled && {
-            opacity: 0.48,
-            pointerEvents: 'none',
-          }),
-          ...(hasError && {
-            borderColor: 'error.main',
-          }),
-          ...(hasFile && {
-            ...(hasError && {
-              bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
+      <Box sx={{ position: 'relative', width: 'fit-content', m: 'auto' }}>
+        <Box
+          {...getRootProps()}
+          sx={{
+            p: 1,
+            m: 'auto',
+            width: 144,
+            height: 144,
+            cursor: 'pointer',
+            overflow: 'hidden',
+            borderRadius: '50%',
+            border: (theme) => `1px dashed ${alpha(theme.palette.grey[500], 0.2)}`,
+            ...(isDragActive && {
+              opacity: 0.72,
             }),
-            '&:hover .upload-placeholder': {
-              opacity: 1,
-            },
-          }),
-          ...sx,
-        }}
-      >
-        <input {...getInputProps()} />
+            ...(disabled && {
+              opacity: 0.48,
+              pointerEvents: 'none',
+            }),
+            ...(hasError && {
+              borderColor: 'error.main',
+            }),
+            ...(hasFile && {
+              ...(hasError && {
+                bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
+              }),
+              '&:hover .upload-placeholder': {
+                opacity: 1,
+              },
+            }),
+            ...sx,
+          }}
+        >
+          <input {...getInputProps()} />
 
-        {renderContent}
+          {renderContent}
+        </Box>
+
+        {hasFile && onDelete ? (
+          <IconButton
+            size="small"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onDelete();
+            }}
+            sx={{
+              position: 'absolute',
+              top: 6,
+              right: 6,
+              zIndex: 10,
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.55),
+              color: 'common.white',
+              '&:hover': {
+                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.75),
+              },
+            }}
+          >
+            <Iconify icon="mingcute:close-line" width={14} />
+          </IconButton>
+        ) : null}
       </Box>
 
       {helperText && helperText}

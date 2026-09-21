@@ -290,8 +290,15 @@ export default function EditCenterDialog({
           preview: URL.createObjectURL(file),
         });
 
-        setValue(fieldName, newFile, { shouldValidate: true });
+        setValue(fieldName, newFile, { shouldValidate: true, shouldDirty: true });
       },
+    [setValue]
+  );
+
+  const makeImageRemoveHandler = useCallback(
+    (fieldName: 'bank_image' | 'commercial_register_image') => () => {
+      setValue(fieldName, null, { shouldValidate: true, shouldDirty: true });
+    },
     [setValue]
   );
 
@@ -337,6 +344,8 @@ export default function EditCenterDialog({
       formData.append('bank_image', data.bank_image);
     } else if (typeof data.bank_image === 'string' && data.bank_image.trim()) {
       formData.append('bank_image', data.bank_image);
+    } else {
+      formData.append('bank_image', 'null');
     }
     if (data.commercial_register_image && typeof data.commercial_register_image !== 'string') {
       formData.append('commercial_register_image', data.commercial_register_image);
@@ -345,6 +354,8 @@ export default function EditCenterDialog({
       data.commercial_register_image.trim()
     ) {
       formData.append('commercial_register_image', data.commercial_register_image);
+    } else {
+      formData.append('commercial_register_image', 'null');
     }
 
     try {
@@ -577,6 +588,7 @@ export default function EditCenterDialog({
               <RHFUploadAvatar
                 name="commercial_register_image"
                 onDrop={makeImageDropHandler('commercial_register_image')}
+                onDelete={makeImageRemoveHandler('commercial_register_image')}
                 sx={{ width: 120, height: 120 }}
               />
               <Typography variant="body2" sx={IMAGE_LABEL_SX}>
@@ -587,6 +599,7 @@ export default function EditCenterDialog({
               <RHFUploadAvatar
                 name="bank_image"
                 onDrop={makeImageDropHandler('bank_image')}
+                onDelete={makeImageRemoveHandler('bank_image')}
                 sx={{ width: 120, height: 120 }}
               />
               <Typography variant="body2" sx={IMAGE_LABEL_SX}>

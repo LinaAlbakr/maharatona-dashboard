@@ -276,8 +276,11 @@ function appendCenterImageIfFile(payload: FormData, key: string, value: FormData
 
 function appendCenterImageValue(payload: FormData, key: string, value: FormDataEntryValue | null) {
   if (value === null || value === undefined) return;
-  if (typeof value === 'string' && value.trim()) {
-    payload.append(key, value);
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    // Explicit clear signal from the client ("null")
+    payload.append(key, trimmed);
   }
 }
 
