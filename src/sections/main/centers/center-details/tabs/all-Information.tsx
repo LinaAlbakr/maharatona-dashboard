@@ -35,11 +35,20 @@ const AllInformation = ({ CenterInfo }: Props) => {
   const commercialRegisterImage =
     CenterInfo?.commercial_register_image?.trim() || placeholderImage;
   const bankImage = CenterInfo?.bank_image?.trim() || placeholderImage;
-  const centerImage = CenterInfo?.center_image?.trim() || placeholderImage;
+  const centerImages = useMemo(() => {
+    if (Array.isArray(CenterInfo?.center_images) && CenterInfo.center_images.length > 0) {
+      return CenterInfo.center_images
+        .map((item: unknown) => (typeof item === 'string' ? item.trim() : ''))
+        .filter(Boolean) as string[];
+    }
+    const single = CenterInfo?.center_image?.trim();
+    return single ? [single] : [placeholderImage];
+  }, [CenterInfo?.center_images, CenterInfo?.center_image]);
 
   const slides = useMemo(
-    () => [centerImage, commercialRegisterImage, bankImage].map((src) => ({ src })),
-    [centerImage, commercialRegisterImage, bankImage]
+    () =>
+      [...centerImages, commercialRegisterImage, bankImage].map((src) => ({ src })),
+    [centerImages, commercialRegisterImage, bankImage]
   );
   const lightbox = useLightBox(slides);
 
@@ -215,18 +224,33 @@ const AllInformation = ({ CenterInfo }: Props) => {
           sx={{
             display: 'flex',
             justifyContent: 'space-evenly',
-            flexDirection: { xs: 'column', sm: 'column', md: 'row ' },
+            flexWrap: 'wrap',
+            gap: 3,
+            flexDirection: { xs: 'column', sm: 'column', md: 'row' },
+            px: 2,
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            <Box onClick={() => lightbox.onOpen(centerImage)} sx={imageWrapperSx}>
-              <Image
-                src={centerImage}
-                width={250}
-                height={250}
-                alt="Center"
-                style={{ borderRadius: '10px', objectFit: 'cover' }}
-              />
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 1.5,
+                justifyContent: 'center',
+                maxWidth: 520,
+              }}
+            >
+              {centerImages.map((src) => (
+                <Box key={src} onClick={() => lightbox.onOpen(src)} sx={imageWrapperSx}>
+                  <Image
+                    src={src}
+                    width={centerImages.length > 1 ? 160 : 250}
+                    height={centerImages.length > 1 ? 160 : 250}
+                    alt="Center"
+                    style={{ borderRadius: '10px', objectFit: 'cover' }}
+                  />
+                </Box>
+              ))}
             </Box>
             <Typography variant="body1" sx={profileDetailImageLabelSx}>
               {t('LABEL.CENTER_IMAGES')}

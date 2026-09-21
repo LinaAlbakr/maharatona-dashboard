@@ -304,6 +304,7 @@ export const updateCenterDetails = async (
       'neighborhood',
       'latitude',
       'longitude',
+      'existing_center_images',
     ] as const;
 
     textFields.forEach((field) => {
@@ -318,14 +319,23 @@ export const updateCenterDetails = async (
       payload.append('fields', fieldsValue as string);
     }
 
+    // Multi center gallery images
+    reqBody.getAll('center_images').forEach((value) => {
+      if (value && typeof value !== 'string') {
+        payload.append('center_images', value);
+      }
+    });
+
+    // Legacy single center_image (if still sent)
     appendCenterImageIfFile(payload, 'center_image', reqBody.get('center_image'));
+    appendCenterImageValue(payload, 'center_image', reqBody.get('center_image'));
+
     appendCenterImageIfFile(payload, 'bank_image', reqBody.get('bank_image'));
     appendCenterImageIfFile(
       payload,
       'commercial_register_image',
       reqBody.get('commercial_register_image')
     );
-    appendCenterImageValue(payload, 'center_image', reqBody.get('center_image'));
     appendCenterImageValue(payload, 'bank_image', reqBody.get('bank_image'));
     appendCenterImageValue(
       payload,

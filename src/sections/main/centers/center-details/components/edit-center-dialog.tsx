@@ -36,6 +36,17 @@ import WordCountTextarea from '../../add-program/components/word-count-textarea'
 import { FIELD_LABEL_COLOR, MAX_DESCRIPTION_WORDS, PROGRAM_SECTION_HEADING_COLOR } from '../../add-program/constants';
 import { programFieldSx } from '../../add-program/styles';
 import { countWords } from '../../add-program/validation';
+import CenterImagesUpload from './center-images-upload';
+
+function resolveInitialCenterImages(centerInfo: any): (File | string)[] {
+  if (Array.isArray(centerInfo?.center_images) && centerInfo.center_images.length > 0) {
+    return centerInfo.center_images
+      .map((item: unknown) => (typeof item === 'string' ? item.trim() : ''))
+      .filter(Boolean);
+  }
+  const single = typeof centerInfo?.center_image === 'string' ? centerInfo.center_image.trim() : '';
+  return single ? [single] : [];
+}
 
 const FIELD_LABEL_SX = {
   fontSize: 13,
@@ -104,7 +115,7 @@ function buildDefaultValues(centerInfo: any) {
     neighborhood: String(centerInfo?.neighborhood?._id ?? centerInfo?.neighborhood?.id ?? ''),
     center_location: hasCoords ? `${latitude}, ${longitude}` : '',
     place_desc: centerInfo?.place_desc ?? '',
-    center_image: centerInfo?.center_image ?? null,
+    center_images: resolveInitialCenterImages(centerInfo),
     bank_image: centerInfo?.bank_image ?? null,
     commercial_register_image: centerInfo?.commercial_register_image ?? null,
   };
@@ -183,7 +194,7 @@ export default function EditCenterDialog({
         neighborhood: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         center_location: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         place_desc: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-        center_image: yup.mixed().nullable(),
+        center_images: yup.array().of(yup.mixed()).nullable(),
         bank_image: yup.mixed().nullable(),
         commercial_register_image: yup.mixed().nullable(),
       })
@@ -270,7 +281,7 @@ export default function EditCenterDialog({
   }, [open, selectedCity]);
 
   const makeImageDropHandler = useCallback(
-    (fieldName: 'center_image' | 'bank_image' | 'commercial_register_image') =>
+    (fieldName: 'bank_image' | 'commercial_register_image') =>
       (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
         if (!file) return;
@@ -312,11 +323,16 @@ export default function EditCenterDialog({
       formData.append('longitude', coords.longitude);
     }
 
-    if (data.center_image && typeof data.center_image !== 'string') {
-      formData.append('center_image', data.center_image);
-    } else if (typeof data.center_image === 'string' && data.center_image.trim()) {
-      formData.append('center_image', data.center_image);
-    }
+    const keptCenterImages = (data.center_images || []).filter(
+      (item): item is string => typeof item === 'string' && item.trim().length > 0
+    );
+    formData.append('existing_center_images', JSON.stringify(keptCenterImages));
+    (data.center_images || []).forEach((item) => {
+      if (item && typeof item !== 'string') {
+        formData.append('center_images', item);
+      }
+    });
+
     if (data.bank_image && typeof data.bank_image !== 'string') {
       formData.append('bank_image', data.bank_image);
     } else if (typeof data.bank_image === 'string' && data.bank_image.trim()) {
@@ -549,18 +565,13 @@ export default function EditCenterDialog({
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             spacing={3}
-            justifyContent="space-evenly"
+            justifyContent="flex-start"
             alignItems="flex-start"
+            flexWrap="wrap"
+            useFlexGap
           >
-            <Box sx={{ textAlign: 'center' }}>
-              <RHFUploadAvatar
-                name="center_image"
-                onDrop={makeImageDropHandler('center_image')}
-                sx={{ width: 120, height: 120 }}
-              />
-              <Typography variant="body2" sx={IMAGE_LABEL_SX}>
-                {`${t('LABEL.CENTER')} ${t('LABEL.CENTER_IMAGE')}`}
-              </Typography>
+            <Box sx={{ flex: '1 1 100%', minWidth: 0 }}>
+              <CenterImagesUpload />
             </Box>
             <Box sx={{ textAlign: 'center' }}>
               <RHFUploadAvatar
