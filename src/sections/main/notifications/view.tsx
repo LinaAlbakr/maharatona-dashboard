@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { format, isValid } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { Fragment, useCallback, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import CutomAutocompleteView from 'src/components/AutoComplete/CutomAutocompleteView';
@@ -33,6 +33,13 @@ const BOOKING_MODEL_FILTERS = [
 
 type Props = {
   notifications: any;
+};
+
+const parseDateParam = (value: unknown) => {
+  if (!value) return null;
+  if (value instanceof Date) return isValid(value) ? value : null;
+  const parsed = parseISO(String(value));
+  return isValid(parsed) ? parsed : null;
 };
 
 const getDayGroupKey = (createdAt: string | Date | undefined) => {
@@ -83,7 +90,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
   );
   const formDefaultValues = {
     type: '',
-    date: '',
+    date: searchParams.get('select_date') || '',
     search: searchParams.get('search') || '',
   };
 
@@ -199,9 +206,11 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
                   <DatePicker
                     label={t('LABEL.DATE')}
                     format="dd-MM-yyyy"
-                    value={field.value ? new Date(field.value) : null}
+                    value={parseDateParam(field.value)}
                     onChange={(newValue) => {
-                      field.onChange(newValue);
+                      const normalized =
+                        newValue && isValid(newValue) ? format(newValue, 'yyyy-MM-dd') : '';
+                      field.onChange(normalized);
                       createQueryString('select_date', newValue);
                     }}
                     slotProps={{
@@ -210,6 +219,7 @@ export default function NotificationsView({ notifications }: Readonly<Props>) {
                         error: !!error,
                         helperText: error?.message,
                       },
+                      actionBar: { actions: ['clear', 'today'] },
                     }}
                   />
                 )}
