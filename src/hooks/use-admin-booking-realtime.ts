@@ -20,7 +20,7 @@ const resolveSocketBaseUrl = () => {
   }
 };
 
-/** Listen for booking-notification socket events and refresh current route. */
+/** Listen for booking-notification socket events and refresh current route.. */
 export const useAdminBookingRealtimeRefresh = () => {
   const router = useRouter();
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
