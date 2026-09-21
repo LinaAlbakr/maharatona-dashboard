@@ -194,11 +194,11 @@ export default function EditCenterDialog({
         neighborhood: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         center_location: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
         place_desc: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-        center_images: yup.array().of(yup.mixed()).nullable(),
+        center_images: yup.array().of(yup.mixed<File | string>()).default([]),
         bank_image: yup.mixed().nullable(),
         commercial_register_image: yup.mixed().nullable(),
       })
-    ) as Resolver<CenterFormValues>,
+    ) as unknown as Resolver<CenterFormValues>,
     defaultValues: buildDefaultValues(centerInfo),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
