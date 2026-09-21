@@ -54,7 +54,7 @@ export default function FlexibleModelSessionContent({ modelKey }: Props) {
           modelKey={modelKey}
           slotIndex={index}
           timeType={timeType}
-          onRemove={fields.length > 1 ? () => remove(index) : undefined}
+          onRemove={() => remove(index)}
         />
       ))}
 
