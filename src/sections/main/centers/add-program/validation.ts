@@ -19,6 +19,7 @@ const numberField = () =>
     .test('is-number', requiredMsg, (value) => value !== '' && !Number.isNaN(Number(value)));
 
 const seatsMustBePositiveMsg = 'ADD_PROGRAM.SEATS_MUST_BE_GREATER_THAN_ZERO';
+const priceMustBePositiveMsg = 'ADD_PROGRAM.PRICE_MUST_BE_GREATER_THAN_ZERO';
 const seatCapacityLessThanBookingsMsg = 'ADD_PROGRAM.SEAT_CAPACITY_LESS_THAN_BOOKINGS';
 
 const positiveNumberField = () =>
@@ -27,6 +28,19 @@ const positiveNumberField = () =>
     seatsMustBePositiveMsg,
     (value) => value !== '' && Number(value) > 0
   );
+
+const positivePriceField = () =>
+  numberField().test(
+    'positive-price',
+    priceMustBePositiveMsg,
+    (value) => value !== '' && Number(value) > 0
+  );
+
+const isPositivePrice = (value: string | undefined): boolean => {
+  if (!value?.trim()) return false;
+  const n = Number(value);
+  return !Number.isNaN(n) && n > 0;
+};
 
 const endTimeAfterStartMsg = 'ADD_PROGRAM.END_TIME_MUST_BE_AFTER_START_TIME';
 const ageToMustBeGreaterMsg = 'ADD_PROGRAM.AGE_TO_MUST_BE_GREATER_THAN_AGE_FROM';
@@ -100,7 +114,7 @@ const slotSchema = (opts: {
     start_time: timeField(),
     end_time: endTimeAfterStartTime(),
     seat_capacity: positiveNumberField(),
-    price: opts.hasPrice ? numberField() : yup.string(),
+    price: opts.hasPrice ? positivePriceField() : yup.string(),
     class_time:
       opts.hasTimeType && opts.timeType === 'fixed'
         ? opts.modelKey === 'hourly'
@@ -129,14 +143,19 @@ const packageSchema = yup
     const anyFilled = Boolean(titleAr || titleEn || sessions || price);
     if (!anyFilled) return true;
     if (!titleAr || !titleEn || !sessions || !price) return false;
-    return !Number.isNaN(Number(sessions)) && !Number.isNaN(Number(price));
+    return !Number.isNaN(Number(sessions)) && isPositivePrice(price);
+  })
+  .test('positive-price', priceMustBePositiveMsg, (row) => {
+    const price = row?.price?.trim() ?? '';
+    if (!price) return true;
+    return isPositivePrice(price);
   });
 
 const fixedStep0Schema = yup.object({
   courseImages: yup.array().min(1, requiredMsg),
   name_ar: yup.string().required(requiredMsg),
   name_en: yup.string().required(requiredMsg),
-  price: numberField(),
+  price: positivePriceField(),
   field_id: yup.string().required(requiredMsg),
   start_date: yup.date().nullable().required(requiredMsg),
   end_date: yup
@@ -294,7 +313,12 @@ const buildStep2Schema = (
                 nameAr || nameEn || price || row?.desc_ar?.trim() || row?.desc_en?.trim()
               );
               if (!anyFilled) return true;
-              return Boolean(nameAr && nameEn && price && !Number.isNaN(Number(price)));
+              return Boolean(nameAr && nameEn && isPositivePrice(price));
+            })
+            .test('positive-price', priceMustBePositiveMsg, (row) => {
+              const price = row?.price?.trim() ?? '';
+              if (!price) return true;
+              return isPositivePrice(price);
             })
         ),
   });
