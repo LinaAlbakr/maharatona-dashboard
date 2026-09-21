@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import {
@@ -47,6 +47,7 @@ type CourseOption = {
   id: string;
   name: string;
   centerId: string;
+  price: number;
   startDate: string | null;
   endDate: string | null;
 };
@@ -62,33 +63,80 @@ export function NewCouponDialog({ open, onClose }: Props) {
   const [centers, setCenters] = useState<CenterOption[]>([]);
   const [courses, setCourses] = useState<CourseOption[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(false);
+  const coursesRef = useRef<CourseOption[]>([]);
+  coursesRef.current = courses;
 
-  const schema = yup.object().shape({
-    code: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    discount: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    discountType: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    startDate: yup.date().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    endDate: yup
-      .date()
-      .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
-      .min(yup.ref('startDate'), t('LABEL.END_DATE_MUST_BE_AFTER_START_DATE')),
-    timesUsed: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    scope: yup
-      .string()
-      .oneOf(['all', 'specific'])
-      .required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-    centerId: yup.string().when('scope', {
-      is: 'specific',
-      then: (s) => s.required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-      otherwise: (s) => s.optional(),
-    }),
-    courseIds: yup.array().of(yup.string()).when('scope', {
-      is: 'specific',
-      then: (s) =>
-        s.min(1, t('LABEL.THIS_FIELD_IS_REQUIRED')).required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
-      otherwise: (s) => s.optional(),
-    }),
-  });
+  const schema = useMemo(
+    () =>
+      yup.object().shape({
+        code: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        discount: yup
+          .number()
+          .typeError(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+          .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+          .moreThan(0, t('LABEL.DISCOUNT_MUST_BE_GREATER_THAN_ZERO'))
+          .test('discount-type-rules', function validateDiscount(value) {
+            if (value === undefined || value === null || Number.isNaN(Number(value))) {
+              return true;
+            }
+
+            const amount = Number(value);
+            const discountType = String(this.parent.discountType || '').toLowerCase();
+
+            if (discountType === 'percentage') {
+              if (amount >= 100) {
+                return this.createError({
+                  message: t('LABEL.DISCOUNT_PERCENTAGE_MUST_BE_LESS_THAN_100'),
+                });
+              }
+              return true;
+            }
+
+            if (discountType === 'value') {
+              const selectedIds = (this.parent.courseIds || []).filter(Boolean) as string[];
+              if (!selectedIds.length) return true;
+
+              const prices = selectedIds
+                .map((id) => coursesRef.current.find((course) => course.id === id)?.price ?? 0)
+                .filter((price) => Number.isFinite(price) && price > 0);
+
+              if (!prices.length) return true;
+
+              const minCoursePrice = Math.min(...prices);
+              if (amount >= minCoursePrice) {
+                return this.createError({
+                  message: t('LABEL.DISCOUNT_VALUE_MUST_BE_LESS_THAN_COURSE_PRICE'),
+                });
+              }
+            }
+
+            return true;
+          }),
+        discountType: yup.string().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        startDate: yup.date().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        endDate: yup
+          .date()
+          .required(t('LABEL.THIS_FIELD_IS_REQUIRED'))
+          .min(yup.ref('startDate'), t('LABEL.END_DATE_MUST_BE_AFTER_START_DATE')),
+        timesUsed: yup.number().required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        scope: yup
+          .string()
+          .oneOf(['all', 'specific'])
+          .required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+        centerId: yup.string().when('scope', {
+          is: 'specific',
+          then: (s) => s.required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+          otherwise: (s) => s.optional(),
+        }),
+        courseIds: yup.array().of(yup.string()).when('scope', {
+          is: 'specific',
+          then: (s) =>
+            s.min(1, t('LABEL.THIS_FIELD_IS_REQUIRED')).required(t('LABEL.THIS_FIELD_IS_REQUIRED')),
+          otherwise: (s) => s.optional(),
+        }),
+      }),
+    [t]
+  );
 
   const defaultValues = useMemo(
     () => ({
@@ -125,6 +173,8 @@ export function NewCouponDialog({ open, onClose }: Props) {
 
   const selectedCenterId = watch('centerId');
   const scope = watch('scope');
+  const discountType = watch('discountType');
+  const selectedCourseIds = watch('courseIds');
 
   useEffect(() => {
     if (!open) return;
@@ -154,6 +204,7 @@ export function NewCouponDialog({ open, onClose }: Props) {
               c.name ||
               '-',
             centerId: String(c.center_id?._id || c.center_id || c.center?._id || c.center?.id || ''),
+            price: Number(c.price) || 0,
             startDate: c.start_date ?? null,
             endDate: c.end_date ?? null,
           }))
@@ -183,6 +234,11 @@ export function NewCouponDialog({ open, onClose }: Props) {
   useEffect(() => {
     setValue('courseIds', []);
   }, [selectedCenterId, setValue]);
+
+  // Re-check discount when type or selected programs change
+  useEffect(() => {
+    trigger('discount');
+  }, [discountType, selectedCourseIds, trigger]);
 
   const programOptions = useMemo(() => {
     if (!selectedCenterId) return [];
