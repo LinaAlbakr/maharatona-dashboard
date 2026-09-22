@@ -250,6 +250,7 @@ export const fetchNotifications = async ({
       created_at: doc.createdAt || doc.created_at,
       // keep original payload data so UI can build richer templates
       raw: doc,
+      is_free: Boolean(doc.is_free),
       booking_type:
         doc.booking_model || doc.booking_type || doc.course_type || doc.session_type || doc.type,
       actual_type:
