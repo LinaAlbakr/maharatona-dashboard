@@ -21,13 +21,13 @@ export const FLEXIBLE_SLOT_KEYS: Record<FlexibleBookingModelKey, string> = {
 };
 
 const DAY_ORDER = [
+  'Sunday',
   'Monday',
   'Tuesday',
   'Wednesday',
   'Thursday',
   'Friday',
   'Saturday',
-  'Sunday',
 ] as const;
 
 const ABBREV_TO_DAY: Record<string, (typeof DAY_ORDER)[number]> = {

@@ -606,25 +606,8 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
               <DurationField name={`${basePath}.class_time`} control={control} />
             </Grid>
 
-            <Grid xs={12} md={6}>
-              <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
-              <Controller
-                name={`${basePath}.seat_capacity`}
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <TextField
-                    {...field}
-                    fullWidth
-                    error={!!error}
-                    helperText={error ? t(String(error.message)) : undefined}
-                    sx={programFieldSx}
-                  />
-                )}
-              />
-            </Grid>
-
             {modelKey !== 'trial' ? (
-              <Grid xs={12}>
+              <Grid xs={12} md={6}>
                 <PriceVatLabel required labelKey={priceLabelKey} />
                 <Controller
                   name={`${basePath}.price`}
@@ -647,10 +630,10 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                   )}
                 />
               </Grid>
-            ) : null}
-          </>
-        ) : modelKey === 'daily' || modelKey === 'weekly' ? (
-          <>
+            ) : (
+              <Grid xs={12} md={6} />
+            )}
+
             <Grid xs={12} md={6}>
               <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
               <Controller
@@ -667,7 +650,9 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                 )}
               />
             </Grid>
-
+          </>
+        ) : modelKey === 'daily' || modelKey === 'weekly' ? (
+          <>
             <Grid xs={12} md={6}>
               <PriceVatLabel required labelKey={priceLabelKey} />
               <Controller
@@ -686,6 +671,23 @@ export default function FlexibleSlotCard({ modelKey, slotIndex, timeType, onRemo
                         </InputAdornment>
                       ),
                     }}
+                    sx={programFieldSx}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <RequiredLabel required>{t(seatLabelKey)}</RequiredLabel>
+              <Controller
+                name={`${basePath}.seat_capacity`}
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    error={!!error}
+                    helperText={error ? t(String(error.message)) : undefined}
                     sx={programFieldSx}
                   />
                 )}
