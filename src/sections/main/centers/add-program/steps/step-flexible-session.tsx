@@ -14,11 +14,9 @@ import Iconify from 'src/components/iconify';
 import BookingModelTabs from '../components/booking-model-tabs';
 import FlexibleModelSessionContent from '../components/flexible-model-session-content';
 import { EMPTY_MATERIAL, FIELD_LABEL_COLOR, PROGRAM_SECTION_HEADING_COLOR } from '../constants';
-import { applyTrialBookingSideEffects } from '../utils/trial-booking-side-effects';
 import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
 import {
   getDefaultFlexibleSessionModel,
-  hasFlexibleMainModelData,
   hasFlexibleTrialSlotData,
 } from '../utils/flexible-model-config';
 
@@ -47,21 +45,6 @@ export default function StepFlexibleSession() {
     [setValue]
   );
 
-  const handleSelectTrial = useCallback(() => {
-    if (hasFlexibleMainModelData(flexibleModels)) {
-      showTrialCombineError();
-      return;
-    }
-
-    const next = { ...flexibleModels };
-    (Object.keys(next) as FlexibleBookingModelKey[]).forEach((key) => {
-      next[key] = { ...next[key], enabled: key === 'trial' };
-    });
-    updateFlexibleModels(next);
-    applyTrialBookingSideEffects(setValue);
-    setActiveModel('trial');
-  }, [flexibleModels, setValue, showTrialCombineError, updateFlexibleModels]);
-
   const handleSelectMainModel = useCallback(
     (modelKey: FlexibleBookingModelKey) => {
       if (hasFlexibleTrialSlotData(flexibleModels.trial)) {
@@ -78,7 +61,7 @@ export default function StepFlexibleSession() {
       }
       setActiveModel(modelKey);
     },
-    [flexibleModels, showTrialCombineError, updateFlexibleModels]
+    [flexibleModels, setValue, showTrialCombineError, updateFlexibleModels]
   );
 
   useEffect(() => {
@@ -98,7 +81,6 @@ export default function StepFlexibleSession() {
     <Box>
       <BookingModelTabs
         activeModel={activeModel}
-        onSelectTrial={handleSelectTrial}
         onSelectMainModel={handleSelectMainModel}
       />
 

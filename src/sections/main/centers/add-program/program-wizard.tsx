@@ -112,7 +112,7 @@ export default function ProgramWizard({
     const schema = getStepSchema(activeStep, bookingType, values.flexibleModels);
 
     try {
-      await schema.validate(values, { abortEarly: false });
+      await schema.validate(values, { abortEarly: false, context: values });
       clearErrors();
       return true;
     } catch (error: any) {
@@ -124,22 +124,20 @@ export default function ProgramWizard({
           ? [error]
           : [];
 
-      if (
-        validationErrors.some(
-          (item: any) => item.message === 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE'
-        ) ||
-        error?.message === 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE'
-      ) {
-        enqueueSnackbar(t('ADD_PROGRAM.TRIAL_CANNOT_COMBINE'), { variant: 'error' });
-      }
+      const snackbarMessages = [
+        'ADD_PROGRAM.TRIAL_CANNOT_COMBINE',
+        'ADD_PROGRAM.errorAddAtLeastOneSlot',
+        'ADD_PROGRAM.IF_ANY_SLOT_OR_PACKAGE_FREE_ALL_MUST_BE_FREE',
+        'ADD_PROGRAM.DISCOUNT_NOT_ALLOWED_ON_FREE_PROGRAM',
+      ];
 
-      if (
-        validationErrors.some(
-          (item: any) => item.message === 'ADD_PROGRAM.errorAddAtLeastOneSlot'
-        ) ||
-        error?.message === 'ADD_PROGRAM.errorAddAtLeastOneSlot'
-      ) {
-        enqueueSnackbar(t('ADD_PROGRAM.errorAddAtLeastOneSlot'), { variant: 'error' });
+      for (const messageKey of snackbarMessages) {
+        if (
+          validationErrors.some((item: any) => item.message === messageKey) ||
+          error?.message === messageKey
+        ) {
+          enqueueSnackbar(t(messageKey), { variant: 'error' });
+        }
       }
 
       if (error?.inner?.length) {

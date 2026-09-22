@@ -37,21 +37,33 @@ import {
   programStepHeadingSx,
 } from '../styles';
 import type { ProgramFormValues } from '../types';
+import { isFreeProgramPricing } from '../utils/free-program-pricing';
 import { isTrialBookingActive } from '../utils/flexible-model-config';
-import { applyTrialBookingSideEffects } from '../utils/trial-booking-side-effects';
+import {
+  applyTrialBookingSideEffects,
+  clearProgramDiscountFields,
+} from '../utils/trial-booking-side-effects';
 
 export default function StepDiscount() {
   const { t } = useTranslate();
   const { control, watch, setValue } = useFormContext<ProgramFormValues>();
   const bookingType = watch('bookingType');
   const flexibleModels = watch('flexibleModels');
+  const price = watch('price');
   const isTrialActive = isTrialBookingActive(bookingType, flexibleModels);
+  const isFreePricing = isFreeProgramPricing(bookingType, { price, flexibleModels });
+  const discountDisabled = isTrialActive || isFreePricing;
   const discountType = watch('discount_type');
 
   useEffect(() => {
-    if (!isTrialActive) return;
-    applyTrialBookingSideEffects(setValue);
-  }, [isTrialActive, setValue]);
+    if (isTrialActive) {
+      applyTrialBookingSideEffects(setValue);
+      return;
+    }
+    if (isFreePricing) {
+      clearProgramDiscountFields(setValue);
+    }
+  }, [isTrialActive, isFreePricing, setValue]);
 
   const { fields: discountGroups, append: appendDiscountGroup } = useFieldArray({
     control,
@@ -59,17 +71,23 @@ export default function StepDiscount() {
   });
 
   return (
-    <Box sx={isTrialActive ? disabledProgramSectionSx : undefined}>
+    <Box sx={discountDisabled ? disabledProgramSectionSx : undefined}>
       <Typography
         sx={{
           ...programStepHeadingSx,
-          ...(isTrialActive ? { color: STEP_INACTIVE_COLOR } : {}),
+          ...(discountDisabled ? { color: STEP_INACTIVE_COLOR } : {}),
         }}
       >
         {t('ADD_PROGRAM.ENABLE_DISCOUNT')}
       </Typography>
 
-      {!isTrialActive ? (
+      {discountDisabled && isFreePricing && !isTrialActive ? (
+        <Typography sx={{ color: STEP_INACTIVE_COLOR, fontSize: 14, mb: 2 }}>
+          {t('ADD_PROGRAM.DISCOUNT_NOT_ALLOWED_ON_FREE_PROGRAM')}
+        </Typography>
+      ) : null}
+
+      {!discountDisabled ? (
           <Controller
             name="discount_type"
             control={control}

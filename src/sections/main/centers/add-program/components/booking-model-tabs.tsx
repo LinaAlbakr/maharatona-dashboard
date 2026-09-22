@@ -1,40 +1,30 @@
 'use client';
 
-import { useFormContext, useWatch } from 'react-hook-form';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { useTranslate } from 'src/locales';
 
-import Iconify from 'src/components/iconify';
-
 import {
   FIELD_LABEL_COLOR,
   FLEXIBLE_BOOKING_MODELS,
-  FREE_BOOKING_COLOR,
   PROGRAM_SECTION_HEADING_COLOR,
 } from '../constants';
 import { programStepHeadingSx } from '../styles';
-import type { FlexibleBookingModelKey, ProgramFormValues } from '../types';
+import type { FlexibleBookingModelKey } from '../types';
 
 type Props = {
   activeModel: FlexibleBookingModelKey;
-  onSelectTrial: () => void;
   onSelectMainModel: (model: FlexibleBookingModelKey) => void;
 };
 
 export default function BookingModelTabs({
   activeModel,
-  onSelectTrial,
   onSelectMainModel,
 }: Props) {
   const { t } = useTranslate();
-  const { control } = useFormContext<ProgramFormValues>();
-  const isTrialEnabled = useWatch({ control, name: 'flexibleModels.trial.enabled' }) === true;
 
   const mainModels = FLEXIBLE_BOOKING_MODELS.filter((m) => m.key !== 'trial');
-  const trialModel = FLEXIBLE_BOOKING_MODELS.find((m) => m.key === 'trial')!;
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -45,39 +35,6 @@ export default function BookingModelTabs({
             *
           </Box>
         </Typography>
-        <Box
-          component="button"
-          type="button"
-          onClick={onSelectTrial}
-          style={{
-            backgroundColor: isTrialEnabled ? FREE_BOOKING_COLOR : '#FFFFFF',
-            color: isTrialEnabled ? '#FFFFFF' : FREE_BOOKING_COLOR,
-            border: `1px solid ${FREE_BOOKING_COLOR}`,
-          }}
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 0.5,
-            width: 140,
-            height: 32,
-            px: 1.5,
-            borderRadius: '20px',
-            fontSize: 16,
-            fontWeight: 600,
-            fontFamily: 'inherit',
-            lineHeight: 1,
-            cursor: 'pointer',
-            outline: 'none',
-            '&:hover': {
-              backgroundColor: isTrialEnabled ? FREE_BOOKING_COLOR : '#FFFFFF',
-              color: isTrialEnabled ? '#FFFFFF' : FREE_BOOKING_COLOR,
-            },
-          }}
-        >
-          <Iconify icon="mingcute:add-line" width={16} sx={{ color: 'inherit', flexShrink: 0 }} />
-          {t(trialModel.labelKey)}
-        </Box>
       </Box>
 
       <Box
