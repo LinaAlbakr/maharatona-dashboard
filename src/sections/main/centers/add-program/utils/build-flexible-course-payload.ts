@@ -18,8 +18,6 @@ import {
 } from './course-api-helpers';
 import { applyDiscountFields } from './build-discount-fields';
 import {
-  getConfiguredFlexibleModelKeys,
-  isFlexibleModelConfigured,
   isFlexiblePackageConfigured,
   isFlexibleSlotConfigured,
   isTrialBookingActive,
@@ -110,9 +108,8 @@ function buildPackages(values: ProgramFormValues) {
 
   PACKAGE_KEYS.forEach((key) => {
     const model = values.flexibleModels[key];
-    if (!isFlexibleModelConfigured(model, key)) return;
-
-    packageMap[key] = (model.packages ?? [])
+    // Always include each model key (even []) so edit can clear saved packages.
+    packageMap[key] = (model?.packages ?? [])
       .filter(isFlexiblePackageConfigured)
       .map((pkg) => ({
         title_ar: pkg.title_ar,
@@ -174,38 +171,27 @@ export function buildFlexibleCourseFormMap(values: ProgramFormValues): Record<st
       : [];
 
   const models = values.flexibleModels;
-  const configuredKeys = getConfiguredFlexibleModelKeys(models);
 
-  if (configuredKeys.includes('trial')) {
-    map.trialSlots = models.trial.slots
-      .filter(isFlexibleSlotConfigured)
-      .map(mapTrialSlot);
-  }
-  if (configuredKeys.includes('minutes')) {
-    map.minutesSlots = models.minutes.slots
-      .filter(isFlexibleSlotConfigured)
-      .map(mapTimedSlot);
-  }
-  if (configuredKeys.includes('hourly')) {
-    map.hourlySlots = models.hourly.slots
-      .filter(isFlexibleSlotConfigured)
-      .map(mapTimedSlot);
-  }
-  if (configuredKeys.includes('daily')) {
-    map.dailySlots = models.daily.slots
-      .filter(isFlexibleSlotConfigured)
-      .map(mapRecurringSlot);
-  }
-  if (configuredKeys.includes('weekly')) {
-    map.weeklySlots = models.weekly.slots
-      .filter(isFlexibleSlotConfigured)
-      .map(mapRecurringSlot);
-  }
-  if (configuredKeys.includes('monthly')) {
-    map.monthlySlots = models.monthly.slots
-      .filter(isFlexibleSlotConfigured)
-      .map(mapMonthlySlot);
-  }
+  // Always send slot arrays (including []) so edit can clear previously saved slots.
+  // Omitting a key left old Mongo arrays in place after a successful save.
+  map.trialSlots = (models.trial?.slots ?? [])
+    .filter(isFlexibleSlotConfigured)
+    .map(mapTrialSlot);
+  map.minutesSlots = (models.minutes?.slots ?? [])
+    .filter(isFlexibleSlotConfigured)
+    .map(mapTimedSlot);
+  map.hourlySlots = (models.hourly?.slots ?? [])
+    .filter(isFlexibleSlotConfigured)
+    .map(mapTimedSlot);
+  map.dailySlots = (models.daily?.slots ?? [])
+    .filter(isFlexibleSlotConfigured)
+    .map(mapRecurringSlot);
+  map.weeklySlots = (models.weekly?.slots ?? [])
+    .filter(isFlexibleSlotConfigured)
+    .map(mapRecurringSlot);
+  map.monthlySlots = (models.monthly?.slots ?? [])
+    .filter(isFlexibleSlotConfigured)
+    .map(mapMonthlySlot);
 
   return cleanFormData(map);
 }

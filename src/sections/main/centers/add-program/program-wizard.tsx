@@ -107,13 +107,13 @@ export default function ProgramWizard({
     ? `${t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM')} - ${centerName}`
     : t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM');
 
-  const validateCurrentStep = async () => {
+  const validateStep = async (step: ProgramStep) => {
     const values = methods.getValues();
-    const schema = getStepSchema(activeStep, bookingType, values.flexibleModels);
+    const schema = getStepSchema(step, bookingType, values.flexibleModels);
 
     try {
       await schema.validate(values, { abortEarly: false, context: values });
-      clearErrors();
+      if (step === activeStep) clearErrors();
       return true;
     } catch (error: any) {
       let firstPath: string | undefined;
@@ -169,14 +169,25 @@ export default function ProgramWizard({
         });
       }
 
+      // Session/slot errors: jump back so the user can fix them before publish.
+      if (step === 1 && activeStep !== 1) {
+        setActiveStep(1);
+      }
+
       return false;
     }
   };
 
   const handleNext = async () => {
     if (!SKIP_PROGRAM_STEP_VALIDATION) {
-      const isValid = await validateCurrentStep();
+      const isValid = await validateStep(activeStep);
       if (!isValid) return;
+
+      // Publish must re-check session/slots — user can clear slots after passing step 1.
+      if (activeStep === 3) {
+        const sessionOk = await validateStep(1);
+        if (!sessionOk) return;
+      }
     } else {
       clearErrors();
     }
