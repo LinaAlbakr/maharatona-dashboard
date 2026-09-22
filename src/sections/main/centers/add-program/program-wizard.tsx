@@ -107,13 +107,13 @@ export default function ProgramWizard({
     ? `${t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM')} - ${centerName}`
     : t(isEditMode ? 'ADD_PROGRAM.EDIT_PROGRAM' : 'LABEL.ADD_PROGRAM');
 
-  const validateCurrentStep = async () => {
+  const validateStep = async (step: ProgramStep) => {
     const values = methods.getValues();
-    const schema = getStepSchema(activeStep, bookingType, values.flexibleModels);
+    const schema = getStepSchema(step, bookingType, values.flexibleModels);
 
     try {
-      await schema.validate(values, { abortEarly: false });
-      clearErrors();
+      await schema.validate(values, { abortEarly: false, context: values });
+      if (step === activeStep) clearErrors();
       return true;
     } catch (error: any) {
       let firstPath: string | undefined;
@@ -124,22 +124,20 @@ export default function ProgramWizard({
           ? [error]
           : [];
 
-      if (
-        validationErrors.some(
-          (item: any) => item.message === 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE'
-        ) ||
-        error?.message === 'ADD_PROGRAM.TRIAL_CANNOT_COMBINE'
-      ) {
-        enqueueSnackbar(t('ADD_PROGRAM.TRIAL_CANNOT_COMBINE'), { variant: 'error' });
-      }
+      const snackbarMessages = [
+        'ADD_PROGRAM.TRIAL_CANNOT_COMBINE',
+        'ADD_PROGRAM.errorAddAtLeastOneSlot',
+        'ADD_PROGRAM.IF_ANY_SLOT_OR_PACKAGE_FREE_ALL_MUST_BE_FREE',
+        'ADD_PROGRAM.DISCOUNT_NOT_ALLOWED_ON_FREE_PROGRAM',
+      ];
 
-      if (
-        validationErrors.some(
-          (item: any) => item.message === 'ADD_PROGRAM.errorAddAtLeastOneSlot'
-        ) ||
-        error?.message === 'ADD_PROGRAM.errorAddAtLeastOneSlot'
-      ) {
-        enqueueSnackbar(t('ADD_PROGRAM.errorAddAtLeastOneSlot'), { variant: 'error' });
+      for (const messageKey of snackbarMessages) {
+        if (
+          validationErrors.some((item: any) => item.message === messageKey) ||
+          error?.message === messageKey
+        ) {
+          enqueueSnackbar(t(messageKey), { variant: 'error' });
+        }
       }
 
       if (error?.inner?.length) {
@@ -171,14 +169,25 @@ export default function ProgramWizard({
         });
       }
 
+      // Session/slot errors: jump back so the user can fix them before publish.
+      if (step === 1 && activeStep !== 1) {
+        setActiveStep(1);
+      }
+
       return false;
     }
   };
 
   const handleNext = async () => {
     if (!SKIP_PROGRAM_STEP_VALIDATION) {
-      const isValid = await validateCurrentStep();
+      const isValid = await validateStep(activeStep);
       if (!isValid) return;
+
+      // Publish must re-check session/slots — user can clear slots after passing step 1.
+      if (activeStep === 3) {
+        const sessionOk = await validateStep(1);
+        if (!sessionOk) return;
+      }
     } else {
       clearErrors();
     }

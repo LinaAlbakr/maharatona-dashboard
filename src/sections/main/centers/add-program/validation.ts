@@ -9,6 +9,12 @@ import {
 } from './utils/flexible-model-config';
 import { hasDiscountConfigured } from './utils/build-discount-fields';
 import { parseApiTime } from './utils/course-api-helpers';
+import {
+  collectFlexibleProgramPrices,
+  hasMixedFreeAndPaidPrices,
+  isFreeProgramPricing,
+  isNonNegativePrice,
+} from './utils/free-program-pricing';
 
 const requiredMsg = 'LABEL.THIS_FIELD_IS_REQUIRED';
 
@@ -19,7 +25,10 @@ const numberField = () =>
     .test('is-number', requiredMsg, (value) => value !== '' && !Number.isNaN(Number(value)));
 
 const seatsMustBePositiveMsg = 'ADD_PROGRAM.SEATS_MUST_BE_GREATER_THAN_ZERO';
+const priceMustBeNonNegativeMsg = 'ADD_PROGRAM.PRICE_MUST_BE_ZERO_OR_GREATER';
 const priceMustBePositiveMsg = 'ADD_PROGRAM.PRICE_MUST_BE_GREATER_THAN_ZERO';
+const allOrNothingFreeMsg = 'ADD_PROGRAM.IF_ANY_SLOT_OR_PACKAGE_FREE_ALL_MUST_BE_FREE';
+const discountNotAllowedOnFreeMsg = 'ADD_PROGRAM.DISCOUNT_NOT_ALLOWED_ON_FREE_PROGRAM';
 const seatCapacityLessThanBookingsMsg = 'ADD_PROGRAM.SEAT_CAPACITY_LESS_THAN_BOOKINGS';
 
 const positiveNumberField = () =>
@@ -29,11 +38,12 @@ const positiveNumberField = () =>
     (value) => value !== '' && Number(value) > 0
   );
 
-const positivePriceField = () =>
+/** Program / slot / package price may be SAR 0 (free). */
+const nonNegativePriceField = () =>
   numberField().test(
-    'positive-price',
-    priceMustBePositiveMsg,
-    (value) => value !== '' && Number(value) > 0
+    'non-negative-price',
+    priceMustBeNonNegativeMsg,
+    (value) => isNonNegativePrice(value)
   );
 
 const isPositivePrice = (value: string | undefined): boolean => {
@@ -114,7 +124,7 @@ const slotSchema = (opts: {
     start_time: timeField(),
     end_time: endTimeAfterStartTime(),
     seat_capacity: positiveNumberField(),
-    price: opts.hasPrice ? positivePriceField() : yup.string(),
+    price: opts.hasPrice ? nonNegativePriceField() : yup.string(),
     class_time:
       opts.hasTimeType && opts.timeType === 'fixed'
         ? opts.modelKey === 'hourly'
@@ -143,19 +153,19 @@ const packageSchema = yup
     const anyFilled = Boolean(titleAr || titleEn || sessions || price);
     if (!anyFilled) return true;
     if (!titleAr || !titleEn || !sessions || !price) return false;
-    return !Number.isNaN(Number(sessions)) && isPositivePrice(price);
+    return !Number.isNaN(Number(sessions)) && isNonNegativePrice(price);
   })
-  .test('positive-price', priceMustBePositiveMsg, (row) => {
+  .test('non-negative-price', priceMustBeNonNegativeMsg, (row) => {
     const price = row?.price?.trim() ?? '';
     if (!price) return true;
-    return isPositivePrice(price);
+    return isNonNegativePrice(price);
   });
 
 const fixedStep0Schema = yup.object({
   courseImages: yup.array().min(1, requiredMsg),
   name_ar: yup.string().required(requiredMsg),
   name_en: yup.string().required(requiredMsg),
-  price: positivePriceField(),
+  price: nonNegativePriceField(),
   field_id: yup.string().required(requiredMsg),
   start_date: yup.date().nullable().required(requiredMsg),
   end_date: yup
@@ -243,30 +253,39 @@ const buildFlexibleStep1Schema = (flexibleModels: Record<string, any>) => {
   }
 
   return yup.object({
-    flexibleModels: yup.object().shape(
-      Object.fromEntries(
-        enabledKeys.map((key) => [
-          key,
-          yup.object({
-            packages: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasPackages
-              ? yup.array().of(packageSchema)
-              : yup.array(),
-            slots: yup
-              .array()
-              .of(
-                slotSchema({
-                  modelKey: key as FlexibleBookingModelKey,
-                  hasPrice: key !== 'trial',
-                  hasTimeType: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasTimeType,
-                  timeType: flexibleModels[key]?.timeType,
-                  hasRecurring: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasRecurring,
-                })
-              )
-              .min(1),
-          }),
-        ])
+    flexibleModels: yup
+      .object()
+      .shape(
+        Object.fromEntries(
+          enabledKeys.map((key) => [
+            key,
+            yup.object({
+              packages: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasPackages
+                ? yup.array().of(packageSchema)
+                : yup.array(),
+              slots: yup
+                .array()
+                .of(
+                  slotSchema({
+                    modelKey: key as FlexibleBookingModelKey,
+                    hasPrice: key !== 'trial',
+                    hasTimeType: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasTimeType,
+                    timeType: flexibleModels[key]?.timeType,
+                    hasRecurring: FLEXIBLE_BOOKING_MODELS.find((m) => m.key === key)?.hasRecurring,
+                  })
+                )
+                .min(1),
+            }),
+          ])
+        )
       )
-    ),
+      .test('all-or-nothing-free', allOrNothingFreeMsg, (models) => {
+        if (!models || typeof models !== 'object') return true;
+        const prices = collectFlexibleProgramPrices(
+          models as ProgramFormValues['flexibleModels']
+        );
+        return !hasMixedFreeAndPaidPrices(prices);
+      }),
   });
 };
 
@@ -366,53 +385,75 @@ const buildStep3Schema = (
     return yup.object({});
   }
 
-  return yup.object({
-    discount_type: yup.string(),
-    discount_amount: yup.string().test('total-discount', requiredMsg, function validateTotalDiscount(value) {
-      const parent = this.parent as {
-        discount_type?: string;
-        discount_amount?: string;
-        discount?: ProgramFormValues['discount'];
-      };
+  return yup
+    .object({
+      discount_type: yup.string(),
+      discount_amount: yup.string().test('total-discount', requiredMsg, function validateTotalDiscount(value) {
+        const parent = this.parent as {
+          discount_type?: string;
+          discount_amount?: string;
+          discount?: ProgramFormValues['discount'];
+        };
 
-      if (!hasDiscountConfigured({
-        discount_type: (parent.discount_type as ProgramFormValues['discount_type']) ?? 'total',
-        discount_amount: parent.discount_amount ?? '',
-        discount: parent.discount ?? [],
-      })) {
+        if (!hasDiscountConfigured({
+          discount_type: (parent.discount_type as ProgramFormValues['discount_type']) ?? 'total',
+          discount_amount: parent.discount_amount ?? '',
+          discount: parent.discount ?? [],
+        })) {
+          return true;
+        }
+
+        if (parent.discount_type !== 'total') return true;
+
+        const amount = value?.trim() ?? '';
+        return Boolean(amount) && !Number.isNaN(Number(amount));
+      }),
+      discount: yup.array().when('discount_type', {
+        is: 'specific',
+        then: (schema) =>
+          schema.test('specific-discount', requiredMsg, function validateSpecificDiscount(groups) {
+            const parent = this.parent as {
+              discount_type?: string;
+              discount_amount?: string;
+              discount?: ProgramFormValues['discount'];
+            };
+
+            if (!hasDiscountConfigured({
+              discount_type: 'specific',
+              discount_amount: parent.discount_amount ?? '',
+              discount: (groups as ProgramFormValues['discount']) ?? [],
+            })) {
+              return true;
+            }
+
+            return (groups ?? []).every((group, index) =>
+              discountGroupSchema.isValidSync(group, { context: { index } })
+            );
+          }),
+        otherwise: (schema) => schema,
+      }),
+    })
+    .test('no-discount-on-free', discountNotAllowedOnFreeMsg, function noDiscountOnFree(values) {
+      const form = (this.options.context as ProgramFormValues | undefined) ??
+        (values as ProgramFormValues);
+
+      if (
+        !isFreeProgramPricing(bookingType, {
+          price: form?.price ?? '',
+          flexibleModels:
+            form?.flexibleModels ??
+            (flexibleModels as ProgramFormValues['flexibleModels']),
+        })
+      ) {
         return true;
       }
 
-      if (parent.discount_type !== 'total') return true;
-
-      const amount = value?.trim() ?? '';
-      return Boolean(amount) && !Number.isNaN(Number(amount));
-    }),
-    discount: yup.array().when('discount_type', {
-      is: 'specific',
-      then: (schema) =>
-        schema.test('specific-discount', requiredMsg, function validateSpecificDiscount(groups) {
-          const parent = this.parent as {
-            discount_type?: string;
-            discount_amount?: string;
-            discount?: ProgramFormValues['discount'];
-          };
-
-          if (!hasDiscountConfigured({
-            discount_type: 'specific',
-            discount_amount: parent.discount_amount ?? '',
-            discount: (groups as ProgramFormValues['discount']) ?? [],
-          })) {
-            return true;
-          }
-
-          return (groups ?? []).every((group, index) =>
-            discountGroupSchema.isValidSync(group, { context: { index } })
-          );
-        }),
-      otherwise: (schema) => schema,
-    }),
-  });
+      return !hasDiscountConfigured({
+        discount_type: (values?.discount_type as ProgramFormValues['discount_type']) ?? 'total',
+        discount_amount: values?.discount_amount ?? '',
+        discount: values?.discount ?? [],
+      });
+    });
 };
 
 export const getStepSchema = (

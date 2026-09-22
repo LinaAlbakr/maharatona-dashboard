@@ -389,6 +389,43 @@ function isFixedTypeLabel(label: string, isAr: boolean): boolean {
   return label === 'Fixed';
 }
 
+const FREE_BADGE_COLOR = '#CC3899';
+
+function isFreeBookingNotification(data: any, detail?: any, bookingModel?: string): boolean {
+  if (data?.is_free === true || data?.raw?.is_free === true) return true;
+  if (detail?.is_free === true) return true;
+  const priceCandidates = [
+    detail?.total_price,
+    data?.raw?.total_price,
+    data?.total_price,
+  ];
+  for (const p of priceCandidates) {
+    const n = Number(p);
+    if (Number.isFinite(n) && n === 0) return true;
+  }
+  const model = String(bookingModel || '').toLowerCase();
+  return model === 'trial';
+}
+
+function FreeBookingChip({ isAr }: { isAr: boolean }) {
+  return (
+    <Chip
+      size="small"
+      label={isAr ? 'مجاني' : 'Free'}
+      sx={{
+        height: 26,
+        borderRadius: '8px',
+        fontWeight: 600,
+        '& .MuiChip-label': { px: 1.25, fontSize: '12px' },
+        bgcolor: alpha(FREE_BADGE_COLOR, 0.12),
+        color: FREE_BADGE_COLOR,
+        pointerEvents: 'none',
+        '&:hover': { bgcolor: alpha(FREE_BADGE_COLOR, 0.12) },
+      }}
+    />
+  );
+}
+
 /** Remove decorative double quotes from API copy (display only). */
 function stripQuotedPhrases(msg: string): string {
   return String(msg || '').replace(/"([^"]+)"/g, '$1');
@@ -687,6 +724,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
   );
 
   const isFixed = effectiveBookingModel === 'fixed';
+  const showFreeBadge = isFreeBookingNotification(data, detail, effectiveBookingModel);
 
   const parentNameLine = (() => {
     const fromDetail = detail?.parent?.name;
@@ -779,6 +817,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     '&:hover': { bgcolor: '#E7F1FF' },
                   }}
                 />
+                {showFreeBadge ? <FreeBookingChip isAr={isAr} /> : null}
               </Stack>
               <Typography sx={{ color: '#006C9C', lineHeight: 1.6, fontSize: '14px' }}>
                 {courseHref ? (
@@ -892,6 +931,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
                     : { bgcolor: '#F5E6FE', color: '#BE63F9', '&:hover': { bgcolor: '#F5E6FE' } }),
                 }}
               />
+              {!awaitingModelBootstrap && showFreeBadge ? <FreeBookingChip isAr={isAr} /> : null}
             </Stack>
 
             {showDesignedSummary ? (
