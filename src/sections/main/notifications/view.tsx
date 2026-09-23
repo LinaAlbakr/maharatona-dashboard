@@ -67,7 +67,7 @@ const isBookingNotification = (n: any) => {
   )
     .trim()
     .toUpperCase();
-  if (t === 'ADMIN_NEW_BOOKING') return true;
+  if (t === 'ADMIN_NEW_BOOKING' || t === 'ADMIN_COURSE_DELETED') return true;
   // defensive fallback for rows where type is missing but booking model exists
   const bookingModel = String(n?.raw?.booking_model ?? n?.booking_type ?? '').trim();
   return bookingModel.length > 0;

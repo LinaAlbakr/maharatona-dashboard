@@ -18,8 +18,8 @@ export default async function Page({ searchParams }: Readonly<Props>) {
     typeof searchParams?.notifications_limit === 'string'
       ? Number(searchParams?.notifications_limit)
       : 20;
-  // Notifications page is booking-only by product requirement.
-  const notification_type = 'ADMIN_NEW_BOOKING';
+  // Notifications page: bookings + center-deleted programs.
+  const notification_type = 'ADMIN_NEW_BOOKING,ADMIN_COURSE_DELETED';
   const booking_model_type =
     typeof searchParams?.booking_model_type === 'string'
       ? searchParams?.booking_model_type

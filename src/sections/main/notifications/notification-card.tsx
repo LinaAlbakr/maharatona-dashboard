@@ -64,18 +64,30 @@ const normalizeProgramTerminology = (text: string) =>
 const isAdminNewBooking = (data: any) => data?.notification_type === 'ADMIN_NEW_BOOKING';
 const isAdminNewCenter = (data: any) => data?.notification_type === 'ADMIN_NEW_CENTER';
 const isAdminNewCourse = (data: any) => data?.notification_type === 'ADMIN_NEW_COURSE';
+const isAdminCourseDeleted = (data: any) => data?.notification_type === 'ADMIN_COURSE_DELETED';
 const isAdminNewSupportTicket = (data: any) =>
   data?.notification_type === 'ADMIN_NEW_SUPPORT_TICKET';
 const isCenterCreatedCourse = (data: any) => {
   const msg = String(data?.message ?? data?.raw?.message_en ?? '').trim();
   return /\bhas created a new (course|program)\s*:/i.test(msg);
 };
+const isCenterDeletedCourse = (data: any) => {
+  const msg = String(data?.message ?? data?.raw?.message_en ?? data?.raw?.message_ar ?? '').trim();
+  return (
+    /\bhas deleted the (course|program)\s*:/i.test(msg) ||
+    /\bhas deleted a (course|program)\s*:/i.test(msg) ||
+    /تم حذف برنامج/i.test(msg) ||
+    /قام\s+.+\s+بحذف البرنامج/i.test(msg)
+  );
+};
 const isCenterBuyPackage = (data: any) => data?.notification_type === 'CENTER_BUY_PACKAGE';
 const isSimpleLineNotification = (data: any) =>
   isAdminNewCenter(data) ||
   isAdminNewCourse(data) ||
+  isAdminCourseDeleted(data) ||
   isAdminNewSupportTicket(data) ||
   isCenterCreatedCourse(data) ||
+  isCenterDeletedCourse(data) ||
   isCenterBuyPackage(data);
 
 const formatEnglishTimeLtr = (value: any) => {
