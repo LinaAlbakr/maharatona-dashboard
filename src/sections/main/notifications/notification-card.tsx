@@ -4,7 +4,10 @@ import { alpha, Box, Paper, Stack, Typography } from '@mui/material';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from './booking-notification-block';
-import { renderProgramDeletedMessage } from './program-deleted-message';
+import {
+  renderProgramLifecycleMessage,
+  renderProgramNameTitle,
+} from './program-notification-message';
 
 type Props = {
   data: any;
@@ -116,10 +119,16 @@ export default function NotificationCard({ data }: Readonly<Props>) {
   const localizedTitle = normalizeProgramTerminology(pickLocalizedText(data, 'title'));
   const localizedMessage = normalizeProgramTerminology(pickLocalizedText(data, 'message'));
   const isAr = i18n.language === 'ar';
-  const showProgramDeletedMessage =
-    isAdminCourseDeleted(data) || isCenterDeletedCourse(data);
-  const messageContent = showProgramDeletedMessage
-    ? renderProgramDeletedMessage(localizedMessage, isAr)
+  const showProgramLifecycleMessage =
+    isAdminCourseDeleted(data) ||
+    isCenterDeletedCourse(data) ||
+    isAdminNewCourse(data) ||
+    isCenterCreatedCourse(data);
+  const displayTitle = showProgramLifecycleMessage
+    ? renderProgramNameTitle(localizedTitle, isAr)
+    : localizedTitle;
+  const messageContent = showProgramLifecycleMessage
+    ? renderProgramLifecycleMessage(localizedMessage, isAr)
     : localizedMessage;
 
   return (
@@ -160,7 +169,7 @@ export default function NotificationCard({ data }: Readonly<Props>) {
         <Stack spacing={1.25} sx={{ minWidth: 0, flex: 1 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} flexWrap="wrap">
             <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
-              {localizedTitle}
+              {displayTitle}
             </Typography>
             <Typography
               variant="body2"
