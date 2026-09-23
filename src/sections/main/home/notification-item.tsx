@@ -5,6 +5,7 @@ import Image from 'next/image';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from 'src/sections/main/notifications/booking-notification-block';
+import { renderProgramDeletedMessage } from 'src/sections/main/notifications/program-deleted-message';
 
 type props = {
   data?: any;
@@ -32,6 +33,11 @@ const NotificationItem = ({ data }: props) => {
     );
   }
 
+  const messageContent =
+    data?.notification_type === 'ADMIN_COURSE_DELETED'
+      ? renderProgramDeletedMessage(String(message), isAr)
+      : message;
+
   return (
     <>
       <Box
@@ -51,11 +57,11 @@ const NotificationItem = ({ data }: props) => {
             height={40}
           />
           <Box>
-            <Typography variant="body1" color="info.dark">
+            <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
               {title}
             </Typography>
             <Typography variant="body2" color="info.dark">
-              {message}
+              {messageContent}
             </Typography>
           </Box>
         </Box>
