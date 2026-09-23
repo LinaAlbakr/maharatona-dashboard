@@ -8,6 +8,7 @@ import { HOST_API } from 'src/config-global';
 import { ACCESS_TOKEN } from 'src/auth/constants';
 
 const ADMIN_BOOKING_NOTIFICATION_CREATED = 'admin_booking_notification_created';
+const ADMIN_COURSE_DELETED = 'admin_course_deleted';
 
 const resolveSocketBaseUrl = () => {
   const raw = String(HOST_API || '').trim();
@@ -20,7 +21,7 @@ const resolveSocketBaseUrl = () => {
   }
 };
 
-/** Listen for booking-notification socket events and refresh current route.. */
+/** Listen for booking / program-deleted socket events and refresh current route.. */
 export const useAdminBookingRealtimeRefresh = () => {
   const router = useRouter();
   const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,9 +46,9 @@ export const useAdminBookingRealtimeRefresh = () => {
     });
     console.log('[rt-notify][client] socket connecting', { socketBaseUrl });
 
-    const scheduleRefresh = (payload?: any) => {
-      console.log('[rt-notify][client] booking event received', {
-        event: ADMIN_BOOKING_NOTIFICATION_CREATED,
+    const scheduleRefresh = (event: string, payload?: any) => {
+      console.log('[rt-notify][client] event received', {
+        event,
         payload: payload ?? null,
       });
       if (refreshTimerRef.current) return;
@@ -67,10 +68,16 @@ export const useAdminBookingRealtimeRefresh = () => {
     socket.on('disconnect', (reason: string) => {
       console.log('[rt-notify][client] socket disconnected', { reason });
     });
-    socket.on(ADMIN_BOOKING_NOTIFICATION_CREATED, scheduleRefresh);
+    const onBooking = (payload?: any) =>
+      scheduleRefresh(ADMIN_BOOKING_NOTIFICATION_CREATED, payload);
+    const onCourseDeleted = (payload?: any) =>
+      scheduleRefresh(ADMIN_COURSE_DELETED, payload);
+    socket.on(ADMIN_BOOKING_NOTIFICATION_CREATED, onBooking);
+    socket.on(ADMIN_COURSE_DELETED, onCourseDeleted);
 
     return () => {
-      socket.off(ADMIN_BOOKING_NOTIFICATION_CREATED, scheduleRefresh);
+      socket.off(ADMIN_BOOKING_NOTIFICATION_CREATED, onBooking);
+      socket.off(ADMIN_COURSE_DELETED, onCourseDeleted);
       socket.off('connect');
       socket.off('connect_error');
       socket.off('disconnect');

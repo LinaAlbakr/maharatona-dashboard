@@ -10,6 +10,7 @@ import { ACCESS_TOKEN } from 'src/auth/constants';
 const ADMIN_CENTER_CREATED = 'admin_center_created';
 const ADMIN_CLIENT_CREATED = 'admin_client_created';
 const ADMIN_COURSE_CREATED = 'admin_course_created';
+const ADMIN_COURSE_DELETED = 'admin_course_deleted';
 
 const resolveSocketBaseUrl = () => {
   const raw = String(HOST_API || '').trim();
@@ -63,6 +64,7 @@ export const useAdminEntityListsRealtimeRefresh = () => {
     const onCenterCreated = (payload?: any) => scheduleRefresh(ADMIN_CENTER_CREATED, payload);
     const onClientCreated = (payload?: any) => scheduleRefresh(ADMIN_CLIENT_CREATED, payload);
     const onCourseCreated = (payload?: any) => scheduleRefresh(ADMIN_COURSE_CREATED, payload);
+    const onCourseDeleted = (payload?: any) => scheduleRefresh(ADMIN_COURSE_DELETED, payload);
 
     socket.on('connect', () => {
       console.log('[rt-entity][client] socket connected', { socketId: socket.id });
@@ -77,11 +79,13 @@ export const useAdminEntityListsRealtimeRefresh = () => {
     socket.on(ADMIN_CENTER_CREATED, onCenterCreated);
     socket.on(ADMIN_CLIENT_CREATED, onClientCreated);
     socket.on(ADMIN_COURSE_CREATED, onCourseCreated);
+    socket.on(ADMIN_COURSE_DELETED, onCourseDeleted);
 
     return () => {
       socket.off(ADMIN_CENTER_CREATED, onCenterCreated);
       socket.off(ADMIN_CLIENT_CREATED, onClientCreated);
       socket.off(ADMIN_COURSE_CREATED, onCourseCreated);
+      socket.off(ADMIN_COURSE_DELETED, onCourseDeleted);
       socket.off('connect');
       socket.off('connect_error');
       socket.off('disconnect');

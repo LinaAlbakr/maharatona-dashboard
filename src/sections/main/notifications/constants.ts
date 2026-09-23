@@ -6,6 +6,12 @@ export const NOTIFICATION_TYPES = [
     value: 'ADMIN_NEW_COURSE',
   },
   {
+    id: 'ADMIN_COURSE_DELETED',
+    name_en: 'Deleted programs',
+    name_ar: 'البرامج المحذوفة',
+    value: 'ADMIN_COURSE_DELETED',
+  },
+  {
     id: 'CENTER_BUY_PACKAGE',
     name_en: 'Packages purchased',
     name_ar: 'الباقات المشتراة',
