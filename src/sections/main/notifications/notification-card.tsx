@@ -1,7 +1,6 @@
 'use client';
 
 import { alpha, Box, Paper, Stack, Typography } from '@mui/material';
-import Image from 'next/image';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from './booking-notification-block';
@@ -135,20 +134,26 @@ export default function NotificationCard({ data }: Readonly<Props>) {
       <Stack direction="row" spacing={1.5} alignItems="flex-start">
         <Box
           sx={{
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            borderRadius: 2,
             flexShrink: 0,
-            display: 'grid',
-            placeItems: 'center',
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: '#EDE9FE',
           }}
         >
-          <Image
-            src="/assets/icons/notification/notificationIcon.png"
+          <Box
+            component="img"
+            src="/assets/icons/notification/notification.svg"
             alt="notification"
-            width={22}
-            height={22}
+            sx={{
+              width: 40,
+              height: 40,
+              objectFit: 'contain',
+              display: 'block',
+            }}
           />
         </Box>
 
