@@ -111,11 +111,20 @@ export function groupAdminNewBookingNotifications(items: any[]): GroupedNotifica
       const parentGuess = cluster
         .map((c) => c?.parent_name)
         .find((n) => n && !isPlaceholderParentName(n));
+      const anyFree = cluster.some(
+        (c) => c?.is_free === true || c?.raw?.is_free === true
+      );
       out.push({
         ...primary,
         _groupedBookingCount: cluster.length,
         _groupedBookingIds: cluster.map((c) => c?.id).filter(Boolean),
         ...(parentGuess ? { parent_name: parentGuess } : {}),
+        ...(anyFree
+          ? {
+              is_free: true,
+              raw: { ...(primary?.raw ?? {}), is_free: true },
+            }
+          : {}),
       });
     }
   }
