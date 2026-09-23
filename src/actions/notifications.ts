@@ -171,6 +171,11 @@ export async function fetchMergedBookingExpands(notificationIds: string[]): Prom
   return {
     ...ok[0],
     booking_items,
+    is_free: ok.some((r) => r.is_free === true) || ok[0].is_free,
+    total_price: ok.reduce((sum, r) => {
+      const n = Number(r.total_price);
+      return sum + (Number.isFinite(n) ? n : 0);
+    }, 0),
     parent: parentFromRows
       ? { ...parentFromRows, phone: phone ?? parentFromRows.phone }
       : ok[0].parent,

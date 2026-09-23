@@ -407,6 +407,14 @@ function isFreeBookingNotification(data: any, detail?: any, bookingModel?: strin
   return model === 'trial';
 }
 
+/** List/page payload has no definitive free flag yet — expand order to resolve. */
+function needsFreeStatusPrefetch(data: any): boolean {
+  if (data?.notification_type !== 'ADMIN_NEW_BOOKING') return false;
+  if (data?.is_free === true || data?.raw?.is_free === true) return false;
+  if (data?.is_free === false || data?.raw?.is_free === false) return false;
+  return true;
+}
+
 function FreeBookingChip({ isAr }: { isAr: boolean }) {
   return (
     <Chip
@@ -645,6 +653,8 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
     const listKnowsModel = Boolean(listModel);
     /** Fixed rows often omit child names in list copy ("1 Child"); prefetch expand on notifications page only. */
     const needsFixedChildNamePrefetch = variant === 'page' && listModel === 'fixed';
+    /** Homepage list skips expand when model is known — still need expand to resolve SAR 0 / Free badge. */
+    const needsFreePrefetch = needsFreeStatusPrefetch(data);
 
     if (prefetchedExpandKeyRef.current !== expandCacheKey) {
       prefetchedExpandKeyRef.current = expandCacheKey;
@@ -654,7 +664,7 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
       setLoading(false);
     }
 
-    if (listKnowsModel && !needsFixedChildNamePrefetch) {
+    if (listKnowsModel && !needsFixedChildNamePrefetch && !needsFreePrefetch) {
       setBootstrapping(false);
       return;
     }
@@ -682,6 +692,8 @@ export default function BookingNotificationBlock({ data, variant = 'page' }: Rea
     data?.booking_model,
     data?.booking_type,
     data?.actual_type,
+    data?.is_free,
+    data?.raw?.is_free,
     variant,
   ]);
 
