@@ -1,10 +1,13 @@
 'use client';
 
 import { alpha, Box, Paper, Stack, Typography } from '@mui/material';
-import Image from 'next/image';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from './booking-notification-block';
+import {
+  renderProgramLifecycleMessage,
+  renderProgramNameTitle,
+} from './program-notification-message';
 
 type Props = {
   data: any;
@@ -115,6 +118,18 @@ export default function NotificationCard({ data }: Readonly<Props>) {
   const centerName = readCenterName(data);
   const localizedTitle = normalizeProgramTerminology(pickLocalizedText(data, 'title'));
   const localizedMessage = normalizeProgramTerminology(pickLocalizedText(data, 'message'));
+  const isAr = i18n.language === 'ar';
+  const showProgramLifecycleMessage =
+    isAdminCourseDeleted(data) ||
+    isCenterDeletedCourse(data) ||
+    isAdminNewCourse(data) ||
+    isCenterCreatedCourse(data);
+  const displayTitle = showProgramLifecycleMessage
+    ? renderProgramNameTitle(localizedTitle, isAr)
+    : localizedTitle;
+  const messageContent = showProgramLifecycleMessage
+    ? renderProgramLifecycleMessage(localizedMessage, isAr)
+    : localizedMessage;
 
   return (
     <Paper
@@ -128,27 +143,33 @@ export default function NotificationCard({ data }: Readonly<Props>) {
       <Stack direction="row" spacing={1.5} alignItems="flex-start">
         <Box
           sx={{
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            borderRadius: 2,
             flexShrink: 0,
-            display: 'grid',
-            placeItems: 'center',
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            bgcolor: '#EDE9FE',
           }}
         >
-          <Image
-            src="/assets/icons/notification/notificationIcon.png"
+          <Box
+            component="img"
+            src="/assets/icons/notification/notification.svg"
             alt="notification"
-            width={22}
-            height={22}
+            sx={{
+              width: 40,
+              height: 40,
+              objectFit: 'contain',
+              display: 'block',
+            }}
           />
         </Box>
 
         <Stack spacing={1.25} sx={{ minWidth: 0, flex: 1 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} flexWrap="wrap">
-            <Typography variant="subtitle1" color="secondary.main" sx={{ fontWeight: 700 }}>
-              {localizedTitle}
+            <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
+              {displayTitle}
             </Typography>
             <Typography
               variant="body2"
@@ -165,7 +186,7 @@ export default function NotificationCard({ data }: Readonly<Props>) {
             color="text.secondary"
             sx={isSimpleLineNotification(data) ? { wordBreak: 'break-word', mb: 0 } : { wordBreak: 'break-word' }}
           >
-            {localizedMessage}
+            {messageContent}
           </Typography>
 
           {!isSimpleLineNotification(data) ? (

@@ -5,6 +5,10 @@ import Image from 'next/image';
 import i18n from 'src/locales/i18n';
 import { arabicDate, englishDate } from 'src/utils/format-time';
 import BookingNotificationBlock from 'src/sections/main/notifications/booking-notification-block';
+import {
+  renderProgramLifecycleMessage,
+  renderProgramNameTitle,
+} from 'src/sections/main/notifications/program-notification-message';
 
 type props = {
   data?: any;
@@ -32,6 +36,18 @@ const NotificationItem = ({ data }: props) => {
     );
   }
 
+  const isProgramLifecycle =
+    data?.notification_type === 'ADMIN_COURSE_DELETED' ||
+    data?.notification_type === 'ADMIN_NEW_COURSE';
+
+  const titleContent = isProgramLifecycle
+    ? renderProgramNameTitle(String(title), isAr)
+    : title;
+
+  const messageContent = isProgramLifecycle
+    ? renderProgramLifecycleMessage(String(message), isAr)
+    : message;
+
   return (
     <>
       <Box
@@ -51,11 +67,11 @@ const NotificationItem = ({ data }: props) => {
             height={40}
           />
           <Box>
-            <Typography variant="body1" color="info.dark">
-              {title}
+            <Typography sx={{ color: '#3CB8BB', fontWeight: 700, fontSize: '14px', lineHeight: 1.3 }}>
+              {titleContent}
             </Typography>
             <Typography variant="body2" color="info.dark">
-              {message}
+              {messageContent}
             </Typography>
           </Box>
         </Box>
