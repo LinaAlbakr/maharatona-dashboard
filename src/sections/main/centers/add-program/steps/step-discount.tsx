@@ -65,7 +65,11 @@ export default function StepDiscount() {
     }
   }, [isTrialActive, isFreePricing, setValue]);
 
-  const { fields: discountGroups, append: appendDiscountGroup } = useFieldArray({
+  const {
+    fields: discountGroups,
+    append: appendDiscountGroup,
+    remove: removeDiscountGroup,
+  } = useFieldArray({
     control,
     name: 'discount',
   });
@@ -151,42 +155,72 @@ export default function StepDiscount() {
                       {discountGroups.map((group, groupIndex) => (
                         <Box key={group.id} sx={{ mb: groupIndex < discountGroups.length - 1 ? 2.5 : 0 }}>
                           <Card sx={innerCardSx}>
-                            <Grid container spacing={2.5}>
-                              <Grid xs={12} md={6}>
-                                <RequiredLabel required>{t('ADD_PROGRAM.TITLE_EN')}</RequiredLabel>
-                                <Controller
-                                  name={`discount.${groupIndex}.title_en`}
-                                  control={control}
-                                  render={({ field: titleField, fieldState: { error } }) => (
-                                    <TextField
-                                      {...titleField}
-                                      fullWidth
-                                      placeholder="Ex: Sibling Discount"
-                                      error={!!error}
-                                      helperText={error ? t(String(error.message)) : undefined}
-                                      sx={programFieldSx}
-                                    />
-                                  )}
-                                />
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                gap: 1,
+                              }}
+                            >
+                              <Grid container spacing={2.5} sx={{ flex: 1, minWidth: 0 }}>
+                                <Grid xs={12} md={6}>
+                                  <RequiredLabel required>{t('ADD_PROGRAM.TITLE_EN')}</RequiredLabel>
+                                  <Controller
+                                    name={`discount.${groupIndex}.title_en`}
+                                    control={control}
+                                    render={({ field: titleField, fieldState: { error } }) => (
+                                      <TextField
+                                        {...titleField}
+                                        fullWidth
+                                        placeholder="Ex: Sibling Discount"
+                                        error={!!error}
+                                        helperText={error ? t(String(error.message)) : undefined}
+                                        sx={programFieldSx}
+                                      />
+                                    )}
+                                  />
+                                </Grid>
+                                <Grid xs={12} md={6}>
+                                  <RequiredLabel required>{t('ADD_PROGRAM.TITLE_AR')}</RequiredLabel>
+                                  <Controller
+                                    name={`discount.${groupIndex}.title_ar`}
+                                    control={control}
+                                    render={({ field: titleField, fieldState: { error } }) => (
+                                      <TextField
+                                        {...titleField}
+                                        fullWidth
+                                        placeholder="Ex: Sibling Discount"
+                                        error={!!error}
+                                        helperText={error ? t(String(error.message)) : undefined}
+                                        sx={programFieldSx}
+                                      />
+                                    )}
+                                  />
+                                </Grid>
                               </Grid>
-                              <Grid xs={12} md={6}>
-                                <RequiredLabel required>{t('ADD_PROGRAM.TITLE_AR')}</RequiredLabel>
-                                <Controller
-                                  name={`discount.${groupIndex}.title_ar`}
-                                  control={control}
-                                  render={({ field: titleField, fieldState: { error } }) => (
-                                    <TextField
-                                      {...titleField}
-                                      fullWidth
-                                      placeholder="Ex: Sibling Discount"
-                                      error={!!error}
-                                      helperText={error ? t(String(error.message)) : undefined}
-                                      sx={programFieldSx}
-                                    />
-                                  )}
-                                />
-                              </Grid>
-                            </Grid>
+                              {discountGroups.length > 1 ? (
+                                <Box sx={{ flexShrink: 0 }}>
+                                  <RequiredLabel sx={{ visibility: 'hidden', userSelect: 'none' }}>
+                                    &nbsp;
+                                  </RequiredLabel>
+                                  <Box
+                                    sx={{
+                                      height: PROGRAM_FIELD_HEIGHT,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                    }}
+                                  >
+                                    <IconButton
+                                      aria-label={t('LABEL.DELETE')}
+                                      onClick={() => removeDiscountGroup(groupIndex)}
+                                      sx={{ p: 0.75 }}
+                                    >
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </Box>
+                                </Box>
+                              ) : null}
+                            </Box>
                           </Card>
 
                           <Card sx={{ ...innerCardSx, mt: 2.5 }}>
