@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -178,12 +178,11 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     name: string;
   } | null>(null);
 
-  useEffect(() => {
-    router.push(`${pathname}`);
-  }, [pathname, router]);
+  // Keep URL search/limit params — clearing them hid older programs from search.
   const currentLimit = Number(searchParams?.get('limit')) || 20;
+  const currentSearch = searchParams?.get('search') ?? '';
 
-  // Open → closed → ended (gray) → inactive; start/end date ordering within each tier.
+  // Active → deactivated → ended; start/end date ordering within each tier.
   const sortedCourses = useMemo(() => {
     const list = Array.isArray(courses) ? [...courses] : [];
     return list.sort(compareCoursesForList);
@@ -312,6 +311,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               <FormProvider methods={methods}>
                 <TextField
                   sx={{ width: '100%' }}
+                  value={currentSearch}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

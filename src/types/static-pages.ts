@@ -40,6 +40,8 @@ export type AcceptedCenter = {
   center_id: string;
   center_name: string;
   accepted_at: string;
+  /** True when the center document no longer exists (hard-deleted). */
+  is_deleted?: boolean;
 };
 
 export type AcceptedCentersResponse = {

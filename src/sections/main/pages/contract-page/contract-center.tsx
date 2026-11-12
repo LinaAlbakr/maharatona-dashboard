@@ -773,7 +773,11 @@ const ContractCenterView = ({ overview, search = '' }: IProps) => {
                   )}
                   {acceptedData?.centers?.map((c) => (
                     <TableRow key={c.center_id}>
-                      <TableCell>{c.center_name}</TableCell>
+                      <TableCell>
+                        {c.is_deleted || c.center_name === 'Deleted center'
+                          ? t('LABEL.DELETED_CENTER')
+                          : c.center_name || '-'}
+                      </TableCell>
                       <TableCell>
                         <Box component="span" dir="ltr" sx={{ display: 'inline-block' }}>
                           {fDateTime(c.accepted_at, 'd-M-yyyy, p')}
