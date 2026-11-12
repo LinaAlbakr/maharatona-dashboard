@@ -117,26 +117,24 @@ const parseDateMs = (value: unknown): number => {
 };
 
 /**
- * List sort tier:
- * 0 — active, not ended, enrollment open (includes full)
- * 1 — active, not ended, enrollment closed
- * 2 — ended (past end date, gray)
- * 3 — inactive (red, bottom)
+ * List sort by display groups (matches admin API):
+ * 0 — Normal (active, not ended)
+ * 1 — Red (all manually deactivated, even if end date passed)
+ * 2 — Gray (ended and still active)
  */
 const getCourseSortTier = (course: any): number => {
-  if (course?.is_active === false) return 3;
+  if (course?.is_active === false) return 1;
   if (isPastCourse(course)) return 2;
-  if (course?.enrollmentStatus === 'closed') return 1;
   return 0;
 };
 
-/** Active/open & closed: nearest start date first; ended: most recent end date first. */
+/** Normal/red: nearest start first; gray (ended): most recent end first. */
 const compareCoursesForList = (a: any, b: any): number => {
   const tierA = getCourseSortTier(a);
   const tierB = getCourseSortTier(b);
   if (tierA !== tierB) return tierA - tierB;
 
-  if (tierA === 2 || tierA === 3) {
+  if (tierA === 2) {
     return parseDateMs(b?.end_date) - parseDateMs(a?.end_date);
   }
 
