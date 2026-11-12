@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 import Container from '@mui/material/Container';
@@ -117,26 +117,24 @@ const parseDateMs = (value: unknown): number => {
 };
 
 /**
- * List sort tier:
- * 0 — active, not ended, enrollment open (includes full)
- * 1 — active, not ended, enrollment closed
- * 2 — ended (past end date, gray)
- * 3 — inactive (red, bottom)
+ * List sort tier (must match admin get-all-courses):
+ * 0 — Active: ongoing / upcoming (is_active, not ended)
+ * 1 — Deactivated: manually disabled and not ended
+ * 2 — Ended: end date passed (even if enrollment still Open)
  */
 const getCourseSortTier = (course: any): number => {
-  if (course?.is_active === false) return 3;
   if (isPastCourse(course)) return 2;
-  if (course?.enrollmentStatus === 'closed') return 1;
+  if (course?.is_active === false) return 1;
   return 0;
 };
 
-/** Active/open & closed: nearest start date first; ended: most recent end date first. */
+/** Active/deactivated: nearest start first; ended: most recent end first. */
 const compareCoursesForList = (a: any, b: any): number => {
   const tierA = getCourseSortTier(a);
   const tierB = getCourseSortTier(b);
   if (tierA !== tierB) return tierA - tierB;
 
-  if (tierA === 2 || tierA === 3) {
+  if (tierA === 2) {
     return parseDateMs(b?.end_date) - parseDateMs(a?.end_date);
   }
 
@@ -180,12 +178,11 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
     name: string;
   } | null>(null);
 
-  useEffect(() => {
-    router.push(`${pathname}`);
-  }, [pathname, router]);
+  // Keep URL search/limit params — clearing them hid older programs from search.
   const currentLimit = Number(searchParams?.get('limit')) || 20;
+  const currentSearch = searchParams?.get('search') ?? '';
 
-  // Open → closed → ended (gray) → inactive; start/end date ordering within each tier.
+  // Active → deactivated → ended; start/end date ordering within each tier.
   const sortedCourses = useMemo(() => {
     const list = Array.isArray(courses) ? [...courses] : [];
     return list.sort(compareCoursesForList);
@@ -314,6 +311,7 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               <FormProvider methods={methods}>
                 <TextField
                   sx={{ width: '100%' }}
+                  value={currentSearch}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
