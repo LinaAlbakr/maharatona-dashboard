@@ -42,7 +42,7 @@ import { cellAlignment } from 'src/CustomSharedComponents/SharedTable/types';
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import { useSettingsContext } from 'src/components/settings';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+import { ConfirmDialog, ConfirmValueMessage } from 'src/components/custom-dialog';
 
 import SendNotification from './components/send-notification';
 import FlexibleEnrollmentDialog from './components/flexible-enrollment-dialog';
@@ -709,9 +709,13 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_COURSE')}
-        content={t('MESSAGE.CONFIRM_DELETE_COURSE', {
-          programName: selectedProgramName,
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_DELETE_COURSE"
+            valueKey="programName"
+            value={selectedProgramName}
+          />
+        }
         action={
           <Button
             variant="contained"
@@ -728,9 +732,13 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         open={confirmActivate.value}
         onClose={confirmActivate.onFalse}
         title={t('TITLE.ACTIVATE_COURSE')}
-        content={t('MESSAGE.CONFIRM_ACTIVATE_COURSE', {
-          programName: selectedProgramName,
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_ACTIVATE_COURSE"
+            valueKey="programName"
+            value={selectedProgramName}
+          />
+        }
         action={
           <Button
             variant="contained"
@@ -747,9 +755,13 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         open={confirmDeactivate.value}
         onClose={confirmDeactivate.onFalse}
         title={t('TITLE.DEACTIVATE_COURSE')}
-        content={t('MESSAGE.CONFIRM_DEACTIVATE_COURSE', {
-          programName: selectedProgramName,
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_DEACTIVATE_COURSE"
+            valueKey="programName"
+            value={selectedProgramName}
+          />
+        }
         action={
           <Button
             variant="contained"

@@ -23,7 +23,7 @@ import { isClientBlocked } from 'src/utils/client-status';
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import { useSettingsContext } from 'src/components/settings';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+import { ConfirmDialog, ConfirmValueMessage } from 'src/components/custom-dialog';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 
 import { ICenter } from 'src/types/centers';
@@ -430,9 +430,13 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
         title={t('TITLE.BLOCK_CLIENT')}
-        content={t('MESSAGE.CONFIRM_BLOCK_CLIENT', {
-          mobileNumber: selectedMobileNumber || '-',
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_BLOCK_CLIENT"
+            valueKey="mobileNumber"
+            value={selectedMobileNumber || '-'}
+          />
+        }
         action={
           <Button
             variant="contained"
@@ -450,9 +454,13 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
         title={t('TITLE.UNBLOCK_CLIENT')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK_CLIENT', {
-          mobileNumber: selectedMobileNumber || '-',
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_UNBLOCK_CLIENT"
+            valueKey="mobileNumber"
+            value={selectedMobileNumber || '-'}
+          />
+        }
         action={
           <Button
             variant="contained"
@@ -470,9 +478,13 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_CLIENT')}
-        content={t('MESSAGE.CONFIRM_DELETE_CLIENT', {
-          mobileNumber: selectedMobileNumber || '-',
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_DELETE_CLIENT"
+            valueKey="mobileNumber"
+            value={selectedMobileNumber || '-'}
+          />
+        }
         action={
           <Button
             variant="contained"

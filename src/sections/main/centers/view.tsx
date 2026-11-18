@@ -19,7 +19,7 @@ import { clearWallet, deleteCenter, changeCenterStatus } from 'src/actions/cente
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import { useSettingsContext } from 'src/components/settings';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+import { ConfirmDialog, ConfirmValueMessage } from 'src/components/custom-dialog';
 import CutomAutocompleteView, { ITems } from 'src/components/AutoComplete/CutomAutocompleteView';
 
 import { ICenter } from 'src/types/centers';
@@ -425,9 +425,13 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
         title={t('TITLE.BLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_BLOCK', {
-          mobileNumber: selectedMobileNumber || '-',
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_BLOCK"
+            valueKey="mobileNumber"
+            value={selectedMobileNumber || '-'}
+          />
+        }
         action={
           <Button
             variant="contained"
@@ -444,9 +448,13 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
         title={t('TITLE.UNBLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK', {
-          mobileNumber: selectedMobileNumber || '-',
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_UNBLOCK"
+            valueKey="mobileNumber"
+            value={selectedMobileNumber || '-'}
+          />
+        }
         action={
           <Button
             variant="contained"
@@ -474,9 +482,13 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_CENTER')}
-        content={t('MESSAGE.CONFIRM_DELETE_CENTER', {
-          mobileNumber: selectedMobileNumber || '-',
-        })}
+        content={
+          <ConfirmValueMessage
+            i18nKey="MESSAGE.CONFIRM_DELETE_CENTER"
+            valueKey="mobileNumber"
+            value={selectedMobileNumber || '-'}
+          />
+        }
         action={
           <Button
             variant="contained"
