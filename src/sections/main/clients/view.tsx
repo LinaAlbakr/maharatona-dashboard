@@ -48,6 +48,7 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
   const confirmDelete = useBoolean();
   const [selectedId, setSelectedId] = useState<string >("");
   const selectedIdRef = useRef<string>('');
+  const [selectedMobileNumber, setSelectedMobileNumber] = useState('');
   const [statusActionLoading, setStatusActionLoading] = useState(false);
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [showSendToAll, setShowSendToAll] = useState<boolean>(false);
@@ -296,6 +297,7 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
                 const id = item._id || item.id;
                 selectedIdRef.current = id;
                 setSelectedId(id);
+                setSelectedMobileNumber(String(item?.phone ?? '').trim());
                 confirmUnblock.onTrue();
               },
               hide: (row) => !isClientBlocked(row),
@@ -308,6 +310,7 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
                 const id = item._id || item.id;
                 selectedIdRef.current = id;
                 setSelectedId(id);
+                setSelectedMobileNumber(String(item?.phone ?? '').trim());
                 confirmBlock.onTrue();
               },
               hide: (row) => isClientBlocked(row),
@@ -318,6 +321,7 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
               icon: 'material-symbols:delete-outline-rounded',
               onClick: (item: any) => {
                 setSelectedId(item._id || item.id);
+                setSelectedMobileNumber(String(item?.phone ?? '').trim());
                 confirmDelete.onTrue();
               },
               dividerBefore: true,
@@ -426,7 +430,9 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
         title={t('TITLE.BLOCK_CLIENT')}
-        content={t('MESSAGE.CONFIRM_BLOCK_CLIENT')}
+        content={t('MESSAGE.CONFIRM_BLOCK_CLIENT', {
+          mobileNumber: selectedMobileNumber || '-',
+        })}
         action={
           <Button
             variant="contained"
@@ -444,7 +450,9 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
         title={t('TITLE.UNBLOCK_CLIENT')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK_CLIENT')}
+        content={t('MESSAGE.CONFIRM_UNBLOCK_CLIENT', {
+          mobileNumber: selectedMobileNumber || '-',
+        })}
         action={
           <Button
             variant="contained"
@@ -462,7 +470,9 @@ const ClientsView = ({ cities, count, clients }: Readonly<props>) => {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_CLIENT')}
-        content={t('MESSAGE.CONFIRM_DELETE_CLIENT')}
+        content={t('MESSAGE.CONFIRM_DELETE_CLIENT', {
+          mobileNumber: selectedMobileNumber || '-',
+        })}
         action={
           <Button
             variant="contained"
