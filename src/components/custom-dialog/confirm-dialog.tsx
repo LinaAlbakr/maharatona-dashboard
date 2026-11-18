@@ -24,8 +24,30 @@ export default function ConfirmDialog({
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
 
       {content && (
-        <DialogContent sx={{ typography: 'body2', minHeight: '50px' }}> {content} </DialogContent>
+        <DialogContent
+          // Avoid OS/browser phone linking (underline on +966… in confirm text)
+          {...({ 'x-ms-format-detection': 'none' } as object)}
+          sx={{
+            typography: 'body2',
+            fontWeight: 400,
+            minHeight: '50px',
+            '& .confirm-dialog-value, & .confirm-dialog-value a, & strong.confirm-dialog-value': {
+              fontWeight: '700 !important',
+              textDecoration: 'none',
+              color: 'inherit',
+            },
+            '& a[href^="tel:"]': {
+              color: 'inherit',
+              fontWeight: '700 !important',
+              textDecoration: 'none',
+              pointerEvents: 'none',
+            },
+          }}
+        >
+          {content}
+        </DialogContent>
       )}
+
 
       <DialogActions>
         <Button
