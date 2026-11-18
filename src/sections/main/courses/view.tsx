@@ -168,6 +168,12 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
   const confirmDelete = useBoolean();
   const confirmActivate = useBoolean();
   const confirmDeactivate = useBoolean();
+  const selectedProgramName =
+    (i18n.language === 'ar'
+      ? selectedCourse?.name_ar || selectedCourse?.name_en
+      : selectedCourse?.name_en || selectedCourse?.name_ar) ||
+    selectedCourse?.name ||
+    '-';
   const [enrollmentSavingId, setEnrollmentSavingId] = useState<string | null>(null);
   const [enrollmentConfirm, setEnrollmentConfirm] = useState<{
     item: any;
@@ -377,8 +383,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
               sx: { color: 'error.dark' },
               label: t('LABEL.DELETE'),
               icon: 'mingcute:delete-fill',
-              onClick: (item) => {
+              onClick: (item: any) => {
                 setSelectedId(item.id);
+                setSelectedCourse(item);
                 confirmDelete.onTrue();
               },
               dividerBefore: true,
@@ -702,7 +709,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_COURSE')}
-        content={t('MESSAGE.CONFIRM_DELETE_COURSE')}
+        content={t('MESSAGE.CONFIRM_DELETE_COURSE', {
+          programName: selectedProgramName,
+        })}
         action={
           <Button
             variant="contained"
@@ -719,7 +728,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         open={confirmActivate.value}
         onClose={confirmActivate.onFalse}
         title={t('TITLE.ACTIVATE_COURSE')}
-        content={t('MESSAGE.CONFIRM_ACTIVATE_COURSE')}
+        content={t('MESSAGE.CONFIRM_ACTIVATE_COURSE', {
+          programName: selectedProgramName,
+        })}
         action={
           <Button
             variant="contained"
@@ -736,7 +747,9 @@ const CoursesView = ({ count, courses }: Readonly<props>) => {
         open={confirmDeactivate.value}
         onClose={confirmDeactivate.onFalse}
         title={t('TITLE.DEACTIVATE_COURSE')}
-        content={t('MESSAGE.CONFIRM_DEACTIVATE_COURSE')}
+        content={t('MESSAGE.CONFIRM_DEACTIVATE_COURSE', {
+          programName: selectedProgramName,
+        })}
         action={
           <Button
             variant="contained"

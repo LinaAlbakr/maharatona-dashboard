@@ -53,6 +53,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
   const confirmDelete = useBoolean();
   const confirmClearWallet = useBoolean();
   const [selectedId, setSelectedId] = useState<string>('');
+  const [selectedMobileNumber, setSelectedMobileNumber] = useState('');
   const [showSendNotification, setShowSendNotification] = useState<boolean | undefined>(false);
   const [showSendToAll, setShowSendToAll] = useState<boolean>(false);
   const [selectedCenter, setSelectedCenter] = useState<ICenter | undefined>();
@@ -288,6 +289,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               icon: 'ic:outline-block',
               onClick: (item: any) => {
                 setSelectedId(item.id);
+                setSelectedMobileNumber(String(item?.phone ?? '').trim());
                 confirmBlock.onTrue();
               },
               hide: (center) => isCenterInactive(center),
@@ -298,6 +300,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               icon: 'gg:unblock',
               onClick: (item: any) => {
                 setSelectedId(item.id);
+                setSelectedMobileNumber(String(item?.phone ?? '').trim());
                 confirmUnblock.onTrue();
               },
               hide: (center) => !isCenterInactive(center),
@@ -318,6 +321,7 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
               icon: 'material-symbols:delete-outline-rounded',
               onClick: (item: any) => {
                 setSelectedId(item.id);
+                setSelectedMobileNumber(String(item?.phone ?? '').trim());
                 confirmDelete.onTrue();
               },
               dividerBefore: true,
@@ -421,7 +425,9 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         open={confirmBlock.value}
         onClose={confirmBlock.onFalse}
         title={t('TITLE.BLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_BLOCK')}
+        content={t('MESSAGE.CONFIRM_BLOCK', {
+          mobileNumber: selectedMobileNumber || '-',
+        })}
         action={
           <Button
             variant="contained"
@@ -438,7 +444,9 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         open={confirmUnblock.value}
         onClose={confirmUnblock.onFalse}
         title={t('TITLE.UNBLOCK_CENTER')}
-        content={t('MESSAGE.CONFIRM_UNBLOCK')}
+        content={t('MESSAGE.CONFIRM_UNBLOCK', {
+          mobileNumber: selectedMobileNumber || '-',
+        })}
         action={
           <Button
             variant="contained"
@@ -466,7 +474,9 @@ const CentersView = ({ cities, neighborhoods, count, centers }: Readonly<props>)
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title={t('TITLE.DELETE_CENTER')}
-        content={t('MESSAGE.CONFIRM_DELETE_CENTER')}
+        content={t('MESSAGE.CONFIRM_DELETE_CENTER', {
+          mobileNumber: selectedMobileNumber || '-',
+        })}
         action={
           <Button
             variant="contained"
